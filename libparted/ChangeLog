@@ -1,3 +1,16 @@
+2006-09-14  Olaf Hering  <olh@suse.de>
+	* labels/mac.c (mac_partition_new): memset() inits everything to
+	zero, no need to do it manually.
+
+	* labels/mac.c (mac_partition_set_flag): Prevent LVM and RAID partition
+	types from corrupting the partition table.
+
+	* arch/linux.c (_blkpg_add_partition): Set linux_part.length based on
+	whether or not this partition is PED_PARTITION_EXTENDED or not.
+
+	* arch/linux.c (_disk_sync_part_table): Remove the check and continue
+	for PED_PARTITION_EXTENDED types.
+
 2006-09-01  Darren Lavender  <dl1@hppine99.gbr.hp.com>
 	* labels/gpt.c (gpt_read, _parse_header): added support for
 	LUN/device resize detection and optional GPT header correction.

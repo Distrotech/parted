@@ -216,3 +216,6 @@ Darren Lavender <dl1@hppine99.gbr.hp.com>
 	header corruption
 	* Fixed off-by-one error in GPT header that allowed for overlap
 	between LDAs of LastUsableLBA and PartitionEntryLBA in backup GPT
+
+Olaf Hering <olh@suse.de>
+	* Fixes for Macintosh disk label code

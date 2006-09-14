@@ -1125,17 +1125,6 @@ mac_partition_new (
 			goto error_free_part;
 
 		memset (mac_data, 0, sizeof (MacPartitionData));
-
-		mac_data->data_region_length = 0;
-		mac_data->boot_region_length = 0;
-		mac_data->is_driver = 0;
-		mac_data->has_driver = 0;
-		mac_data->is_boot = 0;
-		mac_data->is_root = 0;
-		mac_data->is_swap = 0;
-		mac_data->is_lvm = 0;
-		mac_data->is_raid = 0;
-
 		strcpy (mac_data->volume_name, "untitled");
 	} else {
 		part->disk_specific = NULL;
@@ -1260,19 +1249,23 @@ mac_partition_set_flag (PedPartition* part, PedPartitionFlag flag, int state)
 		return 1;
 
 	case PED_PARTITION_LVM:
-		mac_data->is_lvm = state;
-		if (state)
+		if (state) {
 			strcpy (mac_data->system_name, "Linux_LVM");
-		else
-			mac_partition_set_system (part, part->fs_type);
+			mac_data->is_lvm = state;
+		} else {
+			if (mac_data->is_lvm)
+				mac_partition_set_system (part, part->fs_type);
+		}
 		return 1;
 
 	case PED_PARTITION_RAID:
-		mac_data->is_raid = state;
-		if (state)
+		if (state) {
 			strcpy (mac_data->system_name, "Linux_RAID");
-		else
-			mac_partition_set_system (part, part->fs_type);
+			mac_data->is_raid = state;
+		} else {
+			if (mac_data->is_raid)
+				mac_partition_set_system (part, part->fs_type);
+		}
 		return 1;
 
 	default:

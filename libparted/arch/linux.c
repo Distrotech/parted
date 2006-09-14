@@ -1936,7 +1936,11 @@ _blkpg_add_partition (PedDisk* disk, PedPartition* part)
 
         memset (&linux_part, 0, sizeof (linux_part));
         linux_part.start = part->geom.start * disk->dev->sector_size;
-        linux_part.length = part->geom.length * disk->dev->sector_size;
+        /* see fs/partitions/msdos.c:msdos_partition(): "leave room for LILO" */
+        if (part->type & PED_PARTITION_EXTENDED)
+                linux_part.length = part->geom.length == 1 ? 512 : 1024;
+        else
+                linux_part.length = part->geom.length * disk->dev->sector_size;
         linux_part.pno = part->num;
         strncpy (linux_part.devname, dev_name, BLKPG_DEVNAMELTH);
         if (vol_name)
@@ -1993,13 +1997,6 @@ _disk_sync_part_table (PedDisk* disk)
 
                 part = ped_disk_get_partition (disk, i);
                 if (part) {
-                        /* extended partitions have no business in the kernel!
-                         * blkpg doesn't like overlapping partitions.  Hmmm,
-                         * LILO isn't going to like this.
-                         */
-                        if (part->type & PED_PARTITION_EXTENDED)
-                                continue;
-
                         /* busy... so we won't (can't!) disturb ;)  Prolly
                          * doesn't matter anyway, because users shouldn't be
                          * changing mounted partitions anyway...
