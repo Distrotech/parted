@@ -1,0 +1,17 @@
+Begin4
+Title: parted 
+Version: 1.7
+Entered-date: 
+Description: GNU Parted is a program for creating, destroying, resizing,
+checking and copying partitions, and the filesystems on them. This is useful for
+creating space for new operating systems, reorganising disk usage, copying data
+between hard disks, and disk imaging.
+Keywords: partition, partitioning, file system, format, hard disk, storage, disk, disk label, fdisk, boot
+Author: <clausen@gnu.org> (Andrew Clausen)
+Maintained-by: <parted-devel@lists.alioth.debian.org> (GNU Parted development team)
+Primary-site: ftp://ftp.gnu.org/gnu/parted
+1.1M parted-1.7.0.tar.bz2
+1.5M parted-1.7.0.tar.gz
+Platforms: Linux, FreeBSD, BeOS; compiles with GCC and probably other C99 compilers.
+Copying-policy: GPL
+End

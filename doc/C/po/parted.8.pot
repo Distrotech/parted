@@ -1,0 +1,394 @@
+# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2006-05-21  3:21-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING"
+
+# type: TH
+#: parted.8:1
+#, no-wrap
+msgid "PARTED"
+msgstr ""
+
+# type: TH
+#: parted.8:1
+#, no-wrap
+msgid "18 Mar, 2002"
+msgstr ""
+
+# type: TH
+#: parted.8:1
+#, no-wrap
+msgid "parted"
+msgstr ""
+
+# type: TH
+#: parted.8:1
+#, no-wrap
+msgid "GNU Parted Manual"
+msgstr ""
+
+# type: SH
+#: parted.8:2
+#, no-wrap
+msgid "NAME"
+msgstr ""
+
+# type: Plain text
+#: parted.8:4
+msgid "GNU Parted - a partition manipulation program"
+msgstr ""
+
+# type: SH
+#: parted.8:4
+#, no-wrap
+msgid "SYNOPSIS"
+msgstr ""
+
+# type: Plain text
+#: parted.8:7
+msgid "B<parted> [options] [device [command [options...]...]]"
+msgstr ""
+
+# type: SH
+#: parted.8:7
+#, no-wrap
+msgid "DESCRIPTION"
+msgstr ""
+
+# type: Plain text
+#: parted.8:12
+msgid ""
+"This manual page documents briefly the B<parted> command.  Complete "
+"documentation is distributed with the package in GNU Info format; see below."
+msgstr ""
+
+# type: Plain text
+#: parted.8:19
+msgid ""
+"B<parted> is a disk partitioning and partition resizing program.  It allows "
+"you to create, destroy, resize, move and copy ext2, ext3, linux-swap, FAT, "
+"FAT32, and reiserfs partitions.  It can create, resize and move Macintosh "
+"HFS partitions, as well as detect jfs, ntfs, ufs, and xfs partitions.  It is "
+"useful for creating space for new operating systems, reorganising disk "
+"usage, and copying data to new hard disks."
+msgstr ""
+
+# type: SH
+#: parted.8:19
+#, no-wrap
+msgid "OPTIONS"
+msgstr ""
+
+# type: TP
+#: parted.8:20
+#, no-wrap
+msgid "B<-h, --help>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:23
+msgid "displays a help message."
+msgstr ""
+
+# type: TP
+#: parted.8:23
+#, no-wrap
+msgid "B<-i, --interactive>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:26
+msgid "where necessary, prompts for user intervention."
+msgstr ""
+
+# type: TP
+#: parted.8:26
+#, no-wrap
+msgid "B<-s, --script>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:29
+msgid "never prompts for user intervention."
+msgstr ""
+
+# type: TP
+#: parted.8:29
+#, no-wrap
+msgid "B<-v, --version>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:32
+msgid "displays the version."
+msgstr ""
+
+# type: SH
+#: parted.8:32
+#, no-wrap
+msgid "COMMANDS"
+msgstr ""
+
+# type: TP
+#: parted.8:33
+#, no-wrap
+msgid "B<[device]>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:36
+msgid "The block device to partition."
+msgstr ""
+
+# type: TP
+#: parted.8:36
+#, no-wrap
+msgid "B<[command [options]]>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:40
+msgid ""
+"Specifies a command to parted. If no command is given, parted will give you "
+"a command prompt. Commands are:"
+msgstr ""
+
+# type: TP
+#: parted.8:41
+#, no-wrap
+msgid "B<check >I<partition>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:44
+msgid "does a simple check on I<partition>."
+msgstr ""
+
+# type: TP
+#: parted.8:44
+#, no-wrap
+msgid "B<cp >I<[source-device]>B< >I<source>B< >I<dest>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:49
+msgid ""
+"copies the I<source> partition's filesystem on I<source-device> (or the "
+"current device if no other device was specified) to the I<dest> partition on "
+"the current device."
+msgstr ""
+
+# type: TP
+#: parted.8:49
+#, no-wrap
+msgid "B<help >I<[command]>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:52
+msgid "prints general help, or help on I<command> if specified."
+msgstr ""
+
+# type: TP
+#: parted.8:52
+#, no-wrap
+msgid "B<mkfs >I<partition>B< >I<fs-type>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:56
+msgid ""
+"make a filesystem I<fs-type> on I<partition>. I<fs-type> can be one of "
+"\"fat16\", \"fat32\", \"ext2\", \"linux-swap\" or \"reiserfs\"."
+msgstr ""
+
+# type: TP
+#: parted.8:56
+#, no-wrap
+msgid "B<mklabel >I<label-type>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:61
+msgid ""
+"Creates a new disklabel (partition table) of I<label-type>.  I<label-type> "
+"should be one of \"bsd\", \"dvh\", \"gpt\", \"loop\", \"mac\", \"msdos\", "
+"\"pc98\" or \"sun\"."
+msgstr ""
+
+# type: TP
+#: parted.8:61
+#, no-wrap
+msgid "B<mkpart >I<part-type>B< >I<[fs-type]>B< >I<start>B< >I<end>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:68
+msgid ""
+"make a I<part-type> partition with filesystem I<fs-type> (if specified), "
+"beginning at I<start> and ending at I<end> (in megabytes).  I<fs-type> can "
+"be one of \"fat16\", \"fat32\", \"ext2\", \"HFS\", \"linux-swap\", \"NTFS\", "
+"\"reiserfs\" or \"ufs\".  I<part-type> should be one of \"primary\", "
+"\"logical\" or \"extended\""
+msgstr ""
+
+# type: TP
+#: parted.8:68
+#, no-wrap
+msgid "B<mkpartfs >I<part-type>B< >I<fs-type>B< >I<start>B< >I<end>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:72
+msgid ""
+"make a I<part-type> partition with filesystem I<fs-type> beginning at "
+"I<start> and ending at I<end> (in megabytes)"
+msgstr ""
+
+# type: TP
+#: parted.8:72
+#, no-wrap
+msgid "B<move >I<partition>B< >I<start>B< >I<end>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:76
+msgid ""
+"move I<partition> to start at I<start> and end at I<end>. Note: move never "
+"changes the minor number"
+msgstr ""
+
+# type: TP
+#: parted.8:76
+#, no-wrap
+msgid "B<name >I<partition>B< >I<name>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:80
+msgid ""
+"set the name of I<partition> to I<name>. This option works only on Mac and "
+"PC98 disklabels. The name can be placed in quotes, if necessary"
+msgstr ""
+
+# type: TP
+#: parted.8:80
+#, no-wrap
+msgid "B<print>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:83
+msgid "displays the partition table"
+msgstr ""
+
+# type: TP
+#: parted.8:83
+#, no-wrap
+msgid "B<quit>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:86
+msgid "exits parted"
+msgstr ""
+
+# type: TP
+#: parted.8:86
+#, no-wrap
+msgid "B<resize >I<partition>B< >I<start>B< >I<end>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:90
+msgid ""
+"resize the filesystem on I<partition> to start at I<start> and end at I<end> "
+"megabytes"
+msgstr ""
+
+# type: TP
+#: parted.8:90
+#, no-wrap
+msgid "B<rm >I<partition>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:93
+msgid "deletes I<partition>"
+msgstr ""
+
+# type: TP
+#: parted.8:93
+#, no-wrap
+msgid "B<select >I<device>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:98
+msgid ""
+"choose I<device> as the current device to edit. I<device> should usually be "
+"a Linux hard disk device, but it can be a partition, software raid device or "
+"a LVM logical volume if that is necessary"
+msgstr ""
+
+# type: TP
+#: parted.8:98
+#, no-wrap
+msgid "B<set >I<partition>B< >I<flag>B< >I<state>"
+msgstr ""
+
+# type: Plain text
+#: parted.8:104
+msgid ""
+"change the state of the I<flag> on I<partition> to I<state>. Flags supported "
+"are: \"boot\", \"root\", \"swap\", \"hidden\", \"raid\", \"lvm\", \"lba\" "
+"and \"palo\".  I<state> should be either \"on\" or \"off\""
+msgstr ""
+
+# type: SH
+#: parted.8:105
+#, no-wrap
+msgid "REPORTING BUGS"
+msgstr ""
+
+# type: Plain text
+#: parted.8:107
+msgid "Report bugs to E<lt>bug-parted@gnu.orgE<gt>"
+msgstr ""
+
+# type: SH
+#: parted.8:107
+#, no-wrap
+msgid "SEE ALSO"
+msgstr ""
+
+# type: Plain text
+#: parted.8:115
+msgid ""
+"B<fdisk>(8), B<mkfs>(8), The I<parted> program is fully documented in the "
+"B<info(1)> format I<GNU partitioning software> manual."
+msgstr ""
+
+# type: SH
+#: parted.8:115
+#, no-wrap
+msgid "AUTHOR"
+msgstr ""
+
+# type: Plain text
+#: parted.8:117
+msgid ""
+"This manual page was written by Timshel Knoll E<lt>timshel@debian.orgE<gt>, "
+"for the Debian GNU/Linux system (but may be used by others)."
+msgstr ""

@@ -1,0 +1,63 @@
+GNU Parted
+----------
+
+GNU Parted is a program for creating, destroying, resizing, checking and
+copying partitions, and the filesystems on them.  This is useful for creating
+space for new operating systems, reorganising disk usage, copying data between
+hard disks, and disk imaging.
+
+ * documentation is in the doc/ directory.  The User's documentation is in
+texinfo format, and is built into a format viewable by info/pinfo when
+you run make.  i.e.
+
+	$ ./configure
+	$ cd doc
+	$ make
+	$ info -f parted.info
+
+Yes, it sucks that you need to run ./configure before you can read the manual.
+If you have problems with it, doc/parted.texi should be fairly easy to read,
+just a bit less userfriendly.
+	If you prefer html format, you can run:
+
+	$ cd doc
+	$ makeinfo --html parted.texi
+
+ * an online tutorial is available at http://www.luv.asn.au/overheads/parted
+ * the GNU Parted home page is http://www.gnu.org/software/parted
+ * the GNU Parted FAQ can be found at
+   http://www.gnu.org/software/parted/faq.html
+ * send bug reports, requests for help, feature requests, comments, etc. to
+bug-parted@gnu.org.  The authors can be contacted directly (see the AUTHORS
+file).
+
+
+NOTE TO DISTRIBUTIONS
+---------------------
+
+(1) When compiling Parted for distribution for general use, we recommend using
+the default configuration:
+
+	CFLAGS=-Os ./configure
+
+This includes --enable-debug (by default), which contains many assertions.
+Obviously, these "waste" space, but in the past, they have caught potentially
+dangerous bugs before they would have done damage, so we think it's worth
+it.  Also, it means we get more bug reports ;)
+
+
+(2) When doing dependencies, remember that libreiserfs is a *soft* dependency,
+so I guess that means Debian-look-alikes should do a "suggests", but
+not a "requires".
+
+
+(3) When space is important, we suggest --without-readline, --disable-shared,
+and possibly --disable-nls and --disable-dynamic-loading.
+
+If Parted is only going to be used for probing / discovery (and not
+"editing"), there is a --enable-discovery-only and --disable-fs (when you're
+only interested in partition tables).  Since it's readonly, --enable-debug
+gains you nothing wrt safety, so use --disable-debug ;)  The "discover"
+program is about 35k (gzipped) when compiled this way (not counting libc
+and libuuid).
+

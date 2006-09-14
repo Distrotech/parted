@@ -1,0 +1,248 @@
+.\"						Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.\" .TH PARTED 8 "18 Mar, 2002" parted "GNU Parted Manual"
+.TH PARTED 8 "18 Mar, 2002" parted "Manual do GNU Parted"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.\"
+.\" 20020425 tradução para pt_BR por Fábio Minami
+.\"
+.\" .SH NAME
+.\" GNU Parted \- a partition manipulation program
+.SH NOME
+GNU Parted \- ferramenta para manipulação de partições
+.\" .SH SYNOPSIS
+.\" .B parted
+.\" [options] [device [command [options...]...]]
+.SH SINOPSE
+.B parted
+[opções] [dispositivo [comando [opções...]...]]
+.\" .SH DESCRIPTION
+.\"This manual page documents briefly the
+.\".BR parted
+.\"command.  Complete documentation is distributed with the package in
+.\"GNU Info format; see below.
+.SH DESCRIÇÃO
+Esta página de manual descreve brevemente o comando
+.BR parted.
+A documentação completa é distribuída junto ao código-fonte no
+formato GNU Info; veja abaixo.
+.\" .PP
+.\" .B parted
+.\" is a disk partitioning and partition resizing program.  It allows you to
+.\" create, destroy, resize, move and copy ext2, ext3, linux-swap, FAT and FAT32
+.\" partitions. This is useful for creating space for new operating systems,
+.\" reorganising disk usage, and copying data to new hard disks.
+.PP
+O
+.B parted
+é uma ferramenta para particionamento de discos e redimensionamento de
+partições.  Sua função é criar, destruir, redimensionar, mover e copiar
+partições ext2, ext3, linux-swap, FAT e FAT32. Isso é útil para criar 
+espaço para um novo sistema operacional, reorganizar o uso do disco e 
+copiar dados para um novo disco rígido.
+.\" .SH OPTIONS
+.\" .TP
+.\" .B -h, --help
+.\" displays a help message.
+.\" .TP
+.\" .B -i, --interactive
+.\" where necessary, prompts for user intervention.
+.\" .TP
+.\" .B -s, --script
+.\" never prompts for user intervention.
+.\" .TP
+.\" .B -v, --version
+.\" displays the version.
+.SH OPÇÕES
+.TP
+.B -h, --help
+exibe a mensagem de ajuda.
+.TP
+.B -i, --interactive
+onde necessário, pede a intervenção do usuário.
+.TP
+.B -s, --script
+nunca pede a intervenção do usuário.
+.TP
+.B -v, --version
+exibe a versão.
+.\" .SH COMMANDS
+.\" .TP
+.\" .B [device]
+.\" The block device to partition.
+.\" .TP
+.\" .B [command [options]]
+.\" Specifies a command to parted. If no command is given, parted will give you
+.\" a command prompt. Commands are:
+.\" .RS
+.\" .TP
+.SH COMANDOS
+.TP
+.B [dispositivo]
+O dispositivo de bloco da partição.
+.TP
+.B [comando [opções]]
+Especifica um comando ao parted. Se nenhum comando é fornecido, o parted
+irá para o prompt de comando. Os comandos são:
+.RS
+.TP
+.\" .B check \fIpartition\fP
+.\" does a simple check on \fIpartition\fP.
+.\" .TP
+.B check \fIpartition\fP
+faz uma checagem simples em \fIpartição\fP
+.TP
+.\" .B cp \fI[source-device]\fP \fIsource\fP \fIdest\fP
+.\" copies the \fIsource\fP partition's filesystem on \fIsource-device\fP (or the
+.\" current device if no other device was specified) to the \fIdest\fP partition
+.\" on the current device.
+.\" .TP
+.B cp \fIsource\fP [dispositivo] \fIdest\fP
+copia o sistema de arquivos da partição \fIsource\fP em \fIsource-device\fP 
+(ou o dispositivo atual se nenhum outro dispositivo for especificado) 
+para a partição \fIdest\fP do dispositivo atual.
+.TP
+.\" .B help \fI[command]\fP
+.\" prints general help, or help on \fIcommand\fP if specified.
+.\" .TP
+.B help [comando]
+imprime a ajuda geral, ou ajuda sobre o [comando] se especificado
+.TP
+.\" .B mkfs \fIpartition\fP \fIfs-type\fP
+.\" make a filesystem \fIfs-type\fP on \fIpartition\fP. \fIfs-type\fP can be one
+.\" of "FAT", "ext2" or "linux-swap".
+.\" .TP
+.B mkfs \fIpartition\fP \fIfs-type\fP
+cria o sistema de arquivos \fIfs-type\fP em \fIpartition\fP.
+\fIfs-type\fP pode ser "FAT", "ext2" ou "linux-swap"
+.TP
+.\" .B mklabel \fIlabel-type\fP
+.\" Creates a new disklabel (partition table) of \fIlabel-type\fP.
+.\" \fIlabel-type\fP should be one of "bsd", "gpt", "loop", "mac", "mips", "msdos",
+.\" "pc98" or "sun".
+.\" .TP
+.B mklabel \fIlabel-type\fP
+cria um novo disklabel (tabela de partições) de \fIlabel-type\fP.
+\fIlabel-type\fP pode ser "bsd", "gpt", "loop", "mac", "mips", "msdos", 
+"pc98" ou "sun"
+.TP
+.\" .B mkpart \fIpart-type\fP \fI[fs-type]\fP \fIstart\fP \fIend\fP
+.\" make a \fIpart-type\fP partition with filesystem \fIfs-type\fP (if specified),
+.\" beginning at \fIstart\fP and ending at \fIend\fP (in megabytes).
+.\" \fIpart-type\fP should be one of "primary", "logical" or "extended"
+.\" .TP
+.B mkpart \fIpart-type\fP [fs-type] \fIstart\fP \fIend\fP
+cria uma partição \fIpart-type\fP com o sistema de arquivos \fIfs-type\fP
+(se especificado), com início em \fIstart\fP e fim em \fIend\fP (em megabytes).
+\fIpart-type\fP pode ser "primary", "logical" ou "extended"
+.TP
+.\" .B mkpartfs \fIpart-type\fP \fIfs-type\fP \fIstart\fP \fIend\fP
+.\" make a \fIpart-type\fP partition with filesystem \fIfs-type\fP beginning at
+.\" \fIstart\fP and ending at \fIend\fP (in megabytes)
+.\" .TP
+.B mkpartfs \fIpart-type\fP \fIfs-type\fP \fIstart\fP \fIend\fP
+cria a partição \fIpart-type\fP com o sistema de arquivos \fIfs-type\fP
+com início em \fIstart\fP e fim em \fIend\fP (em megabytes).
+.TP
+.\" .B move \fIpartition\fP \fIstart\fP \fIend\fP
+.\" move \fIpartition\fP to start at \fIstart\fP and end at \fIend\fP. Note: move
+.\" never changes the minor number
+.\" .TP
+.B move \fIpartition\fP \fIstart\fP \fIend\fP
+move \fIpartition\fP para iniciar em \fIstart\fP e terminar em \fIend\fP. Nota: 
+mover nunca muda o minor number
+.TP
+.\" .B name \fIpartition\fP \fIname\fP
+.\" set the name of \fIpartition\fP to \fIname\fP. This option works only on Mac
+.\" and PC98 disklabels. The name can be placed in quotes, if necessary
+.\" .TP
+.B name \fIpartition\fP \fIname\fP
+configura o nome da \fIpartition\fP para \fIname\fP. Esta opção funciona 
+somente em disklabels Mac e PC98. O nome pode ser colocado entre aspas, se
+necessário
+.TP
+.\" .B print
+.\" displays the partition table
+.\" .TP
+.B print
+exibe a tabela de partições
+.TP
+.\" .B quit
+.\" exits parted
+.\" .TP
+.B quit
+sai do parted
+.TP
+.\" .B resize \fIpartition\fP \fIstart\fP \fIend\fP
+.\" resize the filesystem on \fIpartition\fP to start at \fIstart\fP and end at
+.\" \fIend\fP megabytes
+.\" .TP
+.B resize \fIpartition\fP \fIstart\fP \fIend\fP
+redimensiona o sistema de arquivos da \fIpartition\fP com início em \fIstart\fP
+e fim em \fIend\fP megabytes
+.TP
+.\" .B rm \fIpartition\fP
+.\" deletes \fIpartition\fP
+.\" .TP
+.B rm \fIpartition\fP
+apaga \fIpartition\fP
+.TP
+.\" .B select \fIdevice\fP
+.\" choose \fIdevice\fP as the current device to edit. \fIdevice\fP should usually
+.\" be a Linux hard disk device, but it can be a partition, software raid device or
+.\" a LVM logical volume if that is necessary
+.\" .TP
+.B select \fIdevice\fP
+seleciona \fIdevice\fP para editar como o dispositivo atual. \fIdevice\fP deve
+usualmente ser um dispositivo de disco rígido do Linux, mas não pode ser uma
+partição, software de dispositivo raid ou um volume lógico LVM se isso for
+necessário
+.TP
+
+.\" .B set \fIpartition\fP \fIflag\fP \fIstate\fP
+.\" change the state of the \fIflag\fP on \fIpartition\fP to \fIstate\fP. Flags
+.\" supported are: "boot", "root", "swap", "hidden", "raid", "lvm" and "lba".
+.\" \fIstate\fP should be either "on" or "off"
+.B set \fIpartition\fP \fIflag\fP \fIstate\fP
+muda o estado do \fIflag\fP na \fIpartition\fP para \fIstate\fP. As flags
+suportadas são "boot", "root", "swap", "hidden", "raid", "lvm" e "lba".
+\fIstate\fP deve ser "on" ou "off
+.\" .RS
+.\" .SH REPORTING BUGS
+.\" Report bugs to <bug-parted@gnu.org>
+.\" .SH SEE ALSO
+.\" .BR fdisk (8),
+.\" .BR mkfs (8),
+.\" The \fIparted\fP program is documented fully in the
+.\" .IR "GNU partitioning software"
+.\" manual available via the Info system.
+.\" .SH AUTHOR
+.\" This manual page was written by Timshel Knoll <timshel@debian.org>,
+.\" for the Debian GNU/Linux system (but may be used by others).
+.RS 
+.SH PROBLEMAS
+Relate bugs para <bug-parted@gnu.org>
+.SH VEJA TAMBÉM
+.BR fdisk (8),
+.BR mkfs (8),
+O \fIparted\fP está completamente documentado no manual
+.IR "GNU partitioning software"
+disponível via Info system.
+.SH AUTOR
+Esta página de manual foi escrita por Timshel Knoll <timshel@pobox.com>,
+para o sistema Debian GNU/Linux (mas pode ser usada por terceiros).
+.SH TRADUZIDO em 25/04/2002.
+\&\fR\&\f(CWFábio Minami <minami@brturbo.com> (tradução)\fR

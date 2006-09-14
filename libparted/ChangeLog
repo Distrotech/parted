@@ -1,0 +1,160 @@
+2006-09-01  Darren Lavender  <dl1@hppine99.gbr.hp.com>
+	* labels/gpt.c (gpt_read, _parse_header): added support for
+	LUN/device resize detection and optional GPT header correction.
+
+	* labels/gpt.c (_generate_header, gpt_write): fixed off-by-one
+	error in GPT header that allowed for overlap between LBAs of
+	LastUsableLBA and PartitionEntryLBA in backup-GPT.
+
+2006-09-01  David Cantrell  <dcantrell@redhat.com>
+	* fs/fat/fat.c (fat_probe): prevent SIGFPE when FAT sector size is 0.
+
+	* arch/linux.c: define VIODASD_MAJOR.
+	* arch/linux.c (_device_probe_type): check for PED_DEVICE_VIODASD.
+	* arch/linux.c (linux_new): init PED_DEVICE_VIODASD.
+	* arch/linux.c (_flush_cache, linux_open): open in O_DIRECT mode on
+	non-zSeries.
+	* arch/linux.c (linux_read, linux_write): modify reading and writing
+	to work correctly in O_DIRECT mode.
+
+	* exception.c: add ped_exception_get_handler().
+
+	* libparted.c (init_disk_types): call ped_disk_aix_init().
+	* libparted.c (done_disk_types): call ped_disk_aix_done().
+
+	* labels/dos.c (msdos_probe): if AIX physical volume detected, fail.
+
+	* labels/aix.c: add AIX disk label code from Matt Wilson.
+	* labels/aix.c: fix prototypes for aix_probe() and aix_alloc() so they
+	can be used in PedDiskOps.
+
+	* labels/vtoc.c (vtoc_error): make error buffer large enough for errors.
+
+	* labels/dasd.c: fix prototypes for dasd_probe() and dasd_alloc() so
+	they can be used in PedDiskOps.
+	* labels/dasd.c (dasd_probe): fix typos: dasd_initialize_anchor() ->
+	fdasd_initialize_anchor(), dasd_cleanup() -> fdasd_cleanup().
+	* labels/dasd.c (dasd_read): fix typo: DEBUG -> PDEBUG.
+
+2006-08-31  David Cantrell  <dcantrell@redhat.com>
+	* arch/linux.c: add DASD_MAJOR.
+	* arch/linux.c (_device_stat): check for DASD devices.
+	* arch/linux.c (init_dasd): add init_dasd() to gather device info
+	for DASD devices.
+	* arch/linux.c (init_generic): add dev->path to the error message so
+	users know what device had the failure.
+
+	* labels/Makefile.am: add dasd.c, fdasd.c, fdasd.h, vtoc.c, and vtoc.h
+
+	* labels/dasd.c: add DASD label code.
+
+	* labels/fdasd.c: add fdasd code (used by dasd.c).
+
+	* labels/vtoc.c: add VTOC code (wonderful EBCDIC util code).
+
+	* libparted.c (init_disk_types): if on zSeries, call
+	ped_disk_dasd_init().
+
+	* libparted.c (done_disk_types): if on zSeries, call
+	ped_disk_dasd_done().
+
+2006-08-30  David Cantrell  <dcantrell@redhat.com>
+	* arch/linux.c: add SX8_MAJOR1 and SX8_MAJOR2.
+	* arch/linux.c (_is_sx8_major): determine if given major number falls
+	in the range of Promise SX8 devices.
+	* arch/linux.c (_device_stat): check for SX8 devices.
+
+2006-05-25  Leslie P. Polzer <polzer@gnu.org>
+	* fs/hfs/hfs.c (hfs_resize, hfsplus_resize): make hgee/hgms assertion
+	only when debugging is turned on.
+
+	* fs/ext2/ext2.c (ext2_open): removed call to ext2_determine_itoffset;
+	also moving it from this file to ext2_resize.c.
+	* fs/ext2/ext2_resize.c (ext2_resize): added call to
+	ext2_determine_itoffset and show a warning if not successful.
+
+	* labels/mac.c (strncasestr): search the whole type string for
+	'driver', not just the strlen of 'driver'. This fixes the detection of
+	driver partitions on mac disklabels.
+
+	* labels/mac.c (mac_partition_get_flag): added 'set 2 raid on/off'
+	capability for mac labels.
+	
+	* labels/mac.c (struct MacRawDisk, struct MacPartitionData): fixed
+	data types of some fields (do not need to be 64 bit wide) and updated
+	meaning of reserved spaces.
+
+	* labels/mac.c (struct MacRawDisk, struct MacDeviceDriver, struct
+	MacDiskData, mac_alloc, _rawpart_has_driver, _rawpart_analyse,
+	mac_read, _pad_raw_part, _generate_raw_part, write_block_zero,
+	mac_write, mac_partition_new): fixes removal of driver partition;
+	this would previously crash MacOS 9.
+
+2006-05-15  Leslie P. Polzer <polzer@gnu.org>
+	* fs/ext2/ext2_block_relocator.c (ext2_block_relocator_mark):
+	turned exception into warning and let it provide additional info.
+
+2006-04-15  Leslie P. Polzer <polzer@gnu.org>
+	* labels/gpt.c (_parse_header): corrected endianness issue (one
+	conversion too much)
+
+2006-04-06  Jonathan duSaint <jon@rockgeeks.net>
+	* unit.c (ped_unit_get_size, parse_unit_suffix): added support for
+	binary units.
+
+2006-04-06  Leslie P. Polzer <polzer@gnu.org>
+	* arch/linux.c (_device_set_sector_size): handle sector size for
+	ioctl and printf correctly as "long long".
+
+	* labels/dvh.c (dvh_probe), labels/bsd.c (bsd_probe), labels/mac.c
+	(mac_probe), labels/pc98.c (pc98_probe), labels/sun.c (sun_probe),
+	labels/dos.c (dos_probe), labels/loop.c (loop_probe): immediately
+	return negative probe when the device's logical sector size is not
+	equal to 512.
+
+2006-03-30  Leslie P. Polzer <polzer@gnu.org>
+	* fs/reiserfs/reiserfs.c: added missing block size initializer.
+
+2006-03-27  Leslie P. Polzer <polzer@gnu.org>
+	* arch/linux.c (linux_probe_all): probe standard devices before
+	/sys/block and /proc/partitions.
+
+	* labels/gpt.c: added Apple GUID support.
+
+2006-03-08  Leslie P. Polzer <polzer@gnu.org>
+	* blkpg.h: moved to arch/.
+
+2006-03-03  Leslie P. Polzer <polzer@gnu.org>
+	* labels/Makefile.am (liblabels_la_SOURCES): added "dvh.h".
+
+	* Makefile.am (libparted_la_SOURCES): fixed @OS@.c location.
+
+	* arch/linux.c (_probe_standard_devices): probe IDE devices before
+	SCSI.
+
+2006-02-25  Leslie P. Polzer <polzer@gnu.org>
+	* labels/gpt.c (_read_header, gpt_read): fixed memory leaks.
+
+2006-02-23  Leslie P. Polzer <polzer@gnu.org>
+	* labels/gpt.c (pth_free): fixed illegal memory deallocation by
+	freeing reserved space before parent.
+
+	* labels/gpt.c (pth_crc32): calculate crc32 from static size.
+
+	* labels/gpt.c (pth_free): free reserved field before freeing parent
+	data structure.
+
+	* labels/gpt.c (pth_crc32): calculate crc32 from static size.
+
+2006-02-20  Leslie P. Polzer <polzer@gnu.org>
+	* device.c: added ped_device_get_constraint. 
+
+
+-----------------------------------------------------------------------------
+
+This file is part of GNU Parted
+Copyright (C) 1999 - 2006 Free Software Foundation Inc.
+
+This file may be modified and/or distributed without restriction.  This is
+not an invitation to misrepresent the history of GNU Parted.
+

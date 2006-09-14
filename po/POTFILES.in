@@ -1,0 +1,80 @@
+# libparted
+# Copyright (C) 1999, 2000, 2001, 2006  Free Software Foundation, Inc.
+# This file may be modified and/or copied without restriction.
+
+# list of files containing translatable strings
+
+# libparted
+libparted/device.c
+libparted/arch/linux.c
+libparted/arch/gnu.c
+libparted/disk.c
+libparted/labels/rdb.c
+libparted/labels/bsd.c
+libparted/labels/dos.c
+libparted/labels/dvh.c
+libparted/labels/gpt.c
+libparted/labels/loop.c
+libparted/labels/mac.c
+libparted/labels/pc98.c
+libparted/labels/sun.c
+libparted/filesys.c
+libparted/exception.c
+libparted/cs/geom.c
+libparted/libparted.c
+libparted/unit.c
+
+# libparted/fs_ext2
+libparted/fs/ext2/ext2.c
+libparted/fs/ext2/ext2_inode_relocator.c
+libparted/fs/ext2/ext2_resize.c
+libparted/fs/ext2/tune.c
+libparted/fs/ext2/ext2_block_relocator.c
+libparted/fs/ext2/ext2_meta.c
+libparted/fs/ext2/interface.c
+libparted/fs/ext2/ext2_buffer.c
+libparted/fs/ext2/ext2_mkfs.c
+libparted/fs/ext2/parted_io.c
+
+# libparted/fs/fat
+libparted/fs/fat/calc.c
+libparted/fs/fat/context.c
+libparted/fs/fat/fat.c
+libparted/fs/fat/resize.c
+libparted/fs/fat/traverse.c
+libparted/fs/fat/bootsector.c
+libparted/fs/fat/clstdup.c
+libparted/fs/fat/count.c
+libparted/fs/fat/fatio.c
+libparted/fs/fat/table.c
+
+# libparted/fs/linux_swap
+libparted/fs/linux_swap/linux_swap.c
+
+# libparted/fs/hfs
+libparted/fs/hfs/advfs.c
+libparted/fs/hfs/advfs_plus.c
+libparted/fs/hfs/cache.c
+libparted/fs/hfs/file.c
+libparted/fs/hfs/file_plus.c
+libparted/fs/hfs/hfs.c
+libparted/fs/hfs/journal.c
+libparted/fs/hfs/probe.c
+libparted/fs/hfs/reloc.c
+libparted/fs/hfs/reloc_plus.c
+
+# libparted/fs/jfs
+libparted/fs/jfs/jfs.c
+
+# libparted/fs/ufs
+libparted/fs/ufs/ufs.c
+
+# libparted/fs/xfs
+libparted/fs/xfs/xfs.c
+
+# parted
+parted/command.c
+parted/parted.c
+parted/strlist.c
+parted/ui.c
+

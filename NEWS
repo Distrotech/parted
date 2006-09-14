@@ -1,0 +1,32 @@
+1.7.0
+=====
+libparted:
+* support for Apple GUIDs to GPT code
+* BeOS/ZETA/Haiku support
+* probe /dev/hd? before /dev/sd?
+* prefer /sys/block to /proc/partitions where possible
+* fix of ext2 "strange layout" bug (EXPERIMENTAL) 
+* Linux: detection of sector sizes not equal to 512
+* GPT handles sector sizes not equal to 512 correctly now (EXPERIMENTAL)
+* ext2 handles sector sizes not equal to 512 correctly now (EXPERIMENTAL)
+* added ped_device_get_constraint to support device-dependent constraints
+* API documentation moved to Doxygen
+
+parted:
+* new formatter for "print" command
+* removed copyright preamble and introduced "version" command
+* SIGSEGV handler
+* fixed "rescue" command core dump
+* 'mkpart' and 'mkpartfs' align partitions to physical block size boundaries
+  now
+* 'mkpart' and 'mkpartfs' let the user set a partition name where supported now
+* 'print' accepts 'free' argument to display free space information
+* 'print' accepts 'all' argument to display information about all
+   detected devices
+* position and size of partitions are displayed with up to two
+  digits after the decimal dot (depending on the unit and value)
+
+manual:
+* cut down substantially.  Lots of general content will be moved to the GNU
+  Storage Guide. 
+

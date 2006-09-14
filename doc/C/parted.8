@@ -1,0 +1,117 @@
+.TH PARTED 8 "18 Mar, 2002" parted "GNU Parted Manual"
+.SH NAME
+GNU Parted \- a partition manipulation program
+.SH SYNOPSIS
+.B parted
+[options] [device [command [options...]...]]
+.SH DESCRIPTION
+This manual page documents briefly the
+.BR parted
+command.  Complete documentation is distributed with the package in
+GNU Info format; see below.
+.PP
+.B parted
+is a disk partitioning and partition resizing program.  It allows you to
+create, destroy, resize, move and copy ext2, ext3, linux-swap, FAT, FAT32, and reiserfs
+partitions.  It can create, resize and move Macintosh HFS partitions, as well as detect jfs, 
+ntfs, ufs, and xfs partitions.  It is useful for creating space for new operating systems,
+reorganising disk usage, and copying data to new hard disks.
+.SH OPTIONS
+.TP
+.B -h, --help
+displays a help message.
+.TP
+.B -i, --interactive
+where necessary, prompts for user intervention.
+.TP
+.B -s, --script
+never prompts for user intervention.
+.TP
+.B -v, --version
+displays the version.
+.SH COMMANDS
+.TP
+.B [device]
+The block device to partition.
+.TP
+.B [command [options]]
+Specifies a command to parted. If no command is given, parted will give you
+a command prompt. Commands are:
+.RS
+.TP
+.B check \fIpartition\fP
+does a simple check on \fIpartition\fP.
+.TP
+.B cp \fI[source-device]\fP \fIsource\fP \fIdest\fP
+copies the \fIsource\fP partition's filesystem on \fIsource-device\fP (or the
+current device if no other device was specified) to the \fIdest\fP partition
+on the current device.
+.TP
+.B help \fI[command]\fP
+prints general help, or help on \fIcommand\fP if specified.
+.TP
+.B mkfs \fIpartition\fP \fIfs-type\fP
+make a filesystem \fIfs-type\fP on \fIpartition\fP. \fIfs-type\fP can be one
+of "fat16", "fat32", "ext2", "linux-swap" or "reiserfs".
+.TP
+.B mklabel \fIlabel-type\fP
+Creates a new disklabel (partition table) of \fIlabel-type\fP.
+\fIlabel-type\fP should be one of "bsd", "dvh", "gpt", "loop", "mac", "msdos",
+"pc98" or "sun".
+.TP
+.B mkpart \fIpart-type\fP \fI[fs-type]\fP \fIstart\fP \fIend\fP
+make a \fIpart-type\fP partition with filesystem \fIfs-type\fP (if specified),
+beginning at \fIstart\fP and ending at \fIend\fP (in megabytes).
+\fIfs-type\fP can be one of 
+"fat16", "fat32", "ext2", "HFS", "linux-swap", "NTFS", "reiserfs" or "ufs".
+\fIpart-type\fP should be one of "primary", "logical" or "extended"
+.TP
+.B mkpartfs \fIpart-type\fP \fIfs-type\fP \fIstart\fP \fIend\fP
+make a \fIpart-type\fP partition with filesystem \fIfs-type\fP beginning at
+\fIstart\fP and ending at \fIend\fP (in megabytes)
+.TP
+.B move \fIpartition\fP \fIstart\fP \fIend\fP
+move \fIpartition\fP to start at \fIstart\fP and end at \fIend\fP. Note: move
+never changes the minor number
+.TP
+.B name \fIpartition\fP \fIname\fP
+set the name of \fIpartition\fP to \fIname\fP. This option works only on Mac
+and PC98 disklabels. The name can be placed in quotes, if necessary
+.TP
+.B print
+displays the partition table
+.TP
+.B quit
+exits parted
+.TP
+.B resize \fIpartition\fP \fIstart\fP \fIend\fP
+resize the filesystem on \fIpartition\fP to start at \fIstart\fP and end at
+\fIend\fP megabytes
+.TP
+.B rm \fIpartition\fP
+deletes \fIpartition\fP
+.TP
+.B select \fIdevice\fP
+choose \fIdevice\fP as the current device to edit. \fIdevice\fP should usually
+be a Linux hard disk device, but it can be a partition, software raid device or
+a LVM logical volume if that is necessary
+.TP
+.B set \fIpartition\fP \fIflag\fP \fIstate\fP
+change the state of the \fIflag\fP on \fIpartition\fP to \fIstate\fP. Flags
+supported are: "boot", "root", "swap", "hidden", "raid", "lvm", "lba" and
+"palo".
+\fIstate\fP should be either "on" or "off"
+.RE
+.SH REPORTING BUGS
+Report bugs to <bug-parted@gnu.org>
+.SH SEE ALSO
+.BR fdisk (8),
+.BR mkfs (8),
+The \fIparted\fP program is fully documented in the
+.BR info(1) 
+format
+.IR "GNU partitioning software"
+manual.
+.SH AUTHOR
+This manual page was written by Timshel Knoll <timshel@debian.org>,
+for the Debian GNU/Linux system (but may be used by others).
