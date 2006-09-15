@@ -44,8 +44,17 @@ for p in gpg curl; do
         check_for_program $p
 done
 
-[[ ./autogen.sh ]] || return 1
-[[ ./configure ]] || return 1
+if [ -x ./autogen.sh ]; then
+        ./autogen.sh
+else
+        return 1
+fi
+
+if [ -x ./configure ]; then
+        ./configure
+else
+        return 1
+fi
 
 VERSION=$(grep ' VERSION' config.h | awk '{print $3}' | tr -d '"')
 
