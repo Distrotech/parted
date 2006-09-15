@@ -39,7 +39,7 @@ check_for_program()
 
 
 echo "* checking for programs that might be missing..."
-for p in gpg curl upx statifier; do
+for p in gpg curl; do
         echo -en "\t$p: "
         check_for_program $p
 done
