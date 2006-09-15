@@ -14,9 +14,7 @@ liblabels_la_SOURCES  = rdb.c		\
 			bsd.c  		\
 			dasd.c		\
 			fdasd.c		\
-			fdash.h		\
 			vtoc.c		\
-			vtoc.h		\
 			efi_crc32.c	\
 			dos.c  		\
 			dvh.h		\
