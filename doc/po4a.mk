@@ -31,10 +31,7 @@ mandir = @mandir@/$(lang)
 # dist_man_MANS = $(wildcard *.[1-9])
 # Because when Makefile.in is generated, dist_man_MANS is empty, and
 # automake do not generate the install-man targets.
-dist_man_MANS = fake-page.1 fake-page.5 fake-page.8
-
-# Do not fail if these man pages do not exist
-.PHONY: fake-page.1 fake-page.5 fake-page.8
+dist_man_MANS =
 
 # Override the automake's install-man target.
 # And set dist_man_MANS according to the pages that could be generated
@@ -44,13 +41,13 @@ install-man: install-man1 install-man5 install-man8
 
 # For each .po, try to generate the man page
 all-local:
-	for po in $(srcdir)/*.$(lang).po; do \
+	for po in `ls -1 $(srcdir)/*.$(lang).po 2>/dev/null`; do \
 		$(MAKE) $$(basename $${po%.$(lang).po}); \
 	done
 
 # Remove the man pages that were generated from a .po
 clean-local:
-	for po in $(srcdir)/*.$(lang).po; do \
+	for po in `ls -1 $(srcdir)/*.$(lang).po 2>/dev/null`; do \
 		rm -f $$(basename $${po%.$(lang).po}); \
 	done
 

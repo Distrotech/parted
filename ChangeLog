@@ -12,6 +12,10 @@ See libparted/ChangeLog and parted/ChangeLog.
 
 	* doc/Makefile.am: Tabs for the updatepo target.
 
+	* doc/po4a.mk: Removed fake* stuff. Fixed all-local target so you don't
+	end up in an infinite make loop trying to make '*'. Fixed the remove
+	target as well.
+
 2006-09-01  David Cantrell  <dcantrell@redhat.com>
 	* include/parted/device.h: add PED_DEVICE_VIODASD.
 	* include/parted/exception.h: add ped_exception_get_handler() prototype.
