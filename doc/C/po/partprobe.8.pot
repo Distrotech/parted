@@ -6,13 +6,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2006-05-21  3:27-0300\n"
+"POT-Creation-Date: 2006-09-15 13:42-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: ENCODING"
+"Content-Transfer-Encoding: ENCODING\n"
 
 # type: TH
 #: partprobe.8:5
@@ -38,6 +38,7 @@ msgstr ""
 msgid "GNU Parted Manual"
 msgstr ""
 
+# type: SH
 #.  Please adjust this date whenever revising the manpage.
 #.  Some roff macros, for reference:
 #.  .nh        disable hyphenation
@@ -49,7 +50,6 @@ msgstr ""
 #.  .br        insert line break
 #.  .sp <n>    insert n+1 empty lines
 #.  for manpage-specific macros, see man(7)
-# type: SH
 #: partprobe.8:18
 #, no-wrap
 msgid "NAME"
@@ -82,10 +82,10 @@ msgstr ""
 msgid "This manual page documents briefly the B<partprobe> command."
 msgstr ""
 
+# type: Plain text
 #.  TeX users may be more comfortable with the \fB<whatever>\fP and
 #.  \fI<whatever>\fP escape sequences to invode bold face and italics, 
 #.  respectively.
-# type: Plain text
 #: partprobe.8:36
 msgid ""
 "B<partprobe> is a program that informs the operating system kernel of "
