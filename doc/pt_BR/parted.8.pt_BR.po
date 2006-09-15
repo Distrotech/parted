@@ -3,15 +3,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 msgid ""
-msgstr "pt_BR utf-8\n"
+msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2006-05-21  3:21-0300\n"
+"POT-Creation-Date: 2006-09-15 13:42-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Tassia Camoes Araujo <tassia@debian-ba.org>\n"
 "Language-Team: l10n portuguese <debian-l10n-portuguese@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"pt_BR utf-8\n"
 
 # type: TH
 #: parted.8:1
@@ -71,9 +72,8 @@ msgid ""
 "This manual page documents briefly the B<parted> command.  Complete "
 "documentation is distributed with the package in GNU Info format; see below."
 msgstr ""
-"Esta página de manual documenta brevemente o comando B<parted>. "
-"Documentação completa é distribuída com o pacote no formato GNU Info; veja "
-"abaixo."
+"Esta página de manual documenta brevemente o comando B<parted>. Documentação "
+"completa é distribuída com o pacote no formato GNU Info; veja abaixo."
 
 # type: Plain text
 #: parted.8:19
@@ -226,9 +226,9 @@ msgid ""
 "make a filesystem I<fs-type> on I<partition>. I<fs-type> can be one of "
 "\"fat16\", \"fat32\", \"ext2\", \"linux-swap\" or \"reiserfs\"."
 msgstr ""
-"faz um sistema de arquivos I<tipo-sistema-arquivos> em I<partição>. "
-"I<tipo-sistema-arquivos> pode ser um dos \"fat16\", \"fat32\", \"ext2\", "
-"\"linux-swap\" ou \"reiserfs\"."
+"faz um sistema de arquivos I<tipo-sistema-arquivos> em I<partição>. I<tipo-"
+"sistema-arquivos> pode ser um dos \"fat16\", \"fat32\", \"ext2\", \"linux-"
+"swap\" ou \"reiserfs\"."
 
 # type: TP
 #: parted.8:56
@@ -262,12 +262,11 @@ msgid ""
 "\"reiserfs\" or \"ufs\".  I<part-type> should be one of \"primary\", "
 "\"logical\" or \"extended\""
 msgstr ""
-"faz uma partição I<tipo-partição> com o sistema de arquivos "
-"I<tipo-sistema-arquivos> (se especificado), começando em I<começo> e "
-"terminando em I<fim> (em megabytes). I<tipo-sistema-arquivos> pode ser um "
-"dos \"fat16\", \"fat32\", \"ext2\", \"HFS\", \"linux-swap\", \"NTFS\", "
-"\"reiserfs\" ou \"ufs\". I<tipo-partição> deve ser um dos \"primary\", "
-"\"logical\" ou \"extended\""
+"faz uma partição I<tipo-partição> com o sistema de arquivos I<tipo-sistema-"
+"arquivos> (se especificado), começando em I<começo> e terminando em I<fim> "
+"(em megabytes). I<tipo-sistema-arquivos> pode ser um dos \"fat16\", \"fat32"
+"\", \"ext2\", \"HFS\", \"linux-swap\", \"NTFS\", \"reiserfs\" ou \"ufs\". "
+"I<tipo-partição> deve ser um dos \"primary\", \"logical\" ou \"extended\""
 
 # type: TP
 #: parted.8:68
@@ -281,9 +280,8 @@ msgid ""
 "make a I<part-type> partition with filesystem I<fs-type> beginning at "
 "I<start> and ending at I<end> (in megabytes)"
 msgstr ""
-"faz uma partição I<tipo-partição> com sistema de arquivos "
-"I<tipo-sistema-arquivos> começando em I<começo> e terminando em I<end> (em "
-"megabytes)"
+"faz uma partição I<tipo-partição> com sistema de arquivos I<tipo-sistema-"
+"arquivos> começando em I<começo> e terminando em I<end> (em megabytes)"
 
 # type: TP
 #: parted.8:72
@@ -379,8 +377,7 @@ msgid ""
 msgstr ""
 "escolhe I<dispositivo> como o atual dispositivo para edição. Normalmente "
 "I<dispositivo> deveria ser um dispositivo de disco rígido Linux, mas pode "
-"ser uma partição, dispositivo raid ou um volume lógico LVM se for "
-"necessário"
+"ser uma partição, dispositivo raid ou um volume lógico LVM se for necessário"
 
 # type: TP
 #: parted.8:98
@@ -396,8 +393,8 @@ msgid ""
 "and \"palo\".  I<state> should be either \"on\" or \"off\""
 msgstr ""
 "muda o estado do I<sinal> em I<partição> para I<estado>. Sinais suportados "
-"são: \"boot\", \"root\", \"swap\", \"hidden\", \"raid\", \"lvm\", \"lba\" "
-"e \"palo\". I<estado> deve ser \"on\" ou \"off\"" 
+"são: \"boot\", \"root\", \"swap\", \"hidden\", \"raid\", \"lvm\", \"lba\" e "
+"\"palo\". I<estado> deve ser \"on\" ou \"off\""
 
 # type: SH
 #: parted.8:105
@@ -437,6 +434,5 @@ msgid ""
 "This manual page was written by Timshel Knoll E<lt>timshel@debian.orgE<gt>, "
 "for the Debian GNU/Linux system (but may be used by others)."
 msgstr ""
-"Esta página de manual foi escrita por Timshel Knoll "
-"E<lt>timshel@debian.orgE<gt>, para o sistema Debian GNU/Linux (mas pode ser "
-"usada por outros)."
+"Esta página de manual foi escrita por Timshel Knoll E<lt>timshel@debian."
+"orgE<gt>, para o sistema Debian GNU/Linux (mas pode ser usada por outros)."

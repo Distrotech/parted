@@ -3,15 +3,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 msgid ""
-msgstr "pt_BR utf-8\n""
+msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2006-05-21  3:27-0300\n"
+"POT-Creation-Date: 2006-09-15 13:42-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Tassia Camoes Araujo <tassia@debian-ba.org>\n"
 "Language-Team: l10n portuguese <debian-l10n-portuguese@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"pt_BR utf-8\n"
 
 # type: TH
 #: partprobe.8:5
@@ -37,6 +38,7 @@ msgstr "parted"
 msgid "GNU Parted Manual"
 msgstr "Manual do GNU Parted"
 
+# type: SH
 #.  Please adjust this date whenever revising the manpage.
 #.  Some roff macros, for reference:
 #.  .nh        disable hyphenation
@@ -48,7 +50,6 @@ msgstr "Manual do GNU Parted"
 #.  .br        insert line break
 #.  .sp <n>    insert n+1 empty lines
 #.  for manpage-specific macros, see man(7)
-# type: SH
 #: partprobe.8:18
 #, no-wrap
 msgid "NAME"
@@ -57,7 +58,9 @@ msgstr "NOME"
 # type: Plain text
 #: partprobe.8:20
 msgid "partprobe - inform the OS of partition table changes"
-msgstr "partprobe - informa ao sistema operacional sobre mudanças na tabela de partição"
+msgstr ""
+"partprobe - informa ao sistema operacional sobre mudanças na tabela de "
+"partição"
 
 # type: SH
 #: partprobe.8:20
@@ -81,19 +84,19 @@ msgstr "DESCRIÇÃO"
 msgid "This manual page documents briefly the B<partprobe> command."
 msgstr "Esta página de manual documenta brevemente o comando B<partprobe>"
 
+# type: Plain text
 #.  TeX users may be more comfortable with the \fB<whatever>\fP and
 #.  \fI<whatever>\fP escape sequences to invode bold face and italics, 
 #.  respectively.
-# type: Plain text
 #: partprobe.8:36
 msgid ""
 "B<partprobe> is a program that informs the operating system kernel of "
 "partition table changes, by requesting that the operating system re-read the "
 "partition table."
 msgstr ""
-"B<partprobe> é uma programa que informa ao kernel do sistema operacional sobre "
-"mudanças na tabela de partição, requisitando que o sistema operacional releia "
-"a tabela de partição."
+"B<partprobe> é uma programa que informa ao kernel do sistema operacional "
+"sobre mudanças na tabela de partição, requisitando que o sistema operacional "
+"releia a tabela de partição."
 
 # type: SH
 #: partprobe.8:36
@@ -173,6 +176,5 @@ msgid ""
 "This manual page was written by Timshel Knoll E<lt>timshel@debian.orgE<gt>, "
 "for the Debian GNU/Linux system (but may be used by others)."
 msgstr ""
-"Esta página de manual foi escrita por Timshel Knoll "
-"E<lt>timshel@debian.orgE<gt>, para o sistema Debian GNU/Linux (mas pode ser "
-"usado por outros)."
+"Esta página de manual foi escrita por Timshel Knoll E<lt>timshel@debian."
+"orgE<gt>, para o sistema Debian GNU/Linux (mas pode ser usado por outros)."
