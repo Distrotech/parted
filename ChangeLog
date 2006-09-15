@@ -8,6 +8,8 @@ See libparted/ChangeLog and parted/ChangeLog.
 	* doc/pt_BR/partprobe.8.pt_BR.po: Removed extra double quote at the end
 	of line 6.
 
+	* include/parted/Makefile.am: Add vtoc.h and fdasd.h to the list.
+
 2006-09-01  David Cantrell  <dcantrell@redhat.com>
 	* include/parted/device.h: add PED_DEVICE_VIODASD.
 	* include/parted/exception.h: add ped_exception_get_handler() prototype.

@@ -11,7 +11,9 @@ partedinclude_HEADERS = gnu.h		\
 			natmath.h	\
 			timer.h		\
 			unit.h		\
-			parted.h
+			parted.h    \
+			vtoc.h		\
+			fdasd.h
 
 noinst_HEADERS	      = crc32.h		\
 			endian.h
