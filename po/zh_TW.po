@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: parted 1.6.6\n"
 "Report-Msgid-Bugs-To: bug-parted@gnu.org\n"
-"POT-Creation-Date: 2006-04-21 21:20+0200\n"
+"POT-Creation-Date: 2006-09-15 12:23-0400\n"
 "PO-Revision-Date: 2005-06-09 15:34+0800\n"
 "Last-Translator: Wei-Lun Chao <chaoweilun@pcmail.com.tw>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
@@ -16,40 +16,40 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: libparted/arch/linux.c:284
+#: libparted/arch/linux.c:319
 #, c-format
 msgid "Could not stat device %s - %s."
 msgstr "無法對設備 %s - %s 進行 stat 操作。"
 
-#: libparted/arch/linux.c:390
+#: libparted/arch/linux.c:431
 #, c-format
 msgid ""
 "Could not determine sector size for %s: %s.\n"
 "Using the default sector size (%lld)."
 msgstr ""
 
-#: libparted/arch/linux.c:401
+#: libparted/arch/linux.c:447
 #, c-format
 msgid ""
 "Device %s has a logical sector size of %lld.  Not all parts of GNU Parted "
 "support this at the moment, and the working code is HIGHLY EXPERIMENTAL.\n"
 msgstr ""
 
-#: libparted/arch/linux.c:441
+#: libparted/arch/linux.c:487
 #, fuzzy, c-format
 msgid "Unable to determine the size of %s (%s)."
 msgstr "無法確定 %s (%s) 的大小"
 
-#: libparted/arch/linux.c:530
+#: libparted/arch/linux.c:576
 #, c-format
 msgid "Could not get identity of device %s - %s"
 msgstr "無法獲取設備 %s - %s 的標識"
 
-#: libparted/arch/linux.c:539
+#: libparted/arch/linux.c:585
 msgid "Generic IDE"
 msgstr ""
 
-#: libparted/arch/linux.c:556
+#: libparted/arch/linux.c:602
 #, c-format
 msgid ""
 "Device %s has multiple (%d) logical sectors per physical sector.\n"
@@ -58,12 +58,12 @@ msgid ""
 "Please consult the web site for up-to-date information."
 msgstr ""
 
-#: libparted/arch/linux.c:726
+#: libparted/arch/linux.c:772
 #, c-format
 msgid "Error initialising SCSI device %s - %s"
 msgstr "初始化 SCSI 設備 %s - %s 出錯"
 
-#: libparted/arch/linux.c:781
+#: libparted/arch/linux.c:827
 #, fuzzy, c-format
 msgid ""
 "The device %s has zero length, and can't possibly store a file system or "
@@ -71,81 +71,94 @@ msgid ""
 msgstr ""
 "設備 %s 的長度為零，因此無法保存檔案系統或分割區表。可能您選擇了錯誤的設備？"
 
-#: libparted/arch/linux.c:829
+#: libparted/arch/linux.c:935
+#, fuzzy, c-format
 msgid ""
-"Unable to determine geometry of file/device.  You should not use Parted "
+"Unable to determine geometry of file/device %s.  You should not use Parted "
 "unless you REALLY know what you're doing!"
 msgstr ""
 "無法確定檔案/設備的幾何結構。除非您確實知道您在做什麼，否則您不該使用 "
 "Parted！"
 
-#: libparted/arch/linux.c:903
+#: libparted/arch/linux.c:1010
 msgid "DAC960 RAID controller"
 msgstr "DAC960 RAID 控制器"
 
-#: libparted/arch/linux.c:908
+#: libparted/arch/linux.c:1015
+msgid "Promise SX8 SATA Device"
+msgstr ""
+
+#: libparted/arch/linux.c:1020
+msgid "IBM S390 DASD drive"
+msgstr ""
+
+#: libparted/arch/linux.c:1025
+msgid "IBM iSeries Virtual DASD"
+msgstr ""
+
+#: libparted/arch/linux.c:1030
 msgid "Compaq Smart Array"
 msgstr "Compaq 智慧型陣列"
 
-#: libparted/arch/linux.c:913
+#: libparted/arch/linux.c:1035
 msgid "ATARAID Controller"
 msgstr "ATARAID 控制器"
 
-#: libparted/arch/linux.c:918
+#: libparted/arch/linux.c:1040
 msgid "I2O Controller"
 msgstr "I2O 控制器"
 
-#: libparted/arch/linux.c:923
+#: libparted/arch/linux.c:1045
 msgid "User-Mode Linux UBD"
 msgstr ""
 
-#: libparted/arch/linux.c:933
+#: libparted/arch/linux.c:1055
 msgid "Unknown"
 msgstr "未知"
 
-#: libparted/arch/linux.c:940
+#: libparted/arch/linux.c:1062
 msgid "ped_device_new()  Unsupported device type"
 msgstr "ped_device_new()  不支援的設備類型"
 
-#: libparted/arch/linux.c:1041 libparted/arch/gnu.c:264
+#: libparted/arch/linux.c:1165 libparted/arch/gnu.c:264
 #, c-format
 msgid "Error opening %s: %s"
 msgstr "開啟 %s 出錯：%s"
 
-#: libparted/arch/linux.c:1052 libparted/arch/gnu.c:274
+#: libparted/arch/linux.c:1176 libparted/arch/gnu.c:274
 #, c-format
 msgid "Unable to open %s read-write (%s).  %s has been opened read-only."
 msgstr "無法開啟 %s 以讀寫 (%s)。%s 已用唯讀的方式開啟。"
 
-#: libparted/arch/linux.c:1160 libparted/arch/linux.c:1228
-#: libparted/arch/gnu.c:452 libparted/arch/gnu.c:550 libparted/arch/gnu.c:678
+#: libparted/arch/linux.c:1284 libparted/arch/linux.c:1361
+#: libparted/arch/gnu.c:452 libparted/arch/gnu.c:551 libparted/arch/gnu.c:679
 #, c-format
 msgid "%s during read on %s"
 msgstr "在讀取 %2$s 期間 %1$s"
 
-#: libparted/arch/linux.c:1199
+#: libparted/arch/linux.c:1325
 #, c-format
 msgid "%s during seek for read on %s"
 msgstr "在為讀取 %2$s 而呼叫 seek 時 %1$s"
 
-#: libparted/arch/linux.c:1270 libparted/arch/linux.c:1355
-#: libparted/arch/linux.c:1413 libparted/arch/gnu.c:587
-#: libparted/arch/gnu.c:632 libparted/arch/gnu.c:709
+#: libparted/arch/linux.c:1406 libparted/arch/linux.c:1498
+#: libparted/arch/linux.c:1567 libparted/arch/gnu.c:588
+#: libparted/arch/gnu.c:633 libparted/arch/gnu.c:710
 #, c-format
 msgid "%s during write on %s"
 msgstr "在寫入 %2$s 時 %1$s"
 
-#: libparted/arch/linux.c:1297 libparted/arch/gnu.c:512
+#: libparted/arch/linux.c:1435 libparted/arch/gnu.c:512
 #, c-format
 msgid "Can't write to %s, because it is opened read-only."
 msgstr "由於 %s 是以唯讀方式開啟的，因此無法寫入。"
 
-#: libparted/arch/linux.c:1321
+#: libparted/arch/linux.c:1459
 #, c-format
 msgid "%s during seek for write on %s"
 msgstr "在為寫入 %2$s 呼叫 seek 時 %1$s"
 
-#: libparted/arch/linux.c:1798
+#: libparted/arch/linux.c:1956
 #, fuzzy, c-format
 msgid ""
 "Error informing the kernel about modifications to partition %s -- %s.  This "
@@ -156,7 +169,7 @@ msgstr ""
 "道您針對 %s 所作的任何修改 - 所以您也不能在重新啟動之前掛載或以任何方式使用"
 "它。"
 
-#: libparted/arch/linux.c:1879
+#: libparted/arch/linux.c:2030
 #, fuzzy, c-format
 msgid ""
 "The kernel was unable to re-read the partition table on %s (%s).  This means "
@@ -208,7 +221,7 @@ msgstr ""
 "您應該在重新啟動之前重新安裝您的開機載入程式。詳情請閱讀 Parted 使用者文件的"
 "第四節。"
 
-#: libparted/arch/gnu.c:774
+#: libparted/arch/gnu.c:775
 #, c-format
 msgid "%s trying to sync %s to disk"
 msgstr "%s 試圖將 %s 同步到磁碟上"
@@ -282,15 +295,15 @@ msgstr "中繼資料"
 msgid "free"
 msgstr "自由空間"
 
-#: libparted/disk.c:2127 parted/ui.c:968 parted/ui.c:996
+#: libparted/disk.c:2127 parted/ui.c:1002 parted/ui.c:1030
 msgid "extended"
 msgstr "擴充分割區"
 
-#: libparted/disk.c:2129 parted/ui.c:972 parted/ui.c:1000
+#: libparted/disk.c:2129 parted/ui.c:1006 parted/ui.c:1034
 msgid "logical"
 msgstr "邏輯分割區"
 
-#: libparted/disk.c:2131 parted/ui.c:964 parted/ui.c:992
+#: libparted/disk.c:2131 parted/ui.c:998 parted/ui.c:1026
 msgid "primary"
 msgstr "主分割區"
 
@@ -343,60 +356,60 @@ msgstr ""
 msgid "Unknown partition flag, %d."
 msgstr "未知的分割區旗標，%d。"
 
-#: libparted/labels/rdb.c:177
+#: libparted/labels/rdb.c:179
 #, c-format
 msgid "%s : Bad checksum on block %llu of type %s."
 msgstr ""
 
-#: libparted/labels/rdb.c:510
+#: libparted/labels/rdb.c:514
 #, c-format
 msgid "%s : Didn't find rdb block, should never happen."
 msgstr ""
 
-#: libparted/labels/rdb.c:595
+#: libparted/labels/rdb.c:600
 #, c-format
 msgid "%s : Loop detected at block %d."
 msgstr ""
 
-#: libparted/labels/rdb.c:614
+#: libparted/labels/rdb.c:619
 #, c-format
 msgid "%s : The %s list seems bad at block %s."
 msgstr ""
 
-#: libparted/labels/rdb.c:703
+#: libparted/labels/rdb.c:708
 #, c-format
 msgid "%s : Failed to list bad blocks."
 msgstr ""
 
-#: libparted/labels/rdb.c:711
+#: libparted/labels/rdb.c:716
 #, c-format
 msgid "%s : Failed to list partition blocks."
 msgstr ""
 
-#: libparted/labels/rdb.c:719
+#: libparted/labels/rdb.c:724
 #, c-format
 msgid "%s : Failed to list file system blocks."
 msgstr ""
 
-#: libparted/labels/rdb.c:727
+#: libparted/labels/rdb.c:732
 #, c-format
 msgid "%s : Failed to list boot blocks."
 msgstr ""
 
-#: libparted/labels/rdb.c:750
+#: libparted/labels/rdb.c:759
 #, c-format
 msgid "Failed to write partition block at %d."
 msgstr ""
 
-#: libparted/labels/rdb.c:1053 libparted/labels/bsd.c:505
-#: libparted/labels/dos.c:1942 libparted/labels/dvh.c:772
-#: libparted/labels/gpt.c:1365 libparted/labels/loop.c:251
-#: libparted/labels/mac.c:1318 libparted/labels/pc98.c:764
+#: libparted/labels/rdb.c:1063 libparted/labels/bsd.c:505
+#: libparted/labels/dos.c:1949 libparted/labels/dvh.c:772
+#: libparted/labels/gpt.c:1447 libparted/labels/loop.c:251
+#: libparted/labels/mac.c:1399 libparted/labels/pc98.c:764
 #: libparted/labels/sun.c:704
 msgid "Unable to satisfy all constraints on the partition."
 msgstr "無法滿足分割區的所有限制。"
 
-#: libparted/labels/rdb.c:1081
+#: libparted/labels/rdb.c:1091
 #, fuzzy
 msgid "Unable to allocate a partition number."
 msgstr "需要分割區編號。"
@@ -406,21 +419,21 @@ msgstr "需要分割區編號。"
 msgid "Unable to allocate a bsd disklabel slot."
 msgstr "無法定位 bsd 磁碟標籤槽"
 
-#: libparted/labels/dos.c:812
+#: libparted/labels/dos.c:819
 #, fuzzy, c-format
 msgid "Invalid partition table on %s -- wrong signature %x."
 msgstr "%s 上的分割區表無效 - 錯誤的簽名 %x"
 
-#: libparted/labels/dos.c:840
+#: libparted/labels/dos.c:847
 #, c-format
 msgid "Invalid partition table - recursive partition on %s."
 msgstr "無效的分割區表 - %s 出現遞歸分割區。"
 
-#: libparted/labels/dos.c:1300
+#: libparted/labels/dos.c:1307
 msgid "Extended partitions cannot be hidden on msdos disk labels."
 msgstr ""
 
-#: libparted/labels/dos.c:1926
+#: libparted/labels/dos.c:1933
 msgid "Parted can't resize partitions managed by Windows Dynamic Disk."
 msgstr ""
 
@@ -453,7 +466,7 @@ msgstr "只有邏輯分割區 (開機檔案) 擁有名字。"
 msgid "Too many primary partitions"
 msgstr "過多的主分割區"
 
-#: libparted/labels/gpt.c:433
+#: libparted/labels/gpt.c:452
 #, fuzzy, c-format
 msgid ""
 "%s contains GPT signatures, indicating that it has a GPT table.  However, it "
@@ -466,7 +479,7 @@ msgstr ""
 "msdos 分割區表。可能它已經損壞 - 可能是不理解 GPT 分割區表的程式導致的。或者"
 "您刪除了 GPT 表，而現在使用 msdos 分割區表。這是 GPT 分割區表嗎？"
 
-#: libparted/labels/gpt.c:625
+#: libparted/labels/gpt.c:647
 #, c-format
 msgid ""
 "The format of the GPT partition table is version %x, which is newer than "
@@ -475,7 +488,15 @@ msgstr ""
 "GPT 分割區表的格式版本為 %x，它比 Parted 所能識別的版本要新。請告訴我們！bug-"
 "parted@gnu.org"
 
-#: libparted/labels/gpt.c:747
+#: libparted/labels/gpt.c:697
+#, c-format
+msgid ""
+"Not all of the space available to %s appears to be used, you can fix the GPT "
+"to use all of the space (an extra %llu blocks) or continue with the current "
+"setting? "
+msgstr ""
+
+#: libparted/labels/gpt.c:826
 msgid ""
 "The backup GPT table is not at the end of the disk, as it should be.  This "
 "might mean that another operating system believes the disk is smaller.  Fix, "
@@ -484,14 +505,14 @@ msgstr ""
 "備份 GPT 表不像應該的那樣出現在磁碟的末尾。這可能意味者其它操作系統相信磁碟小"
 "一些。經由將備份移動到末尾 (並刪除舊備份) 來修正它？"
 
-#: libparted/labels/gpt.c:782
+#: libparted/labels/gpt.c:861
 #, fuzzy
 msgid ""
 "The primary GPT table is corrupt, but the backup appears OK, so that will be "
 "used."
 msgstr "主 GPT 表損壞，但備份似乎是正確的，所以使用備份。"
 
-#: libparted/labels/gpt.c:790
+#: libparted/labels/gpt.c:869
 #, fuzzy
 msgid ""
 "Both the primary and backup GPT tables are corrupt.  Try making a fresh "
@@ -500,84 +521,84 @@ msgstr ""
 "主 GPT 和備份 GPT 都損壞了。試圖建立新表並使用 Parted 的回復功能以重建分割區"
 "表。"
 
-#: libparted/labels/mac.c:167
+#: libparted/labels/mac.c:176
 #, c-format
 msgid "Invalid signature %x for Mac disk labels."
 msgstr "無效的 Mac 磁碟標籤簽名 %x。"
 
-#: libparted/labels/mac.c:212
+#: libparted/labels/mac.c:221
 msgid "Partition map has no partition map entry!"
 msgstr "分割區映射不含有分割區映射條目！"
 
-#: libparted/labels/mac.c:259
+#: libparted/labels/mac.c:268
 #, c-format
 msgid "%s is too small for a Mac disk label!"
 msgstr "%s 對 Mac 磁碟標籤來說太小了！"
 
-#: libparted/labels/mac.c:490
+#: libparted/labels/mac.c:522
 #, c-format
 msgid "Partition %d has an invalid signature %x."
 msgstr "分割區 %d 含有無效的簽名 %x。"
 
-#: libparted/labels/mac.c:508
+#: libparted/labels/mac.c:540
 #, c-format
 msgid "Partition %d has an invalid length of 0 bytes!"
 msgstr "分割區 %d 含有無效的長度 0 位元組！"
 
-#: libparted/labels/mac.c:536
+#: libparted/labels/mac.c:570
 #, fuzzy
 msgid "The data region doesn't start at the start of the partition."
 msgstr "資料區並未從分割區的起點開始"
 
-#: libparted/labels/mac.c:553
+#: libparted/labels/mac.c:587
 #, fuzzy
 msgid "The boot region doesn't start at the start of the partition."
 msgstr "啟動區域並未從分割區的起點開始"
 
-#: libparted/labels/mac.c:567
+#: libparted/labels/mac.c:601
 msgid "The partition's boot region doesn't occupy the entire partition."
 msgstr "分割區的啟動區域並未佔用整個分割區。"
 
-#: libparted/labels/mac.c:577
+#: libparted/labels/mac.c:611
 msgid "The partition's data region doesn't occupy the entire partition."
 msgstr "分割區的資料區域並未佔用整個分割區。"
 
-#: libparted/labels/mac.c:631
+#: libparted/labels/mac.c:664
 #, c-format
 msgid ""
 "Weird block size on device descriptor: %d bytes is not divisible by 512."
 msgstr "設備描述中出現古怪的區塊大小：%d 位元組不能被 512 整除。"
 
-#: libparted/labels/mac.c:644
+#: libparted/labels/mac.c:677
 #, c-format
 msgid ""
 "The driver descriptor says the physical block size is %d bytes, but Linux "
 "says it is %d bytes."
 msgstr "磁碟描述表明物理區塊大小為 %d 位元組，但 Linux 認為它是 %d 位元組。"
 
-#: libparted/labels/mac.c:692
+#: libparted/labels/mac.c:725
 msgid "No valid partition map found."
 msgstr "找不到有效的分割區映射。"
 
-#: libparted/labels/mac.c:744
+#: libparted/labels/mac.c:784
 #, fuzzy, c-format
 msgid ""
 "Conflicting partition map entry sizes!  Entry 1 says it is %d, but entry %d "
 "says it is %d!"
 msgstr "分割區映射條目大小衝突！條目 1 說它是 %d，但條目 %d 說它是 %d！"
 
-#: libparted/labels/mac.c:771
+#: libparted/labels/mac.c:811
 #, fuzzy
 msgid "Weird!  There are 2 partitions map entries!"
 msgstr "奇怪 - 兩個分割區映射條目！"
 
-#: libparted/labels/mac.c:1257
+#: libparted/labels/mac.c:1338
 msgid ""
 "Changing the name of a root or swap partition will prevent Linux from "
 "recognising it as such."
 msgstr "改變根分割區或交換分割區的名稱將導致 Linux 無法識別它。"
 
-#: libparted/labels/mac.c:1353
+#: libparted/labels/mac.c:1434
 #, fuzzy
 msgid "Can't add another partition -- the partition map is too small!"
 msgstr "無法添加另一個分割區 - 分割區映射過小！"
@@ -766,21 +787,21 @@ msgstr "無法在開始之前結束！"
 msgid "Can't have a partition outside the disk!"
 msgstr "無法讓分割區超出磁碟！"
 
-#: libparted/cs/geom.c:303
+#: libparted/cs/geom.c:304
 #, fuzzy, c-format
 msgid "Attempt to read sectors %ld-%ld outside of partition on %s."
 msgstr "試圖讀取 %3$s 上分割區之外的扇區 %1$ld-%2$ld"
 
-#: libparted/cs/geom.c:373
+#: libparted/cs/geom.c:374
 #, fuzzy, c-format
 msgid "Attempt to write sectors %ld-%ld outside of partition on %s."
 msgstr "試圖寫入 %3$s 上分割區之外的扇區 %1$ld-%2$ld"
 
-#: libparted/cs/geom.c:413 libparted/fs/linux_swap/linux_swap.c:353
+#: libparted/cs/geom.c:414 libparted/fs/linux_swap/linux_swap.c:353
 msgid "checking for bad blocks"
 msgstr "檢查壞區塊"
 
-#: libparted/libparted.c:286 libparted/libparted.c:306
+#: libparted/libparted.c:298 libparted/libparted.c:318
 msgid "Out of memory."
 msgstr "記憶體耗盡。"
 
@@ -788,27 +809,27 @@ msgstr "記憶體耗盡。"
 msgid "Cannot get unit size for special unit 'COMPACT'."
 msgstr ""
 
-#: libparted/unit.c:382
+#: libparted/unit.c:384
 #, c-format
 msgid "\"%s\" has invalid syntax for locations."
 msgstr ""
 
-#: libparted/unit.c:390
+#: libparted/unit.c:392
 #, c-format
 msgid "The maximum head value is %d."
 msgstr ""
 
-#: libparted/unit.c:397
+#: libparted/unit.c:399
 #, c-format
 msgid "The maximum sector value is %d."
 msgstr ""
 
-#: libparted/unit.c:409 libparted/unit.c:540
+#: libparted/unit.c:411 libparted/unit.c:543
 #, c-format
 msgid "The location %s is outside of the device %s."
 msgstr ""
 
-#: libparted/unit.c:522
+#: libparted/unit.c:525
 msgid "Invalid number."
 msgstr ""
 
@@ -821,17 +842,17 @@ msgstr "不一致的群組描述符號！"
 msgid "File system full!"
 msgstr "檔案系統已滿！"
 
-#: libparted/fs/ext2/ext2.c:750
+#: libparted/fs/ext2/ext2.c:686
 #, fuzzy
 msgid "Invalid superblock.  Are you sure this is an ext2 file system?"
 msgstr "無效的超區塊。您確信它是一個 ext2 檔案系統？"
 
-#: libparted/fs/ext2/ext2.c:764 libparted/fs/ext2/ext2_resize.c:597
+#: libparted/fs/ext2/ext2.c:700 libparted/fs/ext2/ext2_resize.c:660
 #, fuzzy
 msgid "File system has errors!  You should run e2fsck."
 msgstr "檔案系統錯誤！您應該執行 e2fsck。"
 
-#: libparted/fs/ext2/ext2.c:775
+#: libparted/fs/ext2/ext2.c:711
 #, fuzzy
 msgid ""
 "File system was not cleanly unmounted!  You should run e2fsck.  Modifying an "
@@ -840,21 +861,14 @@ msgstr ""
 "檔案系統沒有被乾淨地卸載！您應該執行 e2fsck。修改不乾淨的檔案系統可能導致嚴重"
 "的損壞。"
 
-#: libparted/fs/ext2/ext2.c:795
+#: libparted/fs/ext2/ext2.c:731
 #, fuzzy
 msgid "File system has an incompatible feature enabled."
 msgstr "檔案系統啟用了不相容的功能"
 
-#: libparted/fs/ext2/ext2.c:806
+#: libparted/fs/ext2/ext2.c:742
 msgid "Error allocating buffer cache."
 msgstr "分配緩衝區快取時發生錯誤。"
-
-#: libparted/fs/ext2/ext2.c:848
-msgid ""
-"A resize operation on this file system will use EXPERIMENTAL code that MAY "
-"CORRUPT it (although it hasn't done so yet).You should at least backup your "
-"data and run 'e2fsck -f' afterwards."
-msgstr ""
 
 #: libparted/fs/ext2/ext2_inode_relocator.c:114
 #, fuzzy
@@ -893,17 +907,17 @@ msgid ""
 msgstr ""
 "您的檔案系統中已使用的 inode 過多，以致無法將其大小改變為 %i 個區塊。抱歉。"
 
-#: libparted/fs/ext2/ext2_resize.c:554 libparted/fs/hfs/hfs.c:243
-#: libparted/fs/hfs/hfs.c:624
+#: libparted/fs/ext2/ext2_resize.c:554 libparted/fs/hfs/hfs.c:249
+#: libparted/fs/hfs/hfs.c:630
 msgid "shrinking"
 msgstr "正在縮小"
 
-#: libparted/fs/ext2/ext2_resize.c:605
+#: libparted/fs/ext2/ext2_resize.c:668
 #, fuzzy
 msgid "File system was not cleanly unmounted!  You should run e2fsck."
 msgstr "檔案系統沒有乾淨地卸載！您應該執行 e2fsck。"
 
-#: libparted/fs/ext2/ext2_resize.c:614
+#: libparted/fs/ext2/ext2_resize.c:677
 msgid ""
 "The file system has the 'dir_index' feature enabled.  Parted can only resize "
 "the file system if it disables this feature.  You can enable it later by "
@@ -912,6 +926,14 @@ msgstr ""
 "檔案系統已啟用「dir_index」的特殊功能。只有當此特性停用時，Parted 才能改變檔"
 "案系統的大小。您可以在稍後利用執行「tune2fs -O dir_index DEVICE」來啟用它，然"
 "後接著「e2fsck -fD DEVICE」。"
+
+#: libparted/fs/ext2/ext2_resize.c:693
+msgid ""
+"A resize operation on this file system will use EXPERIMENTAL code\n"
+"that MAY CORRUPT it (although it hasn't doneso yet\n"
+"in the past).\n"
+"You should at least backup your data and run 'e2fsck -f' afterwards."
+msgstr ""
 
 #: libparted/fs/ext2/ext2_block_relocator.c:198
 #, fuzzy
@@ -924,8 +946,8 @@ msgid "Block %i has no reference?  Weird."
 msgstr "區塊 %i 沒有被參照？奇怪"
 
 #: libparted/fs/ext2/ext2_block_relocator.c:738
-#, c-format
-msgid "Block %i shouldn't have been marked!"
+#, fuzzy, c-format
+msgid "Block %i shouldn't have been marked (%d, %d)!"
 msgstr "區塊 %i 不應該已被標記！"
 
 #: libparted/fs/ext2/interface.c:188
@@ -965,12 +987,12 @@ msgid ""
 "Cluster start delta = %d, which is not a multiple of the cluster size %d."
 msgstr "磁簇起始偏移 = %d，不是磁簇大小 %d 的整數倍。"
 
-#: libparted/fs/fat/fat.c:312
+#: libparted/fs/fat/fat.c:308
 #, fuzzy, c-format
 msgid "Partition too big/small for a %s file system."
 msgstr "對於 %s 檔案系統來說，分割區過大或過小"
 
-#: libparted/fs/fat/fat.c:478
+#: libparted/fs/fat/fat.c:474
 msgid ""
 "The FATs don't match.  If you don't know what this means, then select "
 "cancel, run scandisk on the file system, and then come back."
@@ -978,11 +1000,11 @@ msgstr ""
 "FAT 不相符合。如果你不知道它的含義，請選擇取消，並對檔案系統執行 scandisk，然"
 "後再回到這裡來。"
 
-#: libparted/fs/fat/fat.c:518
+#: libparted/fs/fat/fat.c:514
 msgid "There are no possible configurations for this FAT type."
 msgstr "對於此 FAT 類型沒有可能的配置。"
 
-#: libparted/fs/fat/fat.c:530
+#: libparted/fs/fat/fat.c:526
 #, c-format
 msgid ""
 "File system doesn't have expected sizes for Windows to like it.  Cluster "
@@ -992,13 +1014,13 @@ msgstr ""
 "檔案系統的大小不是 Windows 所希望的。磁簇大小為 %dk (期望 %dk)；磁簇數量為 %"
 "d (期望 %d)；FAT 的大小為 %d 扇區 (期望 %d)。"
 
-#: libparted/fs/fat/fat.c:553
+#: libparted/fs/fat/fat.c:549
 #, c-format
 msgid ""
 "File system is reporting the free space as %d clusters, not %d clusters."
 msgstr "檔案系統報告自由空間為 %d 磁簇，而不是 %d 磁簇。"
 
-#: libparted/fs/fat/fat.c:878
+#: libparted/fs/fat/fat.c:874
 #, fuzzy
 msgid ""
 "GNU Parted was miscompiled: the FAT boot sector should be 512 bytes.  FAT "
@@ -1283,86 +1305,86 @@ msgstr ""
 msgid "Trying to write HFS+ file with CNID %X behind EOF."
 msgstr ""
 
-#: libparted/fs/hfs/hfs.c:225
+#: libparted/fs/hfs/hfs.c:231
 msgid "Sorry, HFS cannot be resized that way yet."
 msgstr ""
 
-#: libparted/fs/hfs/hfs.c:255 libparted/fs/hfs/hfs.c:636
+#: libparted/fs/hfs/hfs.c:261 libparted/fs/hfs/hfs.c:642
 msgid "Data relocation has failed."
 msgstr ""
 
-#: libparted/fs/hfs/hfs.c:274
+#: libparted/fs/hfs/hfs.c:280
 msgid "Data relocation left some data in the end of the volume."
 msgstr ""
 
-#: libparted/fs/hfs/hfs.c:313
+#: libparted/fs/hfs/hfs.c:319
 #, fuzzy
 msgid "writing HFS Master Directory Block"
 msgstr "寫入根目錄時錯誤。"
 
-#: libparted/fs/hfs/hfs.c:461
+#: libparted/fs/hfs/hfs.c:467
 msgid "No valid HFS[+X] signature has been found while opening."
 msgstr ""
 
-#: libparted/fs/hfs/hfs.c:471
+#: libparted/fs/hfs/hfs.c:477
 #, c-format
 msgid "Version %d of HFS+ isn't supported."
 msgstr ""
 
-#: libparted/fs/hfs/hfs.c:482
+#: libparted/fs/hfs/hfs.c:488
 #, c-format
 msgid "Version %d of HFSX isn't supported."
 msgstr ""
 
-#: libparted/fs/hfs/hfs.c:667
+#: libparted/fs/hfs/hfs.c:673
 msgid "Data relocation left some data at the end of the volume."
 msgstr ""
 
-#: libparted/fs/hfs/hfs.c:715
+#: libparted/fs/hfs/hfs.c:721
 #, fuzzy
 msgid "Error while writing the allocation file."
 msgstr "寫入根目錄時錯誤。"
 
-#: libparted/fs/hfs/hfs.c:730
+#: libparted/fs/hfs/hfs.c:736
 msgid "Error while writing the compatibility part of the allocation file."
 msgstr ""
 
-#: libparted/fs/hfs/hfs.c:745
+#: libparted/fs/hfs/hfs.c:751
 msgid "writing HFS+ Volume Header"
 msgstr ""
 
-#: libparted/fs/hfs/hfs.c:845
+#: libparted/fs/hfs/hfs.c:851
 msgid "An error occurred while looking for the mandatory bad blocks file."
 msgstr ""
 
-#: libparted/fs/hfs/hfs.c:899
+#: libparted/fs/hfs/hfs.c:905
 msgid ""
 "It seems there is an error in the HFS wrapper: the bad blocks file doesn't "
 "contain the embedded HFS+ volume."
 msgstr ""
 
-#: libparted/fs/hfs/hfs.c:930
+#: libparted/fs/hfs/hfs.c:941
 msgid "Sorry, HFS+ cannot be resized that way yet."
 msgstr ""
 
-#: libparted/fs/hfs/hfs.c:965
+#: libparted/fs/hfs/hfs.c:976
 msgid "shrinking embedded HFS+ volume"
 msgstr ""
 
-#: libparted/fs/hfs/hfs.c:981
+#: libparted/fs/hfs/hfs.c:992
 msgid "Resizing the HFS+ volume has failed."
 msgstr ""
 
-#: libparted/fs/hfs/hfs.c:988
+#: libparted/fs/hfs/hfs.c:999
 #, fuzzy
 msgid "shrinking HFS wrapper"
 msgstr "正在縮小"
 
-#: libparted/fs/hfs/hfs.c:997
+#: libparted/fs/hfs/hfs.c:1008
 msgid "Updating the HFS wrapper has failed."
 msgstr ""
 
-#: libparted/fs/hfs/hfs.c:1099 libparted/fs/hfs/hfs.c:1184
+#: libparted/fs/hfs/hfs.c:1110 libparted/fs/hfs/hfs.c:1195
 #, c-format
 msgid ""
 "This is not a real %s check.  This is going to extract special low level "
@@ -1394,32 +1416,32 @@ msgstr "磁簇起始偏移 = %d，不是磁簇大小 %d 的整數倍。"
 msgid "Incorrect magic values in the journal header."
 msgstr ""
 
-#: libparted/fs/hfs/journal.c:299
+#: libparted/fs/hfs/journal.c:300
 msgid "Journal size mismatch between journal info block and journal header."
 msgstr ""
 
-#: libparted/fs/hfs/journal.c:311
+#: libparted/fs/hfs/journal.c:312
 #, fuzzy
 msgid "Some header fields are not multiple of the sector size."
 msgstr "磁簇起始偏移 = %d，不是磁簇大小 %d 的整數倍。"
 
-#: libparted/fs/hfs/journal.c:320
+#: libparted/fs/hfs/journal.c:321
 msgid ""
 "The sector size stored in the journal is not 512 bytes.  Parted only "
 "supports 512 bytes length sectors."
 msgstr ""
 
-#: libparted/fs/hfs/journal.c:332
+#: libparted/fs/hfs/journal.c:333
 msgid "Bad journal checksum."
 msgstr ""
 
-#: libparted/fs/hfs/journal.c:350
+#: libparted/fs/hfs/journal.c:351
 msgid ""
 "The journal is not empty.  Parted must replay the transactions before "
 "opening the file system.  This will modify the file system."
 msgstr ""
 
-#: libparted/fs/hfs/journal.c:378
+#: libparted/fs/hfs/journal.c:379
 msgid ""
 "The volume header or the master directory block has changed while replaying "
 "the journal.  You should restart Parted."
@@ -2013,6 +2035,11 @@ msgstr "沒有找到設備"
 msgid "Don't forget to update /etc/fstab, if necessary.\n"
 msgstr "如果必要，不要忘記更新 /etc/fstab。\n"
 
+#: parted/parted.c:2242
+#, c-format
+msgid "WARNING: You are not superuser.  Watch out for permissions.\n"
+msgstr ""
+
 #: parted/ui.c:68
 msgid "Welcome to GNU Parted! Type 'help' to view a list of commands.\n"
 msgstr ""
@@ -2061,199 +2088,199 @@ msgid ""
 "and additional information about your setup you consider important.\n"
 msgstr ""
 
-#: parted/ui.c:230
+#: parted/ui.c:253
 #, c-format
 msgid ""
 "\n"
 "Error: SEGV_MAPERR (Address not mapped to object)"
 msgstr ""
 
-#: parted/ui.c:235
+#: parted/ui.c:258
 #, c-format
 msgid ""
 "\n"
 "Error: SEGV_ACCERR (Invalid permissions for mapped object)"
 msgstr ""
 
-#: parted/ui.c:240
+#: parted/ui.c:263
 #, c-format
 msgid ""
 "\n"
 "Error: A general SIGSEGV signal was encountered."
 msgstr ""
 
-#: parted/ui.c:258
+#: parted/ui.c:287
 #, c-format
 msgid ""
 "\n"
 "Error: FPE_INTDIV (Integer: divide by zero)"
 msgstr ""
 
-#: parted/ui.c:262
+#: parted/ui.c:291
 #, c-format
 msgid ""
 "\n"
 "Error: FPE_INTOVF (Integer: overflow)"
 msgstr ""
 
-#: parted/ui.c:266
+#: parted/ui.c:295
 #, c-format
 msgid ""
 "\n"
 "Error: FPE_FLTDIV (Float: divide by zero)"
 msgstr ""
 
-#: parted/ui.c:270
+#: parted/ui.c:299
 #, c-format
 msgid ""
 "\n"
 "Error: FPE_FLTOVF (Float: overflow)"
 msgstr ""
 
-#: parted/ui.c:274
+#: parted/ui.c:303
 #, c-format
 msgid ""
 "\n"
 "Error: FPE_FLTUND (Float: underflow)"
 msgstr ""
 
-#: parted/ui.c:278
+#: parted/ui.c:307
 #, c-format
 msgid ""
 "\n"
 "Error: FPE_FLTRES (Float: inexact result)"
 msgstr ""
 
-#: parted/ui.c:282
+#: parted/ui.c:311
 #, c-format
 msgid ""
 "\n"
 "Error: FPE_FLTINV (Float: invalid operation)"
 msgstr ""
 
-#: parted/ui.c:286
+#: parted/ui.c:315
 #, c-format
 msgid ""
 "\n"
 "Error: FPE_FLTSUB (Float: subscript out of range)"
 msgstr ""
 
-#: parted/ui.c:291
+#: parted/ui.c:320
 #, c-format
 msgid ""
 "\n"
 "Error: A general SIGFPE signal was encountered."
 msgstr ""
 
-#: parted/ui.c:310
+#: parted/ui.c:345
 #, c-format
 msgid ""
 "\n"
 "Error: ILL_ILLOPC (Illegal Opcode)"
 msgstr ""
 
-#: parted/ui.c:314
+#: parted/ui.c:349
 #, c-format
 msgid ""
 "\n"
 "Error: ILL_ILLOPN (Illegal Operand)"
 msgstr ""
 
-#: parted/ui.c:318
+#: parted/ui.c:353
 #, c-format
 msgid ""
 "\n"
 "Error: ILL_ILLADR (Illegal addressing mode)"
 msgstr ""
 
-#: parted/ui.c:323
+#: parted/ui.c:358
 #, c-format
 msgid ""
 "\n"
 "Error: ILL_ILLTRP (Illegal Trap)"
 msgstr ""
 
-#: parted/ui.c:327
+#: parted/ui.c:362
 #, c-format
 msgid ""
 "\n"
 "Error: ILL_PRVOPC (Privileged Opcode)"
 msgstr ""
 
-#: parted/ui.c:331
+#: parted/ui.c:366
 #, c-format
 msgid ""
 "\n"
 "Error: ILL_PRVREG (Privileged Register)"
 msgstr ""
 
-#: parted/ui.c:335
+#: parted/ui.c:370
 #, c-format
 msgid ""
 "\n"
 "Error: ILL_COPROC (Coprocessor Error)"
 msgstr ""
 
-#: parted/ui.c:339
+#: parted/ui.c:374
 #, c-format
 msgid ""
 "\n"
 "Error: ILL_BADSTK (Internal Stack Error)"
 msgstr ""
 
-#: parted/ui.c:343
+#: parted/ui.c:378
 #, c-format
 msgid ""
 "\n"
 "Error: A general SIGILL signal was encountered."
 msgstr ""
 
-#: parted/ui.c:828
+#: parted/ui.c:862
 msgid "Expecting a partition number."
 msgstr "需要分割區編號。"
 
-#: parted/ui.c:837
+#: parted/ui.c:871
 msgid "Partition doesn't exist."
 msgstr "分割區不存在。"
 
-#: parted/ui.c:857
+#: parted/ui.c:891
 msgid "Expecting a file system type."
 msgstr "需要檔案系統類型。"
 
-#: parted/ui.c:863
+#: parted/ui.c:897
 #, c-format
 msgid "Unknown file system type \"%s\"."
 msgstr "未知的檔案系統類型「%s」。"
 
-#: parted/ui.c:883
+#: parted/ui.c:917
 msgid "Expecting a disk label type."
 msgstr "需要磁碟標籤類型。"
 
-#: parted/ui.c:977
+#: parted/ui.c:1011
 msgid "Can't create any more partitions."
 msgstr "無法建立更多分割區。"
 
-#: parted/ui.c:987
+#: parted/ui.c:1021
 msgid "Expecting a partition type."
 msgstr "需要分割區類型。"
 
-#: parted/ui.c:1115
+#: parted/ui.c:1149
 msgid "on"
 msgstr "開"
 
-#: parted/ui.c:1116
+#: parted/ui.c:1150
 msgid "off"
 msgstr "關"
 
-#: parted/ui.c:1227
+#: parted/ui.c:1261
 msgid "OPTIONs:"
 msgstr "選項："
 
-#: parted/ui.c:1230
+#: parted/ui.c:1264
 msgid "COMMANDs:"
 msgstr "命令："
 
-#: parted/ui.c:1238
+#: parted/ui.c:1272
 #, c-format
 msgid "Using %s\n"
 msgstr "使用 %s\n"
