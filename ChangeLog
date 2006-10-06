@@ -5,6 +5,11 @@ See libparted/ChangeLog and parted/ChangeLog.
 
 ==============================================================================
 2006-10-06  David Cantrell  <dcantrell@redhat.com>
+	* scripts/release/tarball_upload.sh: Since v1.0 directive files will
+	no longer be supported by ftp-upload.gnu.org after 2006, modified the
+	upload script to use the v1.1 format.
+
+2006-10-06  David Cantrell  <dcantrell@redhat.com>
 	* scripts/release/tarball_upload.sh: Support the -a (or --alpha) switch
 	on the tarball upload script. This switch will upload the release to
 	alpha.gnu.org rather than ftp.gnu.org.
