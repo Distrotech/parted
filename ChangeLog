@@ -4,6 +4,11 @@ front-end.  This file is only for reference purposes and top-level changes.
 See libparted/ChangeLog and parted/ChangeLog.
 
 ==============================================================================
+2006-10-06  David Cantrell  <dcantrell@redhat.com>
+	* scripts/release/tarball_upload.sh: Support the -a (or --alpha) switch
+	on the tarball upload script. This switch will upload the release to
+	alpha.gnu.org rather than ftp.gnu.org.
+
 2006-09-15  David Cantrell  <dcantrell@redhat.com>
 	* doc/pt_BR/partprobe.8.pt_BR.po: Removed extra double quote at the end
 	of line 6.

@@ -3,6 +3,19 @@
 #set -x
 
 SRCDIR=.
+FTPURL=ftp://ftp-upload.gnu.org/incoming/ftp/
+
+case $1 in
+	-a|--alpha)
+		FTPURL=ftp://ftp-upload.gnu.org/incoming/alpha/ ;;
+	-?|--help)
+		echo "Upload tarball to ftp.gnu.org"
+		echo "Usage: $(basename $0) [option]"
+		echo "Options:"
+		echo "   -a, --alpha     Upload to alpha.gnu.org"
+		echo "   -?, --help      Display usage screen"
+		exit 0 ;;
+esac
 
 cd $SRCDIR
 
@@ -151,9 +164,7 @@ for EXT in gz bz2; do
         SIG=parted-$VERSION.tar.$EXT.sig
         DIRECTIVE=$TARBALL.directive
         for f in $TARBALL $SIG $DIRECTIVE.asc; do
-                curl --upload-file $PWD/$f \
-                        'ftp://ftp-upload.gnu.org/incoming/ftp/'
-                
+                curl --upload-file $PWD/$f $FTPURL
                 if [ $? -eq 0 ]; then
                         echo "-> successfully uploaded $f."
                 else
@@ -163,4 +174,3 @@ for EXT in gz bz2; do
 done
 
 message "* all files uploaded."
-
