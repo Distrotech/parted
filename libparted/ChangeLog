@@ -1,3 +1,8 @@
+2006-10-06  David Cantrell  <dcantrell@redhat.com>
+	* arch/linux.c: Change __GNU_SOURCE define to _GNU_SOURCE (only one
+	underscore at the beginning). Fixes problem with certain systems
+	not getting posix_memalign() defined during compilation.
+
 2006-09-15  David Cantrell  <dcantrell@redhat.com>
 	* labels/Makefile.am: Removed fdasd.h and vtoc.h references.
 

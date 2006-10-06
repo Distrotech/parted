@@ -18,7 +18,8 @@
 */
 
 /* we need this for O_DIRECT on Linux, it's in the glibc headers */
-#define __GNU_SOURCE
+/* ... and for posix_memalign()                                  */
+#define _GNU_SOURCE
 
 #include "config.h"
 
