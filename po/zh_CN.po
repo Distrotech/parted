@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: parted 1.6.6-pre2\n"
 "Report-Msgid-Bugs-To: bug-parted@gnu.org\n"
-"POT-Creation-Date: 2006-09-15 12:23-0400\n"
+"POT-Creation-Date: 2006-10-09 14:01-0400\n"
 "PO-Revision-Date: 2003-07-25 15:26+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
@@ -14,40 +14,40 @@ msgstr ""
 "Content-Type: text/plain; charset=gb2312\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libparted/arch/linux.c:319
+#: libparted/arch/linux.c:320
 #, c-format
 msgid "Could not stat device %s - %s."
 msgstr "无法对设备 %s - %s 做 stat 操作。"
 
-#: libparted/arch/linux.c:431
+#: libparted/arch/linux.c:432
 #, c-format
 msgid ""
 "Could not determine sector size for %s: %s.\n"
 "Using the default sector size (%lld)."
 msgstr ""
 
-#: libparted/arch/linux.c:447
+#: libparted/arch/linux.c:448
 #, c-format
 msgid ""
 "Device %s has a logical sector size of %lld.  Not all parts of GNU Parted "
 "support this at the moment, and the working code is HIGHLY EXPERIMENTAL.\n"
 msgstr ""
 
-#: libparted/arch/linux.c:487
+#: libparted/arch/linux.c:488
 #, fuzzy, c-format
 msgid "Unable to determine the size of %s (%s)."
 msgstr "无法确定 %s (%s) 的大小"
 
-#: libparted/arch/linux.c:576
+#: libparted/arch/linux.c:577
 #, c-format
 msgid "Could not get identity of device %s - %s"
 msgstr "无法获取设备 %s - %s 的标识"
 
-#: libparted/arch/linux.c:585
+#: libparted/arch/linux.c:586
 msgid "Generic IDE"
 msgstr ""
 
-#: libparted/arch/linux.c:602
+#: libparted/arch/linux.c:603
 #, c-format
 msgid ""
 "Device %s has multiple (%d) logical sectors per physical sector.\n"
@@ -56,12 +56,12 @@ msgid ""
 "Please consult the web site for up-to-date information."
 msgstr ""
 
-#: libparted/arch/linux.c:772
+#: libparted/arch/linux.c:773
 #, c-format
 msgid "Error initialising SCSI device %s - %s"
 msgstr "初始化 SCSI 设备 %s - %s 出错"
 
-#: libparted/arch/linux.c:827
+#: libparted/arch/linux.c:828
 #, fuzzy, c-format
 msgid ""
 "The device %s has zero length, and can't possibly store a file system or "
@@ -69,7 +69,7 @@ msgid ""
 msgstr ""
 "设备 %s 的长度为零，因此无法保存文件系统或分区表。可能您选择了错误的设备？"
 
-#: libparted/arch/linux.c:935
+#: libparted/arch/linux.c:936
 #, fuzzy, c-format
 msgid ""
 "Unable to determine geometry of file/device %s.  You should not use Parted "
@@ -78,85 +78,85 @@ msgstr ""
 "无法确定文件/设备的几何结构。除非您确实知道您在做什么，否则您不该使用 "
 "Parted！"
 
-#: libparted/arch/linux.c:1010
+#: libparted/arch/linux.c:1011
 msgid "DAC960 RAID controller"
 msgstr "DAC960 RAID 控制器"
 
-#: libparted/arch/linux.c:1015
+#: libparted/arch/linux.c:1016
 msgid "Promise SX8 SATA Device"
 msgstr ""
 
-#: libparted/arch/linux.c:1020
+#: libparted/arch/linux.c:1021
 msgid "IBM S390 DASD drive"
 msgstr ""
 
-#: libparted/arch/linux.c:1025
+#: libparted/arch/linux.c:1026
 msgid "IBM iSeries Virtual DASD"
 msgstr ""
 
-#: libparted/arch/linux.c:1030
+#: libparted/arch/linux.c:1031
 msgid "Compaq Smart Array"
 msgstr "Compaq 智能阵列"
 
-#: libparted/arch/linux.c:1035
+#: libparted/arch/linux.c:1036
 msgid "ATARAID Controller"
 msgstr "ATARAID 控制器"
 
-#: libparted/arch/linux.c:1040
+#: libparted/arch/linux.c:1041
 msgid "I2O Controller"
 msgstr "I2O 控制器"
 
-#: libparted/arch/linux.c:1045
+#: libparted/arch/linux.c:1046
 msgid "User-Mode Linux UBD"
 msgstr ""
 
-#: libparted/arch/linux.c:1055
+#: libparted/arch/linux.c:1056
 msgid "Unknown"
 msgstr "未知"
 
-#: libparted/arch/linux.c:1062
+#: libparted/arch/linux.c:1063
 msgid "ped_device_new()  Unsupported device type"
 msgstr "ped_device_new()  不支持的设备类型"
 
-#: libparted/arch/linux.c:1165 libparted/arch/gnu.c:264
+#: libparted/arch/linux.c:1166 libparted/arch/gnu.c:264
 #, c-format
 msgid "Error opening %s: %s"
 msgstr "打开 %s 出错：%s"
 
-#: libparted/arch/linux.c:1176 libparted/arch/gnu.c:274
+#: libparted/arch/linux.c:1177 libparted/arch/gnu.c:274
 #, c-format
 msgid "Unable to open %s read-write (%s).  %s has been opened read-only."
 msgstr ""
 
-#: libparted/arch/linux.c:1284 libparted/arch/linux.c:1361
+#: libparted/arch/linux.c:1285 libparted/arch/linux.c:1362
 #: libparted/arch/gnu.c:452 libparted/arch/gnu.c:551 libparted/arch/gnu.c:679
 #, c-format
 msgid "%s during read on %s"
 msgstr "在读取 %2$s 期间 %1$s"
 
-#: libparted/arch/linux.c:1325
+#: libparted/arch/linux.c:1326
 #, c-format
 msgid "%s during seek for read on %s"
 msgstr "在为读取 %2$s 而调用 seek 时 %1$s"
 
-#: libparted/arch/linux.c:1406 libparted/arch/linux.c:1498
-#: libparted/arch/linux.c:1567 libparted/arch/gnu.c:588
+#: libparted/arch/linux.c:1407 libparted/arch/linux.c:1499
+#: libparted/arch/linux.c:1568 libparted/arch/gnu.c:588
 #: libparted/arch/gnu.c:633 libparted/arch/gnu.c:710
 #, c-format
 msgid "%s during write on %s"
 msgstr "在写入 %2$s 时 %1$s"
 
-#: libparted/arch/linux.c:1435 libparted/arch/gnu.c:512
+#: libparted/arch/linux.c:1436 libparted/arch/gnu.c:512
 #, c-format
 msgid "Can't write to %s, because it is opened read-only."
 msgstr "由于 %s 是以只读方式打开的，因此无法写入。"
 
-#: libparted/arch/linux.c:1459
+#: libparted/arch/linux.c:1460
 #, c-format
 msgid "%s during seek for write on %s"
 msgstr "在为写入 %2$s 调用 seek 时 %1$s"
 
-#: libparted/arch/linux.c:1956
+#: libparted/arch/linux.c:1957
 #, fuzzy, c-format
 msgid ""
 "Error informing the kernel about modifications to partition %s -- %s.  This "
@@ -166,7 +166,7 @@ msgstr ""
 "通知内核关于分区 %s - %s 的修改时出错。这意味着 Linux 在重新启动之前无法知道"
 "您针对 %s 所作的任何修改 - 所以您也不能在重新启动之前加载或以任何方式使用它。"
 
-#: libparted/arch/linux.c:2030
+#: libparted/arch/linux.c:2031
 #, fuzzy, c-format
 msgid ""
 "The kernel was unable to re-read the partition table on %s (%s).  This means "

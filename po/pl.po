@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: parted 1.6.23\n"
 "Report-Msgid-Bugs-To: bug-parted@gnu.org\n"
-"POT-Creation-Date: 2006-09-15 12:23-0400\n"
+"POT-Creation-Date: 2006-10-09 14:01-0400\n"
 "PO-Revision-Date: 2005-07-07 22:23+0200\n"
 "Last-Translator: Wojciech Polak <polak@gnu.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -16,40 +16,40 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
-#: libparted/arch/linux.c:319
+#: libparted/arch/linux.c:320
 #, c-format
 msgid "Could not stat device %s - %s."
 msgstr "Nie mo¿na sprawdziæ urz±dzenia %s - %s."
 
-#: libparted/arch/linux.c:431
+#: libparted/arch/linux.c:432
 #, c-format
 msgid ""
 "Could not determine sector size for %s: %s.\n"
 "Using the default sector size (%lld)."
 msgstr ""
 
-#: libparted/arch/linux.c:447
+#: libparted/arch/linux.c:448
 #, c-format
 msgid ""
 "Device %s has a logical sector size of %lld.  Not all parts of GNU Parted "
 "support this at the moment, and the working code is HIGHLY EXPERIMENTAL.\n"
 msgstr ""
 
-#: libparted/arch/linux.c:487
+#: libparted/arch/linux.c:488
 #, c-format
 msgid "Unable to determine the size of %s (%s)."
 msgstr "Nie mo¿na ustaliæ rozmiaru %s (%s)."
 
-#: libparted/arch/linux.c:576
+#: libparted/arch/linux.c:577
 #, c-format
 msgid "Could not get identity of device %s - %s"
 msgstr "Nie mo¿na uzyskaæ to¿samo¶ci urz±dzenia %s - %s"
 
-#: libparted/arch/linux.c:585
+#: libparted/arch/linux.c:586
 msgid "Generic IDE"
 msgstr ""
 
-#: libparted/arch/linux.c:602
+#: libparted/arch/linux.c:603
 #, c-format
 msgid ""
 "Device %s has multiple (%d) logical sectors per physical sector.\n"
@@ -58,12 +58,12 @@ msgid ""
 "Please consult the web site for up-to-date information."
 msgstr ""
 
-#: libparted/arch/linux.c:772
+#: libparted/arch/linux.c:773
 #, c-format
 msgid "Error initialising SCSI device %s - %s"
 msgstr "B³±d podczas inicjalizacji urz±dzenia SCSI %s - %s"
 
-#: libparted/arch/linux.c:827
+#: libparted/arch/linux.c:828
 #, fuzzy, c-format
 msgid ""
 "The device %s has zero length, and can't possibly store a file system or "
@@ -73,7 +73,7 @@ msgstr ""
 "systemu plików lub tablicê partycji.  Byæ mo¿e dokonano niew³a¶ciwego wyboru "
 "urz±dzenia?"
 
-#: libparted/arch/linux.c:935
+#: libparted/arch/linux.c:936
 #, fuzzy, c-format
 msgid ""
 "Unable to determine geometry of file/device %s.  You should not use Parted "
@@ -82,87 +82,87 @@ msgstr ""
 "Nie mo¿na ustaliæ geometrii pliku/urz±dzenia.  W tym przypadku nie jest "
 "zalecane u¿ywanie Parted chyba, ¿e NAPRAWDÊ wiesz co robisz!"
 
-#: libparted/arch/linux.c:1010
+#: libparted/arch/linux.c:1011
 msgid "DAC960 RAID controller"
 msgstr "Kontroler DAC960 RAID"
 
-#: libparted/arch/linux.c:1015
+#: libparted/arch/linux.c:1016
 msgid "Promise SX8 SATA Device"
 msgstr ""
 
-#: libparted/arch/linux.c:1020
+#: libparted/arch/linux.c:1021
 msgid "IBM S390 DASD drive"
 msgstr ""
 
-#: libparted/arch/linux.c:1025
+#: libparted/arch/linux.c:1026
 msgid "IBM iSeries Virtual DASD"
 msgstr ""
 
-#: libparted/arch/linux.c:1030
+#: libparted/arch/linux.c:1031
 msgid "Compaq Smart Array"
 msgstr "Compaq Smart Array"
 
-#: libparted/arch/linux.c:1035
+#: libparted/arch/linux.c:1036
 msgid "ATARAID Controller"
 msgstr "Kontroler ATARAID"
 
-#: libparted/arch/linux.c:1040
+#: libparted/arch/linux.c:1041
 msgid "I2O Controller"
 msgstr "Kontroler I20"
 
-#: libparted/arch/linux.c:1045
+#: libparted/arch/linux.c:1046
 msgid "User-Mode Linux UBD"
 msgstr ""
 
-#: libparted/arch/linux.c:1055
+#: libparted/arch/linux.c:1056
 msgid "Unknown"
 msgstr "Nieznane"
 
-#: libparted/arch/linux.c:1062
+#: libparted/arch/linux.c:1063
 msgid "ped_device_new()  Unsupported device type"
 msgstr "ped_device_new()  Ten typ urz±dzenia nie jest wspierany"
 
-#: libparted/arch/linux.c:1165 libparted/arch/gnu.c:264
+#: libparted/arch/linux.c:1166 libparted/arch/gnu.c:264
 #, c-format
 msgid "Error opening %s: %s"
 msgstr "B³±d podczas otwierania %s: %s"
 
-#: libparted/arch/linux.c:1176 libparted/arch/gnu.c:274
+#: libparted/arch/linux.c:1177 libparted/arch/gnu.c:274
 #, c-format
 msgid "Unable to open %s read-write (%s).  %s has been opened read-only."
 msgstr ""
 "Nie mo¿na otworzyæ %s jednocze¶nie w trybie do odczytu i zapisu (%s).  %s "
 "zosta³ otwarty tylko w trybie do odczytu."
 
-#: libparted/arch/linux.c:1284 libparted/arch/linux.c:1361
+#: libparted/arch/linux.c:1285 libparted/arch/linux.c:1362
 #: libparted/arch/gnu.c:452 libparted/arch/gnu.c:551 libparted/arch/gnu.c:679
 #, c-format
 msgid "%s during read on %s"
 msgstr "%s podczas czytania %s"
 
-#: libparted/arch/linux.c:1325
+#: libparted/arch/linux.c:1326
 #, c-format
 msgid "%s during seek for read on %s"
 msgstr "%s podczas ustawiania do odczytu na %s"
 
-#: libparted/arch/linux.c:1406 libparted/arch/linux.c:1498
-#: libparted/arch/linux.c:1567 libparted/arch/gnu.c:588
+#: libparted/arch/linux.c:1407 libparted/arch/linux.c:1499
+#: libparted/arch/linux.c:1568 libparted/arch/gnu.c:588
 #: libparted/arch/gnu.c:633 libparted/arch/gnu.c:710
 #, c-format
 msgid "%s during write on %s"
 msgstr "%s podczas zapisu %s"
 
-#: libparted/arch/linux.c:1435 libparted/arch/gnu.c:512
+#: libparted/arch/linux.c:1436 libparted/arch/gnu.c:512
 #, c-format
 msgid "Can't write to %s, because it is opened read-only."
 msgstr "Nie mo¿na zapisaæ do %s, poniewa¿ otwarte jest tylko do czytania."
 
-#: libparted/arch/linux.c:1459
+#: libparted/arch/linux.c:1460
 #, c-format
 msgid "%s during seek for write on %s"
 msgstr "%s podczas ustawiania do zapisu na %s"
 
-#: libparted/arch/linux.c:1956
+#: libparted/arch/linux.c:1957
 #, c-format
 msgid ""
 "Error informing the kernel about modifications to partition %s -- %s.  This "
@@ -174,7 +174,7 @@ msgstr ""
 "dokonane na %s a¿ do czasu ponownego uruchomienia komputera -- proszê nie "
 "pod³±czaæ ani u¿ywaæ tej partycji do czasu ponownego uruchomienia komputera."
 
-#: libparted/arch/linux.c:2030
+#: libparted/arch/linux.c:2031
 #, c-format
 msgid ""
 "The kernel was unable to re-read the partition table on %s (%s).  This means "
