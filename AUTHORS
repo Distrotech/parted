@@ -222,3 +222,5 @@ Olaf Hering <olh@suse.de>
 
 Debarshi Ray <debarshi.ray@gmail.com>
    * Display disk model and transport type in parted(8).
+   * Handle ped_unregister_disk_type() cases when disk_types is not
+   NULL and instances where the specified type is not registered.

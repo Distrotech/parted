@@ -80,12 +80,14 @@ void ped_unregister_disk_type (PedDiskType* type)
 	PedDiskType*	walk;
 	PedDiskType*	last = NULL;
 
+	PED_ASSERT (disk_types != NULL, return);
 	PED_ASSERT (type != NULL, return);
 
-	for (walk = disk_types; walk != NULL; last = walk, walk = walk->next) {
+	for (walk = disk_types; walk; last = walk, walk = walk->next) {
 		if (walk == type) break;
 	}
 
+	PED_ASSERT (walk != NULL, return);
 	if (last)
 		((struct _PedDiskType*) last)->next = type->next;
 	else
