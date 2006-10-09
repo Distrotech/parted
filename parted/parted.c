@@ -1192,6 +1192,9 @@ do_print (PedDevice** dev)
         int             has_num_arg = 0;
         int             has_free_arg = 0;
         int             has_all_arg = 0;
+        char*           transport[12] = {"unknown", "scsi", "ide", "dac960",
+                                         "cpqarray", "file", "ataraid", "i2o",
+                                         "ubd", "dasd", "viodasd", "sx8"};
         char*           peek_word;
         char*           start;
         char*           end;
@@ -1251,7 +1254,7 @@ do_print (PedDevice** dev)
         end = ped_unit_format_byte (*dev, (*dev)->length * (*dev)->sector_size
                                           - 1 );
         printf ("\n");
-        /* TODO: insert dev->model and transport here */
+        printf (_("Model: %s (%s)\n"), (*dev)->model, transport[(*dev)->type]);
         printf (_("Disk %s: %s\n"), (*dev)->path, end);
         printf (_("Sector size (logical/physical): %lldB/%lldB\n"),
                         (*dev)->sector_size, (*dev)->phys_sector_size);

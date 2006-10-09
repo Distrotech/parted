@@ -219,3 +219,6 @@ Darren Lavender <dl1@hppine99.gbr.hp.com>
 
 Olaf Hering <olh@suse.de>
 	* Fixes for Macintosh disk label code
+
+Debarshi Ray <debarshi.ray@gmail.com>
+   * Display disk model and transport type in parted(8).

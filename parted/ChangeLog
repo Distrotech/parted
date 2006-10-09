@@ -1,3 +1,7 @@
+2006-10-09  David Cantrell  <dcantrell@redhat.com>
+	* parted.c (do_print): Define transport type list and display disk
+	model type and transport type (from Debarshi Ray).
+
 2006-09-12  Anant Narayanan <anant@kix.in>
 	* ui.c (sig*_handler): fallback to signal() if sigaction() is not 
 	available 
