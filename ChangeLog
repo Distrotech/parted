@@ -4,6 +4,9 @@ front-end.  This file is only for reference purposes and top-level changes.
 See libparted/ChangeLog and parted/ChangeLog.
 
 ==============================================================================
+2006-10-09  David Cantrell  <dcantrell@redhat.com>
+	* po/*.po, po/parted.pot: Updated.
+
 2006-10-06  David Cantrell  <dcantrell@redhat.com>
 	* scripts/release/tarball_upload.sh: Since v1.0 directive files will
 	no longer be supported by ftp-upload.gnu.org after 2006, modified the
