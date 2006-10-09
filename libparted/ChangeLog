@@ -3,6 +3,11 @@
 	== NULL and the given type is not in the list of registered disk types
 	(from Debarshi Ray).
 
+	* cs/geom.c (ped_geometry_read): Do not throw PED_EXCEPTION_ERROR here
+	if accessing sectors outside of partition boundary. Returning false
+	causes ped_geometry_check() to shift correctly anyway.  This occurs
+	on current Mac disklabels, among other systems.
+
 2006-10-06  David Cantrell  <dcantrell@redhat.com>
 	* arch/linux.c: Change __GNU_SOURCE define to _GNU_SOURCE (only one
 	underscore at the beginning). Fixes problem with certain systems

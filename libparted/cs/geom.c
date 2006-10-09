@@ -298,15 +298,8 @@ ped_geometry_read (const PedGeometry* geom, void* buffer, PedSector start,
 	
 	real_start = geom->start + start;
 
-	if (real_start + count - 1 > geom->end) {
-		exception_status = ped_exception_throw (
-			PED_EXCEPTION_ERROR, PED_EXCEPTION_IGNORE_CANCEL,
-			_("Attempt to read sectors %ld-%ld outside of "
-			  "partition on %s."),
-			(long) start, (long) (start + count - 1),
-			geom->dev->path);
-		return exception_status == PED_EXCEPTION_IGNORE;
-	}
+	if (real_start + count - 1 > geom->end)
+		return 0;
 
 	if (!ped_device_read (geom->dev, buffer, real_start, count))
 		return 0;

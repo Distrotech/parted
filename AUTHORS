@@ -206,6 +206,8 @@ David Cantrell <dcantrell@redhat.com>
 	* Prevent SIGFPE when FAT sector size is 0
 	* Add virtual DASD (VIODASD) on iSeries support
 	* Use O_DIRECT I/O to prevent first partition corruption on GPT disks
+   * Prevent sector reading exceptions from ped_geometry_check() on Mac
+   disklabels.
 
 Peter Jones <pjones@redhat.com>
 	* Add ped_exception_get_handler()
