@@ -134,7 +134,7 @@ echo -e "\t-> success"
 
 DIRECTIVE=$TARBALL.directive
 message "* creating and clearsigning directive file to $DIRECTIVE.asc" 
-echo "version: $VERSION" > $DIRECTIVE
+echo "version: 1.1" > $DIRECTIVE
 echo "directory: parted" >> $DIRECTIVE
 if [ $? -ne 0 ]; then
         kill $GPGAPID; echo creation FAILED; exit
