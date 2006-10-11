@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: parted 1.6.23\n"
 "Report-Msgid-Bugs-To: bug-parted@gnu.org\n"
-"POT-Creation-Date: 2006-10-09 14:01-0400\n"
+"POT-Creation-Date: 2006-10-11 15:47-0400\n"
 "PO-Revision-Date: 2005-07-07 22:23+0200\n"
 "Last-Translator: Wojciech Polak <polak@gnu.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -16,40 +16,40 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
-#: libparted/arch/linux.c:320
+#: libparted/arch/linux.c:417
 #, c-format
 msgid "Could not stat device %s - %s."
 msgstr "Nie mo¿na sprawdziæ urz±dzenia %s - %s."
 
-#: libparted/arch/linux.c:432
+#: libparted/arch/linux.c:531
 #, c-format
 msgid ""
 "Could not determine sector size for %s: %s.\n"
 "Using the default sector size (%lld)."
 msgstr ""
 
-#: libparted/arch/linux.c:448
+#: libparted/arch/linux.c:547
 #, c-format
 msgid ""
 "Device %s has a logical sector size of %lld.  Not all parts of GNU Parted "
 "support this at the moment, and the working code is HIGHLY EXPERIMENTAL.\n"
 msgstr ""
 
-#: libparted/arch/linux.c:488
+#: libparted/arch/linux.c:587
 #, c-format
 msgid "Unable to determine the size of %s (%s)."
 msgstr "Nie mo¿na ustaliæ rozmiaru %s (%s)."
 
-#: libparted/arch/linux.c:577
+#: libparted/arch/linux.c:676
 #, c-format
 msgid "Could not get identity of device %s - %s"
 msgstr "Nie mo¿na uzyskaæ to¿samo¶ci urz±dzenia %s - %s"
 
-#: libparted/arch/linux.c:586
+#: libparted/arch/linux.c:685
 msgid "Generic IDE"
 msgstr ""
 
-#: libparted/arch/linux.c:603
+#: libparted/arch/linux.c:702
 #, c-format
 msgid ""
 "Device %s has multiple (%d) logical sectors per physical sector.\n"
@@ -58,12 +58,12 @@ msgid ""
 "Please consult the web site for up-to-date information."
 msgstr ""
 
-#: libparted/arch/linux.c:773
+#: libparted/arch/linux.c:872
 #, c-format
 msgid "Error initialising SCSI device %s - %s"
 msgstr "B³±d podczas inicjalizacji urz±dzenia SCSI %s - %s"
 
-#: libparted/arch/linux.c:828
+#: libparted/arch/linux.c:927
 #, fuzzy, c-format
 msgid ""
 "The device %s has zero length, and can't possibly store a file system or "
@@ -73,7 +73,7 @@ msgstr ""
 "systemu plików lub tablicê partycji.  Byæ mo¿e dokonano niew³a¶ciwego wyboru "
 "urz±dzenia?"
 
-#: libparted/arch/linux.c:936
+#: libparted/arch/linux.c:1035
 #, fuzzy, c-format
 msgid ""
 "Unable to determine geometry of file/device %s.  You should not use Parted "
@@ -82,87 +82,91 @@ msgstr ""
 "Nie mo¿na ustaliæ geometrii pliku/urz±dzenia.  W tym przypadku nie jest "
 "zalecane u¿ywanie Parted chyba, ¿e NAPRAWDÊ wiesz co robisz!"
 
-#: libparted/arch/linux.c:1011
+#: libparted/arch/linux.c:1110
 msgid "DAC960 RAID controller"
 msgstr "Kontroler DAC960 RAID"
 
-#: libparted/arch/linux.c:1016
+#: libparted/arch/linux.c:1115
 msgid "Promise SX8 SATA Device"
 msgstr ""
 
-#: libparted/arch/linux.c:1021
+#: libparted/arch/linux.c:1120
 msgid "IBM S390 DASD drive"
 msgstr ""
 
-#: libparted/arch/linux.c:1026
+#: libparted/arch/linux.c:1125
 msgid "IBM iSeries Virtual DASD"
 msgstr ""
 
-#: libparted/arch/linux.c:1031
+#: libparted/arch/linux.c:1130
 msgid "Compaq Smart Array"
 msgstr "Compaq Smart Array"
 
-#: libparted/arch/linux.c:1036
+#: libparted/arch/linux.c:1135
 msgid "ATARAID Controller"
 msgstr "Kontroler ATARAID"
 
-#: libparted/arch/linux.c:1041
+#: libparted/arch/linux.c:1140
 msgid "I2O Controller"
 msgstr "Kontroler I20"
 
-#: libparted/arch/linux.c:1046
+#: libparted/arch/linux.c:1145
 msgid "User-Mode Linux UBD"
 msgstr ""
 
-#: libparted/arch/linux.c:1056
+#: libparted/arch/linux.c:1155
+msgid "Linux device-mapper"
+msgstr ""
+
+#: libparted/arch/linux.c:1160
 msgid "Unknown"
 msgstr "Nieznane"
 
-#: libparted/arch/linux.c:1063
+#: libparted/arch/linux.c:1167
 msgid "ped_device_new()  Unsupported device type"
 msgstr "ped_device_new()  Ten typ urz±dzenia nie jest wspierany"
 
-#: libparted/arch/linux.c:1166 libparted/arch/gnu.c:264
+#: libparted/arch/linux.c:1270 libparted/arch/gnu.c:264
 #, c-format
 msgid "Error opening %s: %s"
 msgstr "B³±d podczas otwierania %s: %s"
 
-#: libparted/arch/linux.c:1177 libparted/arch/gnu.c:274
+#: libparted/arch/linux.c:1281 libparted/arch/gnu.c:274
 #, c-format
 msgid "Unable to open %s read-write (%s).  %s has been opened read-only."
 msgstr ""
 "Nie mo¿na otworzyæ %s jednocze¶nie w trybie do odczytu i zapisu (%s).  %s "
 "zosta³ otwarty tylko w trybie do odczytu."
 
-#: libparted/arch/linux.c:1285 libparted/arch/linux.c:1362
+#: libparted/arch/linux.c:1389 libparted/arch/linux.c:1466
 #: libparted/arch/gnu.c:452 libparted/arch/gnu.c:551 libparted/arch/gnu.c:679
 #, c-format
 msgid "%s during read on %s"
 msgstr "%s podczas czytania %s"
 
-#: libparted/arch/linux.c:1326
+#: libparted/arch/linux.c:1430
 #, c-format
 msgid "%s during seek for read on %s"
 msgstr "%s podczas ustawiania do odczytu na %s"
 
-#: libparted/arch/linux.c:1407 libparted/arch/linux.c:1499
-#: libparted/arch/linux.c:1568 libparted/arch/gnu.c:588
+#: libparted/arch/linux.c:1511 libparted/arch/linux.c:1603
+#: libparted/arch/linux.c:1672 libparted/arch/gnu.c:588
 #: libparted/arch/gnu.c:633 libparted/arch/gnu.c:710
 #, c-format
 msgid "%s during write on %s"
 msgstr "%s podczas zapisu %s"
 
-#: libparted/arch/linux.c:1436 libparted/arch/gnu.c:512
+#: libparted/arch/linux.c:1540 libparted/arch/gnu.c:512
 #, c-format
 msgid "Can't write to %s, because it is opened read-only."
 msgstr "Nie mo¿na zapisaæ do %s, poniewa¿ otwarte jest tylko do czytania."
 
-#: libparted/arch/linux.c:1460
+#: libparted/arch/linux.c:1564
 #, c-format
 msgid "%s during seek for write on %s"
 msgstr "%s podczas ustawiania do zapisu na %s"
 
-#: libparted/arch/linux.c:1957
+#: libparted/arch/linux.c:2062
 #, c-format
 msgid ""
 "Error informing the kernel about modifications to partition %s -- %s.  This "
@@ -174,7 +178,18 @@ msgstr ""
 "dokonane na %s a¿ do czasu ponownego uruchomienia komputera -- proszê nie "
 "pod³±czaæ ani u¿ywaæ tej partycji do czasu ponownego uruchomienia komputera."
 
-#: libparted/arch/linux.c:2031
+#: libparted/arch/linux.c:2263
+#, fuzzy, c-format
+msgid ""
+"parted was unable to re-read the partition table on %s (%s).  This means "
+"Linux won't know anything about the modifications you made. "
+msgstr ""
+"J±dro systemu nie mog³o ponownie odczytaæ tablicy partycji na %s (%s).  "
+"Oznacza to, ¿e Linux nie bêdzie wiedzia³ nic o modyfikacjach jakie zosta³y "
+"poczynione a¿ do czasu ponownego uruchomienia komputera.  Nale¿y ponownie "
+"uruchomiæ komputer zanim wykonasz jak±kolwiek operacjê na %s."
+
+#: libparted/arch/linux.c:2367
 #, c-format
 msgid ""
 "The kernel was unable to re-read the partition table on %s (%s).  This means "
@@ -224,7 +239,7 @@ msgstr ""
 "nie wie o ¿adnych zmianach jakie zosta³y wprowadzone.  Nale¿y ponownie "
 "uruchomiæ komputer zanim wykonasz jak±kolwiek operacjê na %s."
 
-#: libparted/arch/gnu.c:383 parted/parted.c:2215
+#: libparted/arch/gnu.c:383 parted/parted.c:2218
 msgid ""
 "You should reinstall your boot loader before rebooting.  Read section 4 of "
 "the Parted User documentation for more information."
@@ -238,12 +253,12 @@ msgstr ""
 msgid "%s trying to sync %s to disk"
 msgstr "B³±d synchronizacji %s do dysku %s"
 
-#: libparted/disk.c:183
+#: libparted/disk.c:185
 #, c-format
 msgid "Unable to open %s - unrecognised disk label."
 msgstr "Nie mo¿na otworzyæ %s - nierozpoznana etykieta dysku."
 
-#: libparted/disk.c:452
+#: libparted/disk.c:454
 #, c-format
 msgid ""
 "This libparted doesn't have write support for %s.  Perhaps it was compiled "
@@ -252,26 +267,26 @@ msgstr ""
 "Biblioteka libparted nie posiada obs³ugi zapisu dla %s.  Byæ mo¿e zosta³a "
 "ona zbudowana z obs³ug± tylko-do-odczytu."
 
-#: libparted/disk.c:579
+#: libparted/disk.c:581
 #, c-format
 msgid "Partition %d is %s, but the file system is %s."
 msgstr "Partycja %d jest %s, lecz system plików jest %s."
 
-#: libparted/disk.c:1056
+#: libparted/disk.c:1058
 #, c-format
 msgid "%s disk labels do not support extended partitions."
 msgstr "Etykiety dysku %s nie wspieraj± rozszerzonych partycji."
 
-#: libparted/disk.c:1616
+#: libparted/disk.c:1618
 #, c-format
 msgid "%s disk labels don't support logical or extended partitions."
 msgstr "Etykiety dysku %s nie wspieraj± logicznych lub rozszerzonych partycji."
 
-#: libparted/disk.c:1629
+#: libparted/disk.c:1631
 msgid "Too many primary partitions."
 msgstr "Zbyt du¿o partycji g³ównych."
 
-#: libparted/disk.c:1638
+#: libparted/disk.c:1640
 #, c-format
 msgid ""
 "Can't add a logical partition to %s, because there is no extended partition."
@@ -279,93 +294,93 @@ msgstr ""
 "Nie mo¿na dodaæ logicznej partycji do %s, poniewa¿ nie istnieje rozszerzona "
 "partycja."
 
-#: libparted/disk.c:1662
+#: libparted/disk.c:1664
 #, c-format
 msgid "Can't have more than one extended partition on %s."
 msgstr "Nie mo¿na mieæ wiêcej ni¿ jedn± rozszerzon± partycjê na %s."
 
-#: libparted/disk.c:1672
+#: libparted/disk.c:1674
 msgid "Can't have logical partitions outside of the extended partition."
 msgstr "Nie mo¿na mieæ logicznych partycji poza rozszerzon± partycj±."
 
-#: libparted/disk.c:1697
+#: libparted/disk.c:1699
 #, c-format
 msgid "Can't have a logical partition outside of the extended partition on %s."
 msgstr "%s nie mo¿e mieæ logicznej partycji poza rozszerzon± partycj±."
 
-#: libparted/disk.c:1707 libparted/disk.c:1761 libparted/disk.c:1927
+#: libparted/disk.c:1709 libparted/disk.c:1763 libparted/disk.c:1929
 msgid "Can't have overlapping partitions."
 msgstr "Nie mo¿na mieæ nak³adaj±cych siê partycji."
 
-#: libparted/disk.c:1715
+#: libparted/disk.c:1717
 msgid "Can't have a primary partition inside an extended partition."
 msgstr "Nie mo¿na mieæ g³ównej partycji wewn±trz rozszerzonej partycji."
 
-#: libparted/disk.c:2123
+#: libparted/disk.c:2125
 msgid "metadata"
 msgstr "metadane"
 
-#: libparted/disk.c:2125
+#: libparted/disk.c:2127
 msgid "free"
 msgstr "wolna"
 
-#: libparted/disk.c:2127 parted/ui.c:1002 parted/ui.c:1030
+#: libparted/disk.c:2129 parted/ui.c:1002 parted/ui.c:1030
 msgid "extended"
 msgstr "rozszerzona"
 
-#: libparted/disk.c:2129 parted/ui.c:1006 parted/ui.c:1034
+#: libparted/disk.c:2131 parted/ui.c:1006 parted/ui.c:1034
 msgid "logical"
 msgstr "logiczna"
 
-#: libparted/disk.c:2131 parted/ui.c:998 parted/ui.c:1026
+#: libparted/disk.c:2133 parted/ui.c:998 parted/ui.c:1026
 msgid "primary"
 msgstr "g³ówna"
 
-#: libparted/disk.c:2147
+#: libparted/disk.c:2149
 msgid "boot"
 msgstr "³adowalna"
 
-#: libparted/disk.c:2149
+#: libparted/disk.c:2151
 msgid "root"
 msgstr "root"
 
-#: libparted/disk.c:2151
+#: libparted/disk.c:2153
 msgid "swap"
 msgstr "wymiany"
 
-#: libparted/disk.c:2153
+#: libparted/disk.c:2155
 msgid "hidden"
 msgstr "ukryta"
 
-#: libparted/disk.c:2155
+#: libparted/disk.c:2157
 msgid "raid"
 msgstr "raid"
 
-#: libparted/disk.c:2157
+#: libparted/disk.c:2159
 msgid "lvm"
 msgstr "lvm"
 
-#: libparted/disk.c:2159
+#: libparted/disk.c:2161
 msgid "lba"
 msgstr "lba"
 
-#: libparted/disk.c:2161
+#: libparted/disk.c:2163
 msgid "hp-service"
 msgstr "us³uga-hp"
 
-#: libparted/disk.c:2163
+#: libparted/disk.c:2165
 msgid "palo"
 msgstr "palo"
 
-#: libparted/disk.c:2165
+#: libparted/disk.c:2167
 msgid "prep"
 msgstr "prep"
 
-#: libparted/disk.c:2167
+#: libparted/disk.c:2169
 msgid "msftres"
 msgstr ""
 
-#: libparted/disk.c:2173
+#: libparted/disk.c:2175
 #, c-format
 msgid "Unknown partition flag, %d."
 msgstr "Nieznana flaga partycji, %d."
@@ -829,17 +844,12 @@ msgstr "Nie mo¿na mieæ koñca przed pocz±tkiem!"
 msgid "Can't have a partition outside the disk!"
 msgstr "Nie mo¿na mieæ partycji poza dyskiem!"
 
-#: libparted/cs/geom.c:304
-#, c-format
-msgid "Attempt to read sectors %ld-%ld outside of partition on %s."
-msgstr "Próba odczytania sektorów %ld-%ld poza partycj± na %s."
-
-#: libparted/cs/geom.c:374
+#: libparted/cs/geom.c:367
 #, c-format
 msgid "Attempt to write sectors %ld-%ld outside of partition on %s."
 msgstr "Próba zapisania sektorów %ld-%ld poza partycj± na %s."
 
-#: libparted/cs/geom.c:414 libparted/fs/linux_swap/linux_swap.c:353
+#: libparted/cs/geom.c:407 libparted/fs/linux_swap/linux_swap.c:353
 msgid "checking for bad blocks"
 msgstr "sprawdzam czy istniej± uszkodzone bloki"
 
@@ -1718,8 +1728,8 @@ msgid "Partition(s) on %s are being used."
 msgstr "Partycja (partycje) na %s s± u¿ywane."
 
 #: parted/parted.c:413 parted/parted.c:594 parted/parted.c:979
-#: parted/parted.c:1059 parted/parted.c:1586 parted/parted.c:1663
-#: parted/parted.c:1707
+#: parted/parted.c:1059 parted/parted.c:1589 parted/parted.c:1666
+#: parted/parted.c:1710
 msgid "Partition number?"
 msgstr "Numer partycji?"
 
@@ -1760,12 +1770,12 @@ msgid "File system type?"
 msgstr "Typ systemu plików?"
 
 #: parted/parted.c:667 parted/parted.c:834 parted/parted.c:994
-#: parted/parted.c:1544 parted/parted.c:1595
+#: parted/parted.c:1547 parted/parted.c:1598
 msgid "Start?"
 msgstr "Pocz±tek?"
 
 #: parted/parted.c:669 parted/parted.c:837 parted/parted.c:997
-#: parted/parted.c:1546 parted/parted.c:1597
+#: parted/parted.c:1549 parted/parted.c:1600
 msgid "End?"
 msgstr "Koniec?"
 
@@ -1825,64 +1835,69 @@ msgstr "Minimalny rozmiar: "
 msgid "Maximum size: "
 msgstr "Maksymalny rozmiar: "
 
-#: parted/parted.c:1255
+#: parted/parted.c:1257
+#, c-format
+msgid "Model: %s (%s)\n"
+msgstr ""
+
+#: parted/parted.c:1258
 #, fuzzy, c-format
 msgid "Disk %s: %s\n"
 msgstr "%s  %s  %s"
 
-#: parted/parted.c:1256
+#: parted/parted.c:1259
 #, c-format
 msgid "Sector size (logical/physical): %lldB/%lldB\n"
 msgstr ""
 
-#: parted/parted.c:1267
+#: parted/parted.c:1270
 #, c-format
 msgid "BIOS cylinder,head,sector geometry: %d,%d,%d.  Each cylinder is %s.\n"
 msgstr ""
 "Geometria BIOS cylinder,g³owica,sektor: %d,%d,%d.  Ka¿dy cylinder ma %s.\n"
 
-#: parted/parted.c:1273
+#: parted/parted.c:1276
 #, fuzzy, c-format
 msgid "Partition Table: %s\n"
 msgstr "Nazwa partycji?"
 
-#: parted/parted.c:1284 parted/parted.c:1287
+#: parted/parted.c:1287 parted/parted.c:1290
 msgid "Number"
 msgstr "Numer"
 
-#: parted/parted.c:1284 parted/parted.c:1287
+#: parted/parted.c:1287 parted/parted.c:1290
 msgid "Start"
 msgstr "Pocz±tek"
 
-#: parted/parted.c:1285 parted/parted.c:1288
+#: parted/parted.c:1288 parted/parted.c:1291
 msgid "End"
 msgstr "Koniec"
 
-#: parted/parted.c:1288
+#: parted/parted.c:1291
 msgid "Size"
 msgstr "Rozmiar"
 
-#: parted/parted.c:1292
+#: parted/parted.c:1295
 msgid "Type"
 msgstr "Typ"
 
-#: parted/parted.c:1294
+#: parted/parted.c:1297
 msgid "File system"
 msgstr "System plików"
 
-#: parted/parted.c:1297
+#: parted/parted.c:1300
 msgid "Name"
 msgstr "Nazwa"
 
-#: parted/parted.c:1299
+#: parted/parted.c:1302
 msgid "Flags"
 msgstr "Flaga"
 
-#: parted/parted.c:1352
+#: parted/parted.c:1355
 msgid "Free Space"
 msgstr ""
 
-#: parted/parted.c:1441
+#: parted/parted.c:1444
 #, c-format
 msgid ""
 "A %s %s partition was found at %s -> %s.  Do you want to add it to the "
@@ -1891,43 +1906,43 @@ msgstr ""
 "Partycja %s %s zosta³a znaleziona na %s -> %s.  Czy chcesz j± dodaæ do "
 "tablicy partycji?"
 
-#: parted/parted.c:1479
+#: parted/parted.c:1482
 msgid "searching for file systems"
 msgstr "szukam systemów plików"
 
-#: parted/parted.c:1684
+#: parted/parted.c:1687
 msgid "New device?"
 msgstr "Nowe urz±dzenie?"
 
-#: parted/parted.c:1709
+#: parted/parted.c:1712
 #, fuzzy
 msgid "Flag to Invert?"
 msgstr "Flaga do zmienienia?"
 
-#: parted/parted.c:1714
+#: parted/parted.c:1717
 msgid "New state?"
 msgstr "Nowy stan?"
 
-#: parted/parted.c:1747
+#: parted/parted.c:1750
 msgid "Unit?"
 msgstr "Jednostka?"
 
-#: parted/parted.c:1896
+#: parted/parted.c:1899
 msgid "check"
 msgstr "sprawd¼"
 
-#: parted/parted.c:1899
+#: parted/parted.c:1902
 #, fuzzy
 msgid ""
 "check NUMBER                             do a simple check on the file system"
 msgstr ""
 "check NUMER                   wykonuje proste sprawdzenie systemu plików"
 
-#: parted/parted.c:1905
+#: parted/parted.c:1908
 msgid "cp"
 msgstr "kopiuj"
 
-#: parted/parted.c:1908
+#: parted/parted.c:1911
 msgid ""
 "cp [FROM-DEVICE] FROM-NUMBER TO-NUMBER   copy file system to another "
 "partition"
@@ -1935,22 +1950,22 @@ msgstr ""
 "cp [URZ¡DZENIE-¬RÓD£OWE] NUMER-¬RÓD£OWY NUMER-DOCELOWY  kopiuje system "
 "plików na inn± partycjê"
 
-#: parted/parted.c:1914
+#: parted/parted.c:1917
 msgid "help"
 msgstr "pomoc"
 
-#: parted/parted.c:1917
+#: parted/parted.c:1920
 #, fuzzy
 msgid ""
 "help [COMMAND]                           prints general help, or help on "
 "COMMAND"
 msgstr "pomoc [KOMENDA]               wy¶wietla pomoc"
 
-#: parted/parted.c:1923
+#: parted/parted.c:1926
 msgid "mklabel"
 msgstr "mklabel"
 
-#: parted/parted.c:1926
+#: parted/parted.c:1929
 #, fuzzy
 msgid ""
 "mklabel LABEL-TYPE                       create a new disklabel (partition "
@@ -1958,26 +1973,26 @@ msgid ""
 msgstr ""
 "mklabel TYP-ETYKIETY          tworzy now± etykietê dysku (tablicê partycji)"
 
-#: parted/parted.c:1932
+#: parted/parted.c:1935
 msgid "mkfs"
 msgstr "mkfs"
 
-#: parted/parted.c:1935
+#: parted/parted.c:1938
 #, fuzzy
 msgid ""
 "mkfs NUMBER FS-TYPE                      make a FS-TYPE file system on "
 "partititon NUMBER"
 msgstr "mkfs NUMER SYSTEM-PLIKÓW      tworzy system plików na partycji NUMER"
 
-#: parted/parted.c:1941
+#: parted/parted.c:1944
 msgid "mkpart"
 msgstr "mkpart"
 
-#: parted/parted.c:1944
+#: parted/parted.c:1947
 msgid "mkpart PART-TYPE [FS-TYPE] START END     make a partition"
 msgstr "mkpart TYP-PARTYCJI [SYSTEM-PLIKÓW] POCZ¡TEK KONIEC   tworzy partycjê"
 
-#: parted/parted.c:1950
+#: parted/parted.c:1953
 msgid ""
 "mkpart makes a partition without creating a new file system on the "
 "partition.  FS-TYPE may be specified to set an appropriate partition ID.\n"
@@ -1986,40 +2001,40 @@ msgstr ""
 "partycji.  Opcjonalny SYSTEM-PLIKÓW mo¿e zostaæ podany do okre¶lenia "
 "w³a¶ciwego identyfikatora partycji.\n"
 
-#: parted/parted.c:1955
+#: parted/parted.c:1958
 msgid "mkpartfs"
 msgstr "mkpartfs"
 
-#: parted/parted.c:1958
+#: parted/parted.c:1961
 msgid ""
 "mkpartfs PART-TYPE FS-TYPE START END     make a partition with a file system"
 msgstr ""
 "mkpartfs TYP-PARTYCJI SYSTEM-PLIKÓW POCZ¡TEK KONIEC   tworzy partycjê z "
 "systemem plików"
 
-#: parted/parted.c:1964
+#: parted/parted.c:1967
 msgid "move"
 msgstr "przesuñ"
 
-#: parted/parted.c:1967
+#: parted/parted.c:1970
 #, fuzzy
 msgid "move NUMBER START END                    move partition NUMBER"
 msgstr "move NUMER POCZ¡TEK KONIEC    przesuwa partycjê NUMER"
 
-#: parted/parted.c:1972
+#: parted/parted.c:1975
 msgid "name"
 msgstr "nazwa"
 
-#: parted/parted.c:1975
+#: parted/parted.c:1978
 #, fuzzy
 msgid "name NUMBER NAME                         name partition NUMBER as NAME"
 msgstr "name NUMER NAZWA              nadaje NAZWÊ partycji NUMER"
 
-#: parted/parted.c:1980
+#: parted/parted.c:1983
 msgid "print"
 msgstr "drukuj"
 
-#: parted/parted.c:1983
+#: parted/parted.c:1986
 #, fuzzy
 msgid ""
 "print [free|NUMBER|all]                  display the partition table, a "
@@ -2027,7 +2042,7 @@ msgid ""
 msgstr ""
 "print [NUMER]                 wy¶wietla tablicê partycji lub ca³± partycjê"
 
-#: parted/parted.c:1987
+#: parted/parted.c:1990
 #, fuzzy
 msgid ""
 "Without arguments, print displays the entire partition table. With 'free'\n"
@@ -2040,20 +2055,20 @@ msgstr ""
 "Je¶li podano NUMER partycji, to wtedy wy¶wietlone zostan± bardziej\n"
 "szczegó³owe informacje odno¶nie partycji NUMER.\n"
 
-#: parted/parted.c:1995
+#: parted/parted.c:1998
 msgid "quit"
 msgstr "koniec"
 
-#: parted/parted.c:1998
+#: parted/parted.c:2001
 #, fuzzy
 msgid "quit                                     exit program"
 msgstr "quit                          koñczy pracê programu"
 
-#: parted/parted.c:2003
+#: parted/parted.c:2006
 msgid "rescue"
 msgstr "uratuj"
 
-#: parted/parted.c:2006
+#: parted/parted.c:2009
 #, fuzzy
 msgid ""
 "rescue START END                         rescue a lost partition near START "
@@ -2062,11 +2077,11 @@ msgstr ""
 "rescue POCZ¡TEK KONIEC        odzyskuje utracon± partycjê blisko POCZ¡TKU i "
 "KOÑCA"
 
-#: parted/parted.c:2012
+#: parted/parted.c:2015
 msgid "resize"
 msgstr "rozmiar"
 
-#: parted/parted.c:2015
+#: parted/parted.c:2018
 #, fuzzy
 msgid ""
 "resize NUMBER START END                  resize partition NUMBER and its "
@@ -2074,80 +2089,80 @@ msgid ""
 msgstr ""
 "resize NUMER POCZ¡TEK KONIEC  zmienia rozmiar systemu plików i partycji NUMER"
 
-#: parted/parted.c:2023
+#: parted/parted.c:2026
 msgid "rm"
 msgstr "usuñ"
 
-#: parted/parted.c:2026
+#: parted/parted.c:2029
 #, fuzzy
 msgid "rm NUMBER                                delete partition NUMBER"
 msgstr "rm NUMER                      usuwa partycjê NUMER"
 
-#: parted/parted.c:2031
+#: parted/parted.c:2034
 msgid "select"
 msgstr "wybierz"
 
-#: parted/parted.c:2034
+#: parted/parted.c:2037
 #, fuzzy
 msgid "select DEVICE                            choose the device to edit"
 msgstr "select URZ¡DZENIE             wybiera urz±dzenie do edycji"
 
-#: parted/parted.c:2039
+#: parted/parted.c:2042
 msgid "set"
 msgstr "ustaw"
 
-#: parted/parted.c:2042
+#: parted/parted.c:2045
 #, fuzzy
 msgid ""
 "set NUMBER FLAG STATE                    change the FLAG on partition NUMBER"
 msgstr "rm NUMER                      usuwa partycjê NUMER"
 
-#: parted/parted.c:2048
+#: parted/parted.c:2051
 msgid "toggle"
 msgstr ""
 
-#: parted/parted.c:2051
+#: parted/parted.c:2054
 #, fuzzy
 msgid ""
 "toggle [NUMBER [FLAG]]                   toggle the state of FLAG on "
 "partition NUMBER"
 msgstr "rm NUMER                      usuwa partycjê NUMER"
 
-#: parted/parted.c:2057
+#: parted/parted.c:2060
 msgid "unit"
 msgstr "jednostka"
 
-#: parted/parted.c:2060
+#: parted/parted.c:2063
 #, fuzzy
 msgid "unit UNIT                                set the default unit to UNIT"
 msgstr "unit JEDNOSTKA                ustawia domy¶ln± jednostkê"
 
-#: parted/parted.c:2065
+#: parted/parted.c:2068
 msgid "version"
 msgstr ""
 
-#: parted/parted.c:2068
+#: parted/parted.c:2071
 msgid ""
 "version                                  displays the current version of GNU "
 "Parted and copyright information"
 msgstr ""
 
-#: parted/parted.c:2072
+#: parted/parted.c:2075
 msgid ""
 "version displays copyright and version information corressponding to this "
 "copy of GNU Parted\n"
 msgstr ""
 
-#: parted/parted.c:2158
+#: parted/parted.c:2161
 msgid "No device found"
 msgstr "Nie znaleziono urz±dzenia"
 
-#: parted/parted.c:2222
+#: parted/parted.c:2225
 msgid "Don't forget to update /etc/fstab, if necessary.\n"
 msgstr ""
 "Nie zapomnij o aktualizacji /etc/fstab, je¶li istnieje taka potrzeba.\n"
 
-#: parted/parted.c:2242
+#: parted/parted.c:2245
 #, c-format
 msgid "WARNING: You are not superuser.  Watch out for permissions.\n"
 msgstr ""
@@ -2396,6 +2411,9 @@ msgstr "KOMENDY:"
 #, c-format
 msgid "Using %s\n"
 msgstr "U¿ycie %s\n"
+
+#~ msgid "Attempt to read sectors %ld-%ld outside of partition on %s."
+#~ msgstr "Próba odczytania sektorów %ld-%ld poza partycj± na %s."
 
 #~ msgid ""
 #~ "This ext2 file system has a rather strange layout!  Parted can't resize "

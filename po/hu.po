@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: parted-hu2\n"
 "Report-Msgid-Bugs-To: bug-parted@gnu.org\n"
-"POT-Creation-Date: 2006-10-09 14:01-0400\n"
+"POT-Creation-Date: 2006-10-11 15:47-0400\n"
 "PO-Revision-Date: 2006-06-02 10:52+0200\n"
 "Last-Translator: Gabor Sari <sari.gabor@gmail.com>\n"
 "Language-Team: hungary <hu@li.org>\n"
@@ -17,12 +17,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.2\n"
 
-#: libparted/arch/linux.c:320
+#: libparted/arch/linux.c:417
 #, c-format
 msgid "Could not stat device %s - %s."
 msgstr ""
 
-#: libparted/arch/linux.c:432
+#: libparted/arch/linux.c:531
 #, c-format
 msgid ""
 "Could not determine sector size for %s: %s.\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Nem látom %s szektorméretét: %s.\n"
 "Az alapértéket (%lld) használom."
 
-#: libparted/arch/linux.c:448
+#: libparted/arch/linux.c:547
 #, c-format
 msgid ""
 "Device %s has a logical sector size of %lld.  Not all parts of GNU Parted "
@@ -40,21 +40,21 @@ msgstr ""
 "%s logikai szektormérete: %lld. A GNU Parted nem minden része támogatja ezt "
 "még, és a működő kód NAGYON KÍSÉRLETI.\n"
 
-#: libparted/arch/linux.c:488
+#: libparted/arch/linux.c:587
 #, c-format
 msgid "Unable to determine the size of %s (%s)."
 msgstr "Nem tudom megállapítani %s méretét (%s)."
 
-#: libparted/arch/linux.c:577
+#: libparted/arch/linux.c:676
 #, c-format
 msgid "Could not get identity of device %s - %s"
 msgstr "Nem tudom azonosítani ezt az eszközt: %s - %s"
 
-#: libparted/arch/linux.c:586
+#: libparted/arch/linux.c:685
 msgid "Generic IDE"
 msgstr "Általános IDE"
 
-#: libparted/arch/linux.c:603
+#: libparted/arch/linux.c:702
 #, c-format
 msgid ""
 "Device %s has multiple (%d) logical sectors per physical sector.\n"
@@ -68,12 +68,12 @@ msgstr ""
 "fájlrendszer párokhoz, pl.: GPT és ext2/3.\n"
 "Nézd meg a weben elérhető dokumentációt."
 
-#: libparted/arch/linux.c:773
+#: libparted/arch/linux.c:872
 #, c-format
 msgid "Error initialising SCSI device %s - %s"
 msgstr "Hiba egy SCSI eszköz inicializálásakor: %s - %s"
 
-#: libparted/arch/linux.c:828
+#: libparted/arch/linux.c:927
 #, c-format
 msgid ""
 "The device %s has zero length, and can't possibly store a file system or "
@@ -82,7 +82,7 @@ msgstr ""
 "%s eszköz 0 hosszúságú, és valószínűleg nem tárol fájlrendszert vagy "
 "partíciós táblát. Talán nem a megfelelő eszközt választottad?"
 
-#: libparted/arch/linux.c:936
+#: libparted/arch/linux.c:1035
 #, fuzzy, c-format
 msgid ""
 "Unable to determine geometry of file/device %s.  You should not use Parted "
@@ -91,85 +91,89 @@ msgstr ""
 "Nem látom a fájl/eszköz geometriáját. Ne használd a Parted-et, míg nem tudod "
 "VALÓBAN, hogy mit teszel!"
 
-#: libparted/arch/linux.c:1011
+#: libparted/arch/linux.c:1110
 msgid "DAC960 RAID controller"
 msgstr "DAC960 RAID vezérlő"
 
-#: libparted/arch/linux.c:1016
+#: libparted/arch/linux.c:1115
 msgid "Promise SX8 SATA Device"
 msgstr ""
 
-#: libparted/arch/linux.c:1021
+#: libparted/arch/linux.c:1120
 msgid "IBM S390 DASD drive"
 msgstr ""
 
-#: libparted/arch/linux.c:1026
+#: libparted/arch/linux.c:1125
 msgid "IBM iSeries Virtual DASD"
 msgstr ""
 
-#: libparted/arch/linux.c:1031
+#: libparted/arch/linux.c:1130
 msgid "Compaq Smart Array"
 msgstr "Compaq Smart tömb"
 
-#: libparted/arch/linux.c:1036
+#: libparted/arch/linux.c:1135
 msgid "ATARAID Controller"
 msgstr "ATARAID vezérlő"
 
-#: libparted/arch/linux.c:1041
+#: libparted/arch/linux.c:1140
 msgid "I2O Controller"
 msgstr "I2O vezérlő"
 
-#: libparted/arch/linux.c:1046
+#: libparted/arch/linux.c:1145
 msgid "User-Mode Linux UBD"
 msgstr "User-Mode Linux UBD"
 
-#: libparted/arch/linux.c:1056
+#: libparted/arch/linux.c:1155
+msgid "Linux device-mapper"
+msgstr ""
+
+#: libparted/arch/linux.c:1160
 msgid "Unknown"
 msgstr "Ismeretlen"
 
-#: libparted/arch/linux.c:1063
+#: libparted/arch/linux.c:1167
 msgid "ped_device_new()  Unsupported device type"
 msgstr "ped_device_new()  Nem támogatott eszköz típus"
 
-#: libparted/arch/linux.c:1166 libparted/arch/gnu.c:264
+#: libparted/arch/linux.c:1270 libparted/arch/gnu.c:264
 #, c-format
 msgid "Error opening %s: %s"
 msgstr "Sikertelen megnyitás: %s: %s"
 
-#: libparted/arch/linux.c:1177 libparted/arch/gnu.c:274
+#: libparted/arch/linux.c:1281 libparted/arch/gnu.c:274
 #, c-format
 msgid "Unable to open %s read-write (%s).  %s has been opened read-only."
 msgstr "Nem tudom megnyitni írás/olvasásra %s-t (%s).  %s most csak olvasható."
 
-#: libparted/arch/linux.c:1285 libparted/arch/linux.c:1362
+#: libparted/arch/linux.c:1389 libparted/arch/linux.c:1466
 #: libparted/arch/gnu.c:452 libparted/arch/gnu.c:551 libparted/arch/gnu.c:679
 #, c-format
 msgid "%s during read on %s"
 msgstr "%s az alábbi olvasásakor: %s"
 
-#: libparted/arch/linux.c:1326
+#: libparted/arch/linux.c:1430
 #, c-format
 msgid "%s during seek for read on %s"
 msgstr "%s a lapozás közben az alábbi olvasásakor: %s"
 
-#: libparted/arch/linux.c:1407 libparted/arch/linux.c:1499
-#: libparted/arch/linux.c:1568 libparted/arch/gnu.c:588
+#: libparted/arch/linux.c:1511 libparted/arch/linux.c:1603
+#: libparted/arch/linux.c:1672 libparted/arch/gnu.c:588
 #: libparted/arch/gnu.c:633 libparted/arch/gnu.c:710
 #, c-format
 msgid "%s during write on %s"
 msgstr "%s az alábbi írásakor %s"
 
-#: libparted/arch/linux.c:1436 libparted/arch/gnu.c:512
+#: libparted/arch/linux.c:1540 libparted/arch/gnu.c:512
 #, c-format
 msgid "Can't write to %s, because it is opened read-only."
 msgstr "Nem tudom írni ezt: %s, mert csak-olvashatóként van megnyitva."
 
-#: libparted/arch/linux.c:1460
+#: libparted/arch/linux.c:1564
 #, c-format
 msgid "%s during seek for write on %s"
 msgstr "%s a lapozás közben az alábbi írásakor: %s"
 
-#: libparted/arch/linux.c:1957
+#: libparted/arch/linux.c:2062
 #, c-format
 msgid ""
 "Error informing the kernel about modifications to partition %s -- %s.  This "
@@ -181,7 +185,17 @@ msgstr ""
 "semmit %s változásairól - így semmilyen módon nem fogod tudni használni azt "
 "egy újraindítás előtt."
 
-#: libparted/arch/linux.c:2031
+#: libparted/arch/linux.c:2263
+#, fuzzy, c-format
+msgid ""
+"parted was unable to re-read the partition table on %s (%s).  This means "
+"Linux won't know anything about the modifications you made. "
+msgstr ""
+"A rendszermag nem tudta újraolvasni az alábbi partíciós táblát: %s (%s). Ez "
+"azt jelenti, hogy a Linux, míg újra nem indítod, nem fog tudni semmit "
+"változásokról. %s bármilyen felhasználása előtt újra kell indítanod a gépet."
+
+#: libparted/arch/linux.c:2367
 #, c-format
 msgid ""
 "The kernel was unable to re-read the partition table on %s (%s).  This means "
@@ -222,7 +236,7 @@ msgstr ""
 "semmit a változásokról. %s bármilyen felhasználása előtt újra kell indítanod "
 "a gépet."
 
-#: libparted/arch/gnu.c:383 parted/parted.c:2215
+#: libparted/arch/gnu.c:383 parted/parted.c:2218
 msgid ""
 "You should reinstall your boot loader before rebooting.  Read section 4 of "
 "the Parted User documentation for more information."
@@ -235,130 +249,130 @@ msgstr ""
 msgid "%s trying to sync %s to disk"
 msgstr ""
 
-#: libparted/disk.c:183
+#: libparted/disk.c:185
 #, c-format
 msgid "Unable to open %s - unrecognised disk label."
 msgstr "%s nem megnyitható - érthetetlen lemez címke."
 
-#: libparted/disk.c:452
+#: libparted/disk.c:454
 #, c-format
 msgid ""
 "This libparted doesn't have write support for %s.  Perhaps it was compiled "
 "read-only."
 msgstr "A libparted nem tud írni ide: %s. Lehet, hogy csak-olvasóra fordított."
 
-#: libparted/disk.c:579
+#: libparted/disk.c:581
 #, c-format
 msgid "Partition %d is %s, but the file system is %s."
 msgstr "A(z) %d. partíció %s, de a fájlrendszer %s."
 
-#: libparted/disk.c:1056
+#: libparted/disk.c:1058
 #, c-format
 msgid "%s disk labels do not support extended partitions."
 msgstr ""
 
-#: libparted/disk.c:1616
+#: libparted/disk.c:1618
 #, c-format
 msgid "%s disk labels don't support logical or extended partitions."
 msgstr ""
 
-#: libparted/disk.c:1629
+#: libparted/disk.c:1631
 msgid "Too many primary partitions."
 msgstr "Túl sok elsődleges partíció."
 
-#: libparted/disk.c:1638
+#: libparted/disk.c:1640
 #, c-format
 msgid ""
 "Can't add a logical partition to %s, because there is no extended partition."
 msgstr "Kiterjesztett partíció nélkül nem készíthető logikai partíció ide: %s."
 
-#: libparted/disk.c:1662
+#: libparted/disk.c:1664
 #, c-format
 msgid "Can't have more than one extended partition on %s."
 msgstr "Nem lehet egynél több kiterjesztett partíció itt: %s"
 
-#: libparted/disk.c:1672
+#: libparted/disk.c:1674
 msgid "Can't have logical partitions outside of the extended partition."
 msgstr "Nem lehetnek logikai partíciók a kiterjesztetten kívül."
 
-#: libparted/disk.c:1697
+#: libparted/disk.c:1699
 #, c-format
 msgid "Can't have a logical partition outside of the extended partition on %s."
 msgstr "Nem lehetnek logikai partíciók a kiterjesztetten kívül itt: %s."
 
-#: libparted/disk.c:1707 libparted/disk.c:1761 libparted/disk.c:1927
+#: libparted/disk.c:1709 libparted/disk.c:1763 libparted/disk.c:1929
 msgid "Can't have overlapping partitions."
 msgstr "Nem lehetnek egymást átfedő partíciók."
 
-#: libparted/disk.c:1715
+#: libparted/disk.c:1717
 msgid "Can't have a primary partition inside an extended partition."
 msgstr "Nem lehet elsődleges partíció egy kiterjesztettben."
 
-#: libparted/disk.c:2123
+#: libparted/disk.c:2125
 msgid "metadata"
 msgstr "metaadatok"
 
-#: libparted/disk.c:2125
+#: libparted/disk.c:2127
 msgid "free"
 msgstr "szabad"
 
-#: libparted/disk.c:2127 parted/ui.c:1002 parted/ui.c:1030
+#: libparted/disk.c:2129 parted/ui.c:1002 parted/ui.c:1030
 msgid "extended"
 msgstr "kiterjesztett"
 
-#: libparted/disk.c:2129 parted/ui.c:1006 parted/ui.c:1034
+#: libparted/disk.c:2131 parted/ui.c:1006 parted/ui.c:1034
 msgid "logical"
 msgstr "logikai"
 
-#: libparted/disk.c:2131 parted/ui.c:998 parted/ui.c:1026
+#: libparted/disk.c:2133 parted/ui.c:998 parted/ui.c:1026
 msgid "primary"
 msgstr "elsődleges"
 
-#: libparted/disk.c:2147
+#: libparted/disk.c:2149
 msgid "boot"
 msgstr "boot"
 
-#: libparted/disk.c:2149
+#: libparted/disk.c:2151
 msgid "root"
 msgstr "root"
 
-#: libparted/disk.c:2151
+#: libparted/disk.c:2153
 msgid "swap"
 msgstr "swap"
 
-#: libparted/disk.c:2153
+#: libparted/disk.c:2155
 msgid "hidden"
 msgstr "rejtett"
 
-#: libparted/disk.c:2155
+#: libparted/disk.c:2157
 msgid "raid"
 msgstr "raid"
 
-#: libparted/disk.c:2157
+#: libparted/disk.c:2159
 msgid "lvm"
 msgstr "lvm"
 
-#: libparted/disk.c:2159
+#: libparted/disk.c:2161
 msgid "lba"
 msgstr "lba"
 
-#: libparted/disk.c:2161
+#: libparted/disk.c:2163
 msgid "hp-service"
 msgstr "hp-service"
 
-#: libparted/disk.c:2163
+#: libparted/disk.c:2165
 msgid "palo"
 msgstr "palo"
 
-#: libparted/disk.c:2165
+#: libparted/disk.c:2167
 msgid "prep"
 msgstr "prep"
 
-#: libparted/disk.c:2167
+#: libparted/disk.c:2169
 msgid "msftres"
 msgstr "msftres"
 
-#: libparted/disk.c:2173
+#: libparted/disk.c:2175
 #, c-format
 msgid "Unknown partition flag, %d."
 msgstr "Ismeretlen partíció : %d."
@@ -793,17 +807,12 @@ msgstr "Nem lehet vég a kezdet előtt!"
 msgid "Can't have a partition outside the disk!"
 msgstr "Nem lehet lemezen kívüli partíció!"
 
-#: libparted/cs/geom.c:304
-#, c-format
-msgid "Attempt to read sectors %ld-%ld outside of partition on %s."
-msgstr "Kísérlet partíción kívüli %ld-%ld szektorok olvasására itt: %s."
-
-#: libparted/cs/geom.c:374
+#: libparted/cs/geom.c:367
 #, c-format
 msgid "Attempt to write sectors %ld-%ld outside of partition on %s."
 msgstr "Kísérlet partíción kívüli %ld-%ld szektorok írására itt: %s."
 
-#: libparted/cs/geom.c:414 libparted/fs/linux_swap/linux_swap.c:353
+#: libparted/cs/geom.c:407 libparted/fs/linux_swap/linux_swap.c:353
 msgid "checking for bad blocks"
 msgstr "hibás blokkok keresése"
 
@@ -1595,8 +1604,8 @@ msgid "Partition(s) on %s are being used."
 msgstr "%s partíciói használat alatt vannak."
 
 #: parted/parted.c:413 parted/parted.c:594 parted/parted.c:979
-#: parted/parted.c:1059 parted/parted.c:1586 parted/parted.c:1663
-#: parted/parted.c:1707
+#: parted/parted.c:1059 parted/parted.c:1589 parted/parted.c:1666
+#: parted/parted.c:1710
 msgid "Partition number?"
 msgstr "Partíció száma?"
 
@@ -1637,12 +1646,12 @@ msgid "File system type?"
 msgstr "Fájlrendszer típus?"
 
 #: parted/parted.c:667 parted/parted.c:834 parted/parted.c:994
-#: parted/parted.c:1544 parted/parted.c:1595
+#: parted/parted.c:1547 parted/parted.c:1598
 msgid "Start?"
 msgstr "Kezdet?"
 
 #: parted/parted.c:669 parted/parted.c:837 parted/parted.c:997
-#: parted/parted.c:1546 parted/parted.c:1597
+#: parted/parted.c:1549 parted/parted.c:1600
 msgid "End?"
 msgstr "Vég?"
 
@@ -1699,63 +1708,68 @@ msgstr "Minimum méret: "
 msgid "Maximum size: "
 msgstr "Maximum méret: "
 
-#: parted/parted.c:1255
+#: parted/parted.c:1257
+#, c-format
+msgid "Model: %s (%s)\n"
+msgstr ""
+
+#: parted/parted.c:1258
 #, c-format
 msgid "Disk %s: %s\n"
 msgstr "%s lemez: %s\n"
 
-#: parted/parted.c:1256
+#: parted/parted.c:1259
 #, c-format
 msgid "Sector size (logical/physical): %lldB/%lldB\n"
 msgstr "Szektorméret (logikai/fizikai): %lldB/%lldB\n"
 
-#: parted/parted.c:1267
+#: parted/parted.c:1270
 #, c-format
 msgid "BIOS cylinder,head,sector geometry: %d,%d,%d.  Each cylinder is %s.\n"
 msgstr "BIOS cilinder,fej,szektor geometria: %d,%d,%d.  Egy cilinder %s.\n"
 
-#: parted/parted.c:1273
+#: parted/parted.c:1276
 #, c-format
 msgid "Partition Table: %s\n"
 msgstr "Partíciós tábla: %s\n"
 
-#: parted/parted.c:1284 parted/parted.c:1287
+#: parted/parted.c:1287 parted/parted.c:1290
 msgid "Number"
 msgstr "Szám"
 
-#: parted/parted.c:1284 parted/parted.c:1287
+#: parted/parted.c:1287 parted/parted.c:1290
 msgid "Start"
 msgstr "Kezdet"
 
-#: parted/parted.c:1285 parted/parted.c:1288
+#: parted/parted.c:1288 parted/parted.c:1291
 msgid "End"
 msgstr "Vég"
 
-#: parted/parted.c:1288
+#: parted/parted.c:1291
 msgid "Size"
 msgstr "Méret"
 
-#: parted/parted.c:1292
+#: parted/parted.c:1295
 msgid "Type"
 msgstr "Típus"
 
-#: parted/parted.c:1294
+#: parted/parted.c:1297
 msgid "File system"
 msgstr "Fájlrendszer"
 
-#: parted/parted.c:1297
+#: parted/parted.c:1300
 msgid "Name"
 msgstr "Név"
 
-#: parted/parted.c:1299
+#: parted/parted.c:1302
 msgid "Flags"
 msgstr "Zászlók"
 
-#: parted/parted.c:1352
+#: parted/parted.c:1355
 msgid "Free Space"
 msgstr "Szabad Hely"
 
-#: parted/parted.c:1441
+#: parted/parted.c:1444
 #, fuzzy, c-format
 msgid ""
 "A %s %s partition was found at %s -> %s.  Do you want to add it to the "
@@ -1764,41 +1778,41 @@ msgstr ""
 "Egy %s %s partíciót találtam itt: %s -&gt; %s.  Hozzáadjam a partíciós "
 "táblához?"
 
-#: parted/parted.c:1479
+#: parted/parted.c:1482
 msgid "searching for file systems"
 msgstr "fájlrendszerek keresése"
 
-#: parted/parted.c:1684
+#: parted/parted.c:1687
 msgid "New device?"
 msgstr "Új eszköz?"
 
-#: parted/parted.c:1709
+#: parted/parted.c:1712
 msgid "Flag to Invert?"
 msgstr ""
 
-#: parted/parted.c:1714
+#: parted/parted.c:1717
 msgid "New state?"
 msgstr "Új állapot?"
 
-#: parted/parted.c:1747
+#: parted/parted.c:1750
 msgid "Unit?"
 msgstr "Egység?"
 
-#: parted/parted.c:1896
+#: parted/parted.c:1899
 msgid "check"
 msgstr "check"
 
-#: parted/parted.c:1899
+#: parted/parted.c:1902
 msgid ""
 "check NUMBER                             do a simple check on the file system"
 msgstr ""
 "check SZÁM                               egyszerű ellenőrzés a fájlrendszeren"
 
-#: parted/parted.c:1905
+#: parted/parted.c:1908
 msgid "cp"
 msgstr "cp"
 
-#: parted/parted.c:1908
+#: parted/parted.c:1911
 msgid ""
 "cp [FROM-DEVICE] FROM-NUMBER TO-NUMBER   copy file system to another "
 "partition"
@@ -1806,21 +1820,21 @@ msgstr ""
 "cp [ESZKÖZRŐL] SORSZÁMRÓL SORSZÁMRA     fájlrendszert másol egy másik "
 "partícióra"
 
-#: parted/parted.c:1914
+#: parted/parted.c:1917
 msgid "help"
 msgstr "help"
 
-#: parted/parted.c:1917
+#: parted/parted.c:1920
 msgid ""
 "help [COMMAND]                           prints general help, or help on "
 "COMMAND"
 msgstr "help [PARANCS]                           általános vagy PARANCS súgó"
 
-#: parted/parted.c:1923
+#: parted/parted.c:1926
 msgid "mklabel"
 msgstr "mklabel"
 
-#: parted/parted.c:1926
+#: parted/parted.c:1929
 msgid ""
 "mklabel LABEL-TYPE                       create a new disklabel (partition "
 "table)"
@@ -1828,11 +1842,11 @@ msgstr ""
 "mklabel CÍMKE-TÍPUS                      új lemezcímkét készít (partíciós "
 "tábla)"
 
-#: parted/parted.c:1932
+#: parted/parted.c:1935
 msgid "mkfs"
 msgstr "mkfs"
 
-#: parted/parted.c:1935
+#: parted/parted.c:1938
 msgid ""
 "mkfs NUMBER FS-TYPE                      make a FS-TYPE file system on "
 "partititon NUMBER"
@@ -1840,15 +1854,15 @@ msgstr ""
 "mkfs SZÁM FS-TÍPUS                       FS-TÍPUSú fájlrendszert készít a "
 "SZÁM. partíción"
 
-#: parted/parted.c:1941
+#: parted/parted.c:1944
 msgid "mkpart"
 msgstr "mkpart"
 
-#: parted/parted.c:1944
+#: parted/parted.c:1947
 msgid "mkpart PART-TYPE [FS-TYPE] START END     make a partition"
 msgstr "mkpart PART-TÍPUS [FS-TÍPUS] KEZDET VÉG  partíciót készít"
 
-#: parted/parted.c:1950
+#: parted/parted.c:1953
 msgid ""
 "mkpart makes a partition without creating a new file system on the "
 "partition.  FS-TYPE may be specified to set an appropriate partition ID.\n"
@@ -1856,38 +1870,38 @@ msgstr ""
 "az mkpart fájlrendszer nélüli partíciót készít. Az FS-TYPE megfelelő "
 "partíció ID-t állíthat be.\n"
 
-#: parted/parted.c:1955
+#: parted/parted.c:1958
 msgid "mkpartfs"
 msgstr "mkpartfs"
 
-#: parted/parted.c:1958
+#: parted/parted.c:1961
 msgid ""
 "mkpartfs PART-TYPE FS-TYPE START END     make a partition with a file system"
 msgstr ""
 "mkpartfs PART-TÍPUS FS-TÍPUS KEZDET VÉG  partíciót készít fájlrendszerrel"
 
-#: parted/parted.c:1964
+#: parted/parted.c:1967
 msgid "move"
 msgstr "move"
 
-#: parted/parted.c:1967
+#: parted/parted.c:1970
 msgid "move NUMBER START END                    move partition NUMBER"
 msgstr "move SZÁM KEZDET VÉG                     áthelyezi a SZÁM. partíciót"
 
-#: parted/parted.c:1972
+#: parted/parted.c:1975
 msgid "name"
 msgstr "name"
 
-#: parted/parted.c:1975
+#: parted/parted.c:1978
 msgid "name NUMBER NAME                         name partition NUMBER as NAME"
 msgstr ""
 "name SZÁM NÉV                            a SZÁM. partíciót NÉVvel nevezi"
 
-#: parted/parted.c:1980
+#: parted/parted.c:1983
 msgid "print"
 msgstr "print"
 
-#: parted/parted.c:1983
+#: parted/parted.c:1986
 msgid ""
 "print [free|NUMBER|all]                  display the partition table, a "
 "partition, or all devices"
@@ -1895,7 +1909,7 @@ msgstr ""
 "print [free|SZÁM|all]                    kiírja a partíciós táblát, egy "
 "partíciót vagy minden eszközt"
 
-#: parted/parted.c:1987
+#: parted/parted.c:1990
 msgid ""
 "Without arguments, print displays the entire partition table. With 'free'\n"
 "argument, information about free space will be displayed otherwise if a\n"
@@ -1910,19 +1924,19 @@ msgstr ""
 "Az 'all' argumentum megadása esetén\n"
 "minden eszköz partíciós adatait kiírja."
 
-#: parted/parted.c:1995
+#: parted/parted.c:1998
 msgid "quit"
 msgstr "quit"
 
-#: parted/parted.c:1998
+#: parted/parted.c:2001
 msgid "quit                                     exit program"
 msgstr "quit                                     kilépés"
 
-#: parted/parted.c:2003
+#: parted/parted.c:2006
 msgid "rescue"
 msgstr "rescue"
 
-#: parted/parted.c:2006
+#: parted/parted.c:2009
 msgid ""
 "rescue START END                         rescue a lost partition near START "
 "and END"
@@ -1930,11 +1944,11 @@ msgstr ""
 "rescue KEZDET VÉG                        visszaállítja a KEZDET és VÉG közti "
 "partíciót"
 
-#: parted/parted.c:2012
+#: parted/parted.c:2015
 msgid "resize"
 msgstr "resize"
 
-#: parted/parted.c:2015
+#: parted/parted.c:2018
 msgid ""
 "resize NUMBER START END                  resize partition NUMBER and its "
 "file system"
@@ -1942,60 +1956,60 @@ msgstr ""
 "resize SZÁM KEZDET VÉG                   átméretezi a SZÁM. partíciót és "
 "fájlrendszerét"
 
-#: parted/parted.c:2023
+#: parted/parted.c:2026
 msgid "rm"
 msgstr "rm"
 
-#: parted/parted.c:2026
+#: parted/parted.c:2029
 msgid "rm NUMBER                                delete partition NUMBER"
 msgstr "rm SZÁM                                  törli a SZÁM. partíciót"
 
-#: parted/parted.c:2031
+#: parted/parted.c:2034
 msgid "select"
 msgstr "select"
 
-#: parted/parted.c:2034
+#: parted/parted.c:2037
 msgid "select DEVICE                            choose the device to edit"
 msgstr ""
 "select ESZKÖZ                            megadja a szerkesztésre kerülő "
 "eszközt"
 
-#: parted/parted.c:2039
+#: parted/parted.c:2042
 msgid "set"
 msgstr "set"
 
-#: parted/parted.c:2042
+#: parted/parted.c:2045
 msgid ""
 "set NUMBER FLAG STATE                    change the FLAG on partition NUMBER"
 msgstr ""
 "set SZÁM ZÁSZLÓ ÁLLAPOT                  váltja a ZÁSZLÓt a SZÁM. partíción"
 
-#: parted/parted.c:2048
+#: parted/parted.c:2051
 msgid "toggle"
 msgstr ""
 
-#: parted/parted.c:2051
+#: parted/parted.c:2054
 msgid ""
 "toggle [NUMBER [FLAG]]                   toggle the state of FLAG on "
 "partition NUMBER"
 msgstr ""
 "toggle [SZÁM [ZÁSZLÓ]]                   váltja a ZÁSZLÓt a SZÁM. partíción"
 
-#: parted/parted.c:2057
+#: parted/parted.c:2060
 msgid "unit"
 msgstr "unit"
 
-#: parted/parted.c:2060
+#: parted/parted.c:2063
 msgid "unit UNIT                                set the default unit to UNIT"
 msgstr ""
 "unit EGYSÉG                              beállítja az alap egységet a UNIT-"
 "hoz"
 
-#: parted/parted.c:2065
+#: parted/parted.c:2068
 msgid "version"
 msgstr "verzió"
 
-#: parted/parted.c:2068
+#: parted/parted.c:2071
 msgid ""
 "version                                  displays the current version of GNU "
 "Parted and copyright information"
@@ -2003,7 +2017,7 @@ msgstr ""
 "version                                  megjeleníti a GNU Parted jelen "
 "verzióját és szerzői jogát"
 
-#: parted/parted.c:2072
+#: parted/parted.c:2075
 msgid ""
 "version displays copyright and version information corressponding to this "
 "copy of GNU Parted\n"
@@ -2011,15 +2025,15 @@ msgstr ""
 "a 'version' megjeleníti a GNU Parted másolatának megfelelő verzió-"
 "információját és szerzői jogát\n"
 
-#: parted/parted.c:2158
+#: parted/parted.c:2161
 msgid "No device found"
 msgstr "Nem találok eszközt"
 
-#: parted/parted.c:2222
+#: parted/parted.c:2225
 msgid "Don't forget to update /etc/fstab, if necessary.\n"
 msgstr "Ne feledd a /etc/fstab frissítését, ha szükséges.\n"
 
-#: parted/parted.c:2242
+#: parted/parted.c:2245
 #, c-format
 msgid "WARNING: You are not superuser.  Watch out for permissions.\n"
 msgstr ""
@@ -2310,3 +2324,6 @@ msgstr "PARANCSok:"
 #, c-format
 msgid "Using %s\n"
 msgstr "%s használata\n"
+
+#~ msgid "Attempt to read sectors %ld-%ld outside of partition on %s."
+#~ msgstr "Kísérlet partíción kívüli %ld-%ld szektorok olvasására itt: %s."

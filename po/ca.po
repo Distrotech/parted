@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: parted 1.6.0\n"
 "Report-Msgid-Bugs-To: bug-parted@gnu.org\n"
-"POT-Creation-Date: 2006-10-09 14:01-0400\n"
+"POT-Creation-Date: 2006-10-11 15:47-0400\n"
 "PO-Revision-Date: 2002-05-05 14:47+0100\n"
 "Last-Translator: Miquel Matas <miquelmatas@wanadoo.es>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -15,40 +15,40 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 0.7\n"
 
-#: libparted/arch/linux.c:320
+#: libparted/arch/linux.c:417
 #, c-format
 msgid "Could not stat device %s - %s."
 msgstr "Impossible d'inicialitzar el dispositiu %s - %s."
 
-#: libparted/arch/linux.c:432
+#: libparted/arch/linux.c:531
 #, c-format
 msgid ""
 "Could not determine sector size for %s: %s.\n"
 "Using the default sector size (%lld)."
 msgstr ""
 
-#: libparted/arch/linux.c:448
+#: libparted/arch/linux.c:547
 #, c-format
 msgid ""
 "Device %s has a logical sector size of %lld.  Not all parts of GNU Parted "
 "support this at the moment, and the working code is HIGHLY EXPERIMENTAL.\n"
 msgstr ""
 
-#: libparted/arch/linux.c:488
+#: libparted/arch/linux.c:587
 #, fuzzy, c-format
 msgid "Unable to determine the size of %s (%s)."
 msgstr "No s'ha pogut determinar la mida de %s (%s)"
 
-#: libparted/arch/linux.c:577
+#: libparted/arch/linux.c:676
 #, c-format
 msgid "Could not get identity of device %s - %s"
 msgstr "No s'ha pogut obtenir la identitat del dispositiu %s - %s"
 
-#: libparted/arch/linux.c:586
+#: libparted/arch/linux.c:685
 msgid "Generic IDE"
 msgstr ""
 
-#: libparted/arch/linux.c:603
+#: libparted/arch/linux.c:702
 #, c-format
 msgid ""
 "Device %s has multiple (%d) logical sectors per physical sector.\n"
@@ -57,19 +57,19 @@ msgid ""
 "Please consult the web site for up-to-date information."
 msgstr ""
 
-#: libparted/arch/linux.c:773
+#: libparted/arch/linux.c:872
 #, c-format
 msgid "Error initialising SCSI device %s - %s"
 msgstr "Error inicialitzant el dispositiu SCSI %s - %s"
 
-#: libparted/arch/linux.c:828
+#: libparted/arch/linux.c:927
 #, c-format
 msgid ""
 "The device %s has zero length, and can't possibly store a file system or "
 "partition table.  Perhaps you selected the wrong device?"
 msgstr ""
 
-#: libparted/arch/linux.c:936
+#: libparted/arch/linux.c:1035
 #, fuzzy, c-format
 msgid ""
 "Unable to determine geometry of file/device %s.  You should not use Parted "
@@ -78,86 +78,90 @@ msgstr ""
 "No s'ha pogut determinar la geometria del fitxer/dispositiu. No s'hauria de "
 "fer servir Parted EXCEPTE que se sàpiga el que s'està fent!"
 
-#: libparted/arch/linux.c:1011
+#: libparted/arch/linux.c:1110
 msgid "DAC960 RAID controller"
 msgstr "Controlador RAID DAC960"
 
-#: libparted/arch/linux.c:1016
+#: libparted/arch/linux.c:1115
 msgid "Promise SX8 SATA Device"
 msgstr ""
 
-#: libparted/arch/linux.c:1021
+#: libparted/arch/linux.c:1120
 msgid "IBM S390 DASD drive"
 msgstr ""
 
-#: libparted/arch/linux.c:1026
+#: libparted/arch/linux.c:1125
 msgid "IBM iSeries Virtual DASD"
 msgstr ""
 
-#: libparted/arch/linux.c:1031
+#: libparted/arch/linux.c:1130
 msgid "Compaq Smart Array"
 msgstr "Compaq Smart Array"
 
-#: libparted/arch/linux.c:1036
+#: libparted/arch/linux.c:1135
 msgid "ATARAID Controller"
 msgstr "Controlador ATARAID"
 
-#: libparted/arch/linux.c:1041
+#: libparted/arch/linux.c:1140
 msgid "I2O Controller"
 msgstr "Controlador I20"
 
-#: libparted/arch/linux.c:1046
+#: libparted/arch/linux.c:1145
 msgid "User-Mode Linux UBD"
 msgstr ""
 
-#: libparted/arch/linux.c:1056
+#: libparted/arch/linux.c:1155
+msgid "Linux device-mapper"
+msgstr ""
+
+#: libparted/arch/linux.c:1160
 msgid "Unknown"
 msgstr "Desconegut"
 
-#: libparted/arch/linux.c:1063
+#: libparted/arch/linux.c:1167
 msgid "ped_device_new()  Unsupported device type"
 msgstr "ped_device_new()  Dispositiu no suportat"
 
-#: libparted/arch/linux.c:1166 libparted/arch/gnu.c:264
+#: libparted/arch/linux.c:1270 libparted/arch/gnu.c:264
 #, c-format
 msgid "Error opening %s: %s"
 msgstr "Error obrint %s: %s"
 
-#: libparted/arch/linux.c:1177 libparted/arch/gnu.c:274
+#: libparted/arch/linux.c:1281 libparted/arch/gnu.c:274
 #, c-format
 msgid "Unable to open %s read-write (%s).  %s has been opened read-only."
 msgstr ""
 "No s'ha pogut obrir %s lectura/escritura (%s). %s s'ha obert només lectura. "
 
-#: libparted/arch/linux.c:1285 libparted/arch/linux.c:1362
+#: libparted/arch/linux.c:1389 libparted/arch/linux.c:1466
 #: libparted/arch/gnu.c:452 libparted/arch/gnu.c:551 libparted/arch/gnu.c:679
 #, c-format
 msgid "%s during read on %s"
 msgstr "%s mentre s'estava llegint a %s"
 
-#: libparted/arch/linux.c:1326
+#: libparted/arch/linux.c:1430
 #, c-format
 msgid "%s during seek for read on %s"
 msgstr "%s mentre es preparava per llegir a %s"
 
-#: libparted/arch/linux.c:1407 libparted/arch/linux.c:1499
-#: libparted/arch/linux.c:1568 libparted/arch/gnu.c:588
+#: libparted/arch/linux.c:1511 libparted/arch/linux.c:1603
+#: libparted/arch/linux.c:1672 libparted/arch/gnu.c:588
 #: libparted/arch/gnu.c:633 libparted/arch/gnu.c:710
 #, c-format
 msgid "%s during write on %s"
 msgstr "%s mentre s'estava escrivint a %s"
 
-#: libparted/arch/linux.c:1436 libparted/arch/gnu.c:512
+#: libparted/arch/linux.c:1540 libparted/arch/gnu.c:512
 #, c-format
 msgid "Can't write to %s, because it is opened read-only."
 msgstr "No s'ha pogut escriure a %s, ja que era obert per només lectura"
 
-#: libparted/arch/linux.c:1460
+#: libparted/arch/linux.c:1564
 #, c-format
 msgid "%s during seek for write on %s"
 msgstr "%s mentre es preparava per escruire a %s"
 
-#: libparted/arch/linux.c:1957
+#: libparted/arch/linux.c:2062
 #, fuzzy, c-format
 msgid ""
 "Error informing the kernel about modifications to partition %s -- %s.  This "
@@ -169,7 +173,17 @@ msgstr ""
 "reinicieu - per tant no podeu muntar-la o utilitzar-la en cap sentit abans "
 "d'inicialitzar la màquina. "
 
-#: libparted/arch/linux.c:2031
+#: libparted/arch/linux.c:2263
+#, fuzzy, c-format
+msgid ""
+"parted was unable to re-read the partition table on %s (%s).  This means "
+"Linux won't know anything about the modifications you made. "
+msgstr ""
+"El kernel no ha pogut rellegir la taula de particions a %s (%s).Aixó vol dir "
+"que Linux no reconeixerà cap de les modificacions fetes. Heu d'arrencar la "
+"màquina abans de fer res amb %s."
+
+#: libparted/arch/linux.c:2367
 #, fuzzy, c-format
 msgid ""
 "The kernel was unable to re-read the partition table on %s (%s).  This means "
@@ -218,7 +232,7 @@ msgstr ""
 "de les modificacions fetes. S'ha de re-arrencar la màquina abans de fer res "
 "amb %s."
 
-#: libparted/arch/gnu.c:383 parted/parted.c:2215
+#: libparted/arch/gnu.c:383 parted/parted.c:2218
 msgid ""
 "You should reinstall your boot loader before rebooting.  Read section 4 of "
 "the Parted User documentation for more information."
@@ -231,12 +245,12 @@ msgstr ""
 msgid "%s trying to sync %s to disk"
 msgstr "%s intentant de sincronitzar %s al dics"
 
-#: libparted/disk.c:183
+#: libparted/disk.c:185
 #, c-format
 msgid "Unable to open %s - unrecognised disk label."
 msgstr "No s'ha pogut obrir %s - etiqueta de disc desconeguda."
 
-#: libparted/disk.c:452
+#: libparted/disk.c:454
 #, c-format
 msgid ""
 "This libparted doesn't have write support for %s.  Perhaps it was compiled "
@@ -245,27 +259,27 @@ msgstr ""
 "Aquesta libparted no té suport per escriure a %s. Potser va ser compilada "
 "per només lectura."
 
-#: libparted/disk.c:579
+#: libparted/disk.c:581
 #, fuzzy, c-format
 msgid "Partition %d is %s, but the file system is %s."
 msgstr "La partició %d és de %.3fMb, però el sistema de fitxers és de %.3fMb."
 
-#: libparted/disk.c:1056
+#: libparted/disk.c:1058
 #, c-format
 msgid "%s disk labels do not support extended partitions."
 msgstr "Les etiquetes de disc de %s no suporten particions exteses."
 
-#: libparted/disk.c:1616
+#: libparted/disk.c:1618
 #, c-format
 msgid "%s disk labels don't support logical or extended partitions."
 msgstr "Les etiquetes de disc de %s no suporten particions lògiques o exteses."
 
-#: libparted/disk.c:1629
+#: libparted/disk.c:1631
 #, fuzzy
 msgid "Too many primary partitions."
 msgstr "Massa particions primàries."
 
-#: libparted/disk.c:1638
+#: libparted/disk.c:1640
 #, c-format
 msgid ""
 "Can't add a logical partition to %s, because there is no extended partition."
@@ -273,95 +287,95 @@ msgstr ""
 "No es pot afegir una partició lògica a %s, ja que no hi ha una partició "
 "extesa"
 
-#: libparted/disk.c:1662
+#: libparted/disk.c:1664
 #, fuzzy, c-format
 msgid "Can't have more than one extended partition on %s."
 msgstr "No pot haver més d'una partició extesa a %s"
 
-#: libparted/disk.c:1672
+#: libparted/disk.c:1674
 msgid "Can't have logical partitions outside of the extended partition."
 msgstr "No poden haver particions lògiques fora de la partició extesa."
 
-#: libparted/disk.c:1697
+#: libparted/disk.c:1699
 #, c-format
 msgid "Can't have a logical partition outside of the extended partition on %s."
 msgstr "No pot haver una partició lògica fora de la partició extesa a %s."
 
-#: libparted/disk.c:1707 libparted/disk.c:1761 libparted/disk.c:1927
+#: libparted/disk.c:1709 libparted/disk.c:1763 libparted/disk.c:1929
 #, fuzzy
 msgid "Can't have overlapping partitions."
 msgstr "No poden haver particions solapades."
 
-#: libparted/disk.c:1715
+#: libparted/disk.c:1717
 msgid "Can't have a primary partition inside an extended partition."
 msgstr "No pot haver una partició primaria dins d'una partició extesa."
 
-#: libparted/disk.c:2123
+#: libparted/disk.c:2125
 msgid "metadata"
 msgstr "metadata"
 
-#: libparted/disk.c:2125
+#: libparted/disk.c:2127
 msgid "free"
 msgstr "lliure"
 
-#: libparted/disk.c:2127 parted/ui.c:1002 parted/ui.c:1030
+#: libparted/disk.c:2129 parted/ui.c:1002 parted/ui.c:1030
 msgid "extended"
 msgstr "extesa"
 
-#: libparted/disk.c:2129 parted/ui.c:1006 parted/ui.c:1034
+#: libparted/disk.c:2131 parted/ui.c:1006 parted/ui.c:1034
 msgid "logical"
 msgstr "lògica"
 
-#: libparted/disk.c:2131 parted/ui.c:998 parted/ui.c:1026
+#: libparted/disk.c:2133 parted/ui.c:998 parted/ui.c:1026
 msgid "primary"
 msgstr "primària"
 
-#: libparted/disk.c:2147
+#: libparted/disk.c:2149
 msgid "boot"
 msgstr "boot"
 
-#: libparted/disk.c:2149
+#: libparted/disk.c:2151
 msgid "root"
 msgstr "root"
 
-#: libparted/disk.c:2151
+#: libparted/disk.c:2153
 msgid "swap"
 msgstr "swap"
 
-#: libparted/disk.c:2153
+#: libparted/disk.c:2155
 msgid "hidden"
 msgstr "oculta"
 
-#: libparted/disk.c:2155
+#: libparted/disk.c:2157
 msgid "raid"
 msgstr "raid"
 
-#: libparted/disk.c:2157
+#: libparted/disk.c:2159
 msgid "lvm"
 msgstr "lvm"
 
-#: libparted/disk.c:2159
+#: libparted/disk.c:2161
 msgid "lba"
 msgstr "lba"
 
-#: libparted/disk.c:2161
+#: libparted/disk.c:2163
 msgid "hp-service"
 msgstr "servei-hp"
 
-#: libparted/disk.c:2163
+#: libparted/disk.c:2165
 msgid "palo"
 msgstr ""
 
-#: libparted/disk.c:2165
+#: libparted/disk.c:2167
 #, fuzzy
 msgid "prep"
 msgstr "boot"
 
-#: libparted/disk.c:2167
+#: libparted/disk.c:2169
 msgid "msftres"
 msgstr ""
 
-#: libparted/disk.c:2173
+#: libparted/disk.c:2175
 #, fuzzy, c-format
 msgid "Unknown partition flag, %d."
 msgstr "Flag desconegut a %d."
@@ -826,17 +840,12 @@ msgstr "No es pot acabar abans de començar!"
 msgid "Can't have a partition outside the disk!"
 msgstr "No es pot fer una partició fora del disc!"
 
-#: libparted/cs/geom.c:304
-#, fuzzy, c-format
-msgid "Attempt to read sectors %ld-%ld outside of partition on %s."
-msgstr "S'ha intentat llegir sectors %ld-%ld fora de la partició a %s"
-
-#: libparted/cs/geom.c:374
+#: libparted/cs/geom.c:367
 #, fuzzy, c-format
 msgid "Attempt to write sectors %ld-%ld outside of partition on %s."
 msgstr "S'ha intentat escriure sectors %ld-%ld fora de la partició a %s"
 
-#: libparted/cs/geom.c:414 libparted/fs/linux_swap/linux_swap.c:353
+#: libparted/cs/geom.c:407 libparted/fs/linux_swap/linux_swap.c:353
 msgid "checking for bad blocks"
 msgstr "comprovant blocs errònis"
 
@@ -1708,8 +1717,8 @@ msgid "Partition(s) on %s are being used."
 msgstr "La(s) partició(ns) a %s s'està utilitzant."
 
 #: parted/parted.c:413 parted/parted.c:594 parted/parted.c:979
-#: parted/parted.c:1059 parted/parted.c:1586 parted/parted.c:1663
-#: parted/parted.c:1707
+#: parted/parted.c:1059 parted/parted.c:1589 parted/parted.c:1666
+#: parted/parted.c:1710
 msgid "Partition number?"
 msgstr "Número de partició?"
 
@@ -1751,12 +1760,12 @@ msgid "File system type?"
 msgstr "Sistema de fitxers?"
 
 #: parted/parted.c:667 parted/parted.c:834 parted/parted.c:994
-#: parted/parted.c:1544 parted/parted.c:1595
+#: parted/parted.c:1547 parted/parted.c:1598
 msgid "Start?"
 msgstr "Inici?"
 
 #: parted/parted.c:669 parted/parted.c:837 parted/parted.c:997
-#: parted/parted.c:1546 parted/parted.c:1597
+#: parted/parted.c:1549 parted/parted.c:1600
 msgid "End?"
 msgstr "Fi?"
 
@@ -1817,68 +1826,73 @@ msgstr "Mida mínima: %10.3fMb (%d%%)\n"
 msgid "Maximum size: "
 msgstr "Mida màxima: %10.3fMb (%d%%)\n"
 
-#: parted/parted.c:1255
+#: parted/parted.c:1257
+#, c-format
+msgid "Model: %s (%s)\n"
+msgstr ""
+
+#: parted/parted.c:1258
 #, fuzzy, c-format
 msgid "Disk %s: %s\n"
 msgstr "%s  %s  %s"
 
-#: parted/parted.c:1256
+#: parted/parted.c:1259
 #, c-format
 msgid "Sector size (logical/physical): %lldB/%lldB\n"
 msgstr ""
 
-#: parted/parted.c:1267
+#: parted/parted.c:1270
 #, c-format
 msgid "BIOS cylinder,head,sector geometry: %d,%d,%d.  Each cylinder is %s.\n"
 msgstr ""
 
-#: parted/parted.c:1273
+#: parted/parted.c:1276
 #, fuzzy, c-format
 msgid "Partition Table: %s\n"
 msgstr "Nom de la partició?"
 
-#: parted/parted.c:1284 parted/parted.c:1287
+#: parted/parted.c:1287 parted/parted.c:1290
 msgid "Number"
 msgstr ""
 
-#: parted/parted.c:1284 parted/parted.c:1287
+#: parted/parted.c:1287 parted/parted.c:1290
 #, fuzzy
 msgid "Start"
 msgstr "Inici?"
 
-#: parted/parted.c:1285 parted/parted.c:1288
+#: parted/parted.c:1288 parted/parted.c:1291
 #, fuzzy
 msgid "End"
 msgstr "Fi?"
 
-#: parted/parted.c:1288
+#: parted/parted.c:1291
 #, fuzzy
 msgid "Size"
 msgstr "resize"
 
-#: parted/parted.c:1292
+#: parted/parted.c:1295
 msgid "Type"
 msgstr ""
 
-#: parted/parted.c:1294
+#: parted/parted.c:1297
 #, fuzzy
 msgid "File system"
 msgstr "Sistema de fitxers?"
 
-#: parted/parted.c:1297
+#: parted/parted.c:1300
 #, fuzzy
 msgid "Name"
 msgstr "name"
 
-#: parted/parted.c:1299
+#: parted/parted.c:1302
 msgid "Flags"
 msgstr "Flags"
 
-#: parted/parted.c:1352
+#: parted/parted.c:1355
 msgid "Free Space"
 msgstr ""
 
-#: parted/parted.c:1441
+#: parted/parted.c:1444
 #, fuzzy, c-format
 msgid ""
 "A %s %s partition was found at %s -> %s.  Do you want to add it to the "
@@ -1887,33 +1901,33 @@ msgstr ""
 "Una partició %s %s ha estat trobada a %.3fMb -> %.3fMb.  Vols afegir-la a la "
 "taula de particions?"
 
-#: parted/parted.c:1479
+#: parted/parted.c:1482
 #, fuzzy
 msgid "searching for file systems"
 msgstr "sistema de fitxers creixent"
 
-#: parted/parted.c:1684
+#: parted/parted.c:1687
 msgid "New device?"
 msgstr "Nou dispositiu?"
 
-#: parted/parted.c:1709
+#: parted/parted.c:1712
 #, fuzzy
 msgid "Flag to Invert?"
 msgstr "Flag a canviar?"
 
-#: parted/parted.c:1714
+#: parted/parted.c:1717
 msgid "New state?"
 msgstr "Nou estat?"
 
-#: parted/parted.c:1747
+#: parted/parted.c:1750
 msgid "Unit?"
 msgstr ""
 
-#: parted/parted.c:1896
+#: parted/parted.c:1899
 msgid "check"
 msgstr "comprova"
 
-#: parted/parted.c:1899
+#: parted/parted.c:1902
 #, fuzzy
 msgid ""
 "check NUMBER                             do a simple check on the file system"
@@ -1921,11 +1935,11 @@ msgstr ""
 "comprova MINOR                 fa una simple comprovació al sistema de "
 "fitxers"
 
-#: parted/parted.c:1905
+#: parted/parted.c:1908
 msgid "cp"
 msgstr "cp"
 
-#: parted/parted.c:1908
+#: parted/parted.c:1911
 #, fuzzy
 msgid ""
 "cp [FROM-DEVICE] FROM-NUMBER TO-NUMBER   copy file system to another "
@@ -1934,22 +1948,22 @@ msgstr ""
 "cp [DESDE-DISPOS] DE-MINOR A-MINOR      copia un sistema de fitxers a una "
 "altra partició"
 
-#: parted/parted.c:1914
+#: parted/parted.c:1917
 msgid "help"
 msgstr "ajuda"
 
-#: parted/parted.c:1917
+#: parted/parted.c:1920
 #, fuzzy
 msgid ""
 "help [COMMAND]                           prints general help, or help on "
 "COMMAND"
 msgstr "Ajuda [ORDRE]                 imprimeix ajuda general, o ajuda d'ORDRE"
 
-#: parted/parted.c:1923
+#: parted/parted.c:1926
 msgid "mklabel"
 msgstr "mklabel"
 
-#: parted/parted.c:1926
+#: parted/parted.c:1929
 #, fuzzy
 msgid ""
 "mklabel LABEL-TYPE                       create a new disklabel (partition "
@@ -1957,11 +1971,11 @@ msgid ""
 msgstr ""
 "mklabel TIPUS-ETI        crea una nova etiqueta de disc (taula de partició)"
 
-#: parted/parted.c:1932
+#: parted/parted.c:1935
 msgid "mkfs"
 msgstr "mkfs"
 
-#: parted/parted.c:1935
+#: parted/parted.c:1938
 #, fuzzy
 msgid ""
 "mkfs NUMBER FS-TYPE                      make a FS-TYPE file system on "
@@ -1970,16 +1984,16 @@ msgstr ""
 "mkfs MINOR TIPUS-SF      crea un sistema de fitxers TIPUS-SF a la partició "
 "MINOR"
 
-#: parted/parted.c:1941
+#: parted/parted.c:1944
 msgid "mkpart"
 msgstr "mkpart"
 
-#: parted/parted.c:1944
+#: parted/parted.c:1947
 #, fuzzy
 msgid "mkpart PART-TYPE [FS-TYPE] START END     make a partition"
 msgstr "mkpart TIPUS-PART [TIPUS-SF] INICI FI      crea una partició"
 
-#: parted/parted.c:1950
+#: parted/parted.c:1953
 msgid ""
 "mkpart makes a partition without creating a new file system on the "
 "partition.  FS-TYPE may be specified to set an appropriate partition ID.\n"
@@ -1987,11 +2001,11 @@ msgstr ""
 "mkpart crea una partició sense crear cap sistema de fitxers a la partició. "
 "TIPUS-SF ha de ser especificat per assignar una ID de partició.\n"
 
-#: parted/parted.c:1955
+#: parted/parted.c:1958
 msgid "mkpartfs"
 msgstr "mkpartfs"
 
-#: parted/parted.c:1958
+#: parted/parted.c:1961
 #, fuzzy
 msgid ""
 "mkpartfs PART-TYPE FS-TYPE START END     make a partition with a file system"
@@ -1999,29 +2013,29 @@ msgstr ""
 "mkpartfs TIPUS-PART TIPUS-SF INICI FI      crea una partició amb un sistema "
 "de fitxers"
 
-#: parted/parted.c:1964
+#: parted/parted.c:1967
 msgid "move"
 msgstr "move"
 
-#: parted/parted.c:1967
+#: parted/parted.c:1970
 #, fuzzy
 msgid "move NUMBER START END                    move partition NUMBER"
 msgstr "move MINOR INICI FI          mou la partició MINOR"
 
-#: parted/parted.c:1972
+#: parted/parted.c:1975
 msgid "name"
 msgstr "name"
 
-#: parted/parted.c:1975
+#: parted/parted.c:1978
 #, fuzzy
 msgid "name NUMBER NAME                         name partition NUMBER as NAME"
 msgstr "name MINOR NOM               anomena la partició MINOR NOM"
 
-#: parted/parted.c:1980
+#: parted/parted.c:1983
 msgid "print"
 msgstr "print"
 
-#: parted/parted.c:1983
+#: parted/parted.c:1986
 #, fuzzy
 msgid ""
 "print [free|NUMBER|all]                  display the partition table, a "
@@ -2029,7 +2043,7 @@ msgid ""
 msgstr ""
 "print[MINOR]                  mostra la taula de particions; o una partició"
 
-#: parted/parted.c:1987
+#: parted/parted.c:1990
 msgid ""
 "Without arguments, print displays the entire partition table. With 'free'\n"
 "argument, information about free space will be displayed otherwise if a\n"
@@ -2038,31 +2052,31 @@ msgid ""
 "information for all devices will be displayed."
 msgstr ""
 
-#: parted/parted.c:1995
+#: parted/parted.c:1998
 msgid "quit"
 msgstr "quit"
 
-#: parted/parted.c:1998
+#: parted/parted.c:2001
 #, fuzzy
 msgid "quit                                     exit program"
 msgstr "quit                          surt del programa"
 
-#: parted/parted.c:2003
+#: parted/parted.c:2006
 msgid "rescue"
 msgstr "rescatar"
 
-#: parted/parted.c:2006
+#: parted/parted.c:2009
 #, fuzzy
 msgid ""
 "rescue START END                         rescue a lost partition near START "
 "and END"
 msgstr "rescatar INICI FI        rescata particions perdudes entre INICI i FI"
 
-#: parted/parted.c:2012
+#: parted/parted.c:2015
 msgid "resize"
 msgstr "resize"
 
-#: parted/parted.c:2015
+#: parted/parted.c:2018
 #, fuzzy
 msgid ""
 "resize NUMBER START END                  resize partition NUMBER and its "
@@ -2071,80 +2085,80 @@ msgstr ""
 "resize MINOR INICI FI        redimensiona el sistema de fitxers a la "
 "partició MINOR"
 
-#: parted/parted.c:2023
+#: parted/parted.c:2026
 msgid "rm"
 msgstr "rm"
 
-#: parted/parted.c:2026
+#: parted/parted.c:2029
 #, fuzzy
 msgid "rm NUMBER                                delete partition NUMBER"
 msgstr "rm MINOR                      suprimeix la partició MINOR"
 
-#: parted/parted.c:2031
+#: parted/parted.c:2034
 msgid "select"
 msgstr "select"
 
-#: parted/parted.c:2034
+#: parted/parted.c:2037
 #, fuzzy
 msgid "select DEVICE                            choose the device to edit"
 msgstr "select DISPOSITIU                 escollir el dispositiu a editar"
 
-#: parted/parted.c:2039
+#: parted/parted.c:2042
 msgid "set"
 msgstr "set"
 
-#: parted/parted.c:2042
+#: parted/parted.c:2045
 #, fuzzy
 msgid ""
 "set NUMBER FLAG STATE                    change the FLAG on partition NUMBER"
 msgstr "rm MINOR                      suprimeix la partició MINOR"
 
-#: parted/parted.c:2048
+#: parted/parted.c:2051
 msgid "toggle"
 msgstr ""
 
-#: parted/parted.c:2051
+#: parted/parted.c:2054
 #, fuzzy
 msgid ""
 "toggle [NUMBER [FLAG]]                   toggle the state of FLAG on "
 "partition NUMBER"
 msgstr "rm MINOR                      suprimeix la partició MINOR"
 
-#: parted/parted.c:2057
+#: parted/parted.c:2060
 #, fuzzy
 msgid "unit"
 msgstr "quit"
 
-#: parted/parted.c:2060
+#: parted/parted.c:2063
 #, fuzzy
 msgid "unit UNIT                                set the default unit to UNIT"
 msgstr "quit                          surt del programa"
 
-#: parted/parted.c:2065
+#: parted/parted.c:2068
 msgid "version"
 msgstr ""
 
-#: parted/parted.c:2068
+#: parted/parted.c:2071
 msgid ""
 "version                                  displays the current version of GNU "
 "Parted and copyright information"
 msgstr ""
 
-#: parted/parted.c:2072
+#: parted/parted.c:2075
 msgid ""
 "version displays copyright and version information corressponding to this "
 "copy of GNU Parted\n"
 msgstr ""
 
-#: parted/parted.c:2158
+#: parted/parted.c:2161
 msgid "No device found"
 msgstr "No s'ha trobat el dispositiu"
 
-#: parted/parted.c:2222
+#: parted/parted.c:2225
 msgid "Don't forget to update /etc/fstab, if necessary.\n"
 msgstr "No us oblideu d'actualitzar /etc/fstab si cal.\n"
 
-#: parted/parted.c:2242
+#: parted/parted.c:2245
 #, c-format
 msgid "WARNING: You are not superuser.  Watch out for permissions.\n"
 msgstr ""
@@ -2394,6 +2408,10 @@ msgstr "ORDRES:"
 #, c-format
 msgid "Using %s\n"
 msgstr "Utilitzant %s\n"
+
+#, fuzzy
+#~ msgid "Attempt to read sectors %ld-%ld outside of partition on %s."
+#~ msgstr "S'ha intentat llegir sectors %ld-%ld fora de la partició a %s"
 
 #, fuzzy
 #~ msgid ""
