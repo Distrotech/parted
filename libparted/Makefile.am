@@ -32,6 +32,7 @@ EXTRA_libparted_la_SOURCES    = arch/linux.c		\
 
 libparted_la_LIBADD   = @OS_LIBS@			\
 			@DL_LIBS@			\
+			@DM_LIBS@			\
 			fs/libfs.la			\
 			labels/liblabels.la
 

@@ -66,6 +66,14 @@ if test "$enable_mtrace" = yes; then
 	AC_DEFINE(ENABLE_MTRACE, 1, [Mtrace malloc() debugging])
 fi
 
+AC_ARG_ENABLE(device-mapper,
+	[  --enable-device-mapper  enable device mapper support [default=no]], ,
+	enable_device_mapper=no
+)
+if test "$enable_device_mapper" = yes; then
+	AC_DEFINE(ENABLE_DEVICE_MAPPER, 1, [device mapper (libdevmapper) support])
+fi
+
 AC_ARG_ENABLE(discover-only,
 	[  --enable-discover-only  support only reading/probing [default=no]], ,
 	enable_discover_only=no
@@ -228,6 +236,19 @@ If you compile e2fsprogs yourself then you need to do 'make install' and
 )
 AC_SUBST(UUID_LIBS)
 
+dnl Check for libdevmapper
+DM_LIBS=""
+if test "$enable_device_mapper" = yes; then
+	AC_CHECK_LIB(devmapper, dm_task_create,
+		DM_LIBS="-ldevmapper -lselinux -lsepol",
+		AC_MSG_ERROR(
+			[libdevmapper not found!  Try using --disable-device-mapper]
+		)
+		exit
+	)
+fi
+AC_SUBST(DM_LIBS)
+
 dnl Check for libreiserfs
 REISER_LIBS=""
 if test "$enable_dynamic_loading" = no -a "$enable_discover_only" = no; then
@@ -321,7 +342,7 @@ GNU Parted requires libstore when running on GNU/Hurd
 systems.  It is a standard part of a GNU/Hurd system.
 		)
 		exit,
-		$OS_LIBS $UUID_LIBS $LIBS
+		$OS_LIBS $UUID_LIBS $DM_LIBS $LIBS
 	)
 	LIBS="$OLD_LIBS"
 fi

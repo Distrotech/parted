@@ -211,6 +211,7 @@ David Cantrell <dcantrell@redhat.com>
 
 Peter Jones <pjones@redhat.com>
 	* Add ped_exception_get_handler()
+	* /dev/mapper read/write support on Linux (via libdevmapper)
 
 Darren Lavender <dl1@hppine99.gbr.hp.com>
 	* Fix SIGSEGV in parted 1.6.19 and assertion error in 1.7.0

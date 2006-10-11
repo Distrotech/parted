@@ -46,6 +46,10 @@ typedef enum {
         PED_DEVICE_DASD         = 9,
         PED_DEVICE_VIODASD      = 10,
         PED_DEVICE_SX8          = 11
+#ifdef ENABLE_DEVICE_MAPPER
+                                    ,
+        PED_DEVICE_DM           = 12
+#endif
 } PedDeviceType;
 
 typedef struct _PedDevice PedDevice;

@@ -43,6 +43,9 @@
 #include <sys/types.h>
 #include <sys/utsname.h>        /* for uname() */
 #include <scsi/scsi.h>
+#ifdef ENABLE_DEVICE_MAPPER
+#include <libdevmapper.h>
+#endif
 
 #include "blkpg.h"
 
@@ -305,6 +308,100 @@ _is_sx8_major (int major)
 }
 
 static int
+readFD (int fd, char **buf)
+{
+        char* p;
+        size_t size = 16384;
+        int s, filesize;
+
+        *buf = calloc (16384, sizeof (char));
+        if (*buf == 0) {
+                return -1;
+        }
+
+        filesize = 0;
+        do {
+                p = &(*buf) [filesize];
+                s = read (fd, p, 16384);
+                if (s < 0)
+                        break;
+                filesize += s;
+                /* only exit for empty reads */
+                if (s == 0)
+                        break;
+                size += s;
+                *buf = realloc (*buf, size);
+        } while (1);
+
+        if (filesize == 0 && s < 0) {
+                free (*buf);
+                *buf = NULL;
+                return -1;
+        }
+
+        return filesize;
+}
+
+static int
+_is_dm_major (int major)
+{
+        int fd;
+        char* buf = NULL;
+        char* line;
+        char* end;
+        int bd = 0;
+        int rc = 0;
+        char c;
+
+        fd = open ("/proc/devices", O_RDONLY);
+        if (fd < 0)
+                return 0;
+
+        if (readFD(fd, &buf) < 0) {
+                close(fd);
+                return 0;
+        }
+
+        line = buf;
+        end = strchr(line, '\n');
+        while (end && *end) {
+                char *name;
+                int maj;
+
+                c = *end;
+                *end = '\0';
+
+                if (!bd) {
+                        if (!strncmp(line, "Block devices:", 14))
+                                bd = 1;
+                        goto next;
+                }
+
+                name = strrchr(line, ' ');
+                if (!name || !*name || strcmp(name+1, "device-mapper"))
+                        goto next;
+
+                maj = strtol(line, &name, 10);
+                if (maj == major) {
+                        free(buf);
+                        close(fd);
+                        return 1;
+                }
+
+next:
+                *end = c;
+                line = end+1;
+                if (line && *line) {
+                        end = strchr(line, '\n');
+                } else
+                        end = line;
+        }
+        free(buf);
+        close(fd);
+        return 0;
+}
+
+static int
 _device_stat (PedDevice* dev, struct stat * dev_stat)
 {
         PED_ASSERT (dev != NULL, return 0);
@@ -365,6 +462,8 @@ _device_probe_type (PedDevice* dev)
                 dev->type = PED_DEVICE_CPQARRAY;
         } else if (dev_major == UBD_MAJOR && (dev_minor % 0x10 == 0)) {
                 dev->type = PED_DEVICE_UBD;
+        } else if (_is_dm_major(dev_major)) {
+                dev->type = PED_DEVICE_DM;
         } else {
                 dev->type = PED_DEVICE_UNKNOWN;
         }
@@ -1049,6 +1148,11 @@ linux_new (const char* path)
 
         case PED_DEVICE_FILE:
                 if (!init_file (dev))
+                        goto error_free_arch_specific;
+                break;
+
+        case PED_DEVICE_DM:
+                if (!init_generic (dev, _("Linux device-mapper")))
                         goto error_free_arch_specific;
                 break;
 
@@ -1802,6 +1906,7 @@ _device_get_part_path (PedDevice* dev, int num)
         } else if (dev->type == PED_DEVICE_DAC960
                         || dev->type == PED_DEVICE_CPQARRAY
                         || dev->type == PED_DEVICE_ATARAID
+                        || dev->type == PED_DEVICE_DM
                         || isdigit (dev->path[path_len - 1]))
                 snprintf (result, result_len, "%sp%d", dev->path, num);
         else
@@ -2015,6 +2120,237 @@ _disk_sync_part_table (PedDisk* disk)
 }
 
 static int
+_dm_remove_map(int major, int minor)
+{
+        struct dm_task  *task = NULL;
+        int             rc;
+
+        task = dm_task_create(DM_DEVICE_REMOVE);
+        if (!task)
+                return 1;
+
+        dm_task_set_major (task, major);
+        dm_task_set_minor (task, minor);
+
+        rc = dm_task_run(task);
+        dm_task_update_nodes();
+        dm_task_destroy(task);
+        if (rc < 0)
+                return 1;
+
+        return 0;
+}
+
+static int
+_dm_remove_map_name(char *name)
+{
+        struct dm_task  *task = NULL;
+        int             rc;
+
+        task = dm_task_create(DM_DEVICE_REMOVE);
+        if (!task)
+                return 1;
+
+        dm_task_set_name (task, name);
+
+        rc = dm_task_run(task);
+        dm_task_update_nodes();
+        dm_task_destroy(task);
+        if (rc < 0)
+                return 1;
+
+        return 0;
+}
+
+static int 
+_dm_is_part (struct dm_info *this, char *name)
+{
+        struct dm_task* task = NULL;
+        struct dm_info* info = alloca(sizeof *info);
+        struct dm_deps* deps = NULL;
+        int             rc = 0;
+        unsigned int    i;
+
+        task = dm_task_create(DM_DEVICE_DEPS);
+        if (!task)
+                return 0;
+        
+        dm_task_set_name(task, name);
+        rc = dm_task_run(task);
+        if (rc < 0) {
+                rc = 0;
+                goto err;
+        }
+        rc = 0;
+
+        memset(info, '\0', sizeof *info);
+        dm_task_get_info(task, info);
+        if (!info->exists)
+                goto err;
+
+        deps = dm_task_get_deps(task);
+        if (!deps)
+                goto err;
+
+        rc = 0;
+        for (i = 0; i < deps->count; i++) {
+                unsigned int ma = major(deps->device[i]),
+                             mi = minor(deps->device[i]);
+
+                if (ma == this->major && mi == this->minor)
+                        rc = 1;
+        }
+
+err:
+        dm_task_destroy(task);
+        return rc;
+}
+
+static int
+_dm_remove_parts (PedDevice* dev)
+{
+        struct stat             dev_stat;
+        struct dm_task*         task = NULL;
+        struct dm_info*         info = alloca(sizeof *info);
+        struct dm_names*        names = NULL;
+        unsigned int            next = 0;
+        int                     i;
+        int                     rc;
+
+        if (!_device_stat (dev, &dev_stat))
+                goto err;
+
+        task = dm_task_create(DM_DEVICE_LIST);
+        if (!task)
+                goto err;
+
+        dm_task_set_major (task, major (dev_stat.st_rdev));
+        dm_task_set_minor (task, minor (dev_stat.st_rdev));
+
+        rc = dm_task_run(task);
+        if (rc < 0)
+                goto err;
+
+        memset(info, '\0', sizeof *info);
+        dm_task_get_info(task, info);
+        if (!info->exists)
+                goto err;
+
+        names = dm_task_get_names(task);
+        if (!names)
+                goto err;
+
+        rc = 0;
+        do {
+                names = (void *)names + next;
+
+                if (_dm_is_part(info, names->name))
+                        rc += _dm_remove_map_name(names->name);
+
+                next = names->next;
+        } while (next);
+
+        dm_task_update_nodes();
+        dm_task_destroy(task);
+        task = NULL;
+
+        if (!rc)
+                return 1;
+err:
+        if (task)
+                dm_task_destroy(task);
+        ped_exception_throw (PED_EXCEPTION_WARNING, PED_EXCEPTION_IGNORE,
+                _("parted was unable to re-read the partition "
+                  "table on %s (%s).  This means Linux won't know "
+                  "anything about the modifications you made. "),
+                dev->path, strerror (errno));
+        return 0;
+}
+
+static int
+_dm_add_partition (PedDisk* disk, PedPartition* part)
+{
+        struct dm_task* task;
+        struct stat     dev_stat;
+        int             rc;
+        char*           vol_name = NULL;
+        char*           dev_name = NULL;
+        char*           params = NULL;
+
+        dev_name = _device_get_part_path (disk->dev, part->num);
+        if (!dev_name)
+                return 0;
+
+        vol_name = strrchr (dev_name, '/');
+        if (vol_name && *vol_name && *(++vol_name))
+                vol_name = strdup (vol_name);
+        else
+                vol_name = strdup (dev_name);
+        if (!vol_name)
+                return 0;
+
+        if (!_device_stat (disk->dev, &dev_stat))
+                goto err;
+
+        asprintf (&params, "%d:%d %lu", major (dev_stat.st_rdev),
+                        minor (dev_stat.st_rdev),
+                        part->geom.start);
+        if (!params)
+                goto err;
+
+        task = dm_task_create (DM_DEVICE_CREATE);
+        if (!task)
+                goto err;
+
+        dm_task_set_name (task, vol_name);
+        dm_task_add_target (task, 0, part->geom.length,
+                "linear", params);
+        rc = dm_task_run(task);
+        if (rc >= 0) {
+                //printf("0 %ld linear %s\n", part->geom.length, params);
+                dm_task_update_nodes();
+                dm_task_destroy(task);
+                free(params);
+                free(vol_name);
+                return 1;
+        } else {
+                _dm_remove_map_name(vol_name);
+        }
+err:
+        dm_task_update_nodes();
+        if (task)
+                dm_task_destroy (task);
+        if (params)
+                free (params);
+        free (vol_name);
+        return 0;
+}
+
+static int
+_dm_reread_part_table (PedDisk* disk)
+{
+        int     rc = 1;
+        int     last = PED_MAX (ped_disk_get_last_partition_num (disk), 16);
+        int     i;
+
+        sync();
+        if (!_dm_remove_parts(disk->dev))
+                rc = 0;
+
+        for (i = 1; i <= last; i++) {
+                PedPartition*      part;
+
+                part = ped_disk_get_partition (disk, i);
+                if (!part)
+                        continue;
+
+                if (!_dm_add_partition (disk, part))
+                        rc = 0;
+        }
+        return rc;
+}
+
+static int
 _kernel_reread_part_table (PedDevice* dev)
 {
         LinuxSpecific*  arch_specific = LINUX_SPECIFIC (dev);
@@ -2057,7 +2393,9 @@ _have_blkpg ()
 static int
 linux_disk_commit (PedDisk* disk)
 {
-        if (disk->dev->type != PED_DEVICE_FILE) {
+        if (disk->dev->type == PED_DEVICE_DM) {
+                return _dm_reread_part_table (disk);
+        } else if (disk->dev->type != PED_DEVICE_FILE) {
                 /* The ioctl() command BLKPG_ADD_PARTITION does not notify
                  * the devfs system; consequently, /proc/partitions will not
                  * be up to date, and the proper links in /dev are not

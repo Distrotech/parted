@@ -1,3 +1,17 @@
+2006-10-11  David Cantrell  <dcantrell@redhat.com>
+	* Makefile.am: Add @DM_LIBS@ to libparted_la_LIBADD.
+	* arch/linux.c (readFD): Add read function used by _is_dm_major().
+	* arch/linux.c (_is_dm_major): Add test function to determine if a
+	given device number is a device-mapper major number.
+	* arch/linux.c (_device_stat): Set dev->type to PED_DEVICE_DM if the
+	device is a major device-mapper node.  Call init_generic() for the
+	PED_DEVICE_DM devices.
+	* arch/linux.c: Added _dm_remove_map(), _dm_remove_map_name(),
+	_dm_is_part(), _dm_remove_parts(), _dm_add_partition(), and
+	_dm_reread_part_table() to support device-mapper devices.
+	* arch/linux.c (linux_disk_commit): If the device type is PED_DEVICE_DM,
+	return result of _dm_reread_part_table on the disk.
+
 2006-10-09  David Cantrell  <dcantrell@redhat.com>
 	* disk.c (ped_unregister_disk_type): Handle instances where disk_types
 	== NULL and the given type is not in the list of registered disk types
