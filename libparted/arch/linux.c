@@ -307,6 +307,7 @@ _is_sx8_major (int major)
         return (SX8_MAJOR1 <= major && major <= SX8_MAJOR2);
 }
 
+#ifdef ENABLE_DEVICE_MAPPER
 static int
 readFD (int fd, char **buf)
 {
@@ -400,6 +401,7 @@ next:
         close(fd);
         return 0;
 }
+#endif
 
 static int
 _device_stat (PedDevice* dev, struct stat * dev_stat)
@@ -462,8 +464,10 @@ _device_probe_type (PedDevice* dev)
                 dev->type = PED_DEVICE_CPQARRAY;
         } else if (dev_major == UBD_MAJOR && (dev_minor % 0x10 == 0)) {
                 dev->type = PED_DEVICE_UBD;
+#ifdef ENABLE_DEVICE_MAPPER
         } else if (_is_dm_major(dev_major)) {
                 dev->type = PED_DEVICE_DM;
+#endif
         } else {
                 dev->type = PED_DEVICE_UNKNOWN;
         }
@@ -1151,10 +1155,12 @@ linux_new (const char* path)
                         goto error_free_arch_specific;
                 break;
 
+#ifdef ENABLE_DEVICE_MAPPER
         case PED_DEVICE_DM:
                 if (!init_generic (dev, _("Linux device-mapper")))
                         goto error_free_arch_specific;
                 break;
+#endif
 
         case PED_DEVICE_UNKNOWN:
                 if (!init_generic (dev, _("Unknown")))
@@ -1906,7 +1912,9 @@ _device_get_part_path (PedDevice* dev, int num)
         } else if (dev->type == PED_DEVICE_DAC960
                         || dev->type == PED_DEVICE_CPQARRAY
                         || dev->type == PED_DEVICE_ATARAID
+#ifdef ENABLE_DEVICE_MAPPER
                         || dev->type == PED_DEVICE_DM
+#endif
                         || isdigit (dev->path[path_len - 1]))
                 snprintf (result, result_len, "%sp%d", dev->path, num);
         else
@@ -2119,6 +2127,7 @@ _disk_sync_part_table (PedDisk* disk)
         return ret;
 }
 
+#ifdef ENABLE_DEVICE_MAPPER
 static int
 _dm_remove_map(int major, int minor)
 {
@@ -2349,6 +2358,7 @@ _dm_reread_part_table (PedDisk* disk)
         }
         return rc;
 }
+#endif
 
 static int
 _kernel_reread_part_table (PedDevice* dev)
@@ -2393,9 +2403,11 @@ _have_blkpg ()
 static int
 linux_disk_commit (PedDisk* disk)
 {
-        if (disk->dev->type == PED_DEVICE_DM) {
+#ifdef ENABLE_DEVICE_MAPPER
+        if (disk->dev->type == PED_DEVICE_DM)
                 return _dm_reread_part_table (disk);
-        } else if (disk->dev->type != PED_DEVICE_FILE) {
+#endif
+        if (disk->dev->type != PED_DEVICE_FILE) {
                 /* The ioctl() command BLKPG_ADD_PARTITION does not notify
                  * the devfs system; consequently, /proc/partitions will not
                  * be up to date, and the proper links in /dev are not
@@ -2408,8 +2420,10 @@ linux_disk_commit (PedDisk* disk)
                         if (_disk_sync_part_table (disk))
                                 return 1;
                 }
+
                 return _kernel_reread_part_table (disk->dev);
         }
+
         return 1;
 }
 

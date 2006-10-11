@@ -1,4 +1,8 @@
 2006-10-11  David Cantrell  <dcantrell@redhat.com>
+	* arch/linux.c: Conditionalize device-mapper stuff correctly so if the
+	user disables it, libparted still compiles.
+
+2006-10-11  David Cantrell  <dcantrell@redhat.com>
 	* Makefile.am: Add @DM_LIBS@ to libparted_la_LIBADD.
 	* arch/linux.c (readFD): Add read function used by _is_dm_major().
 	* arch/linux.c (_is_dm_major): Add test function to determine if a
