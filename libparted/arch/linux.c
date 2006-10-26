@@ -1147,7 +1147,7 @@ linux_new (const char* path)
 
         case PED_DEVICE_UBD:
                 if (!init_generic (dev, _("User-Mode Linux UBD")))
-                        goto error_free_dev;
+                        goto error_free_arch_specific;
                 break;
 
         case PED_DEVICE_FILE:

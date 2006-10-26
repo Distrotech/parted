@@ -1,3 +1,7 @@
+2006-10-26  David Cantrell  <dcantrell@redhat.com>
+	* arch/linux.c: Go to error_free_arch_specific rather than
+	error_free_dev for init_generic() failure on PED_DEVICE_UBD.
+
 2006-10-11  David Cantrell  <dcantrell@redhat.com>
 	* arch/linux.c: Conditionalize device-mapper stuff correctly so if the
 	user disables it, libparted still compiles.
