@@ -5,9 +5,10 @@ See libparted/ChangeLog and parted/ChangeLog.
 
 ==============================================================================
 2006-10-11  David Cantrell  <dcantrell@redhat.com>
-	* include/parted/device.h: Add PED_DEVICE_DM if device-mapper is enabled.
-	* configure.ac: Conditionalize libdevmapper support so people that don't
-	have that library can still build a mostly functional libparted.
+	* include/parted/device.h: Add PED_DEVICE_DM if device-mapper is
+	enabled.
+	* configure.ac: Conditionalize libdevmapper support so people that
+	don't have that library can still build a mostly functional libparted.
 
 2006-10-09  David Cantrell  <dcantrell@redhat.com>
 	* po/*.po, po/parted.pot: Updated.
