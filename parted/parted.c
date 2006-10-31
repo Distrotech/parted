@@ -1192,9 +1192,9 @@ do_print (PedDevice** dev)
         int             has_num_arg = 0;
         int             has_free_arg = 0;
         int             has_all_arg = 0;
-        char*           transport[12] = {"unknown", "scsi", "ide", "dac960",
+        char*           transport[13] = {"unknown", "scsi", "ide", "dac960",
                                          "cpqarray", "file", "ataraid", "i2o",
-                                         "ubd", "dasd", "viodasd", "sx8"};
+                                         "ubd", "dasd", "viodasd", "sx8", "dm"};
         char*           peek_word;
         char*           start;
         char*           end;

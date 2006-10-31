@@ -1,3 +1,7 @@
+2006-10-31  David Cantrell  <dcantrell@redhat.com>
+	* parted.c (do_print): Add device-mapper type to the transport type
+	list (from Debarshi Ray).
+
 2006-10-09  David Cantrell  <dcantrell@redhat.com>
 	* parted.c (do_print): Define transport type list and display disk
 	model type and transport type (from Debarshi Ray).
