@@ -312,7 +312,7 @@ static int
 readFD (int fd, char **buf)
 {
         char* p;
-        size_t size = 2048;
+        size_t size = 1024;
         int s, filesize = 0;
 
         *buf = malloc (size * sizeof (char));
@@ -322,7 +322,7 @@ readFD (int fd, char **buf)
 
         do {
                 p = &(*buf) [filesize];
-                s = read (fd, p, 2048);
+                s = read (fd, p, 1024);
                 /* exit if there is an error or EOF is reached */
                 if (s <= 0)
                         break;
