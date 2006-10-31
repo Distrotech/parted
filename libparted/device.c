@@ -70,7 +70,7 @@ canonicalize_file_name (const char *name)
 
 	/* Just in case realpath does not NULL terminate the string
 	 * or it just fits in SIZE without a NULL terminator.  */
-	buf = calloc (size + 1, 1);
+	buf = calloc (size + 1, sizeof(char));
 	if (! buf) {
 		errno = ENOMEM;
 		return NULL;

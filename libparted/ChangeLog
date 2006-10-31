@@ -1,3 +1,14 @@
+2006-10-31  David Cantrell  <dcantrell@redhat.com>
+	* device.c (canonicalize_file_name): calloc should use sizeof(char)
+	instead of 1 (from Debarshi Ray).
+	* arch/linux.c (readFD): Use a 1KB buffer to read /proc/devices
+	rather than a 16KB buffer.  Init filesize to zero at declaration.
+	Combine error and EOF check for read() loop.  Memory cleanups at
+	function exit.  Use malloc() instead of calloc() (from Debarshi
+	Ray).
+	* arch/linux.c (_is_dm_major): Test expression and loop cleanups
+	(from Debarshi Ray).
+
 2006-10-26  David Cantrell  <dcantrell@redhat.com>
 	* arch/linux.c: Go to error_free_arch_specific rather than
 	error_free_dev for init_generic() failure on PED_DEVICE_UBD.

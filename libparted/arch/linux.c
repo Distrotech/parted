@@ -312,24 +312,21 @@ static int
 readFD (int fd, char **buf)
 {
         char* p;
-        size_t size = 16384;
-        int s, filesize;
+        size_t size = 2048;
+        int s, filesize = 0;
 
-        *buf = calloc (16384, sizeof (char));
+        *buf = malloc (size * sizeof (char));
         if (*buf == 0) {
                 return -1;
         }
 
-        filesize = 0;
         do {
                 p = &(*buf) [filesize];
-                s = read (fd, p, 16384);
-                if (s < 0)
+                s = read (fd, p, 2048);
+                /* exit if there is an error or EOF is reached */
+                if (s <= 0)
                         break;
                 filesize += s;
-                /* only exit for empty reads */
-                if (s == 0)
-                        break;
                 size += s;
                 *buf = realloc (*buf, size);
         } while (1);
@@ -338,6 +335,13 @@ readFD (int fd, char **buf)
                 free (*buf);
                 *buf = NULL;
                 return -1;
+        } else {
+                /*
+                 * there is always some excess memory (usually 1024 bytes)
+                 * left unused
+                 */
+                *buf = realloc (*buf, filesize+1);
+                (*buf)[filesize] = '\0';
         }
 
         return filesize;
@@ -365,7 +369,7 @@ _is_dm_major (int major)
 
         line = buf;
         end = strchr(line, '\n');
-        while (end && *end) {
+        while (end) {
                 char *name;
                 int maj;
 
@@ -379,7 +383,7 @@ _is_dm_major (int major)
                 }
 
                 name = strrchr(line, ' ');
-                if (!name || !*name || strcmp(name+1, "device-mapper"))
+                if (!name || strcmp(name+1, "device-mapper"))
                         goto next;
 
                 maj = strtol(line, &name, 10);
@@ -392,10 +396,7 @@ _is_dm_major (int major)
 next:
                 *end = c;
                 line = end+1;
-                if (line && *line) {
-                        end = strchr(line, '\n');
-                } else
-                        end = line;
+                end = strchr(line, '\n');
         }
         free(buf);
         close(fd);
