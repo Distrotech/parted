@@ -407,7 +407,13 @@ strncasestr (const char* haystack, const char* needle, int n)
 static int
 _rawpart_is_boot (MacRawPartition* raw_part)
 {
-	return !strcasecmp (raw_part->type, "Apple_Bootstrap");
+	if (!strcasecmp(raw_part->type, "Apple_Bootstrap"))
+		return 1;
+
+	if (!strcasecmp(raw_part->type, "Apple_Boot"))
+		return 1;
+
+	return 0;
 }
 
 static int
@@ -604,7 +610,8 @@ _rawpart_analyse (MacRawPartition* raw_part, PedDisk* disk, int num)
 				goto error_destroy_part;
 		}
 	} else {
-		if (mac_part_data->data_region_length < part->geom.length) {
+		if (mac_part_data->data_region_length < part->geom.length &&
+		    !mac_part_data->is_boot) {
 			if (ped_exception_throw (
 				PED_EXCEPTION_ERROR,
 				PED_EXCEPTION_IGNORE_CANCEL,
