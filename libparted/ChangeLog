@@ -1,3 +1,7 @@
+2006-11-05  David Cantrell  <dcantrell@redhat.com>
+	* arch/linux.c: Define PROC_DEVICES_BUFSIZ for reading /proc/devices,
+	set to 16384.
+
 2006-11-02  David Cantrell  <dcantrell@redhat.com>
 	* labels/mac.c (_rawpart_is_boot): Check for Apple_Boot type.
 	* labels/mac.c (_rawpart_analyse): Don't check the data_region_length

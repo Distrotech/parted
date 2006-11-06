@@ -21,6 +21,8 @@
 /* ... and for posix_memalign()                                  */
 #define _GNU_SOURCE
 
+#define PROC_DEVICES_BUFSIZ 16384
+
 #include "config.h"
 
 #include <parted/parted.h>
@@ -312,7 +314,7 @@ static int
 readFD (int fd, char **buf)
 {
         char* p;
-        size_t size = 1024;
+        size_t size = PROC_DEVICES_BUFSIZ;
         int s, filesize = 0;
 
         *buf = malloc (size * sizeof (char));
@@ -322,7 +324,7 @@ readFD (int fd, char **buf)
 
         do {
                 p = &(*buf) [filesize];
-                s = read (fd, p, 1024);
+                s = read (fd, p, PROC_DEVICES_BUFSIZ);
                 /* exit if there is an error or EOF is reached */
                 if (s <= 0)
                         break;
@@ -336,10 +338,7 @@ readFD (int fd, char **buf)
                 *buf = NULL;
                 return -1;
         } else {
-                /*
-                 * there is always some excess memory (usually 1024 bytes)
-                 * left unused
-                 */
+                /* there is always some excess memory left unused */
                 *buf = realloc (*buf, filesize+1);
                 (*buf)[filesize] = '\0';
         }
