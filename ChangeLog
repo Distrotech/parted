@@ -4,6 +4,10 @@ front-end.  This file is only for reference purposes and top-level changes.
 See libparted/ChangeLog and parted/ChangeLog.
 
 ==============================================================================
+2006-11-08  Otavio Salvador <otavio@debian.org>
+
+	* doc/C/parted.8: small documentation simplification.
+	
 2006-10-11  David Cantrell  <dcantrell@redhat.com>
 	* include/parted/device.h: Add PED_DEVICE_DM if device-mapper is
 	enabled.

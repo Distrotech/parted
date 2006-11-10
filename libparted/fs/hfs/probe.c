@@ -42,8 +42,9 @@ hfsc_can_use_geom (PedGeometry* geom)
 {
 	PedDevice* dev;
 
+	dev = geom->dev;
 	PED_ASSERT (geom != NULL, return 0);
-	PED_ASSERT ((dev = geom->dev) != NULL, return 0);
+	PED_ASSERT (dev != NULL, return 0);
 
 	if (dev->sector_size != PED_SECTOR_SIZE_DEFAULT) {
 		ped_exception_throw (
