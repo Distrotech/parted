@@ -4,6 +4,11 @@ front-end.  This file is only for reference purposes and top-level changes.
 See libparted/ChangeLog and parted/ChangeLog.
 
 ==============================================================================
+2006-11-11  Otavio Salvador <otavio@debian.org>
+
+	* autogen.sh: use -f on autopoint to ensure we have the files
+	updated.
+	
 2006-11-08  Otavio Salvador <otavio@debian.org>
 
 	* doc/C/parted.8: small documentation simplification.

@@ -65,7 +65,8 @@ ped_file_system_type_unregister (PedFileSystemType* fs_type)
 	PED_ASSERT (fs_types != NULL, return);
 	PED_ASSERT (fs_type != NULL, return);
 
-	for (walk = fs_types; walk && walk != fs_type; last = walk, walk = walk->next);
+	for (walk = fs_types; walk && walk != fs_type;
+                last = walk, walk = walk->next);
 
 	PED_ASSERT (walk != NULL, return);
 	if (last)

@@ -3,6 +3,6 @@
 aclocal
 autoconf -f
 autoheader
-autopoint
+autopoint -f
 libtoolize -c -f
 automake -a -c

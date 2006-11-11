@@ -84,7 +84,8 @@ void ped_unregister_disk_type (PedDiskType* disk_type)
 	PED_ASSERT (disk_types != NULL, return);
 	PED_ASSERT (disk_type != NULL, return);
 
-	for (walk = disk_types; walk && walk != disk_type; last = walk, walk = walk->next);
+	for (walk = disk_types; walk && walk != disk_type;
+                last = walk, walk = walk->next);
 
 	PED_ASSERT (walk != NULL, return);
 	if (last)
