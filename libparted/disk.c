@@ -65,33 +65,32 @@ static int _disk_raw_add (PedDisk* disk, PedPartition* part);
 static PedDiskType*	disk_types = NULL;
 
 void
-ped_register_disk_type (PedDiskType* type)
+ped_register_disk_type (PedDiskType* disk_type)
 {
-	PED_ASSERT (type != NULL, return);
-	PED_ASSERT (type->ops != NULL, return);
-	PED_ASSERT (type->name != NULL, return);
+	PED_ASSERT (disk_type != NULL, return);
+	PED_ASSERT (disk_type->ops != NULL, return);
+	PED_ASSERT (disk_type->name != NULL, return);
 	
-	((struct _PedDiskType*) type)->next = disk_types;
-	disk_types = (struct _PedDiskType*) type;
+	/* pretend that "next" isn't part of the struct :-) */
+	((struct _PedDiskType*) disk_type)->next = disk_types;
+	disk_types = (struct _PedDiskType*) disk_type;
 }
 
-void ped_unregister_disk_type (PedDiskType* type)
+void ped_unregister_disk_type (PedDiskType* disk_type)
 {
 	PedDiskType*	walk;
 	PedDiskType*	last = NULL;
 
 	PED_ASSERT (disk_types != NULL, return);
-	PED_ASSERT (type != NULL, return);
+	PED_ASSERT (disk_type != NULL, return);
 
-	for (walk = disk_types; walk; last = walk, walk = walk->next) {
-		if (walk == type) break;
-	}
+	for (walk = disk_types; walk && walk != disk_type; last = walk, walk = walk->next);
 
 	PED_ASSERT (walk != NULL, return);
 	if (last)
-		((struct _PedDiskType*) last)->next = type->next;
+		((struct _PedDiskType*) last)->next = disk_type->next;
 	else
-		disk_types = type->next;
+		disk_types = disk_type->next;
 }
 
 /**

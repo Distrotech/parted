@@ -62,18 +62,16 @@ ped_file_system_type_unregister (PedFileSystemType* fs_type)
 	PedFileSystemType*	walk;
 	PedFileSystemType*	last = NULL;
 
+	PED_ASSERT (fs_types != NULL, return);
 	PED_ASSERT (fs_type != NULL, return);
 
-	for (walk = fs_types; walk != fs_type; walk = walk->next) {
-		if (!walk) return;
-		last = walk;
-	}
+	for (walk = fs_types; walk && walk != fs_type; last = walk, walk = walk->next);
 
-	if (last) {
+	PED_ASSERT (walk != NULL, return);
+	if (last)
 		((struct _PedFileSystemType*) last)->next = fs_type->next;
-	} else {
-		fs_types = fs_types->next;
-	}
+	else
+		fs_types = fs_type->next;	
 }
 
 /**
