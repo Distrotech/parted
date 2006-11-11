@@ -413,6 +413,12 @@ Or disable native language support with the --disable-nls option
 	)
 fi
 
+AC_CHECK_HEADER([execinfo.h], [
+	AC_CHECK_LIB(c, backtrace, [
+		AC_DEFINE(HAVE_BACKTRACE, 1, [Has backtrace support])
+	])
+])
+
 dnl Checks for typedefs, structures and compiler characteristics.
 AC_PROG_LD
 
@@ -438,7 +444,7 @@ CFLAGS=-D_GNU_SOURCE=1
 AC_CHECK_FUNCS(canonicalize_file_name)
 CFLAGS="$OLD_CFLAGS"
 
-CFLAGS="$CFLAGS -W -Wall -Wno-unused -Wno-switch -Wno-format"
+CFLAGS="$CFLAGS -W -Wall -Wno-unused -Wno-switch -Wno-format -rdynamic"
 
 if test "$enable_Werror" = yes; then
 	CFLAGS="$CFLAGS -Werror"

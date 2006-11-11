@@ -10,7 +10,7 @@ LIBS = @INTLLIBS@ @LIBS@
 partedincludedir      =	-I$(top_srcdir)/include
 lib_LTLIBRARIES	      =	libparted.la
 libparted_la_LDFLAGS  = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
- 			-release $(LT_RELEASE)
+ 						-release $(LT_RELEASE) -rdynamic
 
 libparted_la_SOURCES  = debug.c			\
 			device.c		\

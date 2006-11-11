@@ -1,3 +1,10 @@
+2006-11-11  Otavio Salvador  <otavio@debian.org>
+
+	* libparted/debug.c (ped_assert): Print backtrace stack when
+	throwing an exception.
+
+	* libparted/Makefile.am: Add -rdynamic on LDFLAGS.
+
 2006-11-10  Otavio Salvador  <otavio@debian.org>
 
 	* libparted/filesys.c (ped_file_system_type_unregister): Handle

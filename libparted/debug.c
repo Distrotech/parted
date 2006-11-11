@@ -30,6 +30,10 @@
 
 #ifdef DEBUG
 
+#if HAVE_BACKTRACE
+#include <execinfo.h>
+#endif
+
 static void default_handler ( const int level, const char* file, int line,
                 const char* function, const char* msg );
 static PedDebugHandler* debug_handler = &default_handler;
@@ -87,6 +91,23 @@ int ped_assert ( int cond, const char* cond_text,
 	if ( cond )
 		return 1;
 
+#if HAVE_BACKTRACE
+	/* Print backtrace stack */
+	void *stack[20];
+	size_t size;
+	char **strings;
+	
+	size = backtrace(stack, 20);
+	strings = backtrace_symbols(stack, size);
+
+	printf(_("Backtrace has %d calls on stack:\n"), size);
+	for (; size > 0; size--, strings++)
+		printf("  %d: %s\n", size, *strings);
+
+	free(strings);
+#endif
+
+	/* Throw the exception */
 	opt = ped_exception_throw (
 		PED_EXCEPTION_BUG,
 		PED_EXCEPTION_IGNORE_CANCEL,
