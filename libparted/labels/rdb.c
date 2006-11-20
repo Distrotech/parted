@@ -664,9 +664,9 @@ amiga_write (PedDisk* disk)
 	uint32_t i, rdb_block, max_part;
 	uint32_t rdb_num, part_num, block_num, next_num;
 
-	PED_ASSERT (disk != NULL, return 0;);
-	PED_ASSERT (disk->dev != NULL, return 0;);
-	PED_ASSERT (disk->disk_specific != NULL, return 0;);
+	PED_ASSERT (disk != NULL, return 0);
+	PED_ASSERT (disk->dev != NULL, return 0);
+	PED_ASSERT (disk->disk_specific != NULL, return 0);
 
 	if (!(rdb = ped_malloc (PED_SECTOR_SIZE_DEFAULT)))
 		return 0;
