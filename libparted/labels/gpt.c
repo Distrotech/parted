@@ -1284,7 +1284,7 @@ gpt_partition_enumerate (PedPartition* part)
 		}
 	}
 
-	PED_ASSERT (0, return 0); return 0;
+	PED_ASSERT (0, return 0);
 }
 
 static int
