@@ -21,77 +21,70 @@ cd $SRCDIR
 
 # release GNU Parted (without tagging).
 # (C)2005, 2006 Leslie Patrick Polzer <polzer@gnu.org>
+# Modified by David Cantrell <dcantrell@gnu.org>
 
-
-message()
-{
-        echo '====================================================='
-        echo "$1"
-        echo '====================================================='
+message() {
+	echo '====================================================='
+	echo "$1"
+	echo '====================================================='
 }
 
-
-correct_version()
-{
-        grep $1 $2  >/dev/null 
-        if [ $? -eq 0 ]; then
-                return 0
-        fi
-        return 1;
+correct_version() {
+	grep $1 $2  >/dev/null 
+	if [ $? -eq 0 ]; then
+		return 0
+	fi
+	return 1
 }
 
-
-check_for_program()
-{
-        which $1
-        if [ $? -ne 0 ]; then
-                echo "not found, exiting."
-                exit
-        fi
+check_for_program() {
+	which $1
+	if [ $? -ne 0 ]; then
+		echo "not found, exiting."
+		exit
+	fi
 }
-
 
 echo "* checking for programs that might be missing..."
-for p in gpg curl; do
-        echo -en "\t$p: "
-        check_for_program $p
+for p in sha1sum gpg curl; do
+	echo -en "\t$p: "
+	check_for_program $p
 done
 
 if [ -x ./autogen.sh ]; then
-        ./autogen.sh
+	./autogen.sh
 else
-        return 1
+	return 1
 fi
 
 if [ -x ./configure ]; then
-        ./configure
+	./configure
 else
-        return 1
+	return 1
 fi
 
 VERSION=$(grep ' VERSION' config.h | awk '{print $3}' | tr -d '"')
 
 message "* checking for correct version in files"
 for f in ChangeLog NEWS; do
-        echo -n -e "\t$f: "
-        correct_version $VERSION $f
-        if [ $? -eq 0 ]; then
-                echo OK
-        else
-                echo "-> WARNING: version mismatch"
-        fi
+	echo -n -e "\t$f: "
+	correct_version $VERSION $f
+	if [ $? -eq 0 ]; then
+		echo OK
+	else
+		echo "-> WARNING: version mismatch"
+	fi
 done
-
 
 correct_version $VERSION Doxyfile
 if [ $? -ne 0 ]; then
-        echo "-> WARNING: version not updated in Doxygen configuration!"
+	echo "-> WARNING: version not updated in Doxygen configuration!"
 fi
 
 message '* checking whether code compiles: '
 make -s
 if [ $? -ne 0 ]; then
-        echo no; exit
+	echo no; exit
 fi
 echo OK
 
@@ -105,12 +98,12 @@ read
 
 message '* creating tarballs...'
 for f in gzip bzip2; do
-        echo -n "dist-$f: "
-        make dist-$f
-        if [ $? -ne 0 ]; then
-                echo FAILED; exit
-        fi
-        echo success
+	echo -n "dist-$f: "
+	make dist-$f
+	if [ $? -ne 0 ]; then
+		echo FAILED; exit
+	fi
+	echo success
 done
 
 set -x
@@ -121,58 +114,62 @@ eval "$GPGAENV"
 set +x
 
 for EXT in gz bz2; do
+	TARBALL=parted-$VERSION.tar.$EXT
+	SHA1FILE=$TARBALL.sha1
 
-TARBALL=parted-$VERSION.tar.$EXT
+	sha1sum $TARBALL > $SHA1FILE
 
-message "* signing $TARBALL to detached signature file $TARBALL.sig"
-gpg --use-agent -b $TARBALL 
-if [ $? -ne 0 ]; then
-        kill $GPGAPID echo "\t-> FAILED"; exit
-fi
-echo -e "\t-> success"
+	message "* signing $TARBALL to detached signature file $TARBALL.sig"
+	gpg --use-agent -b $TARBALL 
+	if [ $? -ne 0 ]; then
+		kill $GPGAPID echo "\t-> FAILED"; exit
+	fi
+	echo -e "\t-> success"
 
+	for FILE in $TARBALL $SHA1FILE; do
+		DIRECTIVE=$FILE.directive
+		message "* creating and clearsigning directive file to $DIRECTIVE.asc" 
+		echo "version: 1.1" > $DIRECTIVE
+		echo "directory: parted" >> $DIRECTIVE
+		echo "filename: $FILE" >> $DIRECTIVE
+		if [ $? -ne 0 ]; then
+			kill $GPGAPID; echo creation FAILED; exit
+		fi
+		echo -e "\t-> created "
+		gpg --use-agent --clearsign $DIRECTIVE
+		if [ $? -ne 0 ]; then
+			kill $GPGAPID; echo ", but signing failed"; exit
+		fi
+		echo -e "\t-> signed"
 
-DIRECTIVE=$TARBALL.directive
-message "* creating and clearsigning directive file to $DIRECTIVE.asc" 
-echo "version: 1.1" > $DIRECTIVE
-echo "directory: parted" >> $DIRECTIVE
-echo "filename: $TARBALL" >> $DIRECTIVE
-if [ $? -ne 0 ]; then
-        kill $GPGAPID; echo creation FAILED; exit
-fi
-echo -e "\t-> created "
-gpg --use-agent --clearsign $DIRECTIVE
-if [ $? -ne 0 ]; then
-        kill $GPGAPID; echo ", but signing failed"; exit
-fi
-echo -e "\t-> signed"
+		message "* deleting $DIRECTIVE."
+		rm $DIRECTIVE 
+	done
 
-
-message "* deleting $DIRECTIVE."
-rm $DIRECTIVE 
-
+	#kill $GPGAPID
 done
 
-#kill $GPGAPID
-
-
-# do all uploading work
 message "! Ready! Hit <RETURN> to start upload."
 read
 
 message "* uploading files to ftp-upload.gnu.org..."
 for EXT in gz bz2; do
-        TARBALL=parted-$VERSION.tar.$EXT 
-        SIG=parted-$VERSION.tar.$EXT.sig
-        DIRECTIVE=$TARBALL.directive
-        for f in $TARBALL $SIG $DIRECTIVE.asc; do
-                curl --upload-file $PWD/$f $FTPURL
-                if [ $? -eq 0 ]; then
-                        echo "-> successfully uploaded $f."
-                else
-                        echo "-> upload of $f FAILED, exiting."
-                fi
-        done
+	T=parted-$VERSION.tar.$EXT
+	TSIG=$TARBALL.sig
+	TDIR=$TARBALL.directive.asc
+
+	S=$TARBALL.sha1
+	SSIG=$SHA1FILE.sig
+	SDIR=$SHA1FILE.directive.asc
+
+	for f in $T $TSIG $TDIR $S $SSIG $SDIR; do
+		curl --upload-file $PWD/$f $FTPURL
+		if [ $? -eq 0 ]; then
+			echo "-> successfully uploaded $f."
+		else
+			echo "-> upload of $f FAILED, exiting."
+		fi
+	done
 done
 
 message "* all files uploaded."
