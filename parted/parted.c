@@ -1236,7 +1236,6 @@ do_print (PedDevice** dev)
 
         if (has_all_arg) {
                 int first_device;
-                PedDevice *current_dev;
                 PedDevice *current_dev = NULL;
 
                 ped_device_probe_all();
