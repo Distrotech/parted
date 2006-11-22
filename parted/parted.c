@@ -1237,14 +1237,13 @@ do_print (PedDevice** dev)
         if (has_all_arg) {
                 int first_device;
                 PedDevice *current_dev;
+                PedDevice *current_dev = NULL;
 
                 ped_device_probe_all();
-                current_dev = NULL;
 
                 while ((current_dev = ped_device_get_next(current_dev))) {
                         do_print (&current_dev);
                         printf ("\n");
-                        current_dev = ped_device_get_next (current_dev);
                 }    
 
                 return 1;
