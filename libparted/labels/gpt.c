@@ -1285,6 +1285,8 @@ gpt_partition_enumerate (PedPartition* part)
 	}
 
 	PED_ASSERT (0, return 0);
+
+	return 0; /* used if debug is disabled */
 }
 
 static int
