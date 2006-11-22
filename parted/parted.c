@@ -2186,6 +2186,14 @@ _init_commands ();
 
 if (!_parse_options (argc_ptr, argv_ptr))
         goto error_done_commands;
+
+#ifdef HAVE_GETUID
+        if (getuid() != 0) {
+            printf(_("WARNING: You are not superuser.  Watch out for "
+                     "permissions.\n"));
+        }
+#endif
+
 dev = _choose_device (argc_ptr, argv_ptr);
 if (!dev)
         goto error_done_commands;
@@ -2237,13 +2245,6 @@ main (int argc, char** argv)
 {
         PedDevice*      dev;
         int             status;
-
-#ifdef HAVE_GETUID
-        if (getuid() != 0) {
-            printf(_("WARNING: You are not superuser.  Watch out for "
-                     "permissions.\n"));
-        }
-#endif
 
         dev = _init (&argc, &argv);
         if (!dev)
