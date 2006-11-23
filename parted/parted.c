@@ -66,6 +66,7 @@ static struct option    options[] = {
         /* name, has-arg, string-return-val, char-return-val */
         {"help",        0, NULL, 'h'},
         {"interactive", 0, NULL, 'i'},
+        {"list",        0, NULL, 'l'},
         {"script",      0, NULL, 's'},
         {"version",     0, NULL, 'v'},
         {NULL,          0, NULL, 0}
@@ -75,6 +76,7 @@ static struct option    options[] = {
 static char*    options_help [][2] = {
         {"help",        N_("displays this help message")},
         {"interactive", N_("where necessary, prompts for user intervention")},
+        {"list",        N_("lists partition tables of all detected devices")},
         {"script",      N_("never prompts for user intervention")},
         {"version",     N_("displays the version")},
         {NULL,          NULL}
@@ -124,6 +126,7 @@ static Command* commands [256] = {NULL};
 static PedTimer* timer;
 static TimerContext timer_context;
 
+static int _print_all (int cli);
 static void _done (PedDevice* dev);
 
 static void
@@ -1234,19 +1237,8 @@ do_print (PedDevice** dev)
                 return status;
         }
 
-        if (has_all_arg) {
-                int first_device;
-                PedDevice *current_dev = NULL;
-
-                ped_device_probe_all();
-
-                while ((current_dev = ped_device_get_next(current_dev))) {
-                        do_print (&current_dev);
-                        printf ("\n");
-                }    
-
-                return 1;
-        }
+        if (has_all_arg) 
+                return _print_all (0);
 
         start = ped_unit_format (*dev, 0);
         end = ped_unit_format_byte (*dev, (*dev)->length * (*dev)->sector_size
@@ -1377,6 +1369,24 @@ error_destroy_disk:
         ped_disk_destroy (disk);
 error:
         return 0;
+}
+
+static int
+_print_all (int cli)
+{
+        PedDevice *current_dev = NULL;
+
+        ped_device_probe_all();
+
+        while ((current_dev = ped_device_get_next(current_dev))) {
+                do_print (&current_dev);
+                printf ("\n");
+        }    
+
+        if(cli)
+                exit(0);
+
+        return 1;
 }
 
 static int
@@ -2113,10 +2123,10 @@ int     opt;
 while (1)
 {
 #ifdef HAVE_GETOPT_H
-        opt = getopt_long (*argc_ptr, *argv_ptr, "hisv",
+        opt = getopt_long (*argc_ptr, *argv_ptr, "hilsv",
                            options, NULL);
 #else
-        opt = getopt (*argc_ptr, *argv_ptr, "hisv");
+        opt = getopt (*argc_ptr, *argv_ptr, "hilsv");
 #endif
         if (opt == -1)
                 break;
@@ -2124,6 +2134,7 @@ while (1)
         switch (opt) {
                 case 'h': help_msg (); break;
                 case 'i': opt_script_mode = 0; break;
+                case 'l': _print_all(1); break;
                 case 's': opt_script_mode = 1; break;
                 case 'v': _version (); break;
         }
