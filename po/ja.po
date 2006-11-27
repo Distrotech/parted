@@ -4,206 +4,171 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: parted 1.7.0rc1\n"
+"Project-Id-Version: parted 1.8.0rc2\n"
 "Report-Msgid-Bugs-To: bug-parted@gnu.org\n"
-"POT-Creation-Date: 2006-10-11 15:47-0400\n"
-"PO-Revision-Date: 2006-04-07 20:37+0900\n"
+"POT-Creation-Date: 2006-10-11 16:56-0400\n"
+"PO-Revision-Date: 2006-10-12 23:19+0900\n"
 "Last-Translator: Hiroshi Takekawa <sian@big.or.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=EUC-JP\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libparted/arch/linux.c:417
+#: libparted/arch/linux.c:419
 #, c-format
 msgid "Could not stat device %s - %s."
 msgstr "デバイス %s を調べられません: %s"
 
-#: libparted/arch/linux.c:531
-#, fuzzy, c-format
+#: libparted/arch/linux.c:535
+#, c-format
 msgid ""
 "Could not determine sector size for %s: %s.\n"
 "Using the default sector size (%lld)."
 msgstr ""
 "%s のセクタサイズが決定できません: %s\n"
-"デフォルトのセクタサイズ (%d) を使います。"
+"デフォルトのセクタサイズ (%lld) を使います。"
 
-#: libparted/arch/linux.c:547
-#, fuzzy, c-format
-msgid ""
-"Device %s has a logical sector size of %lld.  Not all parts of GNU Parted "
-"support this at the moment, and the working code is HIGHLY EXPERIMENTAL.\n"
-msgstr ""
-"%s の 論理セクタサイズが %d です。いまのところ GNU Parted は全ての機能におい"
-"て、このサイズをサポートしているわけではありません。\n"
+#: libparted/arch/linux.c:551
+#, c-format
+msgid "Device %s has a logical sector size of %lld.  Not all parts of GNU Parted support this at the moment, and the working code is HIGHLY EXPERIMENTAL.\n"
+msgstr "%s の 論理セクタサイズが %lld です。いまのところ GNU Parted は全ての機能において、このサイズをサポートしているわけではなく、一応動作する場合でもまともに動作するとは限りません。\n"
 
-#: libparted/arch/linux.c:587
+#: libparted/arch/linux.c:591
 #, c-format
 msgid "Unable to determine the size of %s (%s)."
 msgstr "%s のサイズを決定できません(%s)"
 
-#: libparted/arch/linux.c:676
+#: libparted/arch/linux.c:680
 #, c-format
 msgid "Could not get identity of device %s - %s"
 msgstr "デバイス %s の identity を取得できません: %s"
 
-#: libparted/arch/linux.c:685
+#: libparted/arch/linux.c:689
 msgid "Generic IDE"
 msgstr "一般的な IDE"
 
-#: libparted/arch/linux.c:702
+#: libparted/arch/linux.c:706
 #, c-format
 msgid ""
 "Device %s has multiple (%d) logical sectors per physical sector.\n"
-"GNU Parted supports this EXPERIMENTALLY for some special disk label/file "
-"system combinations, e.g. GPT and ext2/3.\n"
+"GNU Parted supports this EXPERIMENTALLY for some special disk label/file system combinations, e.g. GPT and ext2/3.\n"
 "Please consult the web site for up-to-date information."
 msgstr ""
-"デバイス %s には、物理セクタ一つにつき複数 (%dセクタ) の論理セクタがありま"
-"す。\n"
-"GNU Parted は、ある特定のディスクラベルとファイルシステムの組み合わせについ"
-"て、このような場合を「実験的に」サポートしています。例えば、GPT と ext2/3 と"
-"いった組み合わせです。\n"
+"デバイス %s には、物理セクタ一つにつき複数 (%dセクタ) の論理セクタがあります。\n"
+"GNU Parted は、ある特定のディスクラベルとファイルシステムの組み合わせについて、このような場合を「実験的に」サポートしています。例えば、GPT と ext2/3 といった組み合わせです。\n"
 "最新の情報は web サイトをご覧ください。"
 
-#: libparted/arch/linux.c:872
+#: libparted/arch/linux.c:876
 #, c-format
 msgid "Error initialising SCSI device %s - %s"
 msgstr "SCSI デバイス %s の初期化に失敗しました: %s"
 
-#: libparted/arch/linux.c:927
+#: libparted/arch/linux.c:931
 #, c-format
-msgid ""
-"The device %s has zero length, and can't possibly store a file system or "
-"partition table.  Perhaps you selected the wrong device?"
-msgstr ""
-"デバイス %s の長さが 0 なので、ファイルシステムやパーティションテーブルを記録"
-"できません。デバイスの選択を間違っていないか確認してください。"
+msgid "The device %s has zero length, and can't possibly store a file system or partition table.  Perhaps you selected the wrong device?"
+msgstr "デバイス %s の長さが 0 なので、ファイルシステムやパーティションテーブルを記録できません。デバイスの選択を間違っていないか確認してください。"
 
-#: libparted/arch/linux.c:1035
-#, fuzzy, c-format
-msgid ""
-"Unable to determine geometry of file/device %s.  You should not use Parted "
-"unless you REALLY know what you're doing!"
-msgstr ""
-"ファイルまたはデバイスの geometry を決定できません。自分で何をしているかよく"
-"理解していなければ Parted を使うべきではありません。"
+#: libparted/arch/linux.c:1039
+#, c-format
+msgid "Unable to determine geometry of file/device %s.  You should not use Parted unless you REALLY know what you're doing!"
+msgstr "ファイルまたはデバイス %s の geometry を決定できません。自分で何をしているかよく理解していなければ Parted を使うべきではありません。"
 
-#: libparted/arch/linux.c:1110
+#: libparted/arch/linux.c:1114
 msgid "DAC960 RAID controller"
 msgstr "DAC960 RAID コントローラ"
 
-#: libparted/arch/linux.c:1115
+#: libparted/arch/linux.c:1119
 msgid "Promise SX8 SATA Device"
-msgstr ""
+msgstr "Promise SX8 SATA デバイス"
 
-#: libparted/arch/linux.c:1120
+#: libparted/arch/linux.c:1124
 msgid "IBM S390 DASD drive"
-msgstr ""
+msgstr "IBM S390 DASD ドライブ"
 
-#: libparted/arch/linux.c:1125
+#: libparted/arch/linux.c:1129
 msgid "IBM iSeries Virtual DASD"
-msgstr ""
+msgstr "IBM iSeries Virtual DASD"
 
-#: libparted/arch/linux.c:1130
+#: libparted/arch/linux.c:1134
 msgid "Compaq Smart Array"
 msgstr "Compaq Smart Array"
 
-#: libparted/arch/linux.c:1135
+#: libparted/arch/linux.c:1139
 msgid "ATARAID Controller"
 msgstr "ATA RAID コントローラ"
 
-#: libparted/arch/linux.c:1140
+#: libparted/arch/linux.c:1144
 msgid "I2O Controller"
 msgstr "I2O コントローラ"
 
-#: libparted/arch/linux.c:1145
+#: libparted/arch/linux.c:1149
 msgid "User-Mode Linux UBD"
 msgstr "User-Mode Linux UBD"
 
-#: libparted/arch/linux.c:1155
-msgid "Linux device-mapper"
-msgstr ""
-
 #: libparted/arch/linux.c:1160
+msgid "Linux device-mapper"
+msgstr "Linux device-mapper"
+
+#: libparted/arch/linux.c:1166
 msgid "Unknown"
 msgstr "不明"
 
-#: libparted/arch/linux.c:1167
+#: libparted/arch/linux.c:1173
 msgid "ped_device_new()  Unsupported device type"
 msgstr "ped_device_new()  サポートされていない種類のデバイスです。"
 
-#: libparted/arch/linux.c:1270 libparted/arch/gnu.c:264
+#: libparted/arch/linux.c:1276 libparted/arch/gnu.c:264
 #, c-format
 msgid "Error opening %s: %s"
 msgstr "%s をオープン中にエラー: %s"
 
-#: libparted/arch/linux.c:1281 libparted/arch/gnu.c:274
+#: libparted/arch/linux.c:1287 libparted/arch/gnu.c:274
 #, c-format
 msgid "Unable to open %s read-write (%s).  %s has been opened read-only."
-msgstr ""
-"%s を読み書き可能な状態にオープンできません(%s)。%s は読み込みのみ可能な状態"
-"でオープンされました。"
+msgstr "%s を読み書き可能な状態にオープンできません(%s)。%s は読み込みのみ可能な状態でオープンされました。"
 
-#: libparted/arch/linux.c:1389 libparted/arch/linux.c:1466
+#: libparted/arch/linux.c:1395 libparted/arch/linux.c:1472
 #: libparted/arch/gnu.c:452 libparted/arch/gnu.c:551 libparted/arch/gnu.c:679
 #, c-format
 msgid "%s during read on %s"
 msgstr "%s: %s から読み込み中にエラーが発生しました。"
 
-#: libparted/arch/linux.c:1430
+#: libparted/arch/linux.c:1436
 #, c-format
 msgid "%s during seek for read on %s"
 msgstr "%s: %s から読み込み中のシークでエラーが発生しました。"
 
-#: libparted/arch/linux.c:1511 libparted/arch/linux.c:1603
-#: libparted/arch/linux.c:1672 libparted/arch/gnu.c:588
+#: libparted/arch/linux.c:1517 libparted/arch/linux.c:1609
+#: libparted/arch/linux.c:1678 libparted/arch/gnu.c:588
 #: libparted/arch/gnu.c:633 libparted/arch/gnu.c:710
 #, c-format
 msgid "%s during write on %s"
 msgstr "%s: %s に書きこみ中にエラーが発生しました。"
 
-#: libparted/arch/linux.c:1540 libparted/arch/gnu.c:512
+#: libparted/arch/linux.c:1546 libparted/arch/gnu.c:512
 #, c-format
 msgid "Can't write to %s, because it is opened read-only."
 msgstr "読み込みのみが可能なようにオープンされているので、%sに書きこめません。"
 
-#: libparted/arch/linux.c:1564
+#: libparted/arch/linux.c:1570
 #, c-format
 msgid "%s during seek for write on %s"
 msgstr "%s: %s に書きこみ中のシークでエラーが発生しました。"
 
-#: libparted/arch/linux.c:2062
+#: libparted/arch/linux.c:2070
 #, c-format
-msgid ""
-"Error informing the kernel about modifications to partition %s -- %s.  This "
-"means Linux won't know about any changes you made to %s until you reboot -- "
-"so you shouldn't mount it or use it in any way before rebooting."
-msgstr ""
-"パーティション %s の変更をカーネルに伝える際にエラーが発生しました -- %s。"
-"カーネルは %s に対してなされた変更を再起動するまで関知しませんので、このパー"
-"ティションを mount しようとしたり、なんらかの操作をすべきではありません。"
+msgid "Error informing the kernel about modifications to partition %s -- %s.  This means Linux won't know about any changes you made to %s until you reboot -- so you shouldn't mount it or use it in any way before rebooting."
+msgstr "パーティション %s の変更をカーネルに伝える際にエラーが発生しました -- %s。カーネルは %s に対してなされた変更を再起動するまで関知しませんので、このパーティションを mount しようとしたり、なんらかの操作をすべきではありません。"
 
-#: libparted/arch/linux.c:2263
-#, fuzzy, c-format
-msgid ""
-"parted was unable to re-read the partition table on %s (%s).  This means "
-"Linux won't know anything about the modifications you made. "
-msgstr ""
-"カーネルは %s のパーティションテーブルの内容を再読み込みできません(%s)。これ"
-"は再起動するまで Linux カーネルはあなたが行った変更を関知していないことを意味"
-"しています。%s に対して何か操作をする前にコンピュータを再起動するべきです。"
-
-#: libparted/arch/linux.c:2367
+#: libparted/arch/linux.c:2272
 #, c-format
-msgid ""
-"The kernel was unable to re-read the partition table on %s (%s).  This means "
-"Linux won't know anything about the modifications you made until you "
-"reboot.  You should reboot your computer before doing anything with %s."
-msgstr ""
-"カーネルは %s のパーティションテーブルの内容を再読み込みできません(%s)。これ"
-"は再起動するまで Linux カーネルはあなたが行った変更を関知していないことを意味"
-"しています。%s に対して何か操作をする前にコンピュータを再起動するべきです。"
+msgid "parted was unable to re-read the partition table on %s (%s).  This means Linux won't know anything about the modifications you made. "
+msgstr "parted は %s のパーティションテーブルの内容を再読み込みできません(%s)。これは Linux カーネルはあなたが行った変更を関知していないことを意味しています。"
+
+#: libparted/arch/linux.c:2377
+#, c-format
+msgid "The kernel was unable to re-read the partition table on %s (%s).  This means Linux won't know anything about the modifications you made until you reboot.  You should reboot your computer before doing anything with %s."
+msgstr "カーネルは %s のパーティションテーブルの内容を再読み込みできません(%s)。これは再起動するまで Linux カーネルはあなたが行った変更を関知していないことを意味しています。%s に対して何か操作をする前にコンピュータを再起動するべきです。"
 
 #: libparted/arch/gnu.c:97
 #, c-format
@@ -215,39 +180,17 @@ msgid "Unable to probe store."
 msgstr "デバイスのプローブに失敗しました。"
 
 #: libparted/arch/gnu.c:355
-msgid ""
-"The partition table cannot be re-read.  This means you need to reboot before "
-"mounting any modified partitions.  You also need to reinstall your boot "
-"loader before you reboot (which may require mounting modified partitions).  "
-"It is impossible do both things!  So you'll need to boot off a rescue disk, "
-"and reinstall your boot loader from the rescue disk.  Read section 4 of the "
-"Parted User documentation for more information."
-msgstr ""
-"カーネルはパーティションテーブルの再読み込みができませんでしたので、変更を加"
-"えたパーティションを mount する前に再起動する必要があります。また、再起動する"
-"前にブートローダを再インストールする必要があります(このことは、変更したパー"
-"ティションの mount が必要となるかもしれません)。でもそれらを両方同時にはでき"
-"ません! レスキューディスクを使ってブートして、ブートローダをいれなおしてくだ"
-"さい。より詳しいことは Parted のユーザドキュメントの4章を読んでください。"
+msgid "The partition table cannot be re-read.  This means you need to reboot before mounting any modified partitions.  You also need to reinstall your boot loader before you reboot (which may require mounting modified partitions).  It is impossible do both things!  So you'll need to boot off a rescue disk, and reinstall your boot loader from the rescue disk.  Read section 4 of the Parted User documentation for more information."
+msgstr "カーネルはパーティションテーブルの再読み込みができませんでしたので、変更を加えたパーティションを mount する前に再起動する必要があります。また、再起動する前にブートローダを再インストールする必要があります(このことは、変更したパーティションの mount が必要となるかもしれません)。でもそれらを両方同時にはできません! レスキューディスクを使ってブートして、ブートローダをいれなおしてください。より詳しいことは Parted のユーザドキュメントの4章を読んでください。"
 
 #: libparted/arch/gnu.c:372
 #, c-format
-msgid ""
-"The partition table on %s cannot be re-read (%s).  This means the Hurd knows "
-"nothing about any modifications you made.  You should reboot your computer "
-"before doing anything with %s."
-msgstr ""
-"カーネルは %s のパーティションテーブルの内容を再読み込みできません(%s)。これ"
-"は Hurd はあなたが行った変更を関知していないことを意味しています。%s に対して"
-"何か操作をする前にコンピュータを再起動するべきです。"
+msgid "The partition table on %s cannot be re-read (%s).  This means the Hurd knows nothing about any modifications you made.  You should reboot your computer before doing anything with %s."
+msgstr "カーネルは %s のパーティションテーブルの内容を再読み込みできません(%s)。これは Hurd はあなたが行った変更を関知していないことを意味しています。%s に対して何か操作をする前にコンピュータを再起動するべきです。"
 
 #: libparted/arch/gnu.c:383 parted/parted.c:2218
-msgid ""
-"You should reinstall your boot loader before rebooting.  Read section 4 of "
-"the Parted User documentation for more information."
-msgstr ""
-"再起動する前にブートローダをいれなおすべきです。詳細は Parted ユーザドキュメ"
-"ントの4章を読んでください。"
+msgid "You should reinstall your boot loader before rebooting.  Read section 4 of the Parted User documentation for more information."
+msgstr "再起動する前にブートローダをいれなおすべきです。詳細は Parted ユーザドキュメントの4章を読んでください。"
 
 #: libparted/arch/gnu.c:775
 #, c-format
@@ -261,12 +204,8 @@ msgstr "%s を開けません。ディスクラベルが認識できません。"
 
 #: libparted/disk.c:454
 #, c-format
-msgid ""
-"This libparted doesn't have write support for %s.  Perhaps it was compiled "
-"read-only."
-msgstr ""
-"使用している libparted は %s の書きこみをサポートしていません。読み込み専用で"
-"コンパイルされていると思われます。"
+msgid "This libparted doesn't have write support for %s.  Perhaps it was compiled read-only."
+msgstr "使用している libparted は %s の書きこみをサポートしていません。読み込み専用でコンパイルされていると思われます。"
 
 #: libparted/disk.c:581
 #, c-format
@@ -281,9 +220,7 @@ msgstr "%s のディスクラベルは拡張パーティションをサポートしていません。"
 #: libparted/disk.c:1618
 #, c-format
 msgid "%s disk labels don't support logical or extended partitions."
-msgstr ""
-"%s のディスクラベルは論理パーティションや拡張パーティションをサポートしてませ"
-"ん"
+msgstr "%s のディスクラベルは論理パーティションや拡張パーティションをサポートしてません"
 
 #: libparted/disk.c:1631
 msgid "Too many primary partitions."
@@ -291,8 +228,7 @@ msgstr "プライマリパーティションが多すぎます。"
 
 #: libparted/disk.c:1640
 #, c-format
-msgid ""
-"Can't add a logical partition to %s, because there is no extended partition."
+msgid "Can't add a logical partition to %s, because there is no extended partition."
 msgstr "拡張パーティションがないので、論理パーティションを %s に作れません。"
 
 #: libparted/disk.c:1664
@@ -394,8 +330,7 @@ msgstr "%s : ブロック %llu (type %s) のチェックサムが不正です。"
 #: libparted/labels/rdb.c:514
 #, c-format
 msgid "%s : Didn't find rdb block, should never happen."
-msgstr ""
-"%s : rdb ブロックが見つかりませんでした。これはあってはならないことです。"
+msgstr "%s : rdb ブロックが見つかりませんでした。これはあってはならないことです。"
 
 #: libparted/labels/rdb.c:600
 #, c-format
@@ -451,14 +386,12 @@ msgstr "BSDディスクラベルのスロットを確保できません。"
 #: libparted/labels/dos.c:819
 #, c-format
 msgid "Invalid partition table on %s -- wrong signature %x."
-msgstr ""
-"%s のパーティションテーブルが不正です。%x というシグネチャはあやまりです。"
+msgstr "%s のパーティションテーブルが不正です。%x というシグネチャはあやまりです。"
 
 #: libparted/labels/dos.c:847
 #, c-format
 msgid "Invalid partition table - recursive partition on %s."
-msgstr ""
-"パーティションテーブルが不正です。再帰的なパーティションが %s にあります。"
+msgstr "パーティションテーブルが不正です。再帰的なパーティションが %s にあります。"
 
 #: libparted/labels/dos.c:1307
 msgid "Extended partitions cannot be hidden on msdos disk labels."
@@ -466,16 +399,12 @@ msgstr "MSDOS ディスクラベルで拡張パーティションは隠せません。"
 
 #: libparted/labels/dos.c:1933
 msgid "Parted can't resize partitions managed by Windows Dynamic Disk."
-msgstr ""
-"ダイナミックディスクに使われているパーティションは Parted ではリサイズできま"
-"せん。"
+msgstr "ダイナミックディスクに使われているパーティションは Parted ではリサイズできません。"
 
 #: libparted/labels/dvh.c:192
 #, c-format
 msgid "%s has no extended partition (volume header partition)."
-msgstr ""
-"%s は一つも拡張パーティション（ボリュームヘッダパーティション）を持っていませ"
-"ん。"
+msgstr "%s は一つも拡張パーティション（ボリュームヘッダパーティション）を持っていません。"
 
 #: libparted/labels/dvh.c:315
 msgid "Checksum is wrong, indicating the partition table is corrupt."
@@ -503,62 +432,30 @@ msgstr "プライマリパーティションが多すぎます。"
 
 #: libparted/labels/gpt.c:452
 #, c-format
-msgid ""
-"%s contains GPT signatures, indicating that it has a GPT table.  However, it "
-"does not have a valid fake msdos partition table, as it should.  Perhaps it "
-"was corrupted -- possibly by a program that doesn't understand GPT partition "
-"tables.  Or perhaps you deleted the GPT table, and are now using an msdos "
-"partition table.  Is this a GPT partition table?"
-msgstr ""
-"%s は GPT テーブルの存在を示す GPT のシグネチャを含んでいますが、持っているべ"
-"き見せかけの msdos パーティションテーブルを持っていません。おそらく壊れている"
-"のでしょう。GPT パーティションテーブルを理解しないプログラムが壊してしまった"
-"のかもしれません。あるいは、GPT テーブルを自ら消していて、msdos パーティショ"
-"ンテーブルを使っているのかもしれません。このテーブルは GPT パーティションテー"
-"ブルですか？"
+msgid "%s contains GPT signatures, indicating that it has a GPT table.  However, it does not have a valid fake msdos partition table, as it should.  Perhaps it was corrupted -- possibly by a program that doesn't understand GPT partition tables.  Or perhaps you deleted the GPT table, and are now using an msdos partition table.  Is this a GPT partition table?"
+msgstr "%s は GPT テーブルの存在を示す GPT のシグネチャを含んでいますが、持っているべき見せかけの msdos パーティションテーブルを持っていません。おそらく壊れているのでしょう。GPT パーティションテーブルを理解しないプログラムが壊してしまったのかもしれません。あるいは、GPT テーブルを自ら消していて、msdos パーティションテーブルを使っているのかもしれません。このテーブルは GPT パーティションテーブルですか？"
 
 #: libparted/labels/gpt.c:647
 #, c-format
-msgid ""
-"The format of the GPT partition table is version %x, which is newer than "
-"what Parted can recognise.  Please tell us!  bug-parted@gnu.org"
-msgstr ""
-"GPT パーティションテーブルのフォーマットのバージョンが %x で parted の理解で"
-"きるものより新しいです。 bug-parted@gnu.org まで報告してください。"
+msgid "The format of the GPT partition table is version %x, which is newer than what Parted can recognise.  Please tell us!  bug-parted@gnu.org"
+msgstr "GPT パーティションテーブルのフォーマットのバージョンが %x で parted の理解できるものより新しいです。 bug-parted@gnu.org まで報告してください。"
 
 #: libparted/labels/gpt.c:697
 #, c-format
-msgid ""
-"Not all of the space available to %s appears to be used, you can fix the GPT "
-"to use all of the space (an extra %llu blocks) or continue with the current "
-"setting? "
-msgstr ""
+msgid "Not all of the space available to %s appears to be used, you can fix the GPT to use all of the space (an extra %llu blocks) or continue with the current setting? "
+msgstr "%s で利用可能な領域の一部が利用されていません。GPT を修正して全ての領域を利用可能にするか(%llu ブロック増えます)、このままで続行することができますが、どうしますか？"
 
 #: libparted/labels/gpt.c:826
-msgid ""
-"The backup GPT table is not at the end of the disk, as it should be.  This "
-"might mean that another operating system believes the disk is smaller.  Fix, "
-"by moving the backup to the end (and removing the old backup)?"
-msgstr ""
-"あるべき GPT テーブルのバックアップがディスクの最後にありません。他の OS が"
-"ディスクはもっと小さいものだと思っているのかもしれません。バックアップを最後"
-"に持ってきて（古いバックアップを削除して）修復しますか？"
+msgid "The backup GPT table is not at the end of the disk, as it should be.  This might mean that another operating system believes the disk is smaller.  Fix, by moving the backup to the end (and removing the old backup)?"
+msgstr "あるべき GPT テーブルのバックアップがディスクの最後にありません。他の OS がディスクはもっと小さいものだと思っているのかもしれません。バックアップを最後に持ってきて（古いバックアップを削除して）修復しますか？"
 
 #: libparted/labels/gpt.c:861
-msgid ""
-"The primary GPT table is corrupt, but the backup appears OK, so that will be "
-"used."
-msgstr ""
-"このプライマリ GPT テーブルは壊れていますが、バックアップは問題ないようなの"
-"で、そちらを使います。"
+msgid "The primary GPT table is corrupt, but the backup appears OK, so that will be used."
+msgstr "このプライマリ GPT テーブルは壊れていますが、バックアップは問題ないようなので、そちらを使います。"
 
 #: libparted/labels/gpt.c:869
-msgid ""
-"Both the primary and backup GPT tables are corrupt.  Try making a fresh "
-"table, and using Parted's rescue feature to recover partitions."
-msgstr ""
-"プライマリ GPT テーブルとバックアップの両方が壊れています。新たにテーブルを作"
-"りなおして、Parted の修復機能を用いてパーティションの修復を試みます。"
+msgid "Both the primary and backup GPT tables are corrupt.  Try making a fresh table, and using Parted's rescue feature to recover partitions."
+msgstr "プライマリ GPT テーブルとバックアップの両方が壊れています。新たにテーブルを作りなおして、Parted の修復機能を用いてパーティションの修復を試みます。"
 
 #: libparted/labels/mac.c:176
 #, c-format
@@ -602,20 +499,13 @@ msgstr "パーティションのデータ領域が、パーティション全体を占有してません。"
 
 #: libparted/labels/mac.c:664
 #, c-format
-msgid ""
-"Weird block size on device descriptor: %d bytes is not divisible by 512."
-msgstr ""
-"デバイスディスクリプタに書いてあるブロックサイズはおかしいです。%d バイトは "
-"512 で割り切れません。"
+msgid "Weird block size on device descriptor: %d bytes is not divisible by 512."
+msgstr "デバイスディスクリプタに書いてあるブロックサイズはおかしいです。%d バイトは 512 で割り切れません。"
 
 #: libparted/labels/mac.c:677
 #, c-format
-msgid ""
-"The driver descriptor says the physical block size is %d bytes, but Linux "
-"says it is %d bytes."
-msgstr ""
-"ドライバは物理ブロックサイズが %d バイトであると言っていますが、Linux は %d "
-"バイトだと言っています。"
+msgid "The driver descriptor says the physical block size is %d bytes, but Linux says it is %d bytes."
+msgstr "ドライバは物理ブロックサイズが %d バイトであると言っていますが、Linux は %d バイトだと言っています。"
 
 #: libparted/labels/mac.c:725
 msgid "No valid partition map found."
@@ -623,24 +513,16 @@ msgstr "正しいパーティションマップが見つかりません。"
 
 #: libparted/labels/mac.c:784
 #, c-format
-msgid ""
-"Conflicting partition map entry sizes!  Entry 1 says it is %d, but entry %d "
-"says it is %d!"
-msgstr ""
-"パーティションマップのエントリのサイズが一致しません。エントリ 1 によれば %d "
-"ですが、エントリ %d によれば %d です。"
+msgid "Conflicting partition map entry sizes!  Entry 1 says it is %d, but entry %d says it is %d!"
+msgstr "パーティションマップのエントリのサイズが一致しません。エントリ 1 によれば %d ですが、エントリ %d によれば %d です。"
 
 #: libparted/labels/mac.c:811
 msgid "Weird!  There are 2 partitions map entries!"
 msgstr "おかしいです。パーティションマップエントリが2つあります。"
 
 #: libparted/labels/mac.c:1338
-msgid ""
-"Changing the name of a root or swap partition will prevent Linux from "
-"recognising it as such."
-msgstr ""
-"root に使われているパーティションや swap パーティションの名前を変更すると "
-"Linux がそれらをそうと認識できなくなります。"
+msgid "Changing the name of a root or swap partition will prevent Linux from recognising it as such."
+msgstr "root に使われているパーティションや swap パーティションの名前を変更すると Linux がそれらをそうと認識できなくなります。"
 
 #: libparted/labels/mac.c:1434
 msgid "Can't add another partition -- the partition map is too small!"
@@ -653,12 +535,8 @@ msgstr "%s のパーティションテーブルが不正です。"
 
 #: libparted/labels/pc98.c:409 libparted/labels/pc98.c:487
 #, c-format
-msgid ""
-"Partition %d isn't aligned to cylinder boundaries.  This is still "
-"unsupported."
-msgstr ""
-"パーティション %d はシリンダ境界上にありません。これはまだサポートされていま"
-"せん。"
+msgid "Partition %d isn't aligned to cylinder boundaries.  This is still unsupported."
+msgstr "パーティション %d はシリンダ境界上にありません。これはまだサポートされていません。"
 
 #: libparted/labels/pc98.c:796
 msgid "Can't add another partition."
@@ -670,12 +548,8 @@ msgstr "Sunディスクラベルの破損を検出しました。"
 
 #: libparted/labels/sun.c:264
 #, c-format
-msgid ""
-"The disk CHS geometry (%d,%d,%d) reported by the operating system does not "
-"match the geometry stored on the disk label (%d,%d,%d)."
-msgstr ""
-"ディスクの geometry(CHS) (%d,%d,%d) が、ディスクラベルのもの (%d,%d,%d) と一"
-"致しません。"
+msgid "The disk CHS geometry (%d,%d,%d) reported by the operating system does not match the geometry stored on the disk label (%d,%d,%d)."
+msgstr "ディスクの geometry(CHS) (%d,%d,%d) が、ディスクラベルのもの (%d,%d,%d) と一致しません。"
 
 #: libparted/labels/sun.c:286
 #, c-format
@@ -685,19 +559,11 @@ msgstr "ディスクレベルによると、ディスクは %s より大きいことになっています。"
 #: libparted/labels/sun.c:440
 #, c-format
 msgid "The disk has %d cylinders, which is greater than the maximum of 65536."
-msgstr ""
-"このディスクは %d シリンダあります。これは最大値の 65536 を越えています。"
+msgstr "このディスクは %d シリンダあります。これは最大値の 65536 を越えています。"
 
 #: libparted/labels/sun.c:736
-msgid ""
-"The Whole Disk partition is the only available one left.  Generally, it is "
-"not a good idea to overwrite this partition with a real one.  Solaris may "
-"not be able to boot without it, and SILO (the sparc boot loader) appreciates "
-"it as well."
-msgstr ""
-"Whole Disk パーティションしか残されてません。だいたいの場合において、このパー"
-"ティションを上書きするのはよくありません。Solaris が起動しなくなるかもしれま"
-"せんし、SILO(the sparc boot loader)にも都合がよくありません。"
+msgid "The Whole Disk partition is the only available one left.  Generally, it is not a good idea to overwrite this partition with a real one.  Solaris may not be able to boot without it, and SILO (the sparc boot loader) appreciates it as well."
+msgstr "Whole Disk パーティションしか残されてません。だいたいの場合において、このパーティションを上書きするのはよくありません。Solaris が起動しなくなるかもしれませんし、SILO(the sparc boot loader)にも都合がよくありません。"
 
 #: libparted/labels/sun.c:751
 msgid "Sun disk label is full."
@@ -740,17 +606,8 @@ msgstr "重なりのあるパーティションにはコピーできません。"
 
 #: libparted/filesys.c:647
 #, c-format
-msgid ""
-"Direct support for copying file systems is not yet implemented for %s.  "
-"However, support for resizing is implemented.  Therefore, the file system "
-"can be copied if the new partition is at least as big as the old one.  So, "
-"either shrink the partition you are trying to copy, or copy to a bigger "
-"partition."
-msgstr ""
-"%s のファイルシステムのコピーの直接的な実装はまだされていません。新しいパー"
-"ティションが古いのと少なくとも同じくらいの大きさであればコピーできます。リサ"
-"イズは実装されていますので、パーティションを小さくしてからコピーしてみるか、"
-"もっと大きいパーティションにコピーしてください。"
+msgid "Direct support for copying file systems is not yet implemented for %s.  However, support for resizing is implemented.  Therefore, the file system can be copied if the new partition is at least as big as the old one.  So, either shrink the partition you are trying to copy, or copy to a bigger partition."
+msgstr "%s のファイルシステムのコピーの直接的な実装はまだされていません。新しいパーティションが古いのと少なくとも同じくらいの大きさであればコピーできます。リサイズは実装されていますので、パーティションを小さくしてからコピーしてみるか、もっと大きいパーティションにコピーしてください。"
 
 #: libparted/filesys.c:661
 #, c-format
@@ -816,16 +673,8 @@ msgstr "取消(C)"
 
 #: libparted/exception.c:133
 #, c-format
-msgid ""
-"A bug has been detected in GNU Parted.  Refer to the web site of parted "
-"http://www.gnu.org/software/parted/parted.html for more informations of what "
-"could be useful for bug submitting!  Please email a bug report to bug-"
-"parted@gnu.org containing at least the version (%s) and the following "
-"message:  "
-msgstr ""
-"GNU parted にバグが見つかりました。http://www.gnu.org/software/parted/parted."
-"html を見て、バグレポートに必要な情報を得てください。bug-parted@gnu.org に "
-"version(%s) と以下のメッセージを含めてメールで送ってください: "
+msgid "A bug has been detected in GNU Parted.  Refer to the web site of parted http://www.gnu.org/software/parted/parted.html for more informations of what could be useful for bug submitting!  Please email a bug report to bug-parted@gnu.org containing at least the version (%s) and the following message:  "
+msgstr "GNU parted にバグが見つかりました。http://www.gnu.org/software/parted/parted.html を見て、バグレポートに必要な情報を得てください。bug-parted@gnu.org に version(%s) と以下のメッセージを含めてメールで送ってください: "
 
 #: libparted/cs/geom.c:162
 msgid "Can't have the end before the start!"
@@ -838,8 +687,7 @@ msgstr "ディスクの外側にパーティションは作れません。"
 #: libparted/cs/geom.c:367
 #, c-format
 msgid "Attempt to write sectors %ld-%ld outside of partition on %s."
-msgstr ""
-"書き込もうとしたセクタ (%ld-%ld) は %s 上のパーティションの外にあります。"
+msgstr "書き込もうとしたセクタ (%ld-%ld) は %s 上のパーティションの外にあります。"
 
 #: libparted/cs/geom.c:407 libparted/fs/linux_swap/linux_swap.c:353
 msgid "checking for bad blocks"
@@ -894,12 +742,8 @@ msgid "File system has errors!  You should run e2fsck."
 msgstr "ファイルシステムにエラーがあります。先に e2fsck を実行してください。"
 
 #: libparted/fs/ext2/ext2.c:711
-msgid ""
-"File system was not cleanly unmounted!  You should run e2fsck.  Modifying an "
-"unclean file system could cause severe corruption."
-msgstr ""
-"クリーンに unmount されてません。e2fsck を実行すべきです。クリーンになってい"
-"ないファイルシステムへの変更は大きな損害につながりかねません。"
+msgid "File system was not cleanly unmounted!  You should run e2fsck.  Modifying an unclean file system could cause severe corruption."
+msgstr "クリーンに unmount されてません。e2fsck を実行すべきです。クリーンになっていないファイルシステムへの変更は大きな損害につながりかねません。"
 
 #: libparted/fs/ext2/ext2.c:731
 msgid "File system has an incompatible feature enabled."
@@ -910,11 +754,8 @@ msgid "Error allocating buffer cache."
 msgstr "バッファキャッシュを確保してる最中にエラーが発生しました。"
 
 #: libparted/fs/ext2/ext2_inode_relocator.c:114
-msgid ""
-"Found an inode with a incorrect link count.  Better go run e2fsck first!"
-msgstr ""
-"リンクの数が正しくないinodeが見つかりました。先に e2fsck を実行した方がいいで"
-"しょう。"
+msgid "Found an inode with a incorrect link count.  Better go run e2fsck first!"
+msgstr "リンクの数が正しくないinodeが見つかりました。先に e2fsck を実行した方がいいでしょう。"
 
 #: libparted/fs/ext2/ext2_inode_relocator.c:487
 msgid "Not enough free inodes!"
@@ -939,9 +780,7 @@ msgstr "%i ブロックにリサイズするには領域が不足しています。"
 
 #: libparted/fs/ext2/ext2_resize.c:540
 #, c-format
-msgid ""
-"Your file system has too many occupied inodes to resize it to %i blocks.  "
-"Sorry."
+msgid "Your file system has too many occupied inodes to resize it to %i blocks.  Sorry."
 msgstr "%i ブロックにリサイズするには inode が不足しています。"
 
 #: libparted/fs/ext2/ext2_resize.c:554 libparted/fs/hfs/hfs.c:249
@@ -951,36 +790,27 @@ msgstr "縮小中"
 
 #: libparted/fs/ext2/ext2_resize.c:668
 msgid "File system was not cleanly unmounted!  You should run e2fsck."
-msgstr ""
-"クリーンに unmount されてませんでした。まず、e2fsck を実行してください。"
+msgstr "クリーンに unmount されてませんでした。まず、e2fsck を実行してください。"
 
 #: libparted/fs/ext2/ext2_resize.c:677
-msgid ""
-"The file system has the 'dir_index' feature enabled.  Parted can only resize "
-"the file system if it disables this feature.  You can enable it later by "
-"running 'tune2fs -O dir_index DEVICE' and then 'e2fsck -fD DEVICE'."
-msgstr ""
-"このファイルシステムは 'dir_index' が有効になっています。これを無効にしない"
-"と Parted ではリサイズできません。一旦無効にしても次のようにすることで、有効"
-"にできます。'tune2fs -O dir_index DEVICE' 'e2fsck -fD DEVICE'"
+msgid "The file system has the 'dir_index' feature enabled.  Parted can only resize the file system if it disables this feature.  You can enable it later by running 'tune2fs -O dir_index DEVICE' and then 'e2fsck -fD DEVICE'."
+msgstr "このファイルシステムは 'dir_index' が有効になっています。これを無効にしないと Parted ではリサイズできません。一旦無効にしても次のようにすることで、有効にできます。'tune2fs -O dir_index DEVICE' 'e2fsck -fD DEVICE'"
 
 #: libparted/fs/ext2/ext2_resize.c:693
-#, fuzzy
 msgid ""
 "A resize operation on this file system will use EXPERIMENTAL code\n"
 "that MAY CORRUPT it (although it hasn't doneso yet\n"
 "in the past).\n"
 "You should at least backup your data and run 'e2fsck -f' afterwards."
 msgstr ""
-"このファイルシステムへのリサイズは実験的なコードによって行われ、ファイルシス"
-"テムを破壊してしまう恐れがあります（まだ起きたことはありませんが）。最低限、"
-"バックアップを取ってから行い、リサイズ後に 'e2fsck -f' を実行すべきです。"
+"このファイルシステムへのリサイズは実験的なコードによって行われ、\n"
+"ファイルシステムを破壊してしまう恐れがあります（まだ起きたことはありませんが）。\n"
+"最低限、バックアップを取ってから行い、\n"
+"リサイズ後に 'e2fsck -f' を実行すべきです。"
 
 #: libparted/fs/ext2/ext2_block_relocator.c:198
 msgid "Cross-linked blocks found!  Better go run e2fsck first!"
-msgstr ""
-"Cross-link しているブロックがみつかりました。先に e2fsck を実行した方がいいで"
-"しょう。"
+msgstr "Cross-link しているブロックがみつかりました。先に e2fsck を実行した方がいいでしょう。"
 
 #: libparted/fs/ext2/ext2_block_relocator.c:537
 #, c-format
@@ -988,17 +818,13 @@ msgid "Block %i has no reference?  Weird."
 msgstr "ブロック %i は何も参照していません。おかしいです。"
 
 #: libparted/fs/ext2/ext2_block_relocator.c:738
-#, fuzzy, c-format
+#, c-format
 msgid "Block %i shouldn't have been marked (%d, %d)!"
-msgstr "ブロック %i はマークされていないはずです。"
+msgstr "ブロック %i はマークされていないはずです(%d, %d)。"
 
 #: libparted/fs/ext2/interface.c:188
-msgid ""
-"The ext2 file system passed a basic check.  For a more comprehensive check, "
-"use the e2fsck program."
-msgstr ""
-"この ext2 ファイルシステムは簡単なチェックをパスしました。さらにチェックする"
-"には e2fsck を使ってください。"
+msgid "The ext2 file system passed a basic check.  For a more comprehensive check, use the e2fsck program."
+msgstr "この ext2 ファイルシステムは簡単なチェックをパスしました。さらにチェックするには e2fsck を使ってください。"
 
 #: libparted/fs/ext2/interface.c:205
 msgid "Sorry, can't move the start of ext2 partitions yet!"
@@ -1018,33 +844,22 @@ msgstr "ext2 にするにはファイルシステムが小さすぎます。"
 
 #: libparted/fs/fat/calc.c:134
 #, c-format
-msgid ""
-"You need %s of free disk space to shrink this partition to this size.  "
-"Currently, only %s is free."
-msgstr ""
-"このパーティションをこのサイズに小さくするには %s の空きが必要です。(現在 %s "
-"しか空きがありません。)"
+msgid "You need %s of free disk space to shrink this partition to this size.  Currently, only %s is free."
+msgstr "このパーティションをこのサイズに小さくするには %s の空きが必要です。(現在 %s しか空きがありません。)"
 
 #: libparted/fs/fat/context.c:55
 #, c-format
-msgid ""
-"Cluster start delta = %d, which is not a multiple of the cluster size %d."
-msgstr ""
-"Cluster start delta = %d これはクラスタサイズ %d の倍数ではありません。"
+msgid "Cluster start delta = %d, which is not a multiple of the cluster size %d."
+msgstr "Cluster start delta = %d これはクラスタサイズ %d の倍数ではありません。"
 
 #: libparted/fs/fat/fat.c:308
 #, c-format
 msgid "Partition too big/small for a %s file system."
-msgstr ""
-"パーティションが %s ファイルシステムには小さすぎ、あるいは大きすぎます。"
+msgstr "パーティションが %s ファイルシステムには小さすぎ、あるいは大きすぎます。"
 
 #: libparted/fs/fat/fat.c:474
-msgid ""
-"The FATs don't match.  If you don't know what this means, then select "
-"cancel, run scandisk on the file system, and then come back."
-msgstr ""
-"FAT が一致しません。これが何を意味するかわからないなら、取消(C) を選んで、"
-"scandisk を実行してから、またやりなおしてください。"
+msgid "The FATs don't match.  If you don't know what this means, then select cancel, run scandisk on the file system, and then come back."
+msgstr "FAT が一致しません。これが何を意味するかわからないなら、取消(C) を選んで、scandisk を実行してから、またやりなおしてください。"
 
 #: libparted/fs/fat/fat.c:514
 msgid "There are no possible configurations for this FAT type."
@@ -1052,37 +867,21 @@ msgstr "この FAT タイプに合う configuration がありません。"
 
 #: libparted/fs/fat/fat.c:526
 #, c-format
-msgid ""
-"File system doesn't have expected sizes for Windows to like it.  Cluster "
-"size is %dk (%dk expected); number of clusters is %d (%d expected); size of "
-"FATs is %d sectors (%d expected)."
-msgstr ""
-"ファイルシステムのサイズが Windows の期待しそうなサイズではありません。クラス"
-"タサイズ %dk (予想 %dk); クラスタの数 %d (予想 %d); FAT のサイズ %d セクタ "
-"(予想 %d)"
+msgid "File system doesn't have expected sizes for Windows to like it.  Cluster size is %dk (%dk expected); number of clusters is %d (%d expected); size of FATs is %d sectors (%d expected)."
+msgstr "ファイルシステムのサイズが Windows の期待しそうなサイズではありません。クラスタサイズ %dk (予想 %dk); クラスタの数 %d (予想 %d); FAT のサイズ %d セクタ (予想 %d)"
 
 #: libparted/fs/fat/fat.c:549
 #, c-format
-msgid ""
-"File system is reporting the free space as %d clusters, not %d clusters."
-msgstr ""
-"ファイルシステムの空き容量は %d クラスタ で、%d クラスタではありません。"
+msgid "File system is reporting the free space as %d clusters, not %d clusters."
+msgstr "ファイルシステムの空き容量は %d クラスタ で、%d クラスタではありません。"
 
 #: libparted/fs/fat/fat.c:874
-msgid ""
-"GNU Parted was miscompiled: the FAT boot sector should be 512 bytes.  FAT "
-"support will be disabled."
-msgstr ""
-"GNU parted がちゃんとコンパイルされていません。FAT のブートセクタは 512 バイ"
-"トであるべきです。FAT サポートを無効にします。"
+msgid "GNU Parted was miscompiled: the FAT boot sector should be 512 bytes.  FAT support will be disabled."
+msgstr "GNU parted がちゃんとコンパイルされていません。FAT のブートセクタは 512 バイトであるべきです。FAT サポートを無効にします。"
 
 #: libparted/fs/fat/resize.c:158
-msgid ""
-"There's not enough room in the root directory for all of the files.  Either "
-"cancel, or ignore to lose the files."
-msgstr ""
-"ルートディレクトリに十分な空きがありません。取消(C) すか、ファイルを失っても"
-"よければ 無視(I) を選んでください。"
+msgid "There's not enough room in the root directory for all of the files.  Either cancel, or ignore to lose the files."
+msgstr "ルートディレクトリに十分な空きがありません。取消(C) すか、ファイルを失ってもよければ 無視(I) を選んでください。"
 
 #: libparted/fs/fat/resize.c:299
 msgid "Error writing to the root directory."
@@ -1093,35 +892,16 @@ msgid "If you leave your file system as FAT16, then you will have no problems."
 msgstr "FAT16 のままにしておくなら、何の問題もありません。"
 
 #: libparted/fs/fat/resize.c:487
-msgid ""
-"If you convert to FAT16, and MS Windows is installed on this partition, then "
-"you must re-install the MS Windows boot loader.  If you want to do this, you "
-"should consult the Parted manual (or your distribution's manual)."
-msgstr ""
-"FAT16 に変換しようとしていて、しかも MS Windows がこのパーティションにインス"
-"トールされているなら、MS Windows のブートローダを再インストールしなければなり"
-"ません。もしそうしたいのなら、Parted(あるいは distribution) のマニュアルをよ"
-"く読んでください。"
+msgid "If you convert to FAT16, and MS Windows is installed on this partition, then you must re-install the MS Windows boot loader.  If you want to do this, you should consult the Parted manual (or your distribution's manual)."
+msgstr "FAT16 に変換しようとしていて、しかも MS Windows がこのパーティションにインストールされているなら、MS Windows のブートローダを再インストールしなければなりません。もしそうしたいのなら、Parted(あるいは distribution) のマニュアルをよく読んでください。"
 
 #: libparted/fs/fat/resize.c:495
-msgid ""
-"If you leave your file system as FAT32, then you will not introduce any new "
-"problems."
+msgid "If you leave your file system as FAT32, then you will not introduce any new problems."
 msgstr "FAT32 のままにしておくなら、何の問題も生じません。"
 
 #: libparted/fs/fat/resize.c:499
-msgid ""
-"If you convert to FAT32, and MS Windows is installed on this partition, then "
-"you must re-install the MS Windows boot loader.  If you want to do this, you "
-"should consult the Parted manual (or your distribution's manual).  Also, "
-"converting to FAT32 will make the file system unreadable by MS DOS, MS "
-"Windows 95a, and MS Windows NT."
-msgstr ""
-"FAT32 に変換しようとしていて、しかも MS Windows がこのパーティションにインス"
-"トールされているなら、MS Windows のブートローダを再インストールしなければなり"
-"ません。もしそうしたいのなら、Parted(あるいは distribution) のマニュアルをよ"
-"く読んでください。FAT32 に変換すると、MS-DOS、MS Windows 95a、MS Windows NT "
-"からは読めなくなります。"
+msgid "If you convert to FAT32, and MS Windows is installed on this partition, then you must re-install the MS Windows boot loader.  If you want to do this, you should consult the Parted manual (or your distribution's manual).  Also, converting to FAT32 will make the file system unreadable by MS DOS, MS Windows 95a, and MS Windows NT."
+msgstr "FAT32 に変換しようとしていて、しかも MS Windows がこのパーティションにインストールされているなら、MS Windows のブートローダを再インストールしなければなりません。もしそうしたいのなら、Parted(あるいは distribution) のマニュアルをよく読んでください。FAT32 に変換すると、MS-DOS、MS Windows 95a、MS Windows NT からは読めなくなります。"
 
 #: libparted/fs/fat/resize.c:513
 #, c-format
@@ -1138,42 +918,32 @@ msgid "%s  %s"
 msgstr "%s  %s"
 
 #: libparted/fs/fat/resize.c:542
-msgid ""
-"The file system can only be resized to this size by converting to FAT16."
+msgid "The file system can only be resized to this size by converting to FAT16."
 msgstr "このサイズにリサイズするには FAT16 に変換しなければなりません。"
 
 #: libparted/fs/fat/resize.c:558
-msgid ""
-"The file system can only be resized to this size by converting to FAT32."
+msgid "The file system can only be resized to this size by converting to FAT32."
 msgstr "このサイズにリサイズするには FAT32 に変換しなければなりません。"
 
 #: libparted/fs/fat/resize.c:571
-msgid ""
-"GNU Parted cannot resize this partition to this size.  We're working on it!"
-msgstr ""
-"GNU Parted はこのパーティションをこのサイズにリサイズすることはできません。で"
-"きるように努力しています。"
+msgid "GNU Parted cannot resize this partition to this size.  We're working on it!"
+msgstr "GNU Parted はこのパーティションをこのサイズにリサイズすることはできません。できるように努力しています。"
 
 #: libparted/fs/fat/bootsector.c:48 libparted/fs/fat/bootsector.c:55
 msgid "File system has an invalid signature for a FAT file system."
-msgstr ""
-"ファイルシステムのシグネチャが FAT ファイルシステムのものではありません。"
+msgstr "ファイルシステムのシグネチャが FAT ファイルシステムのものではありません。"
 
 #: libparted/fs/fat/bootsector.c:62
 msgid "File system has an invalid sector size for a FAT file system."
-msgstr ""
-"ファイルシステムのセクタサイズが FAT ファイルシステムのものではありません。"
+msgstr "ファイルシステムのセクタサイズが FAT ファイルシステムのものではありません。"
 
 #: libparted/fs/fat/bootsector.c:69
 msgid "File system has an invalid cluster size for a FAT file system."
-msgstr ""
-"ファイルシステムのクラスタサイズが FAT ファイルシステムのものではありません。"
+msgstr "ファイルシステムのクラスタサイズが FAT ファイルシステムのものではありません。"
 
 #: libparted/fs/fat/bootsector.c:76
-msgid ""
-"File system has an invalid number of reserved sectors for a FAT file system."
-msgstr ""
-"ファイルシステムの予約セクタの数が FAT ファイルシステムとしては不正です。"
+msgid "File system has an invalid number of reserved sectors for a FAT file system."
+msgstr "ファイルシステムの予約セクタの数が FAT ファイルシステムとしては不正です。"
 
 #: libparted/fs/fat/bootsector.c:83
 msgid "File system has an invalid number of FATs."
@@ -1181,32 +951,17 @@ msgstr "ファイルシステムの FAT の数が不正です。"
 
 #: libparted/fs/fat/bootsector.c:138
 #, c-format
-msgid ""
-"This file system has a logical sector size of %d.  GNU Parted is known not "
-"to work properly with sector sizes other than 512 bytes."
-msgstr ""
-"このファイルシステムの論理セクタサイズは %d です.  セクタサイズが 512 バイト"
-"以外では GNU Parted はうまく動かないことが知られています。"
+msgid "This file system has a logical sector size of %d.  GNU Parted is known not to work properly with sector sizes other than 512 bytes."
+msgstr "このファイルシステムの論理セクタサイズは %d です.  セクタサイズが 512 バイト以外では GNU Parted はうまく動かないことが知られています。"
 
 #: libparted/fs/fat/bootsector.c:163
 #, c-format
-msgid ""
-"The file system's CHS geometry is (%d, %d, %d), which is invalid.  The "
-"partition table's CHS geometry is (%d, %d, %d).  If you select Ignore, the "
-"file system's CHS geometry will be left unchanged.  If you select Fix, the "
-"file system's CHS geometry will be set to match the partition table's CHS "
-"geometry."
-msgstr ""
-"このファイルシステムの CHS geometry は (%d, %d, %d) で不正です。パーティショ"
-"ンテーブルの CHS geometry は (%d, %d, %d) です。無視(I)を選べばファイルシステ"
-"ムの CHS geometry はそのままになります。修正(F)を選べば、ファイルシステムの "
-"CHS geometry は、パーティションの CHS geometry と合うよう修正されます。"
+msgid "The file system's CHS geometry is (%d, %d, %d), which is invalid.  The partition table's CHS geometry is (%d, %d, %d).  If you select Ignore, the file system's CHS geometry will be left unchanged.  If you select Fix, the file system's CHS geometry will be set to match the partition table's CHS geometry."
+msgstr "このファイルシステムの CHS geometry は (%d, %d, %d) で不正です。パーティションテーブルの CHS geometry は (%d, %d, %d) です。無視(I)を選べばファイルシステムの CHS geometry はそのままになります。修正(F)を選べば、ファイルシステムの CHS geometry は、パーティションの CHS geometry と合うよう修正されます。"
 
 #: libparted/fs/fat/bootsector.c:209
 msgid "FAT boot sector says logical sector size is 0.  This is weird. "
-msgstr ""
-"FAT のブートセクタには論理セクタサイズが 0 と書かれています、これはおかしいで"
-"す。"
+msgstr "FAT のブートセクタには論理セクタサイズが 0 と書かれています、これはおかしいです。"
 
 #: libparted/fs/fat/bootsector.c:215
 msgid "FAT boot sector says there are no FAT tables.  This is weird. "
@@ -1214,9 +969,7 @@ msgstr "FAT のブートセクタに FAT テーブルがありません。これはおかしいです。"
 
 #: libparted/fs/fat/bootsector.c:221
 msgid "FAT boot sector says clusters are 0 sectors.  This is weird. "
-msgstr ""
-"FAT のブートセクタにクラスタは 0 セクタであると書かれています。これはおかしい"
-"です。"
+msgstr "FAT のブートセクタにクラスタは 0 セクタであると書かれています。これはおかしいです。"
 
 #: libparted/fs/fat/bootsector.c:231
 msgid "File system is FAT12, which is unsupported."
@@ -1224,46 +977,28 @@ msgstr "FAT12 はサポートしていません。"
 
 #: libparted/fs/fat/bootsector.c:407
 #, c-format
-msgid ""
-"The information sector has the wrong signature (%x).  Select cancel for now, "
-"and send in a bug report.  If you're desperate, it's probably safe to ignore."
-msgstr ""
-"information セクタのシグネチャ(%x)はまちがっています。取消(C) してバグレポー"
-"トを送ってください。もしどうなってもいいのであれば 無視(I) してもいいでしょ"
-"う。"
+msgid "The information sector has the wrong signature (%x).  Select cancel for now, and send in a bug report.  If you're desperate, it's probably safe to ignore."
+msgstr "information セクタのシグネチャ(%x)はまちがっています。取消(C) してバグレポートを送ってください。もしどうなってもいいのであれば 無視(I) してもいいでしょう。"
 
 #: libparted/fs/fat/count.c:149
 #, c-format
 msgid "Bad directory entry for %s: first cluster is the end of file marker."
-msgstr ""
-"%s のディレクトリエントリが不良です: 最初のクラスタがファイルの終了を表わす"
-"マークになっています。"
+msgstr "%s のディレクトリエントリが不良です: 最初のクラスタがファイルの終了を表わすマークになっています。"
 
 #: libparted/fs/fat/count.c:162
 #, c-format
-msgid ""
-"Bad FAT: unterminated chain for %s.  You should run dosfsck or scandisk."
-msgstr ""
-"FAT にあやまりがあります。%s の chain が終了しません。dosfsck や scandisk を"
-"実行するべきです。"
+msgid "Bad FAT: unterminated chain for %s.  You should run dosfsck or scandisk."
+msgstr "FAT にあやまりがあります。%s の chain が終了しません。dosfsck や scandisk を実行するべきです。"
 
 #: libparted/fs/fat/count.c:171
 #, c-format
-msgid ""
-"Bad FAT: cluster %d outside file system in chain for %s.  You should run "
-"dosfsck or scandisk."
-msgstr ""
-"FAT にあやまりがあります。クラスタ %d(%s の chain)はファイルシステムの外にあ"
-"ります。dosfsck や scandisk を実行するべきです。"
+msgid "Bad FAT: cluster %d outside file system in chain for %s.  You should run dosfsck or scandisk."
+msgstr "FAT にあやまりがあります。クラスタ %d(%s の chain)はファイルシステムの外にあります。dosfsck や scandisk を実行するべきです。"
 
 #: libparted/fs/fat/count.c:181
 #, c-format
-msgid ""
-"Bad FAT: cluster %d is cross-linked for %s.  You should run dosfsck or "
-"scandisk."
-msgstr ""
-"FATにあやまりがあります。クラスタ %d(%s のchain)がcross-linkしています。"
-"dosfsckやscandiskを実行するべきです。"
+msgid "Bad FAT: cluster %d is cross-linked for %s.  You should run dosfsck or scandisk."
+msgstr "FATにあやまりがあります。クラスタ %d(%s のchain)がcross-linkしています。dosfsckやscandiskを実行するべきです。"
 
 #: libparted/fs/fat/count.c:200
 #, c-format
@@ -1272,21 +1007,13 @@ msgstr "%s は %dk ですが、%d クラスタ(%dk)あります。"
 
 #: libparted/fs/fat/count.c:263
 #, c-format
-msgid ""
-"The file %s is marked as a system file.  This means moving it could cause "
-"some programs to stop working."
-msgstr ""
-"ファイル %s はシステムファイルです。このファイルを動かしてしまうと動かなくな"
-"るプログラムがあります。"
+msgid "The file %s is marked as a system file.  This means moving it could cause some programs to stop working."
+msgstr "ファイル %s はシステムファイルです。このファイルを動かしてしまうと動かなくなるプログラムがあります。"
 
 #: libparted/fs/fat/table.c:138
 #, c-format
-msgid ""
-"FAT %d media %x doesn't match the boot sector's media %x.  You should "
-"probably run scandisk."
-msgstr ""
-"FAT %d media %x はブートセクタのmedia %x と一致しません。scandisk を実行した"
-"方がいいでしょう。"
+msgid "FAT %d media %x doesn't match the boot sector's media %x.  You should probably run scandisk."
+msgstr "FAT %d media %x はブートセクタのmedia %x と一致しません。scandisk を実行した方がいいでしょう。"
 
 #: libparted/fs/fat/table.c:268
 #, c-format
@@ -1324,21 +1051,13 @@ msgstr "不正なブロックは読めませんでした。"
 
 #: libparted/fs/hfs/cache.c:139
 #, c-format
-msgid ""
-"Trying to register an extent starting at block 0x%X, but another one already "
-"exists at this position.  You should check the file system!"
-msgstr ""
-"ブロック 0x%X から始まる extent を登録しようとしましたが、既に他のものがこの"
-"パーティションに存在します。このファイルシステムをチェックしてください。"
+msgid "Trying to register an extent starting at block 0x%X, but another one already exists at this position.  You should check the file system!"
+msgstr "ブロック 0x%X から始まる extent を登録しようとしましたが、既に他のものがこのパーティションに存在します。このファイルシステムをチェックしてください。"
 
 #: libparted/fs/hfs/cache.c:216
 #, c-format
-msgid ""
-"Trying to move an extent from block Ox%X to block Ox%X, but another one "
-"already exists at this position.  This should not happen!"
-msgstr ""
-"ブロック 0x%X からブロック 0x%Xに extent を移動しようとしましたが、既に他のも"
-"のがこのパーティションに存在します。これはありえません。"
+msgid "Trying to move an extent from block Ox%X to block Ox%X, but another one already exists at this position.  This should not happen!"
+msgstr "ブロック 0x%X からブロック 0x%Xに extent を移動しようとしましたが、既に他のものがこのパーティションに存在します。これはありえません。"
 
 #: libparted/fs/hfs/file.c:145
 #, c-format
@@ -1420,8 +1139,7 @@ msgstr "allocation file を書きこみ中にエラーが発生しました。"
 
 #: libparted/fs/hfs/hfs.c:736
 msgid "Error while writing the compatibility part of the allocation file."
-msgstr ""
-"allocation file の compatibility part を書きこみ中にエラーが発生しました。"
+msgstr "allocation file の compatibility part を書きこみ中にエラーが発生しました。"
 
 #: libparted/fs/hfs/hfs.c:751
 msgid "writing HFS+ Volume Header"
@@ -1432,12 +1150,8 @@ msgid "An error occurred while looking for the mandatory bad blocks file."
 msgstr "不正ブロック一覧ファイルを探しているときにエラーが発生しました。"
 
 #: libparted/fs/hfs/hfs.c:905
-msgid ""
-"It seems there is an error in the HFS wrapper: the bad blocks file doesn't "
-"contain the embedded HFS+ volume."
-msgstr ""
-"HFS ラッパーにエラーがあるようです。不正ブロック一覧ファイルの中に、embedded "
-"HFS+ ボリュームがありません。"
+msgid "It seems there is an error in the HFS wrapper: the bad blocks file doesn't contain the embedded HFS+ volume."
+msgstr "HFS ラッパーにエラーがあるようです。不正ブロック一覧ファイルの中に、embedded HFS+ ボリュームがありません。"
 
 #: libparted/fs/hfs/hfs.c:941
 msgid "Sorry, HFS+ cannot be resized that way yet."
@@ -1461,12 +1175,8 @@ msgstr "HFS ラッパーの更新に失敗しました。"
 
 #: libparted/fs/hfs/hfs.c:1110 libparted/fs/hfs/hfs.c:1195
 #, c-format
-msgid ""
-"This is not a real %s check.  This is going to extract special low level "
-"files for debugging purposes."
-msgstr ""
-"これは real %s check ではありません。special low level file をデバッグのため"
-"に取り出します。"
+msgid "This is not a real %s check.  This is going to extract special low level files for debugging purposes."
+msgstr "これは real %s check ではありません。special low level file をデバッグのために取り出します。"
 
 #: libparted/fs/hfs/journal.c:156
 msgid "Bad block list header checksum."
@@ -1474,19 +1184,12 @@ msgstr "ブロックリストヘッダのチェックサムが不正です。"
 
 #: libparted/fs/hfs/journal.c:169
 #, c-format
-msgid ""
-"Invalid size of a transaction block while replaying the journal (%i bytes)."
-msgstr ""
-"ジャーナルのリプレイ中にトランザクションブロックのサイズ (%i バイト) の不正が"
-"ありました。"
+msgid "Invalid size of a transaction block while replaying the journal (%i bytes)."
+msgstr "ジャーナルのリプレイ中にトランザクションブロックのサイズ (%i バイト) の不正がありました。"
 
 #: libparted/fs/hfs/journal.c:261
-msgid ""
-"Journal stored outside of the volume are not supported.  Try to desactivate "
-"the journal and run Parted again."
-msgstr ""
-"ジャーナルが別ボリュームにある HFS+ はサポートしていません。ジャーナルを無効"
-"にしてから操作を行ってください。"
+msgid "Journal stored outside of the volume are not supported.  Try to desactivate the journal and run Parted again."
+msgstr "ジャーナルが別ボリュームにある HFS+ はサポートしていません。ジャーナルを無効にしてから操作を行ってください。"
 
 #: libparted/fs/hfs/journal.c:272
 msgid "Journal offset or size is not multiple of the sector size."
@@ -1498,83 +1201,52 @@ msgstr "ジャーナルヘッダのマジックナンバーが不正です。"
 
 #: libparted/fs/hfs/journal.c:300
 msgid "Journal size mismatch between journal info block and journal header."
-msgstr ""
-"ジャーナルサイズについて、ジャーナルインフォブロックとジャーナルヘッダとで不"
-"整合があります。"
+msgstr "ジャーナルサイズについて、ジャーナルインフォブロックとジャーナルヘッダとで不整合があります。"
 
 #: libparted/fs/hfs/journal.c:312
 msgid "Some header fields are not multiple of the sector size."
 msgstr "ヘッダフィールドの中にセクタサイズの倍数になってないものがあります。"
 
 #: libparted/fs/hfs/journal.c:321
-msgid ""
-"The sector size stored in the journal is not 512 bytes.  Parted only "
-"supports 512 bytes length sectors."
-msgstr ""
-"ジャーナルが保存されているセクタのサイズが 512 バイトではありません。Parted "
-"では 512 バイトのセクタしかサポートしていません。"
+msgid "The sector size stored in the journal is not 512 bytes.  Parted only supports 512 bytes length sectors."
+msgstr "ジャーナルが保存されているセクタのサイズが 512 バイトではありません。Parted では 512 バイトのセクタしかサポートしていません。"
 
 #: libparted/fs/hfs/journal.c:333
 msgid "Bad journal checksum."
 msgstr "ジャーナルのチェックサムが不正です。"
 
 #: libparted/fs/hfs/journal.c:351
-msgid ""
-"The journal is not empty.  Parted must replay the transactions before "
-"opening the file system.  This will modify the file system."
-msgstr ""
-"ジャーナルが空ではありません。Parted はファイルシステムをオープンする前にトラ"
-"ンザクションのリプレイをしなければなりません。リプレイするとファイルシステム"
-"は変更されます。"
+msgid "The journal is not empty.  Parted must replay the transactions before opening the file system.  This will modify the file system."
+msgstr "ジャーナルが空ではありません。Parted はファイルシステムをオープンする前にトランザクションのリプレイをしなければなりません。リプレイするとファイルシステムは変更されます。"
 
 #: libparted/fs/hfs/journal.c:379
-msgid ""
-"The volume header or the master directory block has changed while replaying "
-"the journal.  You should restart Parted."
-msgstr ""
-"ボリュームヘッダかマスターディレクトリブロックがジャーナルのリプレイ中に変更"
-"されました。Parted を再起動してください。"
+msgid "The volume header or the master directory block has changed while replaying the journal.  You should restart Parted."
+msgstr "ボリュームヘッダかマスターディレクトリブロックがジャーナルのリプレイ中に変更されました。Parted を再起動してください。"
 
 #: libparted/fs/hfs/probe.c:52
 #, c-format
-msgid ""
-"Parted can't use HFS file systems on disks with a sector size not equal to %"
-"d bytes."
-msgstr ""
-"Parted は、セクタサイズが %d バイトでないディスクでは HFS ファイルシステムを"
-"使えません。"
+msgid "Parted can't use HFS file systems on disks with a sector size not equal to %d bytes."
+msgstr "Parted は、セクタサイズが %d バイトでないディスクでは HFS ファイルシステムを使えません。"
 
 #: libparted/fs/hfs/reloc.c:153 libparted/fs/hfs/reloc_plus.c:157
 msgid "An extent has not been relocated."
 msgstr "extent は再配置されませんでした。"
 
 #: libparted/fs/hfs/reloc.c:253 libparted/fs/hfs/reloc_plus.c:309
-msgid ""
-"A reference to an extent comes from a place it should not.  You should check "
-"the file system!"
-msgstr ""
-"extent への参照はありえないところからなされています。ファイルシステムをチェッ"
-"クしてください。"
+msgid "A reference to an extent comes from a place it should not.  You should check the file system!"
+msgstr "extent への参照はありえないところからなされています。ファイルシステムをチェックしてください。"
 
 #: libparted/fs/hfs/reloc.c:383
 msgid "This HFS volume has no catalog file.  This is very unusual!"
-msgstr ""
-"この HFS ボリュームには catalog file がありません。これはあまりありえないこと"
-"です。"
+msgstr "この HFS ボリュームには catalog file がありません。これはあまりありえないことです。"
 
 #: libparted/fs/hfs/reloc.c:477
 msgid "This HFS volume has no extents overflow file.  This is quite unusual!"
-msgstr ""
-"この HFS ボリュームには extents overflow file がありません。これはほとんどあ"
-"りえないことです。"
+msgstr "この HFS ボリュームには extents overflow file がありません。これはほとんどありえないことです。"
 
 #: libparted/fs/hfs/reloc.c:519 libparted/fs/hfs/reloc_plus.c:670
-msgid ""
-"The extents overflow file should not contain its own extents!  You should "
-"check the file system."
-msgstr ""
-"extents overflow file は自分自身の extent を含んではいけません。ファイルシス"
-"テムをチェックしてください。"
+msgid "The extents overflow file should not contain its own extents!  You should check the file system."
+msgstr "extents overflow file は自分自身の extent を含んではいけません。ファイルシステムをチェックしてください。"
 
 #: libparted/fs/hfs/reloc.c:576 libparted/fs/hfs/reloc_plus.c:849
 msgid "Could not cache the file system in memory."
@@ -1590,15 +1262,11 @@ msgstr "extent の再配置中にエラーは発生しました。"
 
 #: libparted/fs/hfs/reloc_plus.c:497
 msgid "This HFS+ volume has no catalog file.  This is very unusual!"
-msgstr ""
-"この HFS+ ボリュームには catalog file がありません。これはあまりありえないこ"
-"とです。"
+msgstr "この HFS+ ボリュームには catalog file がありません。これはあまりありえないことです。"
 
 #: libparted/fs/hfs/reloc_plus.c:621
 msgid "This HFS+ volume has no extents overflow file.  This is quite unusual!"
-msgstr ""
-"この HFS+ ボリュームには extents overflow file がありません。これはほとんどあ"
-"りえないことです。"
+msgstr "この HFS+ ボリュームには extents overflow file がありません。これはほとんどありえないことです。"
 
 #: parted/parted.c:76
 msgid "displays this help message"
@@ -1617,13 +1285,8 @@ msgid "displays the version"
 msgstr "バージョンを表示する"
 
 #: parted/parted.c:87
-msgid ""
-"NUMBER is the partition number used by Linux.  On MS-DOS disk labels, the "
-"primary partitions number from 1 to 4, logical partitions from 5 onwards.\n"
-msgstr ""
-"NUMBER は Linux カーネルによってパーティション番号として使われます。MS-DOS "
-"ディスクラベルでは、基本パーティション番号は 1 から 4 までで、論理パーティ"
-"ションは 5 以降となります。\n"
+msgid "NUMBER is the partition number used by Linux.  On MS-DOS disk labels, the primary partitions number from 1 to 4, logical partitions from 5 onwards.\n"
+msgstr "NUMBER は Linux カーネルによってパーティション番号として使われます。MS-DOS ディスクラベルでは、基本パーティション番号は 1 から 4 までで、論理パーティションは 5 以降となります。\n"
 
 #: parted/parted.c:90
 msgid "LABEL-TYPE is one of: "
@@ -1639,21 +1302,15 @@ msgstr "UNIT は次のうちから選びます: "
 
 #: parted/parted.c:93
 msgid "PART-TYPE is one of: primary, logical, extended\n"
-msgstr ""
-"パーティションの種類は次のうちのどれかとなります: プライマリ、論理、拡張\n"
+msgstr "パーティションの種類は次のうちのどれかとなります: プライマリ、論理、拡張\n"
 
 #: parted/parted.c:95
 msgid "FS-TYPE is one of: "
 msgstr "ファイルシステムの種類は次のうちから選びます: "
 
 #: parted/parted.c:96
-msgid ""
-"START and END are disk locations, such as 4GB or 10%.  Negative values count "
-"from the end of the disk.  For example, -1s specifies exactly the last "
-"sector.\n"
-msgstr ""
-"START と END は、ディスク上の位置を 4G や 10% などで表わします。負の値はディ"
-"スクの終わりからの値になります。例えば、-1s は、最後のセクタを指します。\n"
+msgid "START and END are disk locations, such as 4GB or 10%.  Negative values count from the end of the disk.  For example, -1s specifies exactly the last sector.\n"
+msgstr "START と END は、ディスク上の位置を 4G や 10% などで表わします。負の値はディスクの終わりからの値になります。例えば、-1s は、最後のセクタを指します。\n"
 
 #: parted/parted.c:99
 msgid "STATE is one of: on, off\n"
@@ -1669,8 +1326,7 @@ msgstr "名前の部分は任意の単語\n"
 
 #: parted/parted.c:102
 msgid "The partition must have one of the following FS-TYPEs: "
-msgstr ""
-"パーティションのファイルシステムは以下のうちのいずれかでなければなりません: "
+msgstr "パーティションのファイルシステムは以下のうちのいずれかでなければなりません: "
 
 #: parted/parted.c:105
 msgid "GNU Parted Version information:\n"
@@ -1681,19 +1337,14 @@ msgid ""
 "Copyright (C) 1998 - 2006 Free Software Foundation, Inc.\n"
 "This program is free software, covered by the GNU General Public License.\n"
 "\n"
-"This program is distributed in the hope that it will be useful, but WITHOUT "
-"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
-"FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for "
-"more details.\n"
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n"
 "\n"
 msgstr ""
 "Copyright (C) 1998 - 2006 Free Software Foundation, Inc.\n"
 "このプログラムは GPL に基づいたフリーソフトウェアです。\n"
 "日本語訳に関しては Hiroshi Takekawa <sian@big.or.jp> までおねがいします。\n"
 "\n"
-"本プログラムは有用とは思いますが、頒布にあたっては、市場性及び特定目的適合性"
-"についての暗黙の保証を含めて、いかなる保証も行ないません。詳細についてはGNU "
-"一般公有使用許諾書をお読みください。\n"
+"本プログラムは有用とは思いますが、頒布にあたっては、市場性及び特定目的適合性についての暗黙の保証を含めて、いかなる保証も行ないません。詳細についてはGNU 一般公有使用許諾書をお読みください。\n"
 
 #: parted/parted.c:152
 #, c-format
@@ -1702,11 +1353,8 @@ msgstr "%0.f%%\t(残り時間 %.2d:%.2d)"
 
 #: parted/parted.c:170
 #, c-format
-msgid ""
-"Partition %s is being used.  You must unmount it before you modify it with "
-"Parted."
-msgstr ""
-"パーティション %s は使用中です。Parted で操作する前に unmount してください。"
+msgid "Partition %s is being used.  You must unmount it before you modify it with Parted."
+msgstr "パーティション %s は使用中です。Parted で操作する前に unmount してください。"
 
 #: parted/parted.c:187
 #, c-format
@@ -1769,17 +1417,14 @@ msgstr "終了?"
 #, c-format
 msgid ""
 "You requested a partition from %s to %s.\n"
-"The closest location we can manage is %s to %s.  Is this still acceptable to "
-"you?"
+"The closest location we can manage is %s to %s.  Is this still acceptable to you?"
 msgstr ""
 "%s から %s までのパーティションを指定されました。\n"
-"可能な中で最も近いものは %s から %s までのパーティションになります。それでも"
-"かまいませんか？"
+"可能な中で最も近いものは %s から %s までのパーティションになります。それでもかまいませんか？"
 
 #: parted/parted.c:827
 msgid "An extended partition cannot hold a file system.  Did you want mkpart?"
-msgstr ""
-"拡張パーティションにはファイルシステムは作れません。mkpart をしたいのですか？"
+msgstr "拡張パーティションにはファイルシステムは作れません。mkpart をしたいのですか？"
 
 #: parted/parted.c:985
 msgid "Can't move an extended partition."
@@ -1822,7 +1467,7 @@ msgstr "最大サイズ:   "
 #: parted/parted.c:1257
 #, c-format
 msgid "Model: %s (%s)\n"
-msgstr ""
+msgstr "モデル: %s (%s)\n"
 
 #: parted/parted.c:1258
 #, c-format
@@ -1882,12 +1527,8 @@ msgstr "空き容量"
 
 #: parted/parted.c:1444
 #, c-format
-msgid ""
-"A %s %s partition was found at %s -> %s.  Do you want to add it to the "
-"partition table?"
-msgstr ""
-"%s %s パーティションが %s → %s の場所に発見されました。このパーティションを"
-"パーティションテーブルに追加しますか？"
+msgid "A %s %s partition was found at %s -> %s.  Do you want to add it to the partition table?"
+msgstr "%s %s パーティションが %s → %s の場所に発見されました。このパーティションをパーティションテーブルに追加しますか？"
 
 #: parted/parted.c:1482
 msgid "searching for file systems"
@@ -1914,8 +1555,7 @@ msgid "check"
 msgstr "check"
 
 #: parted/parted.c:1902
-msgid ""
-"check NUMBER                             do a simple check on the file system"
+msgid "check NUMBER                             do a simple check on the file system"
 msgstr "check NUMBER                  ファイルシステムの簡単なチェックする"
 
 #: parted/parted.c:1908
@@ -1923,9 +1563,7 @@ msgid "cp"
 msgstr "cp"
 
 #: parted/parted.c:1911
-msgid ""
-"cp [FROM-DEVICE] FROM-NUMBER TO-NUMBER   copy file system to another "
-"partition"
+msgid "cp [FROM-DEVICE] FROM-NUMBER TO-NUMBER   copy file system to another partition"
 msgstr ""
 "cp [転送元デバイス] 転送元NUMBER 転送先NUMBER\n"
 "　　　　　　　　　　　　ファイルシステムを他のパーティションにコピーする"
@@ -1935,31 +1573,23 @@ msgid "help"
 msgstr "help"
 
 #: parted/parted.c:1920
-msgid ""
-"help [COMMAND]                           prints general help, or help on "
-"COMMAND"
-msgstr ""
-"help [コマンド]               ヘルプ表示。コマンド指定でそのヘルプを表示"
+msgid "help [COMMAND]                           prints general help, or help on COMMAND"
+msgstr "help [コマンド]               ヘルプ表示。コマンド指定でそのヘルプを表示"
 
 #: parted/parted.c:1926
 msgid "mklabel"
 msgstr "mklabel"
 
 #: parted/parted.c:1929
-msgid ""
-"mklabel LABEL-TYPE                       create a new disklabel (partition "
-"table)"
-msgstr ""
-"mklabel ラベルの種類          新しいラベル(パーティションテーブル)を作る"
+msgid "mklabel LABEL-TYPE                       create a new disklabel (partition table)"
+msgstr "mklabel ラベルの種類          新しいラベル(パーティションテーブル)を作る"
 
 #: parted/parted.c:1935
 msgid "mkfs"
 msgstr "mkfs"
 
 #: parted/parted.c:1938
-msgid ""
-"mkfs NUMBER FS-TYPE                      make a FS-TYPE file system on "
-"partititon NUMBER"
+msgid "mkfs NUMBER FS-TYPE                      make a FS-TYPE file system on partititon NUMBER"
 msgstr ""
 "mkfs NUMBER ファイルシステムの種類\n"
 "　　　　　　　　　　　　指定した種類のファイルシステムを作る"
@@ -1975,20 +1605,15 @@ msgstr ""
 "　　　　　　　　　　　　パーティションを作る"
 
 #: parted/parted.c:1953
-msgid ""
-"mkpart makes a partition without creating a new file system on the "
-"partition.  FS-TYPE may be specified to set an appropriate partition ID.\n"
-msgstr ""
-"mkpart はパーティションだけ作り、新しいファイルシステムは作りません。ファイル"
-"システムの種類を指定すると、正しいIDが設定されます。\n"
+msgid "mkpart makes a partition without creating a new file system on the partition.  FS-TYPE may be specified to set an appropriate partition ID.\n"
+msgstr "mkpart はパーティションだけ作り、新しいファイルシステムは作りません。ファイルシステムの種類を指定すると、正しいIDが設定されます。\n"
 
 #: parted/parted.c:1958
 msgid "mkpartfs"
 msgstr "mkpartfs"
 
 #: parted/parted.c:1961
-msgid ""
-"mkpartfs PART-TYPE FS-TYPE START END     make a partition with a file system"
+msgid "mkpartfs PART-TYPE FS-TYPE START END     make a partition with a file system"
 msgstr ""
 "mkpartfs パーティションの種類 ファイルシステムの種類 開始 終了\n"
 "　　　　　　　　　　　　パーティションとファイルシステムを作る"
@@ -2014,9 +1639,7 @@ msgid "print"
 msgstr "print"
 
 #: parted/parted.c:1986
-msgid ""
-"print [free|NUMBER|all]                  display the partition table, a "
-"partition, or all devices"
+msgid "print [free|NUMBER|all]                  display the partition table, a partition, or all devices"
 msgstr "print [free|NUMBER|all]       パーティションテーブルを表示する"
 
 #: parted/parted.c:1990
@@ -2029,8 +1652,7 @@ msgid ""
 msgstr ""
 "引数なしの場合、print はパーティションテーブルの全内容を表示します。\n"
 "'free'という引数を与えると、空き容量について表示され、\n"
-"パーティション番号を与えると、そのパーティションについての詳細が表示されま"
-"す。\n"
+"パーティション番号を与えると、そのパーティションについての詳細が表示されます。\n"
 "'all'を与えると、全てのデバイスについてのパーティション情報が表示されます。"
 
 #: parted/parted.c:1998
@@ -2046,24 +1668,16 @@ msgid "rescue"
 msgstr "rescue"
 
 #: parted/parted.c:2009
-msgid ""
-"rescue START END                         rescue a lost partition near START "
-"and END"
-msgstr ""
-"rescue 開始 終了              開始、終了で指定した範囲付近にあるパーティショ"
-"ンを復活させる"
+msgid "rescue START END                         rescue a lost partition near START and END"
+msgstr "rescue 開始 終了              開始、終了で指定した範囲付近にあるパーティションを復活させる"
 
 #: parted/parted.c:2015
 msgid "resize"
 msgstr "resize"
 
 #: parted/parted.c:2018
-msgid ""
-"resize NUMBER START END                  resize partition NUMBER and its "
-"file system"
-msgstr ""
-"resize NUMBER 開始 終了       パーティションとその中のファイルシステムをリサ"
-"イズする"
+msgid "resize NUMBER START END                  resize partition NUMBER and its file system"
+msgstr "resize NUMBER 開始 終了       パーティションとその中のファイルシステムをリサイズする"
 
 #: parted/parted.c:2026
 msgid "rm"
@@ -2086,8 +1700,7 @@ msgid "set"
 msgstr "set"
 
 #: parted/parted.c:2045
-msgid ""
-"set NUMBER FLAG STATE                    change the FLAG on partition NUMBER"
+msgid "set NUMBER FLAG STATE                    change the FLAG on partition NUMBER"
 msgstr "set NUMBER フラグ 状態        ファイルシステムのフラグと状態を設定する"
 
 #: parted/parted.c:2051
@@ -2095,9 +1708,7 @@ msgid "toggle"
 msgstr "toggle"
 
 #: parted/parted.c:2054
-msgid ""
-"toggle [NUMBER [FLAG]]                   toggle the state of FLAG on "
-"partition NUMBER"
+msgid "toggle [NUMBER [FLAG]]                   toggle the state of FLAG on partition NUMBER"
 msgstr "toggle [NUMBER [FLAG]]        パーティションのフラグの状態を反転する"
 
 #: parted/parted.c:2060
@@ -2109,23 +1720,16 @@ msgid "unit UNIT                                set the default unit to UNIT"
 msgstr "unit UNIT                     デフォルトの単位を UNIT にする"
 
 #: parted/parted.c:2068
-#, fuzzy
 msgid "version"
-msgstr "verion"
+msgstr "version"
 
 #: parted/parted.c:2071
-msgid ""
-"version                                  displays the current version of GNU "
-"Parted and copyright information"
-msgstr ""
-"version                       GNU Parted のバージョンと著作権情報を表示"
+msgid "version                                  displays the current version of GNU Parted and copyright information"
+msgstr "version                       GNU Parted のバージョンと著作権情報を表示"
 
 #: parted/parted.c:2075
-msgid ""
-"version displays copyright and version information corressponding to this "
-"copy of GNU Parted\n"
-msgstr ""
-"version は、実行中の GNU Parted のバージョンと著作権情報を表示します。\n"
+msgid "version displays copyright and version information corressponding to this copy of GNU Parted\n"
+msgstr "version は、実行中の GNU Parted のバージョンと著作権情報を表示します。\n"
 
 #: parted/parted.c:2161
 msgid "No device found"
@@ -2138,23 +1742,20 @@ msgstr "必要であれば /etc/fstab を更新するのを忘れないようにしてください。\n"
 #: parted/parted.c:2245
 #, c-format
 msgid "WARNING: You are not superuser.  Watch out for permissions.\n"
-msgstr ""
+msgstr "警告: 管理者権限がありません。パーミッションに注意してください。\n"
 
 #: parted/ui.c:68
 msgid "Welcome to GNU Parted! Type 'help' to view a list of commands.\n"
-msgstr ""
-"GNU Parted へようこそ！ コマンド一覧を見るには 'help' と入力してください。\n"
+msgstr "GNU Parted へようこそ！ コマンド一覧を見るには 'help' と入力してください。\n"
 
 #: parted/ui.c:71
 msgid ""
 "Usage: parted [OPTION]... [DEVICE [COMMAND [PARAMETERS]...]...]\n"
-"Apply COMMANDs with PARAMETERS to DEVICE.  If no COMMAND(s) are given, run "
-"in\n"
+"Apply COMMANDs with PARAMETERS to DEVICE.  If no COMMAND(s) are given, run in\n"
 "interactive mode.\n"
 msgstr ""
 "使い方: parted [オプション]... [デバイス [コマンド [パラメータ]...]...]\n"
-"デバイスに対してパラメータに従ってコマンドを実行します。もしコマンドが指定さ"
-"れなければ、対話モードに入ります。\n"
+"デバイスに対してパラメータに従ってコマンドを実行します。もしコマンドが指定されなければ、対話モードに入ります。\n"
 
 #: parted/ui.c:76
 #, c-format
@@ -2191,8 +1792,7 @@ msgstr ""
 "\n"
 "GNU Parted のバグを発見しました！\n"
 "\n"
-"パニックを起こさないでください！ このバグはおそらくデータには影響ありませ"
-"ん。\n"
+"パニックを起こさないでください！ このバグはおそらくデータには影響ありません。\n"
 "次のことをしてこのバグの修正にご協力ください。\n"
 "\n"
 "次のサイトに最新バージョンがあります。\n"
@@ -2262,13 +1862,13 @@ msgstr ""
 "エラー: FPE_INTOVF (整数: オーバーフロー)"
 
 #: parted/ui.c:295
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "Error: FPE_FLTDIV (Float: divide by zero)"
 msgstr ""
 "\n"
-"エラー: FPE_INTDIV (浮動小数点: 0による除算)"
+"エラー: FPE_FLTDIV (浮動小数点: 0による除算)"
 
 #: parted/ui.c:299
 #, c-format
@@ -2398,7 +1998,7 @@ msgstr ""
 "エラー: ILL_BADSTK (インターナルスタックエラー)"
 
 #: parted/ui.c:378
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "Error: A general SIGILL signal was encountered."
@@ -2455,7 +2055,3 @@ msgstr "コマンド:"
 #, c-format
 msgid "Using %s\n"
 msgstr "%s を使用\n"
-
-#~ msgid "Attempt to read sectors %ld-%ld outside of partition on %s."
-#~ msgstr ""
-#~ "読もうとしたセクタ (%ld-%ld) は %s 上のパーティションの外にあります。"

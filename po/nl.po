@@ -1,211 +1,181 @@
-# Translation of parted-1.7.0rc1 to Dutch.
+# Translation of parted-1.8.0rc2 to Dutch.
 # Copyright (C) 2000, 2005, 2006 Free Software Foundation, Inc.
 # Ivo Timmermans <ivo@o2w.nl>, 2000.
 # Benno Schulenberg <benno@nietvergeten.nl>, 2005, 2006.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: parted 1.7.0rc1\n"
+"Project-Id-Version: parted 1.8.0rc2\n"
 "Report-Msgid-Bugs-To: bug-parted@gnu.org\n"
-"POT-Creation-Date: 2006-10-11 15:47-0400\n"
-"PO-Revision-Date: 2006-04-06 22:58+0200\n"
+"POT-Creation-Date: 2006-10-11 16:56-0400\n"
+"PO-Revision-Date: 2006-10-12 19:42+0200\n"
 "Last-Translator: Benno Schulenberg <benno@nietvergeten.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.2\n"
+"X-Generator: KBabel 1.11.4\n"
 
-#: libparted/arch/linux.c:417
+#: libparted/arch/linux.c:419
 #, c-format
 msgid "Could not stat device %s - %s."
 msgstr "Kan de status van apparaat %s niet opvragen -- %s."
 
-#: libparted/arch/linux.c:531
-#, fuzzy, c-format
+#: libparted/arch/linux.c:535
+#, c-format
 msgid ""
 "Could not determine sector size for %s: %s.\n"
 "Using the default sector size (%lld)."
 msgstr ""
 "Kan de sectorgrootte van %s niet bepalen: %s.\n"
-"De standaard sectorgrootte (%d) wordt gebruikt."
+"De standaard sectorgrootte (%lld) wordt gebruikt."
 
-#: libparted/arch/linux.c:547
-#, fuzzy, c-format
-msgid ""
-"Device %s has a logical sector size of %lld.  Not all parts of GNU Parted "
-"support this at the moment, and the working code is HIGHLY EXPERIMENTAL.\n"
+#: libparted/arch/linux.c:551
+#, c-format
+msgid "Device %s has a logical sector size of %lld.  Not all parts of GNU Parted support this at the moment, and the working code is HIGHLY EXPERIMENTAL.\n"
 msgstr ""
-"De logische sectorgrootte van %s is %d.  Niet alle onderdelen van GNU Parted "
-"ondersteunen dit momenteel.\n"
+"Apparaat %s heeft een logische sectorgrootte van %lld.\n"
+"Niet alle onderdelen van GNU Parted ondersteunen dit momenteel,\n"
+"en de wel aanwezige ondersteuning is ZEER EXPERIMENTEEL.\n"
 
-#: libparted/arch/linux.c:587
+#: libparted/arch/linux.c:591
 #, c-format
 msgid "Unable to determine the size of %s (%s)."
 msgstr "Kan de grootte van %s niet achterhalen -- %s."
 
-#: libparted/arch/linux.c:676
+#: libparted/arch/linux.c:680
 #, c-format
 msgid "Could not get identity of device %s - %s"
 msgstr "Kan de identiteit van apparaat %s niet achterhalen -- %s."
 
-#: libparted/arch/linux.c:685
+#: libparted/arch/linux.c:689
 msgid "Generic IDE"
 msgstr "Gewone IDE"
 
-#: libparted/arch/linux.c:702
+#: libparted/arch/linux.c:706
 #, c-format
 msgid ""
 "Device %s has multiple (%d) logical sectors per physical sector.\n"
-"GNU Parted supports this EXPERIMENTALLY for some special disk label/file "
-"system combinations, e.g. GPT and ext2/3.\n"
+"GNU Parted supports this EXPERIMENTALLY for some special disk label/file system combinations, e.g. GPT and ext2/3.\n"
 "Please consult the web site for up-to-date information."
 msgstr ""
 "Apparaat %s bevat per fysieke sector meerdere (%d) logische sectoren.\n"
-"GNU Parted ondersteunt dit op EXPERIMENTELE basis voor sommige combinaties "
-"van schijflabel en bestandssysteem, bijvoorbeeld GPT met ext2/3.\n"
+"GNU Parted ondersteunt dit op EXPERIMENTELE basis voor sommige combinaties van schijflabel en bestandssysteem, bijvoorbeeld GPT met ext2/3.\n"
 "Zie de website van Parted voor de laatste informatie."
 
-#: libparted/arch/linux.c:872
+#: libparted/arch/linux.c:876
 #, c-format
 msgid "Error initialising SCSI device %s - %s"
 msgstr "Fout tijdens initialiseren van SCSI-apparaat %s -- %s."
 
-#: libparted/arch/linux.c:927
+#: libparted/arch/linux.c:931
 #, c-format
-msgid ""
-"The device %s has zero length, and can't possibly store a file system or "
-"partition table.  Perhaps you selected the wrong device?"
-msgstr ""
-"Apparaat %s heeft lengte nul en kan met geen mogelijkheid een "
-"bestandssysteem of partitietabel bevatten.  Heeft u misschien een verkeerd "
-"apparaat gekozen?"
+msgid "The device %s has zero length, and can't possibly store a file system or partition table.  Perhaps you selected the wrong device?"
+msgstr "Apparaat %s heeft lengte nul en kan met geen mogelijkheid een bestandssysteem of partitietabel bevatten.  Heeft u misschien een verkeerd apparaat gekozen?"
 
-#: libparted/arch/linux.c:1035
-#, fuzzy, c-format
-msgid ""
-"Unable to determine geometry of file/device %s.  You should not use Parted "
-"unless you REALLY know what you're doing!"
+#: libparted/arch/linux.c:1039
+#, c-format
+msgid "Unable to determine geometry of file/device %s.  You should not use Parted unless you REALLY know what you're doing!"
 msgstr ""
-"Kan de logische opbouw van het apparaat niet achterhalen.  U kunt Parted "
-"beter niet gebruiken tenzij u ECHT weet wat u doet!"
+"Kan de logische opbouw van het apparaat %s niet achterhalen.\n"
+"U kunt Parted beter niet gebruiken tenzij u ECHT weet wat u doet!"
 
-#: libparted/arch/linux.c:1110
+#: libparted/arch/linux.c:1114
 msgid "DAC960 RAID controller"
 msgstr "DAC960 RAID-stuurapparaat"
 
-#: libparted/arch/linux.c:1115
+#: libparted/arch/linux.c:1119
 msgid "Promise SX8 SATA Device"
-msgstr ""
+msgstr "Promise SX8 SATA-apparaat"
 
-#: libparted/arch/linux.c:1120
+#: libparted/arch/linux.c:1124
 msgid "IBM S390 DASD drive"
-msgstr ""
+msgstr "IBM S390 DASD-schijf"
 
-#: libparted/arch/linux.c:1125
+#: libparted/arch/linux.c:1129
 msgid "IBM iSeries Virtual DASD"
-msgstr ""
+msgstr "IBM iSeries virtuele DASD"
 
-#: libparted/arch/linux.c:1130
+#: libparted/arch/linux.c:1134
 msgid "Compaq Smart Array"
 msgstr "Compaq Smart Array-stuurapparaat"
 
-#: libparted/arch/linux.c:1135
+#: libparted/arch/linux.c:1139
 msgid "ATARAID Controller"
 msgstr "ATARAID-stuurapparaat"
 
-#: libparted/arch/linux.c:1140
+#: libparted/arch/linux.c:1144
 msgid "I2O Controller"
 msgstr "I2O-stuurapparaat"
 
-#: libparted/arch/linux.c:1145
+#: libparted/arch/linux.c:1149
 msgid "User-Mode Linux UBD"
 msgstr "User-Mode Linux-blokapparaat (UBD)"
 
-#: libparted/arch/linux.c:1155
-msgid "Linux device-mapper"
-msgstr ""
-
 #: libparted/arch/linux.c:1160
+msgid "Linux device-mapper"
+msgstr "Linux device-mapper"
+
+#: libparted/arch/linux.c:1166
 msgid "Unknown"
 msgstr "Onbekend"
 
-#: libparted/arch/linux.c:1167
+#: libparted/arch/linux.c:1173
 msgid "ped_device_new()  Unsupported device type"
 msgstr "Apparaattype wordt niet ondersteund."
 
-#: libparted/arch/linux.c:1270 libparted/arch/gnu.c:264
+#: libparted/arch/linux.c:1276 libparted/arch/gnu.c:264
 #, c-format
 msgid "Error opening %s: %s"
 msgstr "Fout tijdens openen van %s: %s"
 
-#: libparted/arch/linux.c:1281 libparted/arch/gnu.c:274
+#: libparted/arch/linux.c:1287 libparted/arch/gnu.c:274
 #, c-format
 msgid "Unable to open %s read-write (%s).  %s has been opened read-only."
-msgstr ""
-"Kan %s niet openen voor lezen-en-schrijven (%s);  %s is geopend voor alleen-"
-"lezen."
+msgstr "Kan %s niet openen voor lezen-en-schrijven (%s);  %s is geopend voor alleen-lezen."
 
-#: libparted/arch/linux.c:1389 libparted/arch/linux.c:1466
+#: libparted/arch/linux.c:1395 libparted/arch/linux.c:1472
 #: libparted/arch/gnu.c:452 libparted/arch/gnu.c:551 libparted/arch/gnu.c:679
 #, c-format
 msgid "%s during read on %s"
 msgstr "%s tijdens lezen van %s"
 
-#: libparted/arch/linux.c:1430
+#: libparted/arch/linux.c:1436
 #, c-format
 msgid "%s during seek for read on %s"
 msgstr "%s tijdens een 'seek' bij het lezen van %s"
 
-#: libparted/arch/linux.c:1511 libparted/arch/linux.c:1603
-#: libparted/arch/linux.c:1672 libparted/arch/gnu.c:588
+#: libparted/arch/linux.c:1517 libparted/arch/linux.c:1609
+#: libparted/arch/linux.c:1678 libparted/arch/gnu.c:588
 #: libparted/arch/gnu.c:633 libparted/arch/gnu.c:710
 #, c-format
 msgid "%s during write on %s"
 msgstr "%s tijdens schrijven naar %s"
 
-#: libparted/arch/linux.c:1540 libparted/arch/gnu.c:512
+#: libparted/arch/linux.c:1546 libparted/arch/gnu.c:512
 #, c-format
 msgid "Can't write to %s, because it is opened read-only."
 msgstr "Kan niet naar %s schrijven, omdat het geopend is voor alleen-lezen."
 
-#: libparted/arch/linux.c:1564
+#: libparted/arch/linux.c:1570
 #, c-format
 msgid "%s during seek for write on %s"
 msgstr "%s tijdens een 'seek' bij het schrijven naar %s"
 
-#: libparted/arch/linux.c:2062
+#: libparted/arch/linux.c:2070
 #, c-format
-msgid ""
-"Error informing the kernel about modifications to partition %s -- %s.  This "
-"means Linux won't know about any changes you made to %s until you reboot -- "
-"so you shouldn't mount it or use it in any way before rebooting."
-msgstr ""
-"Fout tijdens het inlichten van de kernel over de veranderingen aan partitie %"
-"s (%s).  Dit betekent dat Linux geen weet heeft van de veranderingen die u "
-"net heeft gemaakt.  U dient uw computer te herstarten alvorens iets met %s "
-"te doen."
+msgid "Error informing the kernel about modifications to partition %s -- %s.  This means Linux won't know about any changes you made to %s until you reboot -- so you shouldn't mount it or use it in any way before rebooting."
+msgstr "Fout tijdens het inlichten van de kernel over de veranderingen aan partitie %s (%s).  Dit betekent dat Linux geen weet heeft van de veranderingen die u net heeft gemaakt.  U dient uw computer te herstarten alvorens iets met %s te doen."
 
-#: libparted/arch/linux.c:2263
-#, fuzzy, c-format
-msgid ""
-"parted was unable to re-read the partition table on %s (%s).  This means "
-"Linux won't know anything about the modifications you made. "
-msgstr ""
-"De kernel kan de partitietabel op %s niet herlezen (%s).  Dit betekent dat "
-"Linux geen weet heeft van de veranderingen die u net heeft gemaakt.  U dient "
-"uw computer te herstarten alvorens iets met %s te doen."
-
-#: libparted/arch/linux.c:2367
+#: libparted/arch/linux.c:2272
 #, c-format
-msgid ""
-"The kernel was unable to re-read the partition table on %s (%s).  This means "
-"Linux won't know anything about the modifications you made until you "
-"reboot.  You should reboot your computer before doing anything with %s."
-msgstr ""
-"De kernel kan de partitietabel op %s niet herlezen (%s).  Dit betekent dat "
-"Linux geen weet heeft van de veranderingen die u net heeft gemaakt.  U dient "
-"uw computer te herstarten alvorens iets met %s te doen."
+msgid "parted was unable to re-read the partition table on %s (%s).  This means Linux won't know anything about the modifications you made. "
+msgstr "Parted kan de partitietabel op %s niet herlezen (%s).  Dit betekent dat Linux geen weet heeft van de veranderingen die u net heeft gemaakt.  "
+
+#: libparted/arch/linux.c:2377
+#, c-format
+msgid "The kernel was unable to re-read the partition table on %s (%s).  This means Linux won't know anything about the modifications you made until you reboot.  You should reboot your computer before doing anything with %s."
+msgstr "De kernel kan de partitietabel op %s niet herlezen (%s).  Dit betekent dat Linux geen weet heeft van de veranderingen die u net heeft gemaakt.  U dient uw computer te herstarten alvorens iets met %s te doen."
 
 #: libparted/arch/gnu.c:97
 #, c-format
@@ -217,40 +187,17 @@ msgid "Unable to probe store."
 msgstr "Kan de logische opbouw van het apparaat niet achterhalen."
 
 #: libparted/arch/gnu.c:355
-msgid ""
-"The partition table cannot be re-read.  This means you need to reboot before "
-"mounting any modified partitions.  You also need to reinstall your boot "
-"loader before you reboot (which may require mounting modified partitions).  "
-"It is impossible do both things!  So you'll need to boot off a rescue disk, "
-"and reinstall your boot loader from the rescue disk.  Read section 4 of the "
-"Parted User documentation for more information."
-msgstr ""
-"De kernel kan de partitietabel niet herlezen.  Dit betekent dat u uw "
-"computer moet herstarten alvorens veranderde partities te gebruiken.  Maar "
-"voor het herstarten moet u ook uw opstartprogramma opnieuw installeren, wat "
-"mogelijk het aankoppelen van veranderde partitities vereist.  De twee dingen "
-"zijn niet samen mogelijk!  U zult dus van een reddingsdiskette of van een CD "
-"moeten herstarten, en vanaf daar uw opstartprogramma moeten herinstalleren.  "
-"Lees eventueel sectie 4 van de Parted-gebruikersdocumentatie."
+msgid "The partition table cannot be re-read.  This means you need to reboot before mounting any modified partitions.  You also need to reinstall your boot loader before you reboot (which may require mounting modified partitions).  It is impossible do both things!  So you'll need to boot off a rescue disk, and reinstall your boot loader from the rescue disk.  Read section 4 of the Parted User documentation for more information."
+msgstr "De kernel kan de partitietabel niet herlezen.  Dit betekent dat u uw computer moet herstarten alvorens veranderde partities te gebruiken.  Maar voor het herstarten moet u ook uw opstartprogramma opnieuw installeren, wat mogelijk het aankoppelen van veranderde partitities vereist.  De twee dingen zijn niet samen mogelijk!  U zult dus van een reddingsdiskette of van een CD moeten herstarten, en vanaf daar uw opstartprogramma moeten herinstalleren.  Lees eventueel sectie 4 van de Parted-gebruikersdocumentatie."
 
 #: libparted/arch/gnu.c:372
 #, c-format
-msgid ""
-"The partition table on %s cannot be re-read (%s).  This means the Hurd knows "
-"nothing about any modifications you made.  You should reboot your computer "
-"before doing anything with %s."
-msgstr ""
-"De kernel kan de partitietabel op %s niet herlezen (%s).  Dit betekent dat "
-"de Hurd geen weet heeft van de veranderingen die u net heeft gemaakt.  U "
-"dient uw computer te herstarten alvorens iets met %s te doen."
+msgid "The partition table on %s cannot be re-read (%s).  This means the Hurd knows nothing about any modifications you made.  You should reboot your computer before doing anything with %s."
+msgstr "De kernel kan de partitietabel op %s niet herlezen (%s).  Dit betekent dat de Hurd geen weet heeft van de veranderingen die u net heeft gemaakt.  U dient uw computer te herstarten alvorens iets met %s te doen."
 
 #: libparted/arch/gnu.c:383 parted/parted.c:2218
-msgid ""
-"You should reinstall your boot loader before rebooting.  Read section 4 of "
-"the Parted User documentation for more information."
-msgstr ""
-"Alvorens te herstarten dient u uw opstartprogramma opnieuw te installeren.  "
-"Lees sectie 4 van de Parted-gebruikersdocumentatie voor meer informatie."
+msgid "You should reinstall your boot loader before rebooting.  Read section 4 of the Parted User documentation for more information."
+msgstr "Alvorens te herstarten dient u uw opstartprogramma opnieuw te installeren.  Lees sectie 4 van de Parted-gebruikersdocumentatie voor meer informatie."
 
 #: libparted/arch/gnu.c:775
 #, c-format
@@ -264,12 +211,8 @@ msgstr "Kan %s niet openen -- onbekend schijflabel."
 
 #: libparted/disk.c:454
 #, c-format
-msgid ""
-"This libparted doesn't have write support for %s.  Perhaps it was compiled "
-"read-only."
-msgstr ""
-"Deze libparted kan niet naar %s schrijven.  Mogelijk werd libparted voor "
-"alleen-lezen gecompileerd."
+msgid "This libparted doesn't have write support for %s.  Perhaps it was compiled read-only."
+msgstr "Deze libparted kan niet naar %s schrijven.  Mogelijk werd libparted voor alleen-lezen gecompileerd."
 
 #: libparted/disk.c:581
 #, c-format
@@ -292,11 +235,8 @@ msgstr "Te veel primaire partities."
 
 #: libparted/disk.c:1640
 #, c-format
-msgid ""
-"Can't add a logical partition to %s, because there is no extended partition."
-msgstr ""
-"Kan geen logische partitie aan %s toevoegen, omdat er geen uitgebreide "
-"partitie is."
+msgid "Can't add a logical partition to %s, because there is no extended partition."
+msgstr "Kan geen logische partitie aan %s toevoegen, omdat er geen uitgebreide partitie is."
 
 #: libparted/disk.c:1664
 #, c-format
@@ -462,14 +402,11 @@ msgstr "Ongeldige partitietabel -- recursieve partitie op %s."
 
 #: libparted/labels/dos.c:1307
 msgid "Extended partitions cannot be hidden on msdos disk labels."
-msgstr ""
-"Uitgebreide partities kunnen op MSDOS-schijflabels niet verborgen zijn."
+msgstr "Uitgebreide partities kunnen op MSDOS-schijflabels niet verborgen zijn."
 
 #: libparted/labels/dos.c:1933
 msgid "Parted can't resize partitions managed by Windows Dynamic Disk."
-msgstr ""
-"Parted kan partitities beheerd door Windows Dynamic Disk niet van grootte "
-"veranderen."
+msgstr "Parted kan partitities beheerd door Windows Dynamic Disk niet van grootte veranderen."
 
 #: libparted/labels/dvh.c:192
 #, c-format
@@ -502,65 +439,33 @@ msgstr "Te veel primaire partities."
 
 #: libparted/labels/gpt.c:452
 #, c-format
-msgid ""
-"%s contains GPT signatures, indicating that it has a GPT table.  However, it "
-"does not have a valid fake msdos partition table, as it should.  Perhaps it "
-"was corrupted -- possibly by a program that doesn't understand GPT partition "
-"tables.  Or perhaps you deleted the GPT table, and are now using an msdos "
-"partition table.  Is this a GPT partition table?"
-msgstr ""
-"%s bevat GPT-vingerafdrukken, die aangeven dat het een GPT-tabel heeft.  "
-"Maar het bevat geen geldige nep-MSDOS-partitietabel, zoals zou moeten.  "
-"Misschien werd deze beschadigd, mogelijk door een programma dat GPT-"
-"partitietabellen niet begrijpt.  Of misschien heeft u de GPT-tabel "
-"verwijderd en gebruikt nu een MSDOS-partitietabel.  Is dit echt een GPT-"
-"partitietabel?"
+msgid "%s contains GPT signatures, indicating that it has a GPT table.  However, it does not have a valid fake msdos partition table, as it should.  Perhaps it was corrupted -- possibly by a program that doesn't understand GPT partition tables.  Or perhaps you deleted the GPT table, and are now using an msdos partition table.  Is this a GPT partition table?"
+msgstr "%s bevat GPT-vingerafdrukken, die aangeven dat het een GPT-tabel heeft.  Maar het bevat geen geldige nep-MSDOS-partitietabel, zoals zou moeten.  Misschien werd deze beschadigd, mogelijk door een programma dat GPT-partitietabellen niet begrijpt.  Of misschien heeft u de GPT-tabel verwijderd en gebruikt nu een MSDOS-partitietabel.  Is dit echt een GPT-partitietabel?"
 
 #: libparted/labels/gpt.c:647
 #, c-format
-msgid ""
-"The format of the GPT partition table is version %x, which is newer than "
-"what Parted can recognise.  Please tell us!  bug-parted@gnu.org"
-msgstr ""
-"De indeling van de GPT-partitietabel is van versie %x.  Dit is nieuwer dan "
-"wat deze versie van Parted kent.  Vertel het ons: <bug-parted@gnu.org>"
+msgid "The format of the GPT partition table is version %x, which is newer than what Parted can recognise.  Please tell us!  bug-parted@gnu.org"
+msgstr "De indeling van de GPT-partitietabel is van versie %x.  Dit is nieuwer dan wat deze versie van Parted kent.  Vertel het ons: <bug-parted@gnu.org>"
 
 #: libparted/labels/gpt.c:697
 #, c-format
-msgid ""
-"Not all of the space available to %s appears to be used, you can fix the GPT "
-"to use all of the space (an extra %llu blocks) or continue with the current "
-"setting? "
+msgid "Not all of the space available to %s appears to be used, you can fix the GPT to use all of the space (an extra %llu blocks) or continue with the current setting? "
 msgstr ""
+"Niet alle beschibare ruimte voor %s schijnt gebruikt te worden.\n"
+"De GPT bijwerken om alle ruimte te gebruiken (%llu extra blokken),\n"
+"of doorgaan en deze extra ruimte negeren?"
 
 #: libparted/labels/gpt.c:826
-msgid ""
-"The backup GPT table is not at the end of the disk, as it should be.  This "
-"might mean that another operating system believes the disk is smaller.  Fix, "
-"by moving the backup to the end (and removing the old backup)?"
-msgstr ""
-"De reservekopie van de GPT-tabel staat niet helemaal aan het einde van de "
-"schijf, zoals zou moeten.  Dit zou kunnen betekenen dat een ander "
-"besturingssysteem aanneemt dat de schijf kleiner is dan hij is.  Dit kan "
-"gerepareerd worden door de reservekopie naar het einde te verplaatsen en de "
-"oude reservekopie te verwijderen.  Reparatie uitvoeren?"
+msgid "The backup GPT table is not at the end of the disk, as it should be.  This might mean that another operating system believes the disk is smaller.  Fix, by moving the backup to the end (and removing the old backup)?"
+msgstr "De reservekopie van de GPT-tabel staat niet helemaal aan het einde van de schijf, zoals zou moeten.  Dit zou kunnen betekenen dat een ander besturingssysteem aanneemt dat de schijf kleiner is dan hij is.  Dit kan gerepareerd worden door de reservekopie naar het einde te verplaatsen en de oude reservekopie te verwijderen.  Reparatie uitvoeren?"
 
 #: libparted/labels/gpt.c:861
-msgid ""
-"The primary GPT table is corrupt, but the backup appears OK, so that will be "
-"used."
-msgstr ""
-"De primaire GPT-tabel is beschadigd, maar de reservekopie lijkt goed.  Deze "
-"laatste zal worden gebruikt."
+msgid "The primary GPT table is corrupt, but the backup appears OK, so that will be used."
+msgstr "De primaire GPT-tabel is beschadigd, maar de reservekopie lijkt goed.  Deze laatste zal worden gebruikt."
 
 #: libparted/labels/gpt.c:869
-msgid ""
-"Both the primary and backup GPT tables are corrupt.  Try making a fresh "
-"table, and using Parted's rescue feature to recover partitions."
-msgstr ""
-"Zowel de primaire GPT-tabel als de reservekopie zijn beschadigd.  Maak eerst "
-"een nieuw schijflabel aan, en probeer dan met de 'red'-opdracht de "
-"kwijtgeraakte partities te herstellen."
+msgid "Both the primary and backup GPT tables are corrupt.  Try making a fresh table, and using Parted's rescue feature to recover partitions."
+msgstr "Zowel de primaire GPT-tabel als de reservekopie zijn beschadigd.  Maak eerst een nieuw schijflabel aan, en probeer dan met de 'red'-opdracht de kwijtgeraakte partities te herstellen."
 
 #: libparted/labels/mac.c:176
 #, c-format
@@ -604,20 +509,13 @@ msgstr "Het gegevensgebied beslaat niet de gehele partitie."
 
 #: libparted/labels/mac.c:664
 #, c-format
-msgid ""
-"Weird block size on device descriptor: %d bytes is not divisible by 512."
-msgstr ""
-"Vreemde blokgrootte in apparaatbeschrijving: %d bytes is niet deelbaar door "
-"512."
+msgid "Weird block size on device descriptor: %d bytes is not divisible by 512."
+msgstr "Vreemde blokgrootte in apparaatbeschrijving: %d bytes is niet deelbaar door 512."
 
 #: libparted/labels/mac.c:677
 #, c-format
-msgid ""
-"The driver descriptor says the physical block size is %d bytes, but Linux "
-"says it is %d bytes."
-msgstr ""
-"De beschrijving van het stuurprogramma zegt dat de fysieke blokgrootte %d "
-"bytes is, maar Linux zegt dat het %d bytes is."
+msgid "The driver descriptor says the physical block size is %d bytes, but Linux says it is %d bytes."
+msgstr "De beschrijving van het stuurprogramma zegt dat de fysieke blokgrootte %d bytes is, maar Linux zegt dat het %d bytes is."
 
 #: libparted/labels/mac.c:725
 msgid "No valid partition map found."
@@ -625,29 +523,20 @@ msgstr "Geen geldige partitietabel gevonden."
 
 #: libparted/labels/mac.c:784
 #, c-format
-msgid ""
-"Conflicting partition map entry sizes!  Entry 1 says it is %d, but entry %d "
-"says it is %d!"
-msgstr ""
-"Tegenstrijdige groottes van partitietabelitems!  Item 1 zegt dat het %d is, "
-"maar item %d zegt dat het %d is!"
+msgid "Conflicting partition map entry sizes!  Entry 1 says it is %d, but entry %d says it is %d!"
+msgstr "Tegenstrijdige groottes van partitietabelitems!  Item 1 zegt dat het %d is, maar item %d zegt dat het %d is!"
 
 #: libparted/labels/mac.c:811
 msgid "Weird!  There are 2 partitions map entries!"
 msgstr "Vreemd: twee partitietabelitems!"
 
 #: libparted/labels/mac.c:1338
-msgid ""
-"Changing the name of a root or swap partition will prevent Linux from "
-"recognising it as such."
-msgstr ""
-"Het veranderen van de naam van een root- of swappartitie zal verhinderen dat "
-"Linux deze als zodanig herkent."
+msgid "Changing the name of a root or swap partition will prevent Linux from recognising it as such."
+msgstr "Het veranderen van de naam van een root- of swappartitie zal verhinderen dat Linux deze als zodanig herkent."
 
 #: libparted/labels/mac.c:1434
 msgid "Can't add another partition -- the partition map is too small!"
-msgstr ""
-"Kan geen nieuwe primaire partitie toevoegen: de partitietabel is te klein!"
+msgstr "Kan geen nieuwe primaire partitie toevoegen: de partitietabel is te klein!"
 
 #: libparted/labels/pc98.c:357
 #, c-format
@@ -656,12 +545,8 @@ msgstr "Ongeldige partitietabel op %s."
 
 #: libparted/labels/pc98.c:409 libparted/labels/pc98.c:487
 #, c-format
-msgid ""
-"Partition %d isn't aligned to cylinder boundaries.  This is still "
-"unsupported."
-msgstr ""
-"Partitie %d is niet uitgelijnd op cilindergrenzen.  Dit wordt nog niet "
-"ondersteund."
+msgid "Partition %d isn't aligned to cylinder boundaries.  This is still unsupported."
+msgstr "Partitie %d is niet uitgelijnd op cilindergrenzen.  Dit wordt nog niet ondersteund."
 
 #: libparted/labels/pc98.c:796
 msgid "Can't add another partition."
@@ -673,12 +558,8 @@ msgstr "Beschadigd Sun-schijflabel gevonden."
 
 #: libparted/labels/sun.c:264
 #, c-format
-msgid ""
-"The disk CHS geometry (%d,%d,%d) reported by the operating system does not "
-"match the geometry stored on the disk label (%d,%d,%d)."
-msgstr ""
-"De logische schijfopbouw (%d,%d,%d) gerapporteerd door het besturingssysteem "
-"komt niet overeen met de opbouw (%d,%d,%d) opgeslagen in het schijflabel."
+msgid "The disk CHS geometry (%d,%d,%d) reported by the operating system does not match the geometry stored on the disk label (%d,%d,%d)."
+msgstr "De logische schijfopbouw (%d,%d,%d) gerapporteerd door het besturingssysteem komt niet overeen met de opbouw (%d,%d,%d) opgeslagen in het schijflabel."
 
 #: libparted/labels/sun.c:286
 #, c-format
@@ -691,16 +572,8 @@ msgid "The disk has %d cylinders, which is greater than the maximum of 65536."
 msgstr "De schijf heeft %d cilinders, wat groter is dan het maximum van 65536."
 
 #: libparted/labels/sun.c:736
-msgid ""
-"The Whole Disk partition is the only available one left.  Generally, it is "
-"not a good idea to overwrite this partition with a real one.  Solaris may "
-"not be able to boot without it, and SILO (the sparc boot loader) appreciates "
-"it as well."
-msgstr ""
-"De 'Hele-Schijf'-partitie is de enige die over is.  In het algemeen is het "
-"geen goed idee om deze partitie met een echte te overschrijven.  Solaris kan "
-"mogelijk niet zonder deze partitie starten, en SILO (het Sparc-"
-"opstartprogramma) waardeert de aanwezigheid ervan ook."
+msgid "The Whole Disk partition is the only available one left.  Generally, it is not a good idea to overwrite this partition with a real one.  Solaris may not be able to boot without it, and SILO (the sparc boot loader) appreciates it as well."
+msgstr "De 'Hele-Schijf'-partitie is de enige die over is.  In het algemeen is het geen goed idee om deze partitie met een echte te overschrijven.  Solaris kan mogelijk niet zonder deze partitie starten, en SILO (het Sparc-opstartprogramma) waardeert de aanwezigheid ervan ook."
 
 #: libparted/labels/sun.c:751
 msgid "Sun disk label is full."
@@ -717,23 +590,17 @@ msgstr "Het bestandssysteem is groter dan de partitie!"
 #: libparted/filesys.c:405
 #, c-format
 msgid "Support for opening %s file systems is not implemented yet."
-msgstr ""
-"Ondersteuning voor het openen van %s-bestandssystemen is nog niet "
-"geïmplementeerd."
+msgstr "Ondersteuning voor het openen van %s-bestandssystemen is nog niet geïmplementeerd."
 
 #: libparted/filesys.c:447
 #, c-format
 msgid "Support for creating %s file systems is not implemented yet."
-msgstr ""
-"Ondersteuning voor het maken van %s-bestandssystemen is nog niet "
-"geïmplementeerd."
+msgstr "Ondersteuning voor het maken van %s-bestandssystemen is nog niet geïmplementeerd."
 
 #: libparted/filesys.c:508
 #, c-format
 msgid "Support for checking %s file systems is not implemented yet."
-msgstr ""
-"Ondersteuning voor het controleren van %s-bestandssystemen is nog niet "
-"geïmplementeerd."
+msgstr "Ondersteuning voor het controleren van %s-bestandssystemen is nog niet geïmplementeerd."
 
 #: libparted/filesys.c:574
 msgid "raw block copying"
@@ -749,30 +616,18 @@ msgstr "Kan niet naar een overlappende partitie kopiëren."
 
 #: libparted/filesys.c:647
 #, c-format
-msgid ""
-"Direct support for copying file systems is not yet implemented for %s.  "
-"However, support for resizing is implemented.  Therefore, the file system "
-"can be copied if the new partition is at least as big as the old one.  So, "
-"either shrink the partition you are trying to copy, or copy to a bigger "
-"partition."
-msgstr ""
-"Het tegelijkertijd kopiëren en verkleinen van een %s-bestandssysteem is nog "
-"niet geïmplementeerd.  Verklein dus eerst de bronpartitie alvorens deze naar "
-"de gekozen partitie te kopiëren, of kies een grotere doelpartitie."
+msgid "Direct support for copying file systems is not yet implemented for %s.  However, support for resizing is implemented.  Therefore, the file system can be copied if the new partition is at least as big as the old one.  So, either shrink the partition you are trying to copy, or copy to a bigger partition."
+msgstr "Het tegelijkertijd kopiëren en verkleinen van een %s-bestandssysteem is nog niet geïmplementeerd.  Verklein dus eerst de bronpartitie alvorens deze naar de gekozen partitie te kopiëren, of kies een grotere doelpartitie."
 
 #: libparted/filesys.c:661
 #, c-format
 msgid "Support for copying %s file systems is not implemented yet."
-msgstr ""
-"Ondersteuning voor het kopiëren van %s-bestandssystemen is nog niet "
-"geïmplementeerd."
+msgstr "Ondersteuning voor het kopiëren van %s-bestandssystemen is nog niet geïmplementeerd."
 
 #: libparted/filesys.c:699
 #, c-format
 msgid "Support for resizing %s file systems is not implemented yet."
-msgstr ""
-"Ondersteuning voor het van grootte veranderen van %s-bestandssystemen is nog "
-"niet geïmplementeerd."
+msgstr "Ondersteuning voor het van grootte veranderen van %s-bestandssystemen is nog niet geïmplementeerd."
 
 #: libparted/exception.c:78
 msgid "Information"
@@ -828,18 +683,8 @@ msgstr "Annuleren"
 
 #: libparted/exception.c:133
 #, c-format
-msgid ""
-"A bug has been detected in GNU Parted.  Refer to the web site of parted "
-"http://www.gnu.org/software/parted/parted.html for more informations of what "
-"could be useful for bug submitting!  Please email a bug report to bug-"
-"parted@gnu.org containing at least the version (%s) and the following "
-"message:  "
-msgstr ""
-"U bent tegen een programmeerfout in GNU Parted aangelopen.  Zie de website "
-"van Parted (http://www.gnu.org/software/parted/parted.html) voor meer "
-"informatie over het nuttig rapporteren van fouten.  Stuur de foutrapportage "
-"alstublieft naar <bug-parted@gnu.org> met het versienummer (%s) en de "
-"volgende boodschap:"
+msgid "A bug has been detected in GNU Parted.  Refer to the web site of parted http://www.gnu.org/software/parted/parted.html for more informations of what could be useful for bug submitting!  Please email a bug report to bug-parted@gnu.org containing at least the version (%s) and the following message:  "
+msgstr "U bent tegen een programmeerfout in GNU Parted aangelopen.  Zie de website van Parted (http://www.gnu.org/software/parted/parted.html) voor meer informatie over het nuttig rapporteren van fouten.  Stuur de foutrapportage alstublieft naar <bug-parted@gnu.org> met het versienummer (%s) en de volgende boodschap:"
 
 #: libparted/cs/geom.c:162
 msgid "Can't have the end before the start!"
@@ -852,8 +697,7 @@ msgstr "Kan geen partitie maken buiten de schijf!"
 #: libparted/cs/geom.c:367
 #, c-format
 msgid "Attempt to write sectors %ld-%ld outside of partition on %s."
-msgstr ""
-"Poging tot het schrijven van sectoren %ld-%ld buiten de partitie op %s."
+msgstr "Poging tot het schrijven van sectoren %ld-%ld buiten de partitie op %s."
 
 #: libparted/cs/geom.c:407 libparted/fs/linux_swap/linux_swap.c:353
 msgid "checking for bad blocks"
@@ -908,13 +752,8 @@ msgid "File system has errors!  You should run e2fsck."
 msgstr "Het bestandssysteem bevat fouten!  Voer eerst e2fsck uit."
 
 #: libparted/fs/ext2/ext2.c:711
-msgid ""
-"File system was not cleanly unmounted!  You should run e2fsck.  Modifying an "
-"unclean file system could cause severe corruption."
-msgstr ""
-"Het bestandssysteem werd niet correct ontkoppeld!  Voer eerst e2fsck uit.  "
-"Het veranderen van een ongeschoond bestandssysteem kan tot zware "
-"beschadigingen leiden."
+msgid "File system was not cleanly unmounted!  You should run e2fsck.  Modifying an unclean file system could cause severe corruption."
+msgstr "Het bestandssysteem werd niet correct ontkoppeld!  Voer eerst e2fsck uit.  Het veranderen van een ongeschoond bestandssysteem kan tot zware beschadigingen leiden."
 
 #: libparted/fs/ext2/ext2.c:731
 msgid "File system has an incompatible feature enabled."
@@ -925,11 +764,8 @@ msgid "Error allocating buffer cache."
 msgstr "Fout tijdens reserveren van buffercache."
 
 #: libparted/fs/ext2/ext2_inode_relocator.c:114
-msgid ""
-"Found an inode with a incorrect link count.  Better go run e2fsck first!"
-msgstr ""
-"Er is een inode gevonden met een onjuist aantal verwijzingen.  U kunt beter "
-"eerst e2fsck uitvoeren."
+msgid "Found an inode with a incorrect link count.  Better go run e2fsck first!"
+msgstr "Er is een inode gevonden met een onjuist aantal verwijzingen.  U kunt beter eerst e2fsck uitvoeren."
 
 #: libparted/fs/ext2/ext2_inode_relocator.c:487
 msgid "Not enough free inodes!"
@@ -941,9 +777,7 @@ msgstr "Het bestandssysteem is te vol om een groep te verwijderen!"
 
 #: libparted/fs/ext2/ext2_resize.c:233
 msgid "File system has too many allocated inodes to remove a group!"
-msgstr ""
-"Het bestandssysteem heeft te veel gebruikte inodes om een groep te "
-"verwijderen!"
+msgstr "Het bestandssysteem heeft te veel gebruikte inodes om een groep te verwijderen!"
 
 #: libparted/fs/ext2/ext2_resize.c:493
 msgid "adding groups"
@@ -952,17 +786,12 @@ msgstr "bezig met toevoegen van groepen"
 #: libparted/fs/ext2/ext2_resize.c:530
 #, c-format
 msgid "Your file system is too full to resize it to %i blocks.  Sorry."
-msgstr ""
-"Uw bestandssysteem is te vol om het naar %i blokken te verkleinen.  Sorry."
+msgstr "Uw bestandssysteem is te vol om het naar %i blokken te verkleinen.  Sorry."
 
 #: libparted/fs/ext2/ext2_resize.c:540
 #, c-format
-msgid ""
-"Your file system has too many occupied inodes to resize it to %i blocks.  "
-"Sorry."
-msgstr ""
-"Uw bestandssysteem heeft te veel bezette inodes om het naar %i blokken te "
-"verkleinen.  Sorry."
+msgid "Your file system has too many occupied inodes to resize it to %i blocks.  Sorry."
+msgstr "Uw bestandssysteem heeft te veel bezette inodes om het naar %i blokken te verkleinen.  Sorry."
 
 #: libparted/fs/ext2/ext2_resize.c:554 libparted/fs/hfs/hfs.c:249
 #: libparted/fs/hfs/hfs.c:630
@@ -971,38 +800,27 @@ msgstr "bezig met verkleinen"
 
 #: libparted/fs/ext2/ext2_resize.c:668
 msgid "File system was not cleanly unmounted!  You should run e2fsck."
-msgstr ""
-"Het bestandssysteem werd niet correct ontkoppeld!  Voer eerst e2fsck uit."
+msgstr "Het bestandssysteem werd niet correct ontkoppeld!  Voer eerst e2fsck uit."
 
 #: libparted/fs/ext2/ext2_resize.c:677
-msgid ""
-"The file system has the 'dir_index' feature enabled.  Parted can only resize "
-"the file system if it disables this feature.  You can enable it later by "
-"running 'tune2fs -O dir_index DEVICE' and then 'e2fsck -fD DEVICE'."
-msgstr ""
-"Het bestandssysteem gebruikt de 'dir_index'-functie.  Parted kan het "
-"bestandssysteem alleen van grootte veranderen als het deze functie "
-"uitschakelt.  U kunt deze functie later weer aanzetten door middel van "
-"'tune2fs -O dir_index APPARAAT' en dan 'e2fsck -fD APPARAAT'."
+msgid "The file system has the 'dir_index' feature enabled.  Parted can only resize the file system if it disables this feature.  You can enable it later by running 'tune2fs -O dir_index DEVICE' and then 'e2fsck -fD DEVICE'."
+msgstr "Het bestandssysteem gebruikt de 'dir_index'-functie.  Parted kan het bestandssysteem alleen van grootte veranderen als het deze functie uitschakelt.  U kunt deze functie later weer aanzetten door middel van 'tune2fs -O dir_index APPARAAT' en dan 'e2fsck -fD APPARAAT'."
 
 #: libparted/fs/ext2/ext2_resize.c:693
-#, fuzzy
 msgid ""
 "A resize operation on this file system will use EXPERIMENTAL code\n"
 "that MAY CORRUPT it (although it hasn't doneso yet\n"
 "in the past).\n"
 "You should at least backup your data and run 'e2fsck -f' afterwards."
 msgstr ""
-"Het van grootte veranderen van dit bestandssysteem zal EXPERIMENTELE "
-"programmacode gebruiken dat het bestandssysteem ZOU KUNNEN BESCHADIGEN (maar "
-"dit nog niet gedaan heeft).  Maak een reservekopie van uw gegevens, en draai "
-"na afloop 'e2fsck -f'."
+"Het van grootte veranderen van dit bestandssysteem zal EXPERIMENTELE\n"
+"programmacode gebruiken die het bestandssysteem ZOU KUNNEN BESCHADIGEN\n"
+"(maar dit, voor zover bekend, nog nooit gedaan heeft).  Maak eerst een\n"
+"reservekopie van uw gegevens, en draai na de verandering 'e2fsck -f'."
 
 #: libparted/fs/ext2/ext2_block_relocator.c:198
 msgid "Cross-linked blocks found!  Better go run e2fsck first!"
-msgstr ""
-"Kruiselings gekoppelde blokken gevonden!  U kunt beter eerst e2fsck "
-"uitvoeren."
+msgstr "Kruiselings gekoppelde blokken gevonden!  U kunt beter eerst e2fsck uitvoeren."
 
 #: libparted/fs/ext2/ext2_block_relocator.c:537
 #, c-format
@@ -1010,17 +828,13 @@ msgid "Block %i has no reference?  Weird."
 msgstr "Aan blok %i wordt niet gerefereerd!  Merkwaardig."
 
 #: libparted/fs/ext2/ext2_block_relocator.c:738
-#, fuzzy, c-format
+#, c-format
 msgid "Block %i shouldn't have been marked (%d, %d)!"
-msgstr "Blok %i zou niet gemarkeerd moeten zijn!"
+msgstr "Blok %i zou niet (%d, %d) gemarkeerd moeten zijn!"
 
 #: libparted/fs/ext2/interface.c:188
-msgid ""
-"The ext2 file system passed a basic check.  For a more comprehensive check, "
-"use the e2fsck program."
-msgstr ""
-"Het ext2-bestandssysteem heeft deze basistest goed doorstaan.  Voor een meer "
-"uitgebreide test kunt u het programma e2fsck gebruiken."
+msgid "The ext2 file system passed a basic check.  For a more comprehensive check, use the e2fsck program."
+msgstr "Het ext2-bestandssysteem heeft deze basistest goed doorstaan.  Voor een meer uitgebreide test kunt u het programma e2fsck gebruiken."
 
 #: libparted/fs/ext2/interface.c:205
 msgid "Sorry, can't move the start of ext2 partitions yet!"
@@ -1040,19 +854,13 @@ msgstr "Het bestandssysteem is te klein voor ext2."
 
 #: libparted/fs/fat/calc.c:134
 #, c-format
-msgid ""
-"You need %s of free disk space to shrink this partition to this size.  "
-"Currently, only %s is free."
-msgstr ""
-"U heeft minstens %s vrije schijfruimte nodig om deze partitie naar die "
-"grootte te kunnen verkleinen (u heeft nu slechts %s beschikbaar)."
+msgid "You need %s of free disk space to shrink this partition to this size.  Currently, only %s is free."
+msgstr "U heeft minstens %s vrije schijfruimte nodig om deze partitie naar die grootte te kunnen verkleinen (u heeft nu slechts %s beschikbaar)."
 
 #: libparted/fs/fat/context.c:55
 #, c-format
-msgid ""
-"Cluster start delta = %d, which is not a multiple of the cluster size %d."
-msgstr ""
-"Clusterbegin-delta = %d, en dat is geen veelvoud van de clustergrootte %d."
+msgid "Cluster start delta = %d, which is not a multiple of the cluster size %d."
+msgstr "Clusterbegin-delta = %d, en dat is geen veelvoud van de clustergrootte %d."
 
 #: libparted/fs/fat/fat.c:308
 #, c-format
@@ -1060,12 +868,8 @@ msgid "Partition too big/small for a %s file system."
 msgstr "Partitie is te klein of te groot voor een %s-bestandssysteem."
 
 #: libparted/fs/fat/fat.c:474
-msgid ""
-"The FATs don't match.  If you don't know what this means, then select "
-"cancel, run scandisk on the file system, and then come back."
-msgstr ""
-"De FATs komen niet overeen.  Als u niet weet wat dit betekent, selecteer dan "
-"'Annuleren', voer scandisk uit op het bestandssysteem, en kom dan weer terug."
+msgid "The FATs don't match.  If you don't know what this means, then select cancel, run scandisk on the file system, and then come back."
+msgstr "De FATs komen niet overeen.  Als u niet weet wat dit betekent, selecteer dan 'Annuleren', voer scandisk uit op het bestandssysteem, en kom dan weer terug."
 
 #: libparted/fs/fat/fat.c:514
 msgid "There are no possible configurations for this FAT type."
@@ -1073,38 +877,21 @@ msgstr "Er zijn geen mogelijke configuraties voor dit type FAT."
 
 #: libparted/fs/fat/fat.c:526
 #, c-format
-msgid ""
-"File system doesn't have expected sizes for Windows to like it.  Cluster "
-"size is %dk (%dk expected); number of clusters is %d (%d expected); size of "
-"FATs is %d sectors (%d expected)."
-msgstr ""
-"Het bestandssysteem heeft andere groottes dan Windows graag wil.  De "
-"clustergrootte is %dk (%dk verwacht); het aantal clusters is %d (%d "
-"verwacht); de grootte van de FATs is %d sectoren (%d verwacht)."
+msgid "File system doesn't have expected sizes for Windows to like it.  Cluster size is %dk (%dk expected); number of clusters is %d (%d expected); size of FATs is %d sectors (%d expected)."
+msgstr "Het bestandssysteem heeft andere groottes dan Windows graag wil.  De clustergrootte is %dk (%dk verwacht); het aantal clusters is %d (%d verwacht); de grootte van de FATs is %d sectoren (%d verwacht)."
 
 #: libparted/fs/fat/fat.c:549
 #, c-format
-msgid ""
-"File system is reporting the free space as %d clusters, not %d clusters."
-msgstr ""
-"Het bestandssysteem geeft de beschikbare ruimte aan als %d clusters, niet %d "
-"clusters."
+msgid "File system is reporting the free space as %d clusters, not %d clusters."
+msgstr "Het bestandssysteem geeft de beschikbare ruimte aan als %d clusters, niet %d clusters."
 
 #: libparted/fs/fat/fat.c:874
-msgid ""
-"GNU Parted was miscompiled: the FAT boot sector should be 512 bytes.  FAT "
-"support will be disabled."
-msgstr ""
-"GNU Parted is verkeerd gecompileerd: de FAT-opstartsector zou 512 bytes "
-"moeten zijn.  Ondersteuning voor FAT wordt uitgeschakeld."
+msgid "GNU Parted was miscompiled: the FAT boot sector should be 512 bytes.  FAT support will be disabled."
+msgstr "GNU Parted is verkeerd gecompileerd: de FAT-opstartsector zou 512 bytes moeten zijn.  Ondersteuning voor FAT wordt uitgeschakeld."
 
 #: libparted/fs/fat/resize.c:158
-msgid ""
-"There's not enough room in the root directory for all of the files.  Either "
-"cancel, or ignore to lose the files."
-msgstr ""
-"Er is niet genoeg ruimte in de hoofdmap voor alle bestanden.  Kies 'Negeren' "
-"om de overtallige bestanden te verwijderen."
+msgid "There's not enough room in the root directory for all of the files.  Either cancel, or ignore to lose the files."
+msgstr "Er is niet genoeg ruimte in de hoofdmap voor alle bestanden.  Kies 'Negeren' om de overtallige bestanden te verwijderen."
 
 #: libparted/fs/fat/resize.c:299
 msgid "Error writing to the root directory."
@@ -1112,41 +899,19 @@ msgstr "Fout tijdens schrijven naar de hoofdmap."
 
 #: libparted/fs/fat/resize.c:484
 msgid "If you leave your file system as FAT16, then you will have no problems."
-msgstr ""
-"Als u het bestandssysteem als FAT16 laat, zult u geen problemen hebben."
+msgstr "Als u het bestandssysteem als FAT16 laat, zult u geen problemen hebben."
 
 #: libparted/fs/fat/resize.c:487
-msgid ""
-"If you convert to FAT16, and MS Windows is installed on this partition, then "
-"you must re-install the MS Windows boot loader.  If you want to do this, you "
-"should consult the Parted manual (or your distribution's manual)."
-msgstr ""
-"Als u converteert naar FAT16, en MS-Windows is op deze partitie "
-"geïnstalleerd, dan dient u het MS-Windows-opstartprogramma opnieuw te "
-"installeren.  Als u dit wilt doen, raadpleeg dan de Parted-documentatie (of "
-"de documentatie van uw distributie)."
+msgid "If you convert to FAT16, and MS Windows is installed on this partition, then you must re-install the MS Windows boot loader.  If you want to do this, you should consult the Parted manual (or your distribution's manual)."
+msgstr "Als u converteert naar FAT16, en MS-Windows is op deze partitie geïnstalleerd, dan dient u het MS-Windows-opstartprogramma opnieuw te installeren.  Als u dit wilt doen, raadpleeg dan de Parted-documentatie (of de documentatie van uw distributie)."
 
 #: libparted/fs/fat/resize.c:495
-msgid ""
-"If you leave your file system as FAT32, then you will not introduce any new "
-"problems."
-msgstr ""
-"Als u het bestandssysteem als FAT32 laat, zult u geen nieuwe problemen "
-"introduceren."
+msgid "If you leave your file system as FAT32, then you will not introduce any new problems."
+msgstr "Als u het bestandssysteem als FAT32 laat, zult u geen nieuwe problemen introduceren."
 
 #: libparted/fs/fat/resize.c:499
-msgid ""
-"If you convert to FAT32, and MS Windows is installed on this partition, then "
-"you must re-install the MS Windows boot loader.  If you want to do this, you "
-"should consult the Parted manual (or your distribution's manual).  Also, "
-"converting to FAT32 will make the file system unreadable by MS DOS, MS "
-"Windows 95a, and MS Windows NT."
-msgstr ""
-"Als u converteert naar FAT32, en MS-Windows is op deze partitie "
-"geïnstalleerd, dan dient u het MS-Windows-opstartprogramma opnieuw te "
-"installeren.  Als u dit wilt doen, raadpleeg dan de Parted-documentatie (of "
-"de documentatie van uw distributie).  Maar bedenk: converteren naar FAT32 "
-"maakt het bestandssysteem onleesbaar voor MSDOS, Windows 95a en Windows NT."
+msgid "If you convert to FAT32, and MS Windows is installed on this partition, then you must re-install the MS Windows boot loader.  If you want to do this, you should consult the Parted manual (or your distribution's manual).  Also, converting to FAT32 will make the file system unreadable by MS DOS, MS Windows 95a, and MS Windows NT."
+msgstr "Als u converteert naar FAT32, en MS-Windows is op deze partitie geïnstalleerd, dan dient u het MS-Windows-opstartprogramma opnieuw te installeren.  Als u dit wilt doen, raadpleeg dan de Parted-documentatie (of de documentatie van uw distributie).  Maar bedenk: converteren naar FAT32 maakt het bestandssysteem onleesbaar voor MSDOS, Windows 95a en Windows NT."
 
 #: libparted/fs/fat/resize.c:513
 #, c-format
@@ -1163,25 +928,16 @@ msgid "%s  %s"
 msgstr "%s  %s"
 
 #: libparted/fs/fat/resize.c:542
-msgid ""
-"The file system can only be resized to this size by converting to FAT16."
-msgstr ""
-"Het bestandssysteem kan alleen naar deze grootte veranderd worden door te "
-"converteren naar FAT16."
+msgid "The file system can only be resized to this size by converting to FAT16."
+msgstr "Het bestandssysteem kan alleen naar deze grootte veranderd worden door te converteren naar FAT16."
 
 #: libparted/fs/fat/resize.c:558
-msgid ""
-"The file system can only be resized to this size by converting to FAT32."
-msgstr ""
-"Het bestandssysteem kan alleen naar deze grootte veranderd worden door te "
-"converteren naar FAT32."
+msgid "The file system can only be resized to this size by converting to FAT32."
+msgstr "Het bestandssysteem kan alleen naar deze grootte veranderd worden door te converteren naar FAT32."
 
 #: libparted/fs/fat/resize.c:571
-msgid ""
-"GNU Parted cannot resize this partition to this size.  We're working on it!"
-msgstr ""
-"GNU Parted kan de partitiegrootte niet naar deze afmetingen veranderen.  We "
-"zijn er mee bezig!"
+msgid "GNU Parted cannot resize this partition to this size.  We're working on it!"
+msgstr "GNU Parted kan de partitiegrootte niet naar deze afmetingen veranderen.  We zijn er mee bezig!"
 
 #: libparted/fs/fat/bootsector.c:48 libparted/fs/fat/bootsector.c:55
 msgid "File system has an invalid signature for a FAT file system."
@@ -1196,11 +952,8 @@ msgid "File system has an invalid cluster size for a FAT file system."
 msgstr "Dit bestandssysteem heeft een voor FAT ongeldige clustergrootte."
 
 #: libparted/fs/fat/bootsector.c:76
-msgid ""
-"File system has an invalid number of reserved sectors for a FAT file system."
-msgstr ""
-"Dit bestandssysteem heeft een voor FAT ongeldig aantal gereserveerde "
-"sectoren."
+msgid "File system has an invalid number of reserved sectors for a FAT file system."
+msgstr "Dit bestandssysteem heeft een voor FAT ongeldig aantal gereserveerde sectoren."
 
 #: libparted/fs/fat/bootsector.c:83
 msgid "File system has an invalid number of FATs."
@@ -1208,45 +961,25 @@ msgstr "Dit bestandssysteem heeft een ongeldig aantal FATs."
 
 #: libparted/fs/fat/bootsector.c:138
 #, c-format
-msgid ""
-"This file system has a logical sector size of %d.  GNU Parted is known not "
-"to work properly with sector sizes other than 512 bytes."
-msgstr ""
-"Dit bestandssysteem heeft een logische sectorgrootte van %d.  GNU Parted "
-"werkt niet goed met sectorgroottes anders dan 512 bytes."
+msgid "This file system has a logical sector size of %d.  GNU Parted is known not to work properly with sector sizes other than 512 bytes."
+msgstr "Dit bestandssysteem heeft een logische sectorgrootte van %d.  GNU Parted werkt niet goed met sectorgroottes anders dan 512 bytes."
 
 #: libparted/fs/fat/bootsector.c:163
 #, c-format
-msgid ""
-"The file system's CHS geometry is (%d, %d, %d), which is invalid.  The "
-"partition table's CHS geometry is (%d, %d, %d).  If you select Ignore, the "
-"file system's CHS geometry will be left unchanged.  If you select Fix, the "
-"file system's CHS geometry will be set to match the partition table's CHS "
-"geometry."
-msgstr ""
-"De logische schijfopbouw (%d,%d,%d) vermeld in het bestandssysteem is "
-"ongeldig.  De opbouw opgeslagen in het schijflabel is (%d,%d,%d) (cilinders,"
-"koppen,sectoren).  Als u 'Negeren' kiest, wordt de opbouw vermeld in het "
-"bestandssysteem onveranderd gelaten.  Als u 'Repareren' kiest, wordt deze "
-"opbouw gelijkgemaakt aan die in de partitietabel."
+msgid "The file system's CHS geometry is (%d, %d, %d), which is invalid.  The partition table's CHS geometry is (%d, %d, %d).  If you select Ignore, the file system's CHS geometry will be left unchanged.  If you select Fix, the file system's CHS geometry will be set to match the partition table's CHS geometry."
+msgstr "De logische schijfopbouw (%d,%d,%d) vermeld in het bestandssysteem is ongeldig.  De opbouw opgeslagen in het schijflabel is (%d,%d,%d) (cilinders,koppen,sectoren).  Als u 'Negeren' kiest, wordt de opbouw vermeld in het bestandssysteem onveranderd gelaten.  Als u 'Repareren' kiest, wordt deze opbouw gelijkgemaakt aan die in de partitietabel."
 
 #: libparted/fs/fat/bootsector.c:209
 msgid "FAT boot sector says logical sector size is 0.  This is weird. "
-msgstr ""
-"De FAT-opstartsector zegt dat de logische sectorgrootte 0 is.  Dit is heel "
-"vreemd. "
+msgstr "De FAT-opstartsector zegt dat de logische sectorgrootte 0 is.  Dit is heel vreemd. "
 
 #: libparted/fs/fat/bootsector.c:215
 msgid "FAT boot sector says there are no FAT tables.  This is weird. "
-msgstr ""
-"De FAT-opstartsector zegt dat er geen FAT-tabellen zijn.  Dit is heel "
-"vreemd. "
+msgstr "De FAT-opstartsector zegt dat er geen FAT-tabellen zijn.  Dit is heel vreemd. "
 
 #: libparted/fs/fat/bootsector.c:221
 msgid "FAT boot sector says clusters are 0 sectors.  This is weird. "
-msgstr ""
-"De FAT-opstartsector zegt dat een cluster nul sectoren heeft.  Dit is heel "
-"vreemd. "
+msgstr "De FAT-opstartsector zegt dat een cluster nul sectoren heeft.  Dit is heel vreemd. "
 
 #: libparted/fs/fat/bootsector.c:231
 msgid "File system is FAT12, which is unsupported."
@@ -1254,46 +987,28 @@ msgstr "Het bestandssysteem is FAT12.  Dit wordt niet ondersteund."
 
 #: libparted/fs/fat/bootsector.c:407
 #, c-format
-msgid ""
-"The information sector has the wrong signature (%x).  Select cancel for now, "
-"and send in a bug report.  If you're desperate, it's probably safe to ignore."
-msgstr ""
-"De informatiesector heeft een onjuiste vingerafdruk (%x).  Kies voorlopig "
-"'Annuleren', en stuur een foutrapportage naar <bug-parted@gnu.org>.  Indien "
-"u heel wanhopig bent: het is waarschijnlijk wel veilig om voor 'Negeren' "
-"kiezen."
+msgid "The information sector has the wrong signature (%x).  Select cancel for now, and send in a bug report.  If you're desperate, it's probably safe to ignore."
+msgstr "De informatiesector heeft een onjuiste vingerafdruk (%x).  Kies voorlopig 'Annuleren', en stuur een foutrapportage naar <bug-parted@gnu.org>.  Indien u heel wanhopig bent: het is waarschijnlijk wel veilig om voor 'Negeren' kiezen."
 
 #: libparted/fs/fat/count.c:149
 #, c-format
 msgid "Bad directory entry for %s: first cluster is the end of file marker."
-msgstr ""
-"Foutief mapitem voor %s: de eerste cluster is een bestandseinde-markering."
+msgstr "Foutief mapitem voor %s: de eerste cluster is een bestandseinde-markering."
 
 #: libparted/fs/fat/count.c:162
 #, c-format
-msgid ""
-"Bad FAT: unterminated chain for %s.  You should run dosfsck or scandisk."
-msgstr ""
-"Onjuiste FAT: onbeëindigde keten voor %s.  Voer eerst dosfsck of scandisk "
-"uit."
+msgid "Bad FAT: unterminated chain for %s.  You should run dosfsck or scandisk."
+msgstr "Onjuiste FAT: onbeëindigde keten voor %s.  Voer eerst dosfsck of scandisk uit."
 
 #: libparted/fs/fat/count.c:171
 #, c-format
-msgid ""
-"Bad FAT: cluster %d outside file system in chain for %s.  You should run "
-"dosfsck or scandisk."
-msgstr ""
-"Onjuiste FAT: cluster %d in de keten voor %s ligt buiten het "
-"bestandssysteem.  Voer eerst dosfsck of scandisk uit."
+msgid "Bad FAT: cluster %d outside file system in chain for %s.  You should run dosfsck or scandisk."
+msgstr "Onjuiste FAT: cluster %d in de keten voor %s ligt buiten het bestandssysteem.  Voer eerst dosfsck of scandisk uit."
 
 #: libparted/fs/fat/count.c:181
 #, c-format
-msgid ""
-"Bad FAT: cluster %d is cross-linked for %s.  You should run dosfsck or "
-"scandisk."
-msgstr ""
-"Onjuiste FAT: cluster %d is voor %s kruiselings gekoppeld.  Voer eerst "
-"dosfsck of scandisk uit."
+msgid "Bad FAT: cluster %d is cross-linked for %s.  You should run dosfsck or scandisk."
+msgstr "Onjuiste FAT: cluster %d is voor %s kruiselings gekoppeld.  Voer eerst dosfsck of scandisk uit."
 
 #: libparted/fs/fat/count.c:200
 #, c-format
@@ -1302,21 +1017,13 @@ msgstr "%s is %dk, maar heeft %d clusters (%dk)."
 
 #: libparted/fs/fat/count.c:263
 #, c-format
-msgid ""
-"The file %s is marked as a system file.  This means moving it could cause "
-"some programs to stop working."
-msgstr ""
-"Het bestand %s is gemarkeerd als een systeembestand.  Als het verplaatst "
-"wordt, zullen sommige programma's misschien niet meer werken."
+msgid "The file %s is marked as a system file.  This means moving it could cause some programs to stop working."
+msgstr "Het bestand %s is gemarkeerd als een systeembestand.  Als het verplaatst wordt, zullen sommige programma's misschien niet meer werken."
 
 #: libparted/fs/fat/table.c:138
 #, c-format
-msgid ""
-"FAT %d media %x doesn't match the boot sector's media %x.  You should "
-"probably run scandisk."
-msgstr ""
-"FAT %d medium %x komt niet overeen met medium %x uit de opstartsector.  U "
-"kunt beter eerst scandisk uitvoeren."
+msgid "FAT %d media %x doesn't match the boot sector's media %x.  You should probably run scandisk."
+msgstr "FAT %d medium %x komt niet overeen met medium %x uit de opstartsector.  U kunt beter eerst scandisk uitvoeren."
 
 #: libparted/fs/fat/table.c:268
 #, c-format
@@ -1354,22 +1061,13 @@ msgstr "Slechte blokken konden niet gelezen worden."
 
 #: libparted/fs/hfs/cache.c:139
 #, c-format
-msgid ""
-"Trying to register an extent starting at block 0x%X, but another one already "
-"exists at this position.  You should check the file system!"
-msgstr ""
-"Poging tot het registreren van een 'extent' beginnend bij blok 0x%X, maar er "
-"bestaat al een 'extent' op die positie.  Voer een bestandssysteemcontrole "
-"uit!"
+msgid "Trying to register an extent starting at block 0x%X, but another one already exists at this position.  You should check the file system!"
+msgstr "Poging tot het registreren van een 'extent' beginnend bij blok 0x%X, maar er bestaat al een 'extent' op die positie.  Voer een bestandssysteemcontrole uit!"
 
 #: libparted/fs/hfs/cache.c:216
 #, c-format
-msgid ""
-"Trying to move an extent from block Ox%X to block Ox%X, but another one "
-"already exists at this position.  This should not happen!"
-msgstr ""
-"Poging tot het verplaatsen van een 'extent' van blok 0x%X naar blok Ox%X, "
-"maar er bestaat al een 'extent' op die positie.  Dit hoort nooit te gebeuren!"
+msgid "Trying to move an extent from block Ox%X to block Ox%X, but another one already exists at this position.  This should not happen!"
+msgstr "Poging tot het verplaatsen van een 'extent' van blok 0x%X naar blok Ox%X, maar er bestaat al een 'extent' op die positie.  Dit hoort nooit te gebeuren!"
 
 #: libparted/fs/hfs/file.c:145
 #, c-format
@@ -1379,8 +1077,7 @@ msgstr "Kan 'extent'-cache voor HFS-bestand met CNID %X niet bijwerken."
 #: libparted/fs/hfs/file.c:182
 #, c-format
 msgid "Trying to read HFS file with CNID %X behind EOF."
-msgstr ""
-"Poging tot lezen van HFS-bestand met CNID %X voorbij einde-van-bestand."
+msgstr "Poging tot lezen van HFS-bestand met CNID %X voorbij einde-van-bestand."
 
 #: libparted/fs/hfs/file.c:192 libparted/fs/hfs/file.c:222
 #, c-format
@@ -1390,8 +1087,7 @@ msgstr "Kan sector %lli van HFS-bestand met CNID %X niet vinden."
 #: libparted/fs/hfs/file.c:212
 #, c-format
 msgid "Trying to write HFS file with CNID %X behind EOF."
-msgstr ""
-"Poging tot schrijven van HFS-bestand met CNID %X voorbij einde-van-bestand."
+msgstr "Poging tot schrijven van HFS-bestand met CNID %X voorbij einde-van-bestand."
 
 #: libparted/fs/hfs/file_plus.c:159
 #, c-format
@@ -1401,8 +1097,7 @@ msgstr "Kan 'extent'-cache voor HFS+-bestand met CNID %X niet bijwerken."
 #: libparted/fs/hfs/file_plus.c:203
 #, c-format
 msgid "Trying to read HFS+ file with CNID %X behind EOF."
-msgstr ""
-"Poging tot lezen van HFS+-bestand met CNID %X voorbij einde-van-bestand."
+msgstr "Poging tot lezen van HFS+-bestand met CNID %X voorbij einde-van-bestand."
 
 #: libparted/fs/hfs/file_plus.c:214 libparted/fs/hfs/file_plus.c:256
 #, c-format
@@ -1412,8 +1107,7 @@ msgstr "Kan sector %lli van HFS+-bestand met CNID %X niet vinden."
 #: libparted/fs/hfs/file_plus.c:245
 #, c-format
 msgid "Trying to write HFS+ file with CNID %X behind EOF."
-msgstr ""
-"Poging tot schrijven van HFS+-bestand met CNID %X voorbij einde-van-bestand."
+msgstr "Poging tot schrijven van HFS+-bestand met CNID %X voorbij einde-van-bestand."
 
 #: libparted/fs/hfs/hfs.c:231
 msgid "Sorry, HFS cannot be resized that way yet."
@@ -1425,9 +1119,7 @@ msgstr "De gegevensverplaatsing is mislukt."
 
 #: libparted/fs/hfs/hfs.c:280
 msgid "Data relocation left some data in the end of the volume."
-msgstr ""
-"De gegevensverplaatsing heeft enkele gegevens aan het einde van het volumen "
-"achtergelaten."
+msgstr "De gegevensverplaatsing heeft enkele gegevens aan het einde van het volumen achtergelaten."
 
 #: libparted/fs/hfs/hfs.c:319
 msgid "writing HFS Master Directory Block"
@@ -1449,9 +1141,7 @@ msgstr "Versie %d van HFSX wordt niet ondersteund."
 
 #: libparted/fs/hfs/hfs.c:673
 msgid "Data relocation left some data at the end of the volume."
-msgstr ""
-"De gegevensverplaatsing heeft enkele gegevens aan het einde van het volumen "
-"achtergelaten."
+msgstr "De gegevensverplaatsing heeft enkele gegevens aan het einde van het volumen achtergelaten."
 
 #: libparted/fs/hfs/hfs.c:721
 msgid "Error while writing the allocation file."
@@ -1459,9 +1149,7 @@ msgstr "Fout tijdens schrijven van het reserveringsbestand."
 
 #: libparted/fs/hfs/hfs.c:736
 msgid "Error while writing the compatibility part of the allocation file."
-msgstr ""
-"Fout tijdens schrijven van het compatibiliteitsdeel van het "
-"reserveringsbestand."
+msgstr "Fout tijdens schrijven van het compatibiliteitsdeel van het reserveringsbestand."
 
 #: libparted/fs/hfs/hfs.c:751
 msgid "writing HFS+ Volume Header"
@@ -1472,12 +1160,8 @@ msgid "An error occurred while looking for the mandatory bad blocks file."
 msgstr "Fout tijdens zoeken naar het vereiste slechte-blokkenbestand."
 
 #: libparted/fs/hfs/hfs.c:905
-msgid ""
-"It seems there is an error in the HFS wrapper: the bad blocks file doesn't "
-"contain the embedded HFS+ volume."
-msgstr ""
-"Er schijnt een fout in de HFS-wikkel te zitten: het slechte-blokkenbestand "
-"bevat geen ingebed HFS+-volumen."
+msgid "It seems there is an error in the HFS wrapper: the bad blocks file doesn't contain the embedded HFS+ volume."
+msgstr "Er schijnt een fout in de HFS-wikkel te zitten: het slechte-blokkenbestand bevat geen ingebed HFS+-volumen."
 
 #: libparted/fs/hfs/hfs.c:941
 msgid "Sorry, HFS+ cannot be resized that way yet."
@@ -1501,12 +1185,8 @@ msgstr "Het bijwerken van de HFS-wikkel is mislukt."
 
 #: libparted/fs/hfs/hfs.c:1110 libparted/fs/hfs/hfs.c:1195
 #, c-format
-msgid ""
-"This is not a real %s check.  This is going to extract special low level "
-"files for debugging purposes."
-msgstr ""
-"Dit is geen echte %s-controle.  Het extraheert slechts enkele speciale "
-"bestanden om bij de foutopsporing te helpen."
+msgid "This is not a real %s check.  This is going to extract special low level files for debugging purposes."
+msgstr "Dit is geen echte %s-controle.  Het extraheert slechts enkele speciale bestanden om bij de foutopsporing te helpen."
 
 #: libparted/fs/hfs/journal.c:156
 msgid "Bad block list header checksum."
@@ -1514,24 +1194,16 @@ msgstr "Onjuiste controlesom van kop van blokkenlijst."
 
 #: libparted/fs/hfs/journal.c:169
 #, c-format
-msgid ""
-"Invalid size of a transaction block while replaying the journal (%i bytes)."
-msgstr ""
-"Ongeldige grootte (%i bytes) van een transactieblok tijdens herafspelen van "
-"het journal."
+msgid "Invalid size of a transaction block while replaying the journal (%i bytes)."
+msgstr "Ongeldige grootte (%i bytes) van een transactieblok tijdens herafspelen van het journal."
 
 #: libparted/fs/hfs/journal.c:261
-msgid ""
-"Journal stored outside of the volume are not supported.  Try to desactivate "
-"the journal and run Parted again."
-msgstr ""
-"Een journal opgeslagen buiten het volumen wordt niet ondersteund.  Probeer "
-"het journal uit te schakelen en voer dan Parted opnieuw uit."
+msgid "Journal stored outside of the volume are not supported.  Try to desactivate the journal and run Parted again."
+msgstr "Een journal opgeslagen buiten het volumen wordt niet ondersteund.  Probeer het journal uit te schakelen en voer dan Parted opnieuw uit."
 
 #: libparted/fs/hfs/journal.c:272
 msgid "Journal offset or size is not multiple of the sector size."
-msgstr ""
-"Grootte of offset van het journal is geen veelvoud van de sectorgrootte."
+msgstr "Grootte of offset van het journal is geen veelvoud van de sectorgrootte."
 
 #: libparted/fs/hfs/journal.c:290
 msgid "Incorrect magic values in the journal header."
@@ -1539,81 +1211,52 @@ msgstr "Onjuiste magische getallen in de journalkop."
 
 #: libparted/fs/hfs/journal.c:300
 msgid "Journal size mismatch between journal info block and journal header."
-msgstr ""
-"Journalgrootte is verschillend aangegeven in journal-infoblok en journalkop."
+msgstr "Journalgrootte is verschillend aangegeven in journal-infoblok en journalkop."
 
 #: libparted/fs/hfs/journal.c:312
 msgid "Some header fields are not multiple of the sector size."
-msgstr ""
-"Sommige velden in de journalkop zijn geen veelvoud van de sectorgrootte."
+msgstr "Sommige velden in de journalkop zijn geen veelvoud van de sectorgrootte."
 
 #: libparted/fs/hfs/journal.c:321
-msgid ""
-"The sector size stored in the journal is not 512 bytes.  Parted only "
-"supports 512 bytes length sectors."
-msgstr ""
-"De sectorgrootte is volgens het journal niet 512 bytes.  Parted ondersteunt "
-"alleen sectoren van 512 bytes."
+msgid "The sector size stored in the journal is not 512 bytes.  Parted only supports 512 bytes length sectors."
+msgstr "De sectorgrootte is volgens het journal niet 512 bytes.  Parted ondersteunt alleen sectoren van 512 bytes."
 
 #: libparted/fs/hfs/journal.c:333
 msgid "Bad journal checksum."
 msgstr "Onjuiste controlesom van journal."
 
 #: libparted/fs/hfs/journal.c:351
-msgid ""
-"The journal is not empty.  Parted must replay the transactions before "
-"opening the file system.  This will modify the file system."
-msgstr ""
-"Het journal is niet leeg.  Parted moet de transacties herafspelen alvorens "
-"het bestandssysteem te openen.  Dit zal het bestandssysteem veranderen."
+msgid "The journal is not empty.  Parted must replay the transactions before opening the file system.  This will modify the file system."
+msgstr "Het journal is niet leeg.  Parted moet de transacties herafspelen alvorens het bestandssysteem te openen.  Dit zal het bestandssysteem veranderen."
 
 #: libparted/fs/hfs/journal.c:379
-msgid ""
-"The volume header or the master directory block has changed while replaying "
-"the journal.  You should restart Parted."
-msgstr ""
-"De volumenkop of het hoofdmappenblok is veranderd tijdens het herafspelen "
-"van het journal.  U dient Parted te herstarten."
+msgid "The volume header or the master directory block has changed while replaying the journal.  You should restart Parted."
+msgstr "De volumenkop of het hoofdmappenblok is veranderd tijdens het herafspelen van het journal.  U dient Parted te herstarten."
 
 #: libparted/fs/hfs/probe.c:52
 #, c-format
-msgid ""
-"Parted can't use HFS file systems on disks with a sector size not equal to %"
-"d bytes."
-msgstr ""
-"Parted kan geen HFS-bestandssystemen bewerken op schijven met een andere "
-"sectorgrootte dan %d bytes."
+msgid "Parted can't use HFS file systems on disks with a sector size not equal to %d bytes."
+msgstr "Parted kan geen HFS-bestandssystemen bewerken op schijven met een andere sectorgrootte dan %d bytes."
 
 #: libparted/fs/hfs/reloc.c:153 libparted/fs/hfs/reloc_plus.c:157
 msgid "An extent has not been relocated."
 msgstr "Een 'extent' is niet verplaatst."
 
 #: libparted/fs/hfs/reloc.c:253 libparted/fs/hfs/reloc_plus.c:309
-msgid ""
-"A reference to an extent comes from a place it should not.  You should check "
-"the file system!"
-msgstr ""
-"Er wordt gerefereerd aan een 'extent' vanuit een onmogelijke plaats.  Voer "
-"een bestandssyteemcontrole uit!"
+msgid "A reference to an extent comes from a place it should not.  You should check the file system!"
+msgstr "Er wordt gerefereerd aan een 'extent' vanuit een onmogelijke plaats.  Voer een bestandssyteemcontrole uit!"
 
 #: libparted/fs/hfs/reloc.c:383
 msgid "This HFS volume has no catalog file.  This is very unusual!"
-msgstr ""
-"Dit HFS-volumen heeft geen catalogusbestand.  Dit is zeer ongebruikelijk!"
+msgstr "Dit HFS-volumen heeft geen catalogusbestand.  Dit is zeer ongebruikelijk!"
 
 #: libparted/fs/hfs/reloc.c:477
 msgid "This HFS volume has no extents overflow file.  This is quite unusual!"
-msgstr ""
-"Dit HFS-volumen heeft geen 'extents-overflow'-bestand.  Dit is zeer "
-"ongebruikelijk!"
+msgstr "Dit HFS-volumen heeft geen 'extents-overflow'-bestand.  Dit is zeer ongebruikelijk!"
 
 #: libparted/fs/hfs/reloc.c:519 libparted/fs/hfs/reloc_plus.c:670
-msgid ""
-"The extents overflow file should not contain its own extents!  You should "
-"check the file system."
-msgstr ""
-"Het 'extents-overflow'-bestand hoort niet zijn eigen 'extents' te bevatten.  "
-"Voer een bestandssyteemcontrole uit!"
+msgid "The extents overflow file should not contain its own extents!  You should check the file system."
+msgstr "Het 'extents-overflow'-bestand hoort niet zijn eigen 'extents' te bevatten.  Voer een bestandssyteemcontrole uit!"
 
 #: libparted/fs/hfs/reloc.c:576 libparted/fs/hfs/reloc_plus.c:849
 msgid "Could not cache the file system in memory."
@@ -1629,14 +1272,11 @@ msgstr "Er is een fout opgetreden tijdens het verplaatsen van een 'extent'."
 
 #: libparted/fs/hfs/reloc_plus.c:497
 msgid "This HFS+ volume has no catalog file.  This is very unusual!"
-msgstr ""
-"Dit HFS+-volumen heeft geen catalogusbestand.  Dit is zeer ongebruikelijk!"
+msgstr "Dit HFS+-volumen heeft geen catalogusbestand.  Dit is zeer ongebruikelijk!"
 
 #: libparted/fs/hfs/reloc_plus.c:621
 msgid "This HFS+ volume has no extents overflow file.  This is quite unusual!"
-msgstr ""
-"Dit HFS+-volumen heeft geen 'extents-overflow'-bestand.  Dit is zeer "
-"ongebruikelijk!"
+msgstr "Dit HFS+-volumen heeft geen 'extents-overflow'-bestand.  Dit is zeer ongebruikelijk!"
 
 #: parted/parted.c:76
 msgid "displays this help message"
@@ -1655,13 +1295,8 @@ msgid "displays the version"
 msgstr "de programmaversie weergeven"
 
 #: parted/parted.c:87
-msgid ""
-"NUMBER is the partition number used by Linux.  On MS-DOS disk labels, the "
-"primary partitions number from 1 to 4, logical partitions from 5 onwards.\n"
-msgstr ""
-"NUMMER is het door Linux gebruikte nummer van de partitie.  In MSDOS-"
-"schijflabels zijn de primaire partities genummerd van 1 tot 4, de logische "
-"partities vanaf 5 en hoger.\n"
+msgid "NUMBER is the partition number used by Linux.  On MS-DOS disk labels, the primary partitions number from 1 to 4, logical partitions from 5 onwards.\n"
+msgstr "NUMMER is het door Linux gebruikte nummer van de partitie.  In MSDOS-schijflabels zijn de primaire partities genummerd van 1 tot 4, de logische partities vanaf 5 en hoger.\n"
 
 #: parted/parted.c:90
 msgid "LABEL-TYPE is one of: "
@@ -1684,14 +1319,8 @@ msgid "FS-TYPE is one of: "
 msgstr "BS-SOORT is een van: "
 
 #: parted/parted.c:96
-msgid ""
-"START and END are disk locations, such as 4GB or 10%.  Negative values count "
-"from the end of the disk.  For example, -1s specifies exactly the last "
-"sector.\n"
-msgstr ""
-"BEGIN en EINDE zijn schijflokaties, zoals 4GB of 10%.  Negatieve waarden "
-"tellen vanaf het einde van de schijf.  Bijvoorbeeld, -1s geeft precies de "
-"laatste sector aan.\n"
+msgid "START and END are disk locations, such as 4GB or 10%.  Negative values count from the end of the disk.  For example, -1s specifies exactly the last sector.\n"
+msgstr "BEGIN en EINDE zijn schijflokaties, zoals 4GB of 10%.  Negatieve waarden tellen vanaf het einde van de schijf.  Bijvoorbeeld, -1s geeft precies de laatste sector aan.\n"
 
 #: parted/parted.c:99
 msgid "STATE is one of: on, off\n"
@@ -1718,19 +1347,13 @@ msgid ""
 "Copyright (C) 1998 - 2006 Free Software Foundation, Inc.\n"
 "This program is free software, covered by the GNU General Public License.\n"
 "\n"
-"This program is distributed in the hope that it will be useful, but WITHOUT "
-"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
-"FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for "
-"more details.\n"
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n"
 "\n"
 msgstr ""
 "Copyright (C) 1998 - 2006 Free Software Foundation, Inc.\n"
 "Dit is vrije programmatuur, vallend onder de GNU General Public License.\n"
 "\n"
-"Dit programma wordt uitgegeven in de hoop dat het nuttig is, maar ZONDER "
-"ENIGE GARANTIE; zelfs zonder de impliciete garantie van VERKOOPBAARHEID of "
-"GESCHIKTHEID VOOR EEN BEPAALD DOEL.  Zie de GNU General Public License voor "
-"nadere details.\n"
+"Dit programma wordt uitgegeven in de hoop dat het nuttig is, maar ZONDER ENIGE GARANTIE; zelfs zonder de impliciete garantie van VERKOOPBAARHEID of GESCHIKTHEID VOOR EEN BEPAALD DOEL.  Zie de GNU General Public License voor nadere details.\n"
 
 #: parted/parted.c:152
 #, c-format
@@ -1739,12 +1362,8 @@ msgstr "%0.f%%\t(resterende tijd: %.2d:%.2d)"
 
 #: parted/parted.c:170
 #, c-format
-msgid ""
-"Partition %s is being used.  You must unmount it before you modify it with "
-"Parted."
-msgstr ""
-"Partitie %s is in gebruik.  Deze dient ontkoppeld te worden alvorens hem met "
-"Parted te bewerken."
+msgid "Partition %s is being used.  You must unmount it before you modify it with Parted."
+msgstr "Partitie %s is in gebruik.  Deze dient ontkoppeld te worden alvorens hem met Parted te bewerken."
 
 #: parted/parted.c:187
 #, c-format
@@ -1807,17 +1426,14 @@ msgstr "Einde?"
 #, c-format
 msgid ""
 "You requested a partition from %s to %s.\n"
-"The closest location we can manage is %s to %s.  Is this still acceptable to "
-"you?"
+"The closest location we can manage is %s to %s.  Is this still acceptable to you?"
 msgstr ""
 "U verzocht om een partitie van %s tot %s.\n"
 "De dichtstbijzijnde mogelijkheid is van %s tot %s.  Is dit nog acceptabel?"
 
 #: parted/parted.c:827
 msgid "An extended partition cannot hold a file system.  Did you want mkpart?"
-msgstr ""
-"Een uitgebreide partitie kan geen bestandssysteem bevatten.  Bedoelde u "
-"'maakpart'?"
+msgstr "Een uitgebreide partitie kan geen bestandssysteem bevatten.  Bedoelde u 'maakpart'?"
 
 #: parted/parted.c:985
 msgid "Can't move an extended partition."
@@ -1825,8 +1441,7 @@ msgstr "Kan een uitgebreide partitie niet verplaatsen."
 
 #: parted/parted.c:1014
 msgid "Can't move a partition onto itself.  Try using resize, perhaps?"
-msgstr ""
-"Kan een partitie niet naar zichzelf verplaatsen.  Bedoelde u 'grootte'?"
+msgstr "Kan een partitie niet naar zichzelf verplaatsen.  Bedoelde u 'grootte'?"
 
 #: parted/parted.c:1158
 #, c-format
@@ -1861,7 +1476,7 @@ msgstr "Maximum grootte: "
 #: parted/parted.c:1257
 #, c-format
 msgid "Model: %s (%s)\n"
-msgstr ""
+msgstr "Model: %s (%s)\n"
 
 #: parted/parted.c:1258
 #, c-format
@@ -1876,9 +1491,7 @@ msgstr "Sectorgrootte (logisch/fysiek): %lldB/%lldB\n"
 #: parted/parted.c:1270
 #, c-format
 msgid "BIOS cylinder,head,sector geometry: %d,%d,%d.  Each cylinder is %s.\n"
-msgstr ""
-"Logische schijfopbouw volgens BIOS: %d,%d,%d (cilinders,koppen,sectoren).  "
-"Elke cilinder is %s.\n"
+msgstr "Logische schijfopbouw volgens BIOS: %d,%d,%d (cilinders,koppen,sectoren).  Elke cilinder is %s.\n"
 
 #: parted/parted.c:1276
 #, c-format
@@ -1923,12 +1536,8 @@ msgstr "Vrije ruimte"
 
 #: parted/parted.c:1444
 #, c-format
-msgid ""
-"A %s %s partition was found at %s -> %s.  Do you want to add it to the "
-"partition table?"
-msgstr ""
-"Er is een %s %s-partitie gevonden van %s tot %s.  Wilt u deze aan de "
-"partitietabel toevoegen?"
+msgid "A %s %s partition was found at %s -> %s.  Do you want to add it to the partition table?"
+msgstr "Er is een %s %s-partitie gevonden van %s tot %s.  Wilt u deze aan de partitietabel toevoegen?"
 
 #: parted/parted.c:1482
 msgid "searching for file systems"
@@ -1955,58 +1564,40 @@ msgid "check"
 msgstr "controleer"
 
 #: parted/parted.c:1902
-msgid ""
-"check NUMBER                             do a simple check on the file system"
-msgstr ""
-"controleer NUMMER           een simpele controle op het bestandssysteem "
-"uitvoeren"
+msgid "check NUMBER                             do a simple check on the file system"
+msgstr "controleer NUMMER           een simpele controle op het bestandssysteem uitvoeren"
 
 #: parted/parted.c:1908
 msgid "cp"
 msgstr "kopieer"
 
 #: parted/parted.c:1911
-msgid ""
-"cp [FROM-DEVICE] FROM-NUMBER TO-NUMBER   copy file system to another "
-"partition"
-msgstr ""
-"kopieer [APPARAAT] VAN-NUMMER NAAR-NUMMER   een bestandssysteem naar een "
-"andere partitie kopiëren"
+msgid "cp [FROM-DEVICE] FROM-NUMBER TO-NUMBER   copy file system to another partition"
+msgstr "kopieer [APPARAAT] VAN-NUMMER NAAR-NUMMER   een bestandssysteem naar een andere partitie kopiëren"
 
 #: parted/parted.c:1917
 msgid "help"
 msgstr "hulp"
 
 #: parted/parted.c:1920
-msgid ""
-"help [COMMAND]                           prints general help, or help on "
-"COMMAND"
-msgstr ""
-"help [OPDRACHT]             enige algemene hulp geven (of hulp bij OPDRACHT)"
+msgid "help [COMMAND]                           prints general help, or help on COMMAND"
+msgstr "help [OPDRACHT]             enige algemene hulp geven (of hulp bij OPDRACHT)"
 
 #: parted/parted.c:1926
 msgid "mklabel"
 msgstr "maaklabel"
 
 #: parted/parted.c:1929
-msgid ""
-"mklabel LABEL-TYPE                       create a new disklabel (partition "
-"table)"
-msgstr ""
-"maaklabel LABEL-TYPE        een nieuw schijflabel (met lege partitietabel) "
-"maken"
+msgid "mklabel LABEL-TYPE                       create a new disklabel (partition table)"
+msgstr "maaklabel LABEL-TYPE        een nieuw schijflabel (met lege partitietabel) maken"
 
 #: parted/parted.c:1935
 msgid "mkfs"
 msgstr "maakbs"
 
 #: parted/parted.c:1938
-msgid ""
-"mkfs NUMBER FS-TYPE                      make a FS-TYPE file system on "
-"partititon NUMBER"
-msgstr ""
-"maakbs NUMMER BS-SOORT      op partitie NUMMER een bestandssysteem van BS-"
-"SOORT aanmaken"
+msgid "mkfs NUMBER FS-TYPE                      make a FS-TYPE file system on partititon NUMBER"
+msgstr "maakbs NUMMER BS-SOORT      op partitie NUMMER een bestandssysteem van BS-SOORT aanmaken"
 
 #: parted/parted.c:1944
 msgid "mkpart"
@@ -2017,24 +1608,16 @@ msgid "mkpart PART-TYPE [FS-TYPE] START END     make a partition"
 msgstr "maakpart PART-TYPE [BS-SOORT] BEGIN EINDE   een partitie aanmaken"
 
 #: parted/parted.c:1953
-msgid ""
-"mkpart makes a partition without creating a new file system on the "
-"partition.  FS-TYPE may be specified to set an appropriate partition ID.\n"
-msgstr ""
-"Opdracht 'maakpart' maakt een partitie aan zonder een bestandssysteem aan te "
-"maken.  BS-SOORT mag gebruikt worden om het een geschikt partitiekenmerk te "
-"geven.\n"
+msgid "mkpart makes a partition without creating a new file system on the partition.  FS-TYPE may be specified to set an appropriate partition ID.\n"
+msgstr "Opdracht 'maakpart' maakt een partitie aan zonder een bestandssysteem aan te maken.  BS-SOORT mag gebruikt worden om het een geschikt partitiekenmerk te geven.\n"
 
 #: parted/parted.c:1958
 msgid "mkpartfs"
 msgstr "maakpartbs"
 
 #: parted/parted.c:1961
-msgid ""
-"mkpartfs PART-TYPE FS-TYPE START END     make a partition with a file system"
-msgstr ""
-"maakpartbs PART-TYPE BS-SOORT BEGIN EINDE   een partitie aanmaken met een "
-"bestandssysteem"
+msgid "mkpartfs PART-TYPE FS-TYPE START END     make a partition with a file system"
+msgstr "maakpartbs PART-TYPE BS-SOORT BEGIN EINDE   een partitie aanmaken met een bestandssysteem"
 
 #: parted/parted.c:1967
 msgid "move"
@@ -2042,9 +1625,7 @@ msgstr "schuif"
 
 #: parted/parted.c:1970
 msgid "move NUMBER START END                    move partition NUMBER"
-msgstr ""
-"schuif NUMMER BEGIN EINDE   partitie NUMMER verplaatsen naar nieuw BEGIN en "
-"EINDE"
+msgstr "schuif NUMMER BEGIN EINDE   partitie NUMMER verplaatsen naar nieuw BEGIN en EINDE"
 
 #: parted/parted.c:1975
 msgid "name"
@@ -2059,12 +1640,8 @@ msgid "print"
 msgstr "toon"
 
 #: parted/parted.c:1986
-msgid ""
-"print [free|NUMBER|all]                  display the partition table, a "
-"partition, or all devices"
-msgstr ""
-"toon [free|NUMMER|all]      de partitietabel weergeven (of de vrije ruimte, "
-"een specifieke partitie, of alle apparaten)"
+msgid "print [free|NUMBER|all]                  display the partition table, a partition, or all devices"
+msgstr "toon [free|NUMMER|all]      de partitietabel weergeven (of de vrije ruimte, een specifieke partitie, of alle apparaten)"
 
 #: parted/parted.c:1990
 msgid ""
@@ -2076,7 +1653,7 @@ msgid ""
 msgstr ""
 "Zonder argumenten toont 'toon' de volledige partitietabel.  Met 'free'\n"
 "als argument, toont het hoeveel ruimte er nog beschikbaar is.  Met een\n"
-" partitienummer als argument, toont het meer gedetailleerde informatie\n"
+"partitienummer als argument, toont het meer gedetailleerde informatie\n"
 "over die partitie.  En met 'all' als argument, toont het informatie over\n"
 "alle apparaten."
 
@@ -2093,23 +1670,16 @@ msgid "rescue"
 msgstr "red"
 
 #: parted/parted.c:2009
-msgid ""
-"rescue START END                         rescue a lost partition near START "
-"and END"
-msgstr ""
-"red BEGIN EINDE             een verloren partitie proberen te herstellen"
+msgid "rescue START END                         rescue a lost partition near START and END"
+msgstr "red BEGIN EINDE             een verloren partitie proberen te herstellen"
 
 #: parted/parted.c:2015
 msgid "resize"
 msgstr "grootte"
 
 #: parted/parted.c:2018
-msgid ""
-"resize NUMBER START END                  resize partition NUMBER and its "
-"file system"
-msgstr ""
-"grootte NUMMER BEGIN EINDE  de grootte van het bestandssysteem op partitie "
-"NUMMER veranderen"
+msgid "resize NUMBER START END                  resize partition NUMBER and its file system"
+msgstr "grootte NUMMER BEGIN EINDE  de grootte van het bestandssysteem op partitie NUMMER veranderen"
 
 #: parted/parted.c:2026
 msgid "rm"
@@ -2132,21 +1702,16 @@ msgid "set"
 msgstr "zet"
 
 #: parted/parted.c:2045
-msgid ""
-"set NUMBER FLAG STATE                    change the FLAG on partition NUMBER"
-msgstr ""
-"zet NUMMER VLAG TOESTAND    op partitie NUMMER deze VLAG in TOESTAND zetten"
+msgid "set NUMBER FLAG STATE                    change the FLAG on partition NUMBER"
+msgstr "zet NUMMER VLAG TOESTAND    op partitie NUMMER deze VLAG in TOESTAND zetten"
 
 #: parted/parted.c:2051
 msgid "toggle"
 msgstr "zetom"
 
 #: parted/parted.c:2054
-msgid ""
-"toggle [NUMBER [FLAG]]                   toggle the state of FLAG on "
-"partition NUMBER"
-msgstr ""
-"zetom [NUMMER [VLAG]]       op partitie NUMMER de toestand van VLAG omzetten"
+msgid "toggle [NUMBER [FLAG]]                   toggle the state of FLAG on partition NUMBER"
+msgstr "zetom [NUMMER [VLAG]]       op partitie NUMMER de toestand van VLAG omzetten"
 
 #: parted/parted.c:2060
 msgid "unit"
@@ -2157,25 +1722,16 @@ msgid "unit UNIT                                set the default unit to UNIT"
 msgstr "eenheid EENHEID             standaard deze EENHEID gebruiken"
 
 #: parted/parted.c:2068
-#, fuzzy
 msgid "version"
 msgstr "versie"
 
 #: parted/parted.c:2071
-msgid ""
-"version                                  displays the current version of GNU "
-"Parted and copyright information"
-msgstr ""
-"versie                      toon het versienummer van GNU Parted en de "
-"copyrightinformatie"
+msgid "version                                  displays the current version of GNU Parted and copyright information"
+msgstr "versie                      toon het versienummer van GNU Parted en de copyrightinformatie"
 
 #: parted/parted.c:2075
-msgid ""
-"version displays copyright and version information corressponding to this "
-"copy of GNU Parted\n"
-msgstr ""
-"'versie' toont informatie over het copyright en de versie van deze GNU "
-"Parted\n"
+msgid "version displays copyright and version information corressponding to this copy of GNU Parted\n"
+msgstr "'versie' toont informatie over het copyright en de versie van deze GNU Parted\n"
 
 #: parted/parted.c:2161
 msgid "No device found"
@@ -2189,18 +1745,17 @@ msgstr "Vergeet niet, indien nodig, /etc/fstab bij te werken.\n"
 #, c-format
 msgid "WARNING: You are not superuser.  Watch out for permissions.\n"
 msgstr ""
+"WAARSCHUWING: u bent niet root.\n"
+"Houd rekening met ontbrekende toegangsrechten.\n"
 
 #: parted/ui.c:68
 msgid "Welcome to GNU Parted! Type 'help' to view a list of commands.\n"
-msgstr ""
-"Welkom bij GNU Parted!  Typ 'help' voor een lijst van beschikbare "
-"opdrachten.\n"
+msgstr "Welkom bij GNU Parted!  Typ 'help' voor een lijst van beschikbare opdrachten.\n"
 
 #: parted/ui.c:71
 msgid ""
 "Usage: parted [OPTION]... [DEVICE [COMMAND [PARAMETERS]...]...]\n"
-"Apply COMMANDs with PARAMETERS to DEVICE.  If no COMMAND(s) are given, run "
-"in\n"
+"Apply COMMANDs with PARAMETERS to DEVICE.  If no COMMAND(s) are given, run in\n"
 "interactive mode.\n"
 msgstr ""
 "Gebruik:  parted [OPTIE]... [APPARAAT [OPDRACHT [ARGUMENTEN]...]...]\n"
@@ -2245,8 +1800,7 @@ msgstr ""
 "\n"
 "Help ons de fout te verbeteren door het volgende te doen:\n"
 "\n"
-"Controleer of de fout al is verbeterd door de nieuwste versie van GNU "
-"Parted\n"
+"Controleer of de fout al is verbeterd door de nieuwste versie van GNU Parted\n"
 "te gebruiken die te vinden is op:\n"
 "\n"
 "\thttp://ftp.gnu.org/gnu/parted/\n"
@@ -2285,6 +1839,8 @@ msgid ""
 "\n"
 "Error: A general SIGSEGV signal was encountered."
 msgstr ""
+"\n"
+"Fout: een niet-specifiek SIGSEGV-signaal werd ontvangen."
 
 #: parted/ui.c:287
 #, c-format
@@ -2348,6 +1904,8 @@ msgid ""
 "\n"
 "Error: A general SIGFPE signal was encountered."
 msgstr ""
+"\n"
+"Fout: een niet-specifiek SIGFPE-signaal werd ontvangen."
 
 #: parted/ui.c:345
 #, c-format
@@ -2411,6 +1969,8 @@ msgid ""
 "\n"
 "Error: A general SIGILL signal was encountered."
 msgstr ""
+"\n"
+"Fout: een niet-specifiek SIGILL-signaal werd ontvangen."
 
 #: parted/ui.c:862
 msgid "Expecting a partition number."
@@ -2461,6 +2021,3 @@ msgstr "OPDRACHTen:"
 #, c-format
 msgid "Using %s\n"
 msgstr "%s wordt gebruikt\n"
-
-#~ msgid "Attempt to read sectors %ld-%ld outside of partition on %s."
-#~ msgstr "Poging tot het lezen van sectoren %ld-%ld buiten de partitie op %s."
