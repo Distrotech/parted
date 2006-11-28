@@ -195,6 +195,38 @@ _disk_warn_busy (PedDisk* disk)
         return 1;
 }
 
+static int
+_partition_warn_loss ()
+{
+        if (ped_exception_throw (
+                PED_EXCEPTION_WARNING,
+                PED_EXCEPTION_YES_NO,
+                _("The existing file system will be destroyed and "
+                  "all data on the partition will be lost. Do "
+                  "you want to continue?"), 
+                NULL)
+                       != PED_EXCEPTION_YES)
+                return 0;
+
+        return 1;
+}
+
+static int
+_disk_warn_loss (PedDisk* disk)
+{
+        if (ped_exception_throw (
+                PED_EXCEPTION_WARNING,
+                PED_EXCEPTION_YES_NO,
+                _("The existing disk label on %s will be destroyed "
+                  "and all data on this disk will be lost. Do you "
+                  "want to continue?"), 
+                disk->dev->path)
+                        != PED_EXCEPTION_YES)
+                return 0;
+
+        return 1;
+}
+
 /* This function changes "sector" to "new_sector" if the new value lies
  * within the required range.
  */
@@ -556,11 +588,12 @@ do_mklabel (PedDevice** dev)
         if (!disk) ped_exception_catch ();
         ped_exception_leave_all ();
 
+	if (!_disk_warn_loss (disk))
+                goto error_destroy_disk;
+
         if (disk) {
-                if (!_disk_warn_busy (disk)) {
-                        ped_disk_destroy (disk);
-                        goto error;
-                }
+                if (!_disk_warn_busy (disk))
+                        goto error_destroy_disk;
                 ped_disk_destroy (disk);
         }
 
@@ -593,6 +626,9 @@ do_mkfs (PedDevice** dev)
         disk = ped_disk_new (*dev);
         if (!disk)
                 goto error;
+
+        if  (!_partition_warn_loss())
+                goto error_destroy_disk;
 
         if (!command_line_get_partition (_("Partition number?"), disk, &part))
                 goto error_destroy_disk;
