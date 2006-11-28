@@ -1931,10 +1931,10 @@ NULL),
                 NULL, 1));
 
         command_register (commands, command_create (
-                str_list_create_unique ("mklabel", _("mklabel"), NULL),
+                str_list_create_unique ("mklabel", _("mklabel"), "mktable", _("mktable"), NULL),
                 do_mklabel,
                 str_list_create (
-_("mklabel LABEL-TYPE                       create a new disklabel "
+_("mklabel,mktable LABEL-TYPE               create a new disklabel "
   "(partition table)"),
 NULL),
                 str_list_create (label_type_msg, NULL), 1));
