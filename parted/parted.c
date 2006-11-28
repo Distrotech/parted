@@ -1999,7 +1999,7 @@ _("Without arguments, print displays the entire partition table. With 'free'\n"
 "argument, information about free space will be displayed otherwise if a\n"
 "partition number is given, then more detailed information is displayed\n"
 "about that partition. If the 'all' argument is passed instead, partition\n"
-"information for all devices will be displayed."),
+"information for all devices will be displayed.\n"),
 NULL), 1));
 
 command_register (commands, command_create (
