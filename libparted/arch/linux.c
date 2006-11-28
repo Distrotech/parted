@@ -2279,8 +2279,8 @@ err:
 static int
 _dm_add_partition (PedDisk* disk, PedPartition* part)
 {
-        struct dm_task* task;
         struct stat     dev_stat;
+        struct dm_task* task = NULL;
         int             rc;
         char*           vol_name = NULL;
         char*           dev_name = NULL;
