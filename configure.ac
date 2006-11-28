@@ -240,7 +240,7 @@ dnl Check for libdevmapper
 DM_LIBS=""
 if test "$enable_device_mapper" = yes; then
 	AC_CHECK_LIB(devmapper, dm_task_create,
-		DM_LIBS="-ldevmapper -lselinux -lsepol",
+		DM_LIBS="-ldevmapper",
 		AC_MSG_ERROR(
 			[libdevmapper not found!  Try using --disable-device-mapper]
 		)
