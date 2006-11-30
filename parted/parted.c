@@ -164,67 +164,59 @@ _timer_handler (PedTimer* timer, void* context)
 static int
 _partition_warn_busy (PedPartition* part)
 {
-        char* path = ped_partition_get_path (part);
+        char* path;
 
         if (ped_partition_is_busy (part)) {
+                path = ped_partition_get_path (part);
                 ped_exception_throw (
                         PED_EXCEPTION_ERROR,
                         PED_EXCEPTION_CANCEL,
-                        _("Partition %s is being used.  You must unmount it "
+                        _("Partition %s is being used. You must unmount it "
                           "before you modify it with Parted."),
                         path);
                 ped_free (path);
                 return 0;
         }
-        ped_free (path);
         return 1;
 }
 
 static int
 _disk_warn_busy (PedDisk* disk)
 {
-        if (ped_device_is_busy (disk->dev)) {
-                if (ped_exception_throw (
+        if (ped_device_is_busy (disk->dev))
+                return ped_exception_throw (
                         PED_EXCEPTION_WARNING,
                         PED_EXCEPTION_IGNORE_CANCEL,
                         _("Partition(s) on %s are being used."),
                         disk->dev->path)
-                                != PED_EXCEPTION_IGNORE)
-                        return 0;
-        }
+                                == PED_EXCEPTION_IGNORE;
+
         return 1;
 }
 
 static int
 _partition_warn_loss ()
 {
-        if (ped_exception_throw (
+        return ped_exception_throw (
                 PED_EXCEPTION_WARNING,
                 PED_EXCEPTION_YES_NO,
                 _("The existing file system will be destroyed and "
                   "all data on the partition will be lost. Do "
                   "you want to continue?"), 
-                NULL)
-                       != PED_EXCEPTION_YES)
-                return 0;
-
-        return 1;
+                NULL) == PED_EXCEPTION_YES;
 }
 
 static int
 _disk_warn_loss (PedDisk* disk)
 {
-        if (ped_exception_throw (
+        return ped_exception_throw (
                 PED_EXCEPTION_WARNING,
                 PED_EXCEPTION_YES_NO,
                 _("The existing disk label on %s will be destroyed "
                   "and all data on this disk will be lost. Do you "
                   "want to continue?"), 
                 disk->dev->path)
-                        != PED_EXCEPTION_YES)
-                return 0;
-
-        return 1;
+                        == PED_EXCEPTION_YES;
 }
 
 /* This function changes "sector" to "new_sector" if the new value lies
