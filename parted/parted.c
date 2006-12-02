@@ -2229,10 +2229,10 @@ int     opt;
 while (1)
 {
 #ifdef HAVE_GETOPT_H
-        opt = getopt_long (*argc_ptr, *argv_ptr, "hlmsv",
+        opt = getopt_long (*argc_ptr, *argv_ptr, "hilmsv",
                            options, NULL);
 #else
-        opt = getopt (*argc_ptr, *argv_ptr, "hlmsv");
+        opt = getopt (*argc_ptr, *argv_ptr, "hilmsv");
 #endif
         if (opt == -1)
                 break;
