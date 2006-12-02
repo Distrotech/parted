@@ -65,8 +65,8 @@ typedef struct {
 static struct option    options[] = {
         /* name, has-arg, string-return-val, char-return-val */
         {"help",        0, NULL, 'h'},
-        {"interactive", 0, NULL, 'i'},
         {"list",        0, NULL, 'l'},
+        {"machine",     0, NULL, 'm'},
         {"script",      0, NULL, 's'},
         {"version",     0, NULL, 'v'},
         {NULL,          0, NULL, 0}
@@ -75,14 +75,15 @@ static struct option    options[] = {
 
 static char*    options_help [][2] = {
         {"help",        N_("displays this help message")},
-        {"interactive", N_("where necessary, prompts for user intervention")},
         {"list",        N_("lists partition tables of all detected devices")},
+        {"machine",     N_("displays machine parseable output")},
         {"script",      N_("never prompts for user intervention")},
         {"version",     N_("displays the version")},
         {NULL,          NULL}
 };
 
-int     opt_script_mode;
+int     opt_script_mode = 0;
+int     opt_machine_mode = 0;
 int     is_toggle_mode = 0;
 
 static char* number_msg = N_(
@@ -1271,11 +1272,30 @@ do_print (PedDevice** dev)
         start = ped_unit_format (*dev, 0);
         end = ped_unit_format_byte (*dev, (*dev)->length * (*dev)->sector_size
                                           - 1 );
-        printf ("\n");
-        printf (_("Model: %s (%s)\n"), (*dev)->model, transport[(*dev)->type]);
-        printf (_("Disk %s: %s\n"), (*dev)->path, end);
-        printf (_("Sector size (logical/physical): %lldB/%lldB\n"),
-                        (*dev)->sector_size, (*dev)->phys_sector_size);
+        
+        if (opt_machine_mode) {
+            switch (ped_unit_get_default ()) {
+                case PED_UNIT_CHS:      printf ("CHS;\n");
+                                        break;
+                case PED_UNIT_CYLINDER: printf ("CYL;\n");
+                                        break;
+                default:                printf ("BYT;\n");
+                                        break;
+
+            }
+            printf ("%s:%s:%s:%lld:%lld:%s:%s;\n",
+                    (*dev)->path, end, transport[(*dev)->type],
+                    (*dev)->sector_size, (*dev)->phys_sector_size,
+                    disk->type->name, (*dev)->model);
+        } else {
+            printf ("\n");
+            printf (_("Model: %s (%s)\n"), 
+                    (*dev)->model, transport[(*dev)->type]);
+            printf (_("Disk %s: %s\n"), (*dev)->path, end);
+            printf (_("Sector size (logical/physical): %lldB/%lldB\n"),
+                    (*dev)->sector_size, (*dev)->phys_sector_size);
+        }
+
         ped_free (start);
         ped_free (end);
 
@@ -1285,15 +1305,23 @@ do_print (PedDevice** dev)
                 char* cyl_size = ped_unit_format_custom (*dev,
                                         chs->heads * chs->sectors,
                                         PED_UNIT_KILOBYTE);
-                printf (_("BIOS cylinder,head,sector geometry: %d,%d,%d.  "
-                          "Each cylinder is %s.\n"),
-                        chs->cylinders, chs->heads, chs->sectors, cyl_size);
+                
+                if (opt_machine_mode) {
+                    printf ("%d:%d:%d:%s;\n",
+                            chs->cylinders, chs->heads, chs->sectors, cyl_size);
+                } else {
+                    printf (_("BIOS cylinder,head,sector geometry: %d,%d,%d.  "
+                              "Each cylinder is %s.\n"),
+                            chs->cylinders, chs->heads, chs->sectors, cyl_size);
+                }
+
                 ped_free (cyl_size);
         }
 
-        printf (_("Partition Table: %s\n"), disk->type->name);
-
-        printf ("\n");
+        if (!opt_machine_mode) {
+            printf (_("Partition Table: %s\n"), disk->type->name);
+            printf ("\n");
+        }
         
         has_extended = ped_disk_type_check_feature (disk->type,
                                          PED_DISK_TYPE_EXTENDED);
@@ -1301,96 +1329,144 @@ do_print (PedDevice** dev)
                                          PED_DISK_TYPE_PARTITION_NAME);
 
         
-        if (ped_unit_get_default() == PED_UNIT_CHS) {
-                row = str_list_create (_("Number"), _("Start"),
-                                           _("End"), NULL);
+        if (!opt_machine_mode) {
+
+            if (ped_unit_get_default() == PED_UNIT_CHS) {
+                    row = str_list_create (_("Number"), _("Start"),
+                                               _("End"), NULL);
+            } else {
+                    row = str_list_create (_("Number"), _("Start"),
+                                               _("End"), _("Size"), NULL);
+            }
+
+            if (has_extended)
+                    str_list_append (row, _("Type"));
+
+            str_list_append (row, _("File system"));
+
+            if (has_name)
+                    str_list_append (row, _("Name"));
+
+            str_list_append (row, _("Flags"));
+
+
+            table = table_new (str_list_length(row));
+
+            table_add_row_from_strlist (table, row);
+
+
+            for (part = ped_disk_next_partition (disk, NULL); part;
+                 part = ped_disk_next_partition (disk, part)) {
+
+                    if ((!has_free_arg && !ped_partition_is_active(part)) ||
+                        part->type & PED_PARTITION_METADATA)
+                            continue;
+
+                    tmp = ped_malloc (4);
+
+                    if (part->num >= 0)
+                            sprintf (tmp, "%2d ", part->num);
+                    else
+                            sprintf (tmp, "%2s ", "");
+
+                    row = str_list_create (tmp, NULL);
+
+                    start = ped_unit_format (*dev, part->geom.start);
+                    end = ped_unit_format_byte (
+                            *dev,
+                            (part->geom.end + 1) * (*dev)->sector_size - 1);
+                    size = ped_unit_format (*dev, part->geom.length);
+                    if (ped_unit_get_default() == PED_UNIT_CHS) {
+                            str_list_append (row, start);
+                            str_list_append (row, end);
+                    } else {
+                            str_list_append (row, start);
+                            str_list_append (row, end);
+                            str_list_append (row, size);
+                    }
+
+                    if (!(part->type & PED_PARTITION_FREESPACE)) {
+                            if (has_extended) {
+                                name = 
+                                    _(ped_partition_type_get_name (part->type));
+                                str_list_append (row, name);
+                            }
+
+                            str_list_append (row, part->fs_type ?
+                                             part->fs_type->name : "");
+
+                            if (has_name) {
+                                    name = _(ped_partition_get_name (part));
+                                    str_list_append (row, name);
+                            }
+
+                            str_list_append (row, partition_print_flags (part));
+                    } else {
+                            if (has_extended)
+                                    str_list_append (row, "");
+                            str_list_append (row, _("Free Space"));
+                            if (has_name)
+                                    str_list_append (row, "");
+                            str_list_append (row, "");
+                    }
+
+                    //PED_ASSERT (row.cols == caption.cols)
+                    table_add_row_from_strlist (table, row);
+            }
+
+            table_rendered = table_render (table); 
+#ifdef ENABLE_NLS
+            printf("%ls\n", table_rendered);
+#else
+            printf("%s\n", table_rendered);
+#endif
+            ped_free (table_rendered);
+            table_destroy (table);
+
         } else {
-                row = str_list_create (_("Number"), _("Start"),
-                                           _("End"), _("Size"), NULL);
-        }
-
-        if (has_extended)
-                str_list_append (row, _("Type"));
-
-        str_list_append (row, _("File system"));
-
-        if (has_name)
-                str_list_append (row, _("Name"));
-
-        str_list_append (row, _("Flags"));
-
-
-        table = table_new (str_list_length(row));
-
-        table_add_row_from_strlist (table, row);
-
-
-        for (part = ped_disk_next_partition (disk, NULL); part;
-             part = ped_disk_next_partition (disk, part)) {
+    
+            for (part = ped_disk_next_partition (disk, NULL); part;
+                 part = ped_disk_next_partition (disk, part)) {
 
                 if ((!has_free_arg && !ped_partition_is_active(part)) ||
-                    part->type & PED_PARTITION_METADATA)
-                        continue;
-
-                tmp = ped_malloc (4);
-
+                        part->type & PED_PARTITION_METADATA)
+                            continue; 
+                
                 if (part->num >= 0)
-                        sprintf (tmp, "%2d ", part->num);
+                    printf ("%d:", part->num);
                 else
-                        sprintf (tmp, "%2s ", "");
+                    printf ("1:");
 
-                row = str_list_create (tmp, NULL);
+                printf ("%s:", ped_unit_format (*dev, part->geom.start));
+                printf ("%s:", ped_unit_format_byte (
+                                *dev,
+                                (part->geom.end + 1) * 
+                                (*dev)->sector_size - 1));
 
-                start = ped_unit_format (*dev, part->geom.start);
-                end = ped_unit_format_byte (
-                        *dev, (part->geom.end + 1) * (*dev)->sector_size - 1);
-                size = ped_unit_format (*dev, part->geom.length);
-                if (ped_unit_get_default() == PED_UNIT_CHS) {
-                        str_list_append (row, start);
-                        str_list_append (row, end);
-                } else {
-                        str_list_append (row, start);
-                        str_list_append (row, end);
-                        str_list_append (row, size);
-                }
-
+                if (ped_unit_get_default() != PED_UNIT_CHS)
+                    printf ("%s:", ped_unit_format (*dev,
+                                                    part->geom.length));
+                    
                 if (!(part->type & PED_PARTITION_FREESPACE)) {
-                        if (has_extended) {
-                                name = _(ped_partition_type_get_name (part->type));
-                                str_list_append (row, name);
-                        }
 
-                        str_list_append (row, part->fs_type ?
-                                         part->fs_type->name : "");
+                    if (part->fs_type)
+                        printf ("%s:", part->fs_type->name);
+                    else
+                        printf (":");
 
-                        if (has_name) {
-                                name = _(ped_partition_get_name (part));
-                                str_list_append (row, name);
-                        }
+                    if (has_name) 
+                        printf ("%s:", _(ped_partition_get_name (part)));
+                    else
+                        printf (":");
 
-                        str_list_append (row, partition_print_flags (part));
+                    printf ("%s;\n", partition_print_flags (part));
+
                 } else {
-                        if (has_extended)
-                                str_list_append (row, "");
-                        str_list_append (row, _("Free Space"));
-                        if (has_name)
-                                str_list_append (row, "");
-                        str_list_append (row, "");
+                    printf ("free;\n");
                 }
-
-                //PED_ASSERT (row.cols == caption.cols)
-                table_add_row_from_strlist (table, row);
+            }
         }
 
-        table_rendered = table_render (table); 
-#ifdef ENABLE_NLS
-        printf("%ls\n", table_rendered);
-#else
-        printf("%s\n", table_rendered);
-#endif
-        ped_free (table_rendered);
-
-        table_destroy (table);
         ped_disk_destroy (disk);
 
         return 1;
@@ -2153,18 +2229,18 @@ int     opt;
 while (1)
 {
 #ifdef HAVE_GETOPT_H
-        opt = getopt_long (*argc_ptr, *argv_ptr, "hilsv",
+        opt = getopt_long (*argc_ptr, *argv_ptr, "hlmsv",
                            options, NULL);
 #else
-        opt = getopt (*argc_ptr, *argv_ptr, "hilsv");
+        opt = getopt (*argc_ptr, *argv_ptr, "hlmsv");
 #endif
         if (opt == -1)
                 break;
 
         switch (opt) {
                 case 'h': help_msg (); break;
-                case 'i': opt_script_mode = 0; break;
                 case 'l': _print_all(1); break;
+                case 'm': opt_machine_mode = 1; break;
                 case 's': opt_script_mode = 1; break;
                 case 'v': _version (); break;
         }
@@ -2266,7 +2342,7 @@ if (dev->boot_dirty && dev->type != PED_DEVICE_FILE) {
           "rebooting.  Read section 4 of the Parted User "
           "documentation for more information."));
 }
-if (dev->type != PED_DEVICE_FILE && !opt_script_mode) {
+if (dev->type != PED_DEVICE_FILE && !opt_script_mode && !opt_machine_mode) {
         ped_exception_throw (
                 PED_EXCEPTION_INFORMATION, PED_EXCEPTION_OK,
                 _("Don't forget to update /etc/fstab, if "
