@@ -322,7 +322,7 @@ of the latest GNU Parted version is available, which you can use thus:
 @enumerate
 @item Boot your system 
 
-@item Download @file{parted-static-VERSION.tgz} from @uref{ftp://ftp.gnu.org/parted/static}
+@item Download @file{parted-static-VERSION.tgz} from @uref{ftp://ftp.gnu.org/gnu/parted/static}
 @item Unpack the tarball, resulting in a file called ``parted.static".
 
 @item Insert a floppy.
