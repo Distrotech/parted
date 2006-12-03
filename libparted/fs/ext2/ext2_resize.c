@@ -687,20 +687,12 @@ int ext2_resize_fs(struct ext2_fs *fs, blk_t newsize, PedTimer* timer)
 		fs->metadirty |= EXT2_META_SB;
 	}
 
-	if (!ext2_determine_itoffset(fs) && ped_exception_throw (
-                        PED_EXCEPTION_WARNING,
-                        PED_EXCEPTION_OK_CANCEL,
-                        _("A resize operation on this file system will "
-                          "use EXPERIMENTAL code\n"
-                          "that MAY CORRUPT it (although it hasn't done"
-                          "so yet\n"
-                          "in the past).\n"
-                          "You should at least backup your data and "
-                          "run 'e2fsck -f' afterwards."))
-                == PED_EXCEPTION_CANCEL)
-        {
-	        return 0;
-        }
+	if (!ext2_determine_itoffset(fs)) {
+		ped_exception_throw (PED_EXCEPTION_NO_FEATURE, PED_EXCEPTION_OK,
+			_("GNU Parted cannot resize this file system, please use"
+			  "resize2fs."));
+		return 0;
+	}
 
 	if (fs->opt_verbose)
 		fprintf(stderr, "ext2_resize_fs\n");
