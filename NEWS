@@ -1,26 +1,26 @@
-1.8.0
+1.8.1
 =====
+
 libparted:
-* GPT fixes:
-     - Correctly handle disks with non-512 byte sector sizes
-     - Support LUN resizing (see new space, allow parted to use it)
-     - Prevent overlap of LastUsableLBA and PartitionEntryLBA in backup GPT
-* Prevent SIGFPE when FAT sector size is 0
-* Add ped_exception_get_handler()
-* DASD support for IBM zSeries systems
-* AIX disk label support
-* Detect Promise SX8 storage devices
-* Macintosh (ppc and x86) disk label improvements:
-     - Prevent LVM and RAID partition types from corrupting the table
-     - Fix removal of driver partition
-* Add support binary units (MiB, KiB, GiB)
-* In ped_register_disk_type(), handle disk_types==NULL case
-* In ped_unregister_disk_type(), handle case where type is not registered
-* Fix geometry read problems on 64-bit Macs (and probably other 64-bit systems)
-* Add support for /dev/mapper devices via libdevmapper library
-* Detect Apple_Boot partition types correctly on MacOS X 10.4 systems
+* Rework backtrace support.
+* Code cleanups.
+* Added --enable-selinux configure option to enable linking libparted with
+  libselinux and libsepol.
+* Disable ext2fs resize for now, tell user to use resize2fs.
 
 parted:
-* Various bug fixes, signal handling fixes, and spelling error fixes
-* UI improvements to display more information about the disk and transport
-  layer
+* Fix loop in print_all().
+* Introduce the -list command-line switch.
+* Make mktable aliased to mklabel.
+* Warn before mklabel and mkfs.
+* Code cleanups in _partition_warn_busy(), _disk_warn_busy(),
+  _partition_warn_loss(), and _disk_warn_loss().
+* Avoid warning about user permissions when using --version.
+* Fix 'print' command help.
+* Proper print when there are no extended partitions, but partition names.
+
+misc:
+* Generate SHA-1 digest of the archive files and upload those along with the
+  actual archive files.
+* Update translation files.
+* Remove automatically generated files from version control.
