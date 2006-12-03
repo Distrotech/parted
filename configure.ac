@@ -74,6 +74,11 @@ if test "$enable_device_mapper" = yes; then
 	AC_DEFINE(ENABLE_DEVICE_MAPPER, 1, [device mapper (libdevmapper) support])
 fi
 
+AC_ARG_ENABLE(selinux,
+	[  --enable-selinux        enable SELinux support [default=no]], ,
+	enable_selinux=no
+)
+
 AC_ARG_ENABLE(discover-only,
 	[  --enable-discover-only  support only reading/probing [default=no]], ,
 	enable_discover_only=no
@@ -248,6 +253,13 @@ if test "$enable_device_mapper" = yes; then
 	)
 fi
 AC_SUBST(DM_LIBS)
+
+dnl Check for SELinux
+SELINUX_LIBS=""
+if test "$enable_selinux" = yes; then
+	SELINUX_LIBS="-lselinux -lsepol"
+fi
+AC_SUBST(SELINUX_LIBS)
 
 dnl Check for libreiserfs
 REISER_LIBS=""
