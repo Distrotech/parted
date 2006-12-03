@@ -64,7 +64,7 @@ else
 fi
 
 message "* generating ChangeLog"
-git log --pretty=medium > ChangeLog
+git log --pretty=medium | fold -s > ChangeLog
 
 VERSION=$(grep ' VERSION' config.h | awk '{print $3}' | tr -d '"')
 
