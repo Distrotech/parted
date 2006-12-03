@@ -46,7 +46,7 @@ check_for_program() {
 }
 
 echo "* checking for programs that might be missing..."
-for p in sha1sum gpg curl; do
+for p in sha1sum gpg curl git; do
 	echo -en "\t$p: "
 	check_for_program $p
 done
@@ -63,10 +63,13 @@ else
 	return 1
 fi
 
+message "* generating ChangeLog"
+git log --pretty=medium > ChangeLog
+
 VERSION=$(grep ' VERSION' config.h | awk '{print $3}' | tr -d '"')
 
 message "* checking for correct version in files"
-for f in ChangeLog NEWS; do
+for f in NEWS; do
 	echo -n -e "\t$f: "
 	correct_version $VERSION $f
 	if [ $? -eq 0 ]; then
