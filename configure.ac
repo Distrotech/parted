@@ -19,10 +19,10 @@ dnl if backwards compatibility has been broken (eg. functions removed,
 dnl function signatures changed),
 dnl set PED_BINARY_AGE _and_ PED_INTERFACE_AGE to 0.
 PED_MAJOR_VERSION=1
-PED_MINOR_VERSION=8
-PED_MICRO_VERSION=0
-PED_INTERFACE_AGE=0
-PED_BINARY_AGE=0
+PED_MINOR_VERSION=9
+PED_MICRO_VERSION=9
+PED_INTERFACE_AGE=1
+PED_BINARY_AGE=1
 PED_VERSION_SUFFIX=
 PED_VERSION=$PED_MAJOR_VERSION.$PED_MINOR_VERSION.$PED_MICRO_VERSION$PED_VERSION_SUFFIX
 
@@ -73,6 +73,11 @@ AC_ARG_ENABLE(device-mapper,
 if test "$enable_device_mapper" = yes; then
 	AC_DEFINE(ENABLE_DEVICE_MAPPER, 1, [device mapper (libdevmapper) support])
 fi
+
+AC_ARG_ENABLE(selinux,
+	[  --enable-selinux        enable SELinux support [default=no]], ,
+	enable_selinux=no
+)
 
 AC_ARG_ENABLE(discover-only,
 	[  --enable-discover-only  support only reading/probing [default=no]], ,
@@ -248,6 +253,13 @@ if test "$enable_device_mapper" = yes; then
 	)
 fi
 AC_SUBST(DM_LIBS)
+
+dnl Check for SELinux
+SELINUX_LIBS=""
+if test "$enable_selinux" = yes; then
+	SELINUX_LIBS="-lselinux -lsepol"
+fi
+AC_SUBST(SELINUX_LIBS)
 
 dnl Check for libreiserfs
 REISER_LIBS=""
