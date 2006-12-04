@@ -120,10 +120,16 @@ for EXT in gz bz2; do
 	TARBALL=parted-$VERSION.tar.$EXT
 	SHA1FILE=$TARBALL.sha1
 
-	sha1sum $TARBALL > $SHA1FILE
-
 	message "* signing $TARBALL to detached signature file $TARBALL.sig"
-	gpg --use-agent -b $TARBALL 
+	gpg --use-agent -b $TARBALL
+	if [ $? -ne 0 ]; then
+		kill $GPGAPID echo "\t-> FAILED"; exit
+	fi
+	echo -e "\t-> success"
+
+	sha1sum $TARBALL > $SHA1FILE
+	message "* signing $SHA1FILE to detached signature file $SHA1FILE.sig"
+	gpg --use-agent -b $SHA1FILE
 	if [ $? -ne 0 ]; then
 		kill $GPGAPID echo "\t-> FAILED"; exit
 	fi
