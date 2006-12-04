@@ -6,6 +6,7 @@ if [ ! -d parted ] && [ ! -d libparted ]; then
 	exit 1
 fi
 
+rm -rf ChangeLog doc/mdate-sh doc/texinfo.tex
 rm -rf m4 configure config.rpath depcomp
 rm -rf parted-*.*.*
 rm -rf compile config.guess config.sub ltmain.sh mkinstalldirs
