@@ -1,5 +1,6 @@
 #!/bin/sh
 
+git log --pretty=medium | fold -s > ChangeLog
 aclocal
 autoconf -f
 autoheader
