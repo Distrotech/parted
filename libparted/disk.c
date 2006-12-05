@@ -121,11 +121,11 @@ ped_disk_type_get (const char* name)
 
 	PED_ASSERT (name != NULL, return NULL);
 
-	while (1) {
-		walk = ped_disk_type_get_next (walk);
-		if (!walk) break;
-		if (strcasecmp (walk->name, name) == 0) break;
-	}
+	for (walk = ped_disk_type_get_next (NULL); walk;
+	     walk = ped_disk_type_get_next (walk))
+			if (strcasecmp (walk->name, name) == 0)
+					break;
+
 	return walk;
 }
 
@@ -145,11 +145,11 @@ ped_disk_probe (PedDevice* dev)
 		return NULL;
 
 	ped_exception_fetch_all ();
-	while (1) {
-		walk = ped_disk_type_get_next (walk);
-		if (!walk) break;
-		if (walk->ops->probe (dev)) break;
-	}
+	for (walk = ped_disk_type_get_next (NULL); walk;
+	     walk = ped_disk_type_get_next (walk))
+			if (walk->ops->probe (dev))
+					break;
+
 	if (ped_exception)
 		ped_exception_catch ();
 	ped_exception_leave_all ();
