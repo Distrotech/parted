@@ -689,8 +689,8 @@ int ext2_resize_fs(struct ext2_fs *fs, blk_t newsize, PedTimer* timer)
 
 	if (!ext2_determine_itoffset(fs)) {
 		ped_exception_throw (PED_EXCEPTION_NO_FEATURE, PED_EXCEPTION_OK,
-			_("GNU Parted cannot resize this file system, please use"
-			  "resize2fs."));
+			_("GNU Parted cannot resize this file system, please use "
+			  "'resize2fs'."));
 		return 0;
 	}
 
