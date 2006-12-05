@@ -3,7 +3,13 @@
 #
 # This file may be modified and/or distributed without restriction.
 
-SUBDIRS       = labels fs
+if HAVE_CHECK
+SUBDIRS_CHECK = tests
+else
+SUBDIRS_CHECK =
+endif
+
+SUBDIRS       = labels fs . $(SUBDIRS_CHECK)
 
 LIBS = @INTLLIBS@ @LIBS@
 

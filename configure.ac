@@ -432,6 +432,10 @@ AC_CHECK_HEADER([execinfo.h], [
 	])
 ])
 
+dnl check for "check", unit testing library/header
+PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
+AM_CONDITIONAL(HAVE_CHECK, test "x$CHECK_LIBS" != "x")
+
 dnl Checks for typedefs, structures and compiler characteristics.
 AC_PROG_LD
 
@@ -486,6 +490,7 @@ libparted/fs/ntfs/Makefile
 libparted/fs/reiserfs/Makefile
 libparted/fs/ufs/Makefile
 libparted/fs/xfs/Makefile
+libparted/tests/Makefile
 parted/Makefile
 partprobe/Makefile
 doc/Makefile
