@@ -109,9 +109,9 @@ static char* copyright_msg = N_(
 "Copyright (C) 1998 - 2006 Free Software Foundation, Inc.\n"
 "This program is free software, covered by the GNU General Public License.\n"
 "\n"
-"This program is distributed in the hope that it will be useful, "
-"but WITHOUT ANY WARRANTY; without even the implied warranty of "
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the "
+"This program is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
 "GNU General Public License for more details.\n\n");
 
 static char* label_type_msg;
@@ -1794,7 +1794,7 @@ do_version ()
 {
     printf ("\n%s\n%s",
             prog_name,
-            copyright_msg);
+            _(copyright_msg));
     return 1;
 }
 
