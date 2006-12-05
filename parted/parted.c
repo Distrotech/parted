@@ -189,8 +189,7 @@ _disk_warn_busy (PedDisk* disk)
                         PED_EXCEPTION_WARNING,
                         PED_EXCEPTION_IGNORE_CANCEL,
                         _("Partition(s) on %s are being used."),
-                        disk->dev->path)
-                                == PED_EXCEPTION_IGNORE;
+                        disk->dev->path) == PED_EXCEPTION_IGNORE;
 
         return 1;
 }
@@ -216,8 +215,7 @@ _disk_warn_loss (PedDisk* disk)
                 _("The existing disk label on %s will be destroyed "
                   "and all data on this disk will be lost. Do you "
                   "want to continue?"), 
-                disk->dev->path)
-                        == PED_EXCEPTION_YES;
+                disk->dev->path) == PED_EXCEPTION_YES;
 }
 
 /* This function changes "sector" to "new_sector" if the new value lies
