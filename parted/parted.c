@@ -1219,9 +1219,10 @@ do_print (PedDevice** dev)
         StrList*        row;
         int             has_extended;
         int             has_name;
-        int             has_num_arg = 0;
-        int             has_free_arg = 0;
         int             has_all_arg = 0;
+        int             has_devices_arg = 0;
+        int             has_free_arg = 0;
+        int             has_num_arg = 0;
         char*           transport[13] = {"unknown", "scsi", "ide", "dac960",
                                          "cpqarray", "file", "ataraid", "i2o",
                                          "ubd", "dasd", "viodasd", "sx8", "dm"};
@@ -1241,21 +1242,51 @@ do_print (PedDevice** dev)
         if (peek_word) {
                 has_num_arg = isdigit (peek_word[0]);
 
-                if (strncmp (peek_word, "free", 4) == 0) {
-                        command_line_pop_word ();
-                        has_free_arg = 1;
-                } 
-
                 if (strncmp (peek_word, "all", 3) == 0) {
                         command_line_pop_word();
                         has_all_arg = 1;
                 }
 
+                else if (strncmp (peek_word, "devices", 7) == 0) {
+                        command_line_pop_word();
+                        has_devices_arg = 1;
+                }
+
+                else if (strncmp (peek_word, "free", 4) == 0) {
+                        command_line_pop_word ();
+                        has_free_arg = 1;
+                } 
+
                 ped_free (peek_word);
 
         }
 
-        if (has_num_arg) {
+        if (has_all_arg) 
+                return _print_all (0);
+
+        else if (has_devices_arg) {
+                PedDevice *current_dev = NULL;
+
+                ped_device_probe_all();
+
+                while ((current_dev = ped_device_get_next(current_dev))) {
+                        if(current_dev->length)
+                                end = ped_unit_format_byte (current_dev,
+                                             current_dev->length
+					     * current_dev->sector_size
+                                             - 1);
+			else {
+				end = ped_malloc(sizeof(char) * 7);
+				strcpy(end, "0.00B");
+			}
+		        printf ("%s (%s)\n", current_dev->path, end);
+                        ped_free(end);
+                }    
+
+                return 1;
+        }
+
+        else if (has_num_arg) {
                 PedPartition*   part = NULL;
                 int             status = 0;
                 if (command_line_get_partition ("", disk, &part))
@@ -1263,9 +1294,6 @@ do_print (PedDevice** dev)
                 ped_disk_destroy (disk);
                 return status;
         }
-
-        if (has_all_arg) 
-                return _print_all (0);
 
         start = ped_unit_format (*dev, 0);
         end = ped_unit_format_byte (*dev, (*dev)->length * (*dev)->sector_size
@@ -2095,16 +2123,16 @@ command_register (commands, command_create (
         str_list_create_unique ("print", _("print"), NULL),
         do_print,
         str_list_create (
-_("print [free|NUMBER|all]                  display the partition table, "
+_("print [NUMBER|all|devices|free]          display the partition table, "
   "a partition, or all devices"),
 NULL),
         str_list_create (
-_("Without arguments, print displays the entire partition table. With 'free'\n"
-"argument, information about free space will be displayed otherwise if a\n"
-"partition number is given, then more detailed information is displayed\n"
-"about that partition. If the 'all' argument is passed instead, partition\n"
-"information for all devices will be displayed.\n"),
-NULL), 1));
+_("Without arguments, print displays the entire partition table. With 'devices',\n"
+"all the active block devices are listed, while with the argument 'free'\n"
+"information about free space will be displayed. If a partition number is given,\n"
+"then more detailed information is displayed about that partition. If the 'all'\n"
+"argument is passed instead, partition information for all devices will be\n"
+"displayed.\n"), NULL), 1));
 
 command_register (commands, command_create (
         str_list_create_unique ("quit", _("quit"), NULL),
