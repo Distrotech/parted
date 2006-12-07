@@ -251,17 +251,19 @@ sigsegv_handler (int signum, siginfo_t* info, void* ucontext)
         
         case SEGV_MAPERR:
             printf(_("\nError: SEGV_MAPERR (Address not mapped "
-                     "to object)"));
+                     "to object)\n"));
+            PED_ASSERT(0, break); /* Force a backtrace */
             break;
 
         case SEGV_ACCERR:
             printf(_("\nError: SEGV_ACCERR (Invalid permissions "
-                     "for mapped object)"));
+                     "for mapped object)\n"));
             break;
 
         default:
             printf(_("\nError: A general SIGSEGV signal was "
-                     "encountered."));
+                     "encountered.\n"));
+            PED_ASSERT(0, break); /* Force a backtrace */
             break;
     }
 
