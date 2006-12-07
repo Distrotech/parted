@@ -231,6 +231,8 @@ ped_exception_throw (PedExceptionType ex_type,
 		     PedExceptionOption ex_opts, const char* message, ...)
 {
 	va_list		arg_list;
+	int result;
+	static int size = 1000;
 
 	if (ex)
 		ped_exception_catch ();
@@ -239,16 +241,23 @@ ped_exception_throw (PedExceptionType ex_type,
 	if (!ex)
 		goto no_memory;
 
-	ex->message = (char*) malloc (8192);
-	if (!ex->message)
-		goto no_memory;
-
 	ex->type = ex_type;
 	ex->options = ex_opts;
 
-	va_start (arg_list, message);
-	vsnprintf (ex->message, 8192, message, arg_list);
-	va_end (arg_list);
+	while (1) {
+			ex->message = (char*) malloc (size);
+			if (!ex->message)
+					goto no_memory;
+
+			va_start (arg_list, message);
+			result = vsnprintf (ex->message, size, message, arg_list);
+			va_end (arg_list);
+
+			if (result > -1 && result < size)
+					break;
+
+			size += 10;
+	}
 
 	return do_throw ();
 
