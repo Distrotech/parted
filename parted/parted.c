@@ -1270,16 +1270,10 @@ do_print (PedDevice** dev)
                 ped_device_probe_all();
 
                 while ((current_dev = ped_device_get_next(current_dev))) {
-                        if(current_dev->length)
-                                end = ped_unit_format_byte (current_dev,
+                        end = ped_unit_format_byte (current_dev,
                                              current_dev->length
-					     * current_dev->sector_size
-                                             - 1);
-			else {
-				end = ped_malloc(sizeof(char) * 7);
-				strcpy(end, "0.00B");
-			}
-		        printf ("%s (%s)\n", current_dev->path, end);
+                                             * current_dev->sector_size);
+                        printf ("%s (%s)\n", current_dev->path, end);
                         ped_free(end);
                 }    
 

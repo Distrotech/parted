@@ -221,15 +221,17 @@ ped_unit_format_custom_byte (PedDevice* dev, PedSector byte, PedUnit unit)
 		return ped_strdup (buf);
 	}
 	
-	if (unit == PED_UNIT_COMPACT) {
-		if (byte >= 10LL * PED_TERABYTE_SIZE)
-			unit = PED_UNIT_TERABYTE;
-		else if (byte >= 10LL * PED_GIGABYTE_SIZE)
-			unit = PED_UNIT_GIGABYTE;
-		else if (byte >= 10LL * PED_MEGABYTE_SIZE)
-			unit = PED_UNIT_MEGABYTE;
-		else
-			unit = PED_UNIT_KILOBYTE;
+        if (unit == PED_UNIT_COMPACT) {
+                if (byte >= 10LL * PED_TERABYTE_SIZE)
+                        unit = PED_UNIT_TERABYTE;
+                else if (byte >= 10LL * PED_GIGABYTE_SIZE)
+                        unit = PED_UNIT_GIGABYTE;
+                else if (byte >= 10LL * PED_MEGABYTE_SIZE)
+                        unit = PED_UNIT_MEGABYTE;
+                else if (byte >= 10LL * PED_KILOBYTE_SIZE)
+                        unit = PED_UNIT_KILOBYTE;
+                else
+                        unit = PED_UNIT_BYTE;
 	}
 
 	/* IEEE754 says that 100.5 has to be rounded to 100 (by printf) */
