@@ -127,7 +127,7 @@ static Command* commands [256] = {NULL};
 static PedTimer* timer;
 static TimerContext timer_context;
 
-static int _print_all (int cli);
+static int _print_list (int cli);
 static void _done (PedDevice* dev);
 
 static void
@@ -1219,9 +1219,9 @@ do_print (PedDevice** dev)
         StrList*        row;
         int             has_extended;
         int             has_name;
-        int             has_all_arg = 0;
         int             has_devices_arg = 0;
         int             has_free_arg = 0;
+        int             has_list_arg = 0;
         int             has_num_arg = 0;
         char*           transport[13] = {"unknown", "scsi", "ide", "dac960",
                                          "cpqarray", "file", "ataraid", "i2o",
@@ -1240,31 +1240,26 @@ do_print (PedDevice** dev)
 
         peek_word = command_line_peek_word ();
         if (peek_word) {
-                has_num_arg = isdigit (peek_word[0]);
-
-                if (strncmp (peek_word, "all", 3) == 0) {
-                        command_line_pop_word();
-                        has_all_arg = 1;
-                }
-
-                else if (strncmp (peek_word, "devices", 7) == 0) {
+                if (strncmp (peek_word, "devices", 7) == 0) {
                         command_line_pop_word();
                         has_devices_arg = 1;
                 }
-
                 else if (strncmp (peek_word, "free", 4) == 0) {
                         command_line_pop_word ();
                         has_free_arg = 1;
                 } 
+                else if (strncmp (peek_word, "all", 3) == 0 ||
+                         strncmp (peek_word, "list", 4) == 0) {
+                        command_line_pop_word();
+                        has_list_arg = 1;
+                }
+                else
+                        has_num_arg = isdigit(peek_word[0]);
 
                 ped_free (peek_word);
-
         }
 
-        if (has_all_arg) 
-                return _print_all (0);
-
-        else if (has_devices_arg) {
+        if (has_devices_arg) {
                 PedDevice *current_dev = NULL;
 
                 ped_device_probe_all();
@@ -1279,6 +1274,9 @@ do_print (PedDevice** dev)
 
                 return 1;
         }
+
+        else if (has_list_arg) 
+                return _print_list (0);
 
         else if (has_num_arg) {
                 PedPartition*   part = NULL;
@@ -1498,7 +1496,7 @@ error:
 }
 
 static int
-_print_all (int cli)
+_print_list (int cli)
 {
         PedDevice *current_dev = NULL;
 
@@ -2093,7 +2091,7 @@ NULL), 1));
                 do_mkpartfs,
                 str_list_create (
 _("mkpartfs PART-TYPE FS-TYPE START END     make a partition with a "
-"file system"),
+  "file system"),
 NULL),
         str_list_create (_(part_type_msg), _(start_end_msg), NULL), 1));
 
@@ -2117,16 +2115,18 @@ command_register (commands, command_create (
         str_list_create_unique ("print", _("print"), NULL),
         do_print,
         str_list_create (
-_("print [NUMBER|all|devices|free]          display the partition table, "
+_("print [devices|free|list,all|NUMBER]     display the partition table, "
   "a partition, or all devices"),
 NULL),
         str_list_create (
-_("Without arguments, print displays the entire partition table. With 'devices',\n"
-"all the active block devices are listed, while with the argument 'free'\n"
-"information about free space will be displayed. If a partition number is given,\n"
-"then more detailed information is displayed about that partition. If the 'all'\n"
-"argument is passed instead, partition information for all devices will be\n"
-"displayed.\n"), NULL), 1));
+_("Without arguments, print displays the entire partition table. However "
+  "with the following arguments it performs the various other actions.\n"),
+_("a. devices : display all active block devices\n"),
+_("b. free    : display information about free unpartitioned space on the "
+  "current block device\n"),
+_("c. list,all: display partition tables of all active block devices\n"),
+_("d. NUMBER  : display more detail information about particular partition\n"),
+NULL), 1));
 
 command_register (commands, command_create (
         str_list_create_unique ("quit", _("quit"), NULL),
@@ -2259,7 +2259,7 @@ while (1)
 
         switch (opt) {
                 case 'h': help_msg (); break;
-                case 'l': _print_all(1); break;
+                case 'l': _print_list(1); break;
                 case 'm': opt_machine_mode = 1; break;
                 case 's': opt_script_mode = 1; break;
                 case 'v': _version (); break;
