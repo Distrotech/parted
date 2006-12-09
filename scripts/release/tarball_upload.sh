@@ -54,13 +54,13 @@ done
 if [ -x ./autogen.sh ]; then
 	./autogen.sh
 else
-	return 1
+	exit 1
 fi
 
 if [ -x ./configure ]; then
 	./configure
 else
-	return 1
+	exit 1
 fi
 
 message "* generating ChangeLog"
