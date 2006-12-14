@@ -206,8 +206,8 @@ David Cantrell <dcantrell@redhat.com>
 	* Prevent SIGFPE when FAT sector size is 0
 	* Add virtual DASD (VIODASD) on iSeries support
 	* Use O_DIRECT I/O to prevent first partition corruption on GPT disks
-   * Prevent sector reading exceptions from ped_geometry_check() on Mac
-   disklabels.
+        * Prevent sector reading exceptions from ped_geometry_check() on Mac
+        disklabels.
 
 Peter Jones <pjones@redhat.com>
 	* Add ped_exception_get_handler()
@@ -223,7 +223,9 @@ Darren Lavender <dl1@hppine99.gbr.hp.com>
 Olaf Hering <olh@suse.de>
 	* Fixes for Macintosh disk label code
 
-Debarshi Ray <debarshi.ray@gmail.com>
-   * Display disk model and transport type in parted(8).
-   * Handle ped_unregister_disk_type() cases when disk_types is not
-   NULL and instances where the specified type is not registered.
+Debarshi Ray <rishi@gnu.org>
+        * Display disk model and transport type in parted(8).
+        * '--list/-l' command line switch.
+        * Introduce 'print devices' and alias 'print list' to 'print all'.
+        * Alias 'mktable' to 'mklabel'.
+        * Code and API clean-up, bug fixes, and other miscellaneous stuff.
