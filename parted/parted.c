@@ -1276,6 +1276,8 @@ do_print (PedDevice** dev)
                         ped_free(end);
                 }    
 
+                ped_device_free_all();
+
                 return 1;
         }
 
