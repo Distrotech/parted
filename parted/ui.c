@@ -87,7 +87,9 @@ static char* bug_msg = N_(
 "Your report should contain the version of this release (%s)\n"
 "along with the error message below, the output of\n\n"
 "\tparted DEVICE unit co print unit s print\n\n"
-"and additional information about your setup you consider important.\n");
+"and the following history of commands you entered.\n"
+"Also include any additional information about your setup you\n"
+"consider important.\n");
 
 #define MAX_WORDS	1024
 
@@ -183,6 +185,18 @@ _add_history_unique (const char* line)
 	if (!last_entry || strcmp (last_entry->line, line))
 		add_history ((char*) line);
 }
+
+/* Prints command history, to be used before aborting */
+static void
+_dump_history ()
+{
+    printf(_("\nCommand History:\n"));
+    int i = 0;
+    HIST_ENTRY** all_entries = history_list ();
+    while (all_entries[i]) {
+        printf("%s\n", all_entries[i++]->line);
+    }
+}
 #endif /* HAVE_LIBREADLINE */
 
 #ifndef HAVE_SIGACTION
@@ -246,7 +260,10 @@ sigsegv_handler (int signum, siginfo_t* info, void* ucontext)
     #endif /* HAVE_SIGACTION */
 
     printf (bug_msg, VERSION);
-    
+    #ifdef HAVE_LIBREADLINE
+    _dump_history ();
+    #endif
+ 
     switch (info->si_code) {
         
         case SEGV_MAPERR:
@@ -267,7 +284,7 @@ sigsegv_handler (int signum, siginfo_t* info, void* ucontext)
             break;
     }
 
-    abort();
+    abort ();
 }
 
 /* Signal handler for SIGFPE */
@@ -282,6 +299,9 @@ sigfpe_handler (int signum, siginfo_t* info, void* ucontext)
     #endif /* HAVE_SIGACTION */
 
     printf (bug_msg, VERSION);
+    #ifdef HAVE_LIBREADLINE
+    _dump_history ();
+    #endif
 
     switch (info->si_code) {
 
@@ -324,8 +344,8 @@ sigfpe_handler (int signum, siginfo_t* info, void* ucontext)
             break;
 
     }
-    
-    abort();
+   
+    abort ();
 }
 
 /* Signal handler for SIGILL */
@@ -340,6 +360,9 @@ sigill_handler (int signum, siginfo_t* info, void* ucontext)
     #endif /* HAVE_SIGACTION */
 
     printf (bug_msg, VERSION);
+    #ifdef HAVE_LIBREADLINE
+    _dump_history ();
+    #endif
 
     switch (info->si_code) {
 
@@ -381,8 +404,8 @@ sigill_handler (int signum, siginfo_t* info, void* ucontext)
                      "encountered."));
             break;
     }
-    
-    abort();
+   
+    abort ();
 }
 
 
