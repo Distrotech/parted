@@ -12,12 +12,13 @@ libparted:
 * Dynamically allocate space for exception messages.
 * Output a backtrace when catching SEGV_MAPPER or a general SIGSEGV.
 
-what does 2441fb0b6b1e26757479aad66f3f559f0b681dc1 do?
-
 parted:
 * Destroy all objects before return when called with --list or --all option.
 * Zero sized device is shown as 0.00B and not -0.00kB.
 * Implement 'print devices' command.
+* Alias 'print list' to 'print all'.
+* Alias 'mktable' to 'mklabel'.
 
 misc:
 * Other bug fixes, documentation updates, and translation improvements.
+* Code and API clean-ups.
