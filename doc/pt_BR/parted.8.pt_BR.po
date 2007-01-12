@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2006-09-15 13:42-0400\n"
+"POT-Creation-Date: 2007-01-12 12:45-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Tassia Camoes Araujo <tassia@debian-ba.org>\n"
 "Language-Team: l10n portuguese <debian-l10n-portuguese@lists.debian.org>\n"
@@ -118,56 +118,69 @@ msgstr "B<-i, --interactive>"
 
 # type: Plain text
 #: parted.8:26
-msgid "where necessary, prompts for user intervention."
-msgstr "onde necessário, pede intervenção do usuário."
+#, fuzzy
+msgid "prompts for user intervention."
+msgstr "nunca pede intervenção do usuário."
 
 # type: TP
 #: parted.8:26
+#, fuzzy, no-wrap
+msgid "B<-l, --list>"
+msgstr "B<-s, --script>"
+
+# type: Plain text
+#: parted.8:29
+msgid "list partition layout on all block devices."
+msgstr ""
+
+# type: TP
+#: parted.8:29
 #, no-wrap
 msgid "B<-s, --script>"
 msgstr "B<-s, --script>"
 
 # type: Plain text
-#: parted.8:29
-msgid "never prompts for user intervention."
+#: parted.8:32
+#, fuzzy
+msgid "never prompt the user."
 msgstr "nunca pede intervenção do usuário."
 
 # type: TP
-#: parted.8:29
+#: parted.8:32
 #, no-wrap
 msgid "B<-v, --version>"
 msgstr "B<-v, --version>"
 
 # type: Plain text
-#: parted.8:32
+#: parted.8:35
 msgid "displays the version."
 msgstr "mostra a versão."
 
 # type: SH
-#: parted.8:32
+#: parted.8:35
 #, no-wrap
 msgid "COMMANDS"
 msgstr "COMANDOS"
 
 # type: TP
-#: parted.8:33
+#: parted.8:36
 #, no-wrap
 msgid "B<[device]>"
 msgstr "B<[dispositivo]>"
 
 # type: Plain text
-#: parted.8:36
+#: parted.8:39
 msgid "The block device to partition."
 msgstr "O dispositivo a ser particionado."
 
 # type: TP
-#: parted.8:36
+#: parted.8:39
 #, no-wrap
 msgid "B<[command [options]]>"
 msgstr "B<[comando [opções]]>"
 
 # type: Plain text
-#: parted.8:40
+#: parted.8:43
 msgid ""
 "Specifies a command to parted. If no command is given, parted will give you "
 "a command prompt. Commands are:"
@@ -176,24 +189,24 @@ msgstr ""
 "apresentará um pedido de comando. Os comandos são:"
 
 # type: TP
-#: parted.8:41
+#: parted.8:44
 #, no-wrap
 msgid "B<check >I<partition>"
 msgstr "B<check >I<partição>"
 
 # type: Plain text
-#: parted.8:44
+#: parted.8:47
 msgid "does a simple check on I<partition>."
 msgstr "faz uma checagem simples em I<partição>."
 
 # type: TP
-#: parted.8:44
+#: parted.8:47
 #, no-wrap
 msgid "B<cp >I<[source-device]>B< >I<source>B< >I<dest>"
 msgstr "B<cp >I<[dispositivo-origem]>B< >I<origem>B< >I<destino>"
 
 # type: Plain text
-#: parted.8:49
+#: parted.8:52
 msgid ""
 "copies the I<source> partition's filesystem on I<source-device> (or the "
 "current device if no other device was specified) to the I<dest> partition on "
@@ -204,24 +217,24 @@ msgstr ""
 "sido especificado) para a partição I<destino> no dispositivo atual."
 
 # type: TP
-#: parted.8:49
+#: parted.8:52
 #, no-wrap
 msgid "B<help >I<[command]>"
 msgstr "B<help >I<[comando]>"
 
 # type: Plain text
-#: parted.8:52
+#: parted.8:55
 msgid "prints general help, or help on I<command> if specified."
 msgstr "imprime ajuda geral ou sobre I<comando>, caso especificado."
 
 # type: TP
-#: parted.8:52
+#: parted.8:55
 #, no-wrap
 msgid "B<mkfs >I<partition>B< >I<fs-type>"
 msgstr "B<mkfs >I<partição>B< >I<tipo-sistema-arquivos>"
 
 # type: Plain text
-#: parted.8:56
+#: parted.8:59
 msgid ""
 "make a filesystem I<fs-type> on I<partition>. I<fs-type> can be one of "
 "\"fat16\", \"fat32\", \"ext2\", \"linux-swap\" or \"reiserfs\"."
@@ -231,13 +244,13 @@ msgstr ""
 "swap\" ou \"reiserfs\"."
 
 # type: TP
-#: parted.8:56
+#: parted.8:59
 #, no-wrap
 msgid "B<mklabel >I<label-type>"
 msgstr "B<mklabel >I<tipo-marca>"
 
 # type: Plain text
-#: parted.8:61
+#: parted.8:64
 msgid ""
 "Creates a new disklabel (partition table) of I<label-type>.  I<label-type> "
 "should be one of \"bsd\", \"dvh\", \"gpt\", \"loop\", \"mac\", \"msdos\", "
@@ -248,13 +261,13 @@ msgstr ""
 "\"msdos\", \"pc98\" ou \"sun\"."
 
 # type: TP
-#: parted.8:61
+#: parted.8:64
 #, no-wrap
 msgid "B<mkpart >I<part-type>B< >I<[fs-type]>B< >I<start>B< >I<end>"
 msgstr "B<mkpart >I<tipo-partição>B< >I<[tipo-sistema-arquivos]>B< >I<começo>B< >I<fim>"
 
 # type: Plain text
-#: parted.8:68
+#: parted.8:71
 msgid ""
 "make a I<part-type> partition with filesystem I<fs-type> (if specified), "
 "beginning at I<start> and ending at I<end> (in megabytes).  I<fs-type> can "
@@ -269,13 +282,13 @@ msgstr ""
 "I<tipo-partição> deve ser um dos \"primary\", \"logical\" ou \"extended\""
 
 # type: TP
-#: parted.8:68
+#: parted.8:71
 #, no-wrap
 msgid "B<mkpartfs >I<part-type>B< >I<fs-type>B< >I<start>B< >I<end>"
 msgstr "B<mkpartfs >I<tipo-partição>B< >I<tipo-sistema-arquivos>B< >I<começo>B< >I<fim>"
 
 # type: Plain text
-#: parted.8:72
+#: parted.8:75
 msgid ""
 "make a I<part-type> partition with filesystem I<fs-type> beginning at "
 "I<start> and ending at I<end> (in megabytes)"
@@ -284,13 +297,13 @@ msgstr ""
 "arquivos> começando em I<começo> e terminando em I<end> (em megabytes)"
 
 # type: TP
-#: parted.8:72
+#: parted.8:75
 #, no-wrap
 msgid "B<move >I<partition>B< >I<start>B< >I<end>"
 msgstr "B<move >I<partição>B< >I<começo>B< >I<fim>"
 
 # type: Plain text
-#: parted.8:76
+#: parted.8:79
 msgid ""
 "move I<partition> to start at I<start> and end at I<end>. Note: move never "
 "changes the minor number"
@@ -299,13 +312,13 @@ msgstr ""
 "nunca altera o menor número"
 
 # type: TP
-#: parted.8:76
+#: parted.8:79
 #, no-wrap
 msgid "B<name >I<partition>B< >I<name>"
 msgstr "B<name >I<partição>B< >I<nome>"
 
 # type: Plain text
-#: parted.8:80
+#: parted.8:83
 msgid ""
 "set the name of I<partition> to I<name>. This option works only on Mac and "
 "PC98 disklabels. The name can be placed in quotes, if necessary"
@@ -315,35 +328,35 @@ msgstr ""
 "necessário"
 
 # type: TP
-#: parted.8:80
+#: parted.8:83
 #, no-wrap
 msgid "B<print>"
 msgstr "B<print>"
 
 # type: Plain text
-#: parted.8:83
+#: parted.8:86
 msgid "displays the partition table"
 msgstr "mostra a tabela de partição"
 
 # type: TP
-#: parted.8:83
+#: parted.8:86
 #, no-wrap
 msgid "B<quit>"
 msgstr "B<quit>"
 
 # type: Plain text
-#: parted.8:86
+#: parted.8:89
 msgid "exits parted"
 msgstr "sai do parted"
 
 # type: TP
-#: parted.8:86
+#: parted.8:89
 #, no-wrap
 msgid "B<resize >I<partition>B< >I<start>B< >I<end>"
 msgstr "B<resize >I<partição>B< >I<começo>B< >I<fim>"
 
 # type: Plain text
-#: parted.8:90
+#: parted.8:93
 msgid ""
 "resize the filesystem on I<partition> to start at I<start> and end at I<end> "
 "megabytes"
@@ -352,24 +365,24 @@ msgstr ""
 "e terminar em I<fim> megabytes"
 
 # type: TP
-#: parted.8:90
+#: parted.8:93
 #, no-wrap
 msgid "B<rm >I<partition>"
 msgstr "B<rm >I<partição>"
 
 # type: Plain text
-#: parted.8:93
+#: parted.8:96
 msgid "deletes I<partition>"
 msgstr "deletes I<partição>"
 
 # type: TP
-#: parted.8:93
+#: parted.8:96
 #, no-wrap
 msgid "B<select >I<device>"
 msgstr "B<select >I<dispositivo>"
 
 # type: Plain text
-#: parted.8:98
+#: parted.8:101
 msgid ""
 "choose I<device> as the current device to edit. I<device> should usually be "
 "a Linux hard disk device, but it can be a partition, software raid device or "
@@ -380,13 +393,13 @@ msgstr ""
 "ser uma partição, dispositivo raid ou um volume lógico LVM se for necessário"
 
 # type: TP
-#: parted.8:98
+#: parted.8:101
 #, no-wrap
 msgid "B<set >I<partition>B< >I<flag>B< >I<state>"
 msgstr "B<set >I<partição>B< >I<sinal>B< >I<estado>"
 
 # type: Plain text
-#: parted.8:104
+#: parted.8:107
 msgid ""
 "change the state of the I<flag> on I<partition> to I<state>. Flags supported "
 "are: \"boot\", \"root\", \"swap\", \"hidden\", \"raid\", \"lvm\", \"lba\" "
@@ -397,24 +410,24 @@ msgstr ""
 "\"palo\". I<estado> deve ser \"on\" ou \"off\""
 
 # type: SH
-#: parted.8:105
+#: parted.8:108
 #, no-wrap
 msgid "REPORTING BUGS"
 msgstr "REPORTANDO ERROS"
 
 # type: Plain text
-#: parted.8:107
+#: parted.8:110
 msgid "Report bugs to E<lt>bug-parted@gnu.orgE<gt>"
 msgstr "Reporte erros para E<lt>bug-parted@gnu.orgE<gt>"
 
 # type: SH
-#: parted.8:107
+#: parted.8:110
 #, no-wrap
 msgid "SEE ALSO"
 msgstr "VEJA TAMBÉM"
 
 # type: Plain text
-#: parted.8:115
+#: parted.8:118
 msgid ""
 "B<fdisk>(8), B<mkfs>(8), The I<parted> program is fully documented in the "
 "B<info(1)> format I<GNU partitioning software> manual."
@@ -423,16 +436,20 @@ msgstr ""
 "manual do I<programa de particionamento GNU> no formato B<info(1)>."
 
 # type: SH
-#: parted.8:115
+#: parted.8:118
 #, no-wrap
 msgid "AUTHOR"
 msgstr "AUTOR"
 
 # type: Plain text
-#: parted.8:117
+#: parted.8:120
 msgid ""
 "This manual page was written by Timshel Knoll E<lt>timshel@debian.orgE<gt>, "
 "for the Debian GNU/Linux system (but may be used by others)."
 msgstr ""
 "Esta página de manual foi escrita por Timshel Knoll E<lt>timshel@debian."
 "orgE<gt>, para o sistema Debian GNU/Linux (mas pode ser usada por outros)."
+
+# type: Plain text
+#~ msgid "where necessary, prompts for user intervention."
+#~ msgstr "onde necessário, pede intervenção do usuário."
