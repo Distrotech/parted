@@ -126,6 +126,7 @@ extern int ped_device_is_busy (PedDevice* dev);
 extern int ped_device_open (PedDevice* dev);
 extern int ped_device_close (PedDevice* dev);
 extern void ped_device_destroy (PedDevice* dev);
+extern void ped_device_cache_remove (PedDevice* dev);
 
 extern int ped_device_begin_external_access (PedDevice* dev);
 extern int ped_device_end_external_access (PedDevice* dev);
