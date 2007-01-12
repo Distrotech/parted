@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: parted 1.2.1\n"
 "Report-Msgid-Bugs-To: bug-parted@gnu.org\n"
-"POT-Creation-Date: 2006-10-11 15:47-0400\n"
+"POT-Creation-Date: 2007-01-12 12:44-0500\n"
 "PO-Revision-Date: 2000-06-16 22:52+04:00\n"
 "Last-Translator: Dmitry S. Sivachenko <dima@Chg.RU>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -14,40 +14,40 @@ msgstr ""
 "Content-Type: text/plain; charset=koi8-r\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: libparted/arch/linux.c:417
+#: libparted/arch/linux.c:419
 #, c-format
 msgid "Could not stat device %s - %s."
 msgstr "Не удается получить статус устройства %s - %s."
 
-#: libparted/arch/linux.c:531
+#: libparted/arch/linux.c:535
 #, c-format
 msgid ""
 "Could not determine sector size for %s: %s.\n"
 "Using the default sector size (%lld)."
 msgstr ""
 
-#: libparted/arch/linux.c:547
+#: libparted/arch/linux.c:551
 #, c-format
 msgid ""
 "Device %s has a logical sector size of %lld.  Not all parts of GNU Parted "
 "support this at the moment, and the working code is HIGHLY EXPERIMENTAL.\n"
 msgstr ""
 
-#: libparted/arch/linux.c:587
+#: libparted/arch/linux.c:591
 #, fuzzy, c-format
 msgid "Unable to determine the size of %s (%s)."
 msgstr "Не удается определить размер %s (%s)"
 
-#: libparted/arch/linux.c:676
+#: libparted/arch/linux.c:680
 #, c-format
 msgid "Could not get identity of device %s - %s"
 msgstr "Не удается получить идентификатор устройства %s - %s"
 
-#: libparted/arch/linux.c:685
+#: libparted/arch/linux.c:689
 msgid "Generic IDE"
 msgstr ""
 
-#: libparted/arch/linux.c:702
+#: libparted/arch/linux.c:706
 #, c-format
 msgid ""
 "Device %s has multiple (%d) logical sectors per physical sector.\n"
@@ -56,19 +56,19 @@ msgid ""
 "Please consult the web site for up-to-date information."
 msgstr ""
 
-#: libparted/arch/linux.c:872
+#: libparted/arch/linux.c:876
 #, c-format
 msgid "Error initialising SCSI device %s - %s"
 msgstr "Ошибка инициализации SCSI-устройства %s - %s"
 
-#: libparted/arch/linux.c:927
+#: libparted/arch/linux.c:931
 #, c-format
 msgid ""
 "The device %s has zero length, and can't possibly store a file system or "
 "partition table.  Perhaps you selected the wrong device?"
 msgstr ""
 
-#: libparted/arch/linux.c:1035
+#: libparted/arch/linux.c:1039
 #, fuzzy, c-format
 msgid ""
 "Unable to determine geometry of file/device %s.  You should not use Parted "
@@ -77,93 +77,93 @@ msgstr ""
 "Не удается определить геометрию файла/устройства.  Вы не должны использовать "
 "Parted, если вы не знаете НАВЕРНЯКА, что делаете!"
 
-#: libparted/arch/linux.c:1110
+#: libparted/arch/linux.c:1114
 msgid "DAC960 RAID controller"
 msgstr ""
 
-#: libparted/arch/linux.c:1115
+#: libparted/arch/linux.c:1119
 msgid "Promise SX8 SATA Device"
 msgstr ""
 
-#: libparted/arch/linux.c:1120
+#: libparted/arch/linux.c:1124
 msgid "IBM S390 DASD drive"
 msgstr ""
 
-#: libparted/arch/linux.c:1125
+#: libparted/arch/linux.c:1129
 msgid "IBM iSeries Virtual DASD"
 msgstr ""
 
-#: libparted/arch/linux.c:1130
+#: libparted/arch/linux.c:1134
 msgid "Compaq Smart Array"
 msgstr ""
 
-#: libparted/arch/linux.c:1135
+#: libparted/arch/linux.c:1139
 msgid "ATARAID Controller"
 msgstr ""
 
-#: libparted/arch/linux.c:1140
+#: libparted/arch/linux.c:1144
 msgid "I2O Controller"
 msgstr ""
 
-#: libparted/arch/linux.c:1145
+#: libparted/arch/linux.c:1149
 msgid "User-Mode Linux UBD"
 msgstr ""
 
-#: libparted/arch/linux.c:1155
+#: libparted/arch/linux.c:1160
 msgid "Linux device-mapper"
 msgstr ""
 
-#: libparted/arch/linux.c:1160
+#: libparted/arch/linux.c:1166
 #, fuzzy
 msgid "Unknown"
 msgstr "неизвестная"
 
-#: libparted/arch/linux.c:1167
+#: libparted/arch/linux.c:1173
 #, fuzzy
 msgid "ped_device_new()  Unsupported device type"
 msgstr "ped_device_new()  Неподдерживаемый тип устройства"
 
-#: libparted/arch/linux.c:1270 libparted/arch/gnu.c:264
+#: libparted/arch/linux.c:1276 libparted/arch/gnu.c:264
 #, c-format
 msgid "Error opening %s: %s"
 msgstr ""
 
-#: libparted/arch/linux.c:1281 libparted/arch/gnu.c:274
+#: libparted/arch/linux.c:1287 libparted/arch/gnu.c:274
 #, c-format
 msgid "Unable to open %s read-write (%s).  %s has been opened read-only."
 msgstr ""
 
-#: libparted/arch/linux.c:1389 libparted/arch/linux.c:1466
+#: libparted/arch/linux.c:1395 libparted/arch/linux.c:1472
 #: libparted/arch/gnu.c:452 libparted/arch/gnu.c:551 libparted/arch/gnu.c:679
 #, c-format
 msgid "%s during read on %s"
 msgstr "%s во время чтения на %s"
 
-#: libparted/arch/linux.c:1430
+#: libparted/arch/linux.c:1436
 #, c-format
 msgid "%s during seek for read on %s"
 msgstr "%s во время позиционирования для чтения на %s"
 
-#: libparted/arch/linux.c:1511 libparted/arch/linux.c:1603
-#: libparted/arch/linux.c:1672 libparted/arch/gnu.c:588
+#: libparted/arch/linux.c:1517 libparted/arch/linux.c:1609
+#: libparted/arch/linux.c:1678 libparted/arch/gnu.c:588
 #: libparted/arch/gnu.c:633 libparted/arch/gnu.c:710
 #, c-format
 msgid "%s during write on %s"
 msgstr "%s во время записи на %s"
 
-#: libparted/arch/linux.c:1540 libparted/arch/gnu.c:512
+#: libparted/arch/linux.c:1546 libparted/arch/gnu.c:512
 #, fuzzy, c-format
 msgid "Can't write to %s, because it is opened read-only."
 msgstr ""
 "Невозможно добавить логический раздел на %s, потому что нет расширенного "
 "раздела."
 
-#: libparted/arch/linux.c:1564
+#: libparted/arch/linux.c:1570
 #, c-format
 msgid "%s during seek for write on %s"
 msgstr "%s во время позиционирования для записи на %s"
 
-#: libparted/arch/linux.c:2062
+#: libparted/arch/linux.c:2070
 #, fuzzy, c-format
 msgid ""
 "Error informing the kernel about modifications to partition %s -- %s.  This "
@@ -174,7 +174,7 @@ msgstr ""
 "сделанные вами изменения недоступны для Linux.  Вы должны перезагрузить ваш "
 "компьютер до того, как что-либо делать с %s."
 
-#: libparted/arch/linux.c:2263
+#: libparted/arch/linux.c:2272
 #, fuzzy, c-format
 msgid ""
 "parted was unable to re-read the partition table on %s (%s).  This means "
@@ -184,7 +184,7 @@ msgstr ""
 "сделанные вами изменения недоступны для Linux.  Вы должны перезагрузить ваш "
 "компьютер до того, как что-либо делать с %s."
 
-#: libparted/arch/linux.c:2367
+#: libparted/arch/linux.c:2377
 #, fuzzy, c-format
 msgid ""
 "The kernel was unable to re-read the partition table on %s (%s).  This means "
@@ -226,7 +226,7 @@ msgstr ""
 "сделанные вами изменения недоступны для Linux.  Вы должны перезагрузить ваш "
 "компьютер до того, как что-либо делать с %s."
 
-#: libparted/arch/gnu.c:383 parted/parted.c:2218
+#: libparted/arch/gnu.c:383 parted/parted.c:2373
 msgid ""
 "You should reinstall your boot loader before rebooting.  Read section 4 of "
 "the Parted User documentation for more information."
@@ -312,15 +312,15 @@ msgstr "метаданные"
 msgid "free"
 msgstr "свободно"
 
-#: libparted/disk.c:2129 parted/ui.c:1002 parted/ui.c:1030
+#: libparted/disk.c:2129 parted/ui.c:1004 parted/ui.c:1032
 msgid "extended"
 msgstr "расширенный"
 
-#: libparted/disk.c:2131 parted/ui.c:1006 parted/ui.c:1034
+#: libparted/disk.c:2131 parted/ui.c:1008 parted/ui.c:1036
 msgid "logical"
 msgstr "логический"
 
-#: libparted/disk.c:2133 parted/ui.c:998 parted/ui.c:1026
+#: libparted/disk.c:2133 parted/ui.c:1000 parted/ui.c:1028
 msgid "primary"
 msgstr "основной"
 
@@ -422,8 +422,8 @@ msgstr "Не удается определить, является ли раздел замонтированным."
 
 #: libparted/labels/rdb.c:1063 libparted/labels/bsd.c:505
 #: libparted/labels/dos.c:1949 libparted/labels/dvh.c:772
-#: libparted/labels/gpt.c:1447 libparted/labels/loop.c:251
-#: libparted/labels/mac.c:1399 libparted/labels/pc98.c:764
+#: libparted/labels/gpt.c:1449 libparted/labels/loop.c:251
+#: libparted/labels/mac.c:1406 libparted/labels/pc98.c:764
 #: libparted/labels/sun.c:704
 #, fuzzy
 msgid "Unable to satisfy all constraints on the partition."
@@ -551,72 +551,72 @@ msgstr ""
 msgid "%s is too small for a Mac disk label!"
 msgstr ""
 
-#: libparted/labels/mac.c:522
+#: libparted/labels/mac.c:528
 #, c-format
 msgid "Partition %d has an invalid signature %x."
 msgstr ""
 
-#: libparted/labels/mac.c:540
+#: libparted/labels/mac.c:546
 #, c-format
 msgid "Partition %d has an invalid length of 0 bytes!"
 msgstr ""
 
-#: libparted/labels/mac.c:570
+#: libparted/labels/mac.c:576
 #, fuzzy
 msgid "The data region doesn't start at the start of the partition."
 msgstr "Новый раздел перекрывается с другим разделом."
 
-#: libparted/labels/mac.c:587
+#: libparted/labels/mac.c:593
 #, fuzzy
 msgid "The boot region doesn't start at the start of the partition."
 msgstr "Новый раздел перекрывается с другим разделом."
 
-#: libparted/labels/mac.c:601
+#: libparted/labels/mac.c:607
 #, fuzzy
 msgid "The partition's boot region doesn't occupy the entire partition."
 msgstr "Новый раздел перекрывается с другим разделом."
 
-#: libparted/labels/mac.c:611
+#: libparted/labels/mac.c:618
 #, fuzzy
 msgid "The partition's data region doesn't occupy the entire partition."
 msgstr "Новый раздел перекрывается с другим разделом."
 
-#: libparted/labels/mac.c:664
+#: libparted/labels/mac.c:671
 #, c-format
 msgid ""
 "Weird block size on device descriptor: %d bytes is not divisible by 512."
 msgstr ""
 
-#: libparted/labels/mac.c:677
+#: libparted/labels/mac.c:684
 #, c-format
 msgid ""
 "The driver descriptor says the physical block size is %d bytes, but Linux "
 "says it is %d bytes."
 msgstr ""
 
-#: libparted/labels/mac.c:725
+#: libparted/labels/mac.c:732
 #, fuzzy
 msgid "No valid partition map found."
 msgstr "Неверная таблица разделов на %s - неправильная сигнатура %x"
 
-#: libparted/labels/mac.c:784
+#: libparted/labels/mac.c:791
 #, c-format
 msgid ""
 "Conflicting partition map entry sizes!  Entry 1 says it is %d, but entry %d "
 "says it is %d!"
 msgstr ""
 
-#: libparted/labels/mac.c:811
+#: libparted/labels/mac.c:818
 msgid "Weird!  There are 2 partitions map entries!"
 msgstr ""
 
-#: libparted/labels/mac.c:1338
+#: libparted/labels/mac.c:1345
 msgid ""
 "Changing the name of a root or swap partition will prevent Linux from "
 "recognising it as such."
 msgstr ""
 
-#: libparted/labels/mac.c:1434
+#: libparted/labels/mac.c:1441
 #, fuzzy
 msgid "Can't add another partition -- the partition map is too small!"
 msgstr ""
@@ -673,44 +673,44 @@ msgstr ""
 msgid "Sun disk label is full."
 msgstr ""
 
-#: libparted/filesys.c:386
+#: libparted/filesys.c:385
 msgid "Could not detect file system."
 msgstr "Не удается определить файловую систему."
 
-#: libparted/filesys.c:397
+#: libparted/filesys.c:396
 msgid "The file system is bigger than its volume!"
 msgstr ""
 
-#: libparted/filesys.c:405
+#: libparted/filesys.c:404
 #, fuzzy, c-format
 msgid "Support for opening %s file systems is not implemented yet."
 msgstr "Поддержка для копирования файловой системы для %s пока не реализована."
 
-#: libparted/filesys.c:447
+#: libparted/filesys.c:446
 #, fuzzy, c-format
 msgid "Support for creating %s file systems is not implemented yet."
 msgstr "Поддержка форматирования файловой системы для %s пока не реализована."
 
-#: libparted/filesys.c:508
+#: libparted/filesys.c:507
 #, fuzzy, c-format
 msgid "Support for checking %s file systems is not implemented yet."
 msgstr "Поддержка для проверки файловой системы для %s пока не реализована."
 
-#: libparted/filesys.c:574
+#: libparted/filesys.c:573
 msgid "raw block copying"
 msgstr ""
 
-#: libparted/filesys.c:585
+#: libparted/filesys.c:584
 #, fuzzy
 msgid "growing file system"
 msgstr "Неизвестный тип файловой системы."
 
-#: libparted/filesys.c:625
+#: libparted/filesys.c:624
 #, fuzzy
 msgid "Can't copy onto an overlapping partition."
 msgstr "Невозможно скопировать расширенный раздел."
 
-#: libparted/filesys.c:647
+#: libparted/filesys.c:646
 #, c-format
 msgid ""
 "Direct support for copying file systems is not yet implemented for %s.  "
@@ -720,12 +720,12 @@ msgid ""
 "partition."
 msgstr ""
 
-#: libparted/filesys.c:661
+#: libparted/filesys.c:660
 #, fuzzy, c-format
 msgid "Support for copying %s file systems is not implemented yet."
 msgstr "Поддержка для копирования файловой системы для %s пока не реализована."
 
-#: libparted/filesys.c:699
+#: libparted/filesys.c:698
 #, fuzzy, c-format
 msgid "Support for resizing %s file systems is not implemented yet."
 msgstr ""
@@ -823,27 +823,27 @@ msgstr "Не хватает памяти."
 msgid "Cannot get unit size for special unit 'COMPACT'."
 msgstr ""
 
-#: libparted/unit.c:384
+#: libparted/unit.c:386
 #, c-format
 msgid "\"%s\" has invalid syntax for locations."
 msgstr ""
 
-#: libparted/unit.c:392
+#: libparted/unit.c:394
 #, c-format
 msgid "The maximum head value is %d."
 msgstr ""
 
-#: libparted/unit.c:399
+#: libparted/unit.c:401
 #, c-format
 msgid "The maximum sector value is %d."
 msgstr ""
 
-#: libparted/unit.c:411 libparted/unit.c:543
+#: libparted/unit.c:413 libparted/unit.c:545
 #, fuzzy, c-format
 msgid "The location %s is outside of the device %s."
 msgstr "Невозможно создать раздел вне устройства."
 
-#: libparted/unit.c:525
+#: libparted/unit.c:527
 msgid "Invalid number."
 msgstr ""
 
@@ -944,13 +944,12 @@ msgid ""
 "running 'tune2fs -O dir_index DEVICE' and then 'e2fsck -fD DEVICE'."
 msgstr ""
 
-#: libparted/fs/ext2/ext2_resize.c:693
-msgid ""
-"A resize operation on this file system will use EXPERIMENTAL code\n"
-"that MAY CORRUPT it (although it hasn't doneso yet\n"
-"in the past).\n"
-"You should at least backup your data and run 'e2fsck -f' afterwards."
+#: libparted/fs/ext2/ext2_resize.c:692
+#, fuzzy
+msgid "GNU Parted cannot resize this file system, please use 'resize2fs'."
 msgstr ""
+"GNU Parted не может изменить размер раздела до этой величины.  Мы работаем "
+"над этим!"
 
 #: libparted/fs/ext2/ext2_block_relocator.c:198
 #, fuzzy
@@ -1491,7 +1490,7 @@ msgid ""
 "the journal.  You should restart Parted."
 msgstr ""
 
-#: libparted/fs/hfs/probe.c:52
+#: libparted/fs/hfs/probe.c:53
 #, c-format
 msgid ""
 "Parted can't use HFS file systems on disks with a sector size not equal to %"
@@ -1543,23 +1542,27 @@ msgstr ""
 msgid "This HFS+ volume has no extents overflow file.  This is quite unusual!"
 msgstr ""
 
-#: parted/parted.c:76
+#: parted/parted.c:77
 msgid "displays this help message"
 msgstr "отображает это справочное сообщение"
 
-#: parted/parted.c:77
-msgid "where necessary, prompts for user intervention"
-msgstr "когда необходимо, запрашивает вмешательство пользователя"
-
 #: parted/parted.c:78
+msgid "lists partition tables of all detected devices"
+msgstr ""
+
+#: parted/parted.c:79
+msgid "displays machine parseable output"
+msgstr ""
+
+#: parted/parted.c:80
 msgid "never prompts for user intervention"
 msgstr "никогда не запрашивает вмешательство пользователя"
 
-#: parted/parted.c:79
+#: parted/parted.c:81
 msgid "displays the version"
 msgstr "отображает версию"
 
-#: parted/parted.c:87
+#: parted/parted.c:90
 #, fuzzy
 msgid ""
 "NUMBER is the partition number used by Linux.  On MS-DOS disk labels, the "
@@ -1568,66 +1571,66 @@ msgstr ""
 "MINOR - это номер раздела, используемый Linux.  Основные разделы имеют "
 "номера 1-4, а логические - 5 и далее.\n"
 
-#: parted/parted.c:90
+#: parted/parted.c:93
 msgid "LABEL-TYPE is one of: "
 msgstr "ТИП-МЕТКИ один из: "
 
-#: parted/parted.c:91
+#: parted/parted.c:94
 #, fuzzy
 msgid "FLAG is one of: "
 msgstr "ТИП_ФС один из: "
 
-#: parted/parted.c:92
+#: parted/parted.c:95
 #, fuzzy
 msgid "UNIT is one of: "
 msgstr "ТИП_ФС один из: "
 
-#: parted/parted.c:93
+#: parted/parted.c:96
 msgid "PART-TYPE is one of: primary, logical, extended\n"
 msgstr "ТИП_РАЗД один из: основной, логический, расширенный\n"
 
-#: parted/parted.c:95
+#: parted/parted.c:98
 msgid "FS-TYPE is one of: "
 msgstr "ТИП_ФС один из: "
 
-#: parted/parted.c:96
+#: parted/parted.c:99
 msgid ""
 "START and END are disk locations, such as 4GB or 10%.  Negative values count "
 "from the end of the disk.  For example, -1s specifies exactly the last "
 "sector.\n"
 msgstr ""
 
-#: parted/parted.c:99
+#: parted/parted.c:102
 #, fuzzy
 msgid "STATE is one of: on, off\n"
 msgstr "ТИП_ФС один из: "
 
-#: parted/parted.c:100
+#: parted/parted.c:103
 msgid "DEVICE is usually /dev/hda or /dev/sda\n"
 msgstr "УСТРОЙСТВОМ обычно является /dev/hda или /dev/sda\n"
 
-#: parted/parted.c:101
+#: parted/parted.c:104
 msgid "NAME is any word you want\n"
 msgstr ""
 
-#: parted/parted.c:102
+#: parted/parted.c:105
 msgid "The partition must have one of the following FS-TYPEs: "
 msgstr ""
 
-#: parted/parted.c:105
+#: parted/parted.c:108
 msgid "GNU Parted Version information:\n"
 msgstr ""
 
-#: parted/parted.c:107
+#: parted/parted.c:110
 #, fuzzy
 msgid ""
 "Copyright (C) 1998 - 2006 Free Software Foundation, Inc.\n"
 "This program is free software, covered by the GNU General Public License.\n"
 "\n"
-"This program is distributed in the hope that it will be useful, but WITHOUT "
-"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
-"FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for "
-"more details.\n"
+"This program is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"GNU General Public License for more details.\n"
 "\n"
 msgstr ""
 "Copyright (C) 1999-2000 Andrew Clausen, Lennert Buytenhek и Red Hat Inc.\n"
@@ -1640,84 +1643,97 @@ msgstr ""
 "или ПРИГОДНОСТИ ДЛЯ КОНКРЕТНОЙ ЦЕЛИ.  Для получения более подробной "
 "информации смотрите Универсальную Общественную Лицензию GNU.\n"
 
-#: parted/parted.c:152
+#: parted/parted.c:156
 #, c-format
 msgid "%0.f%%\t(time left %.2d:%.2d)"
 msgstr ""
 
-#: parted/parted.c:170
+#: parted/parted.c:175
 #, c-format
 msgid ""
-"Partition %s is being used.  You must unmount it before you modify it with "
+"Partition %s is being used. You must unmount it before you modify it with "
 "Parted."
 msgstr ""
 
-#: parted/parted.c:187
+#: parted/parted.c:191
 #, c-format
 msgid "Partition(s) on %s are being used."
 msgstr "Разделы на %s используются."
 
-#: parted/parted.c:413 parted/parted.c:594 parted/parted.c:979
-#: parted/parted.c:1059 parted/parted.c:1589 parted/parted.c:1666
-#: parted/parted.c:1710
+#: parted/parted.c:203
+msgid ""
+"The existing file system will be destroyed and all data on the partition "
+"will be lost. Do you want to continue?"
+msgstr ""
+
+#: parted/parted.c:215
+#, c-format
+msgid ""
+"The existing disk label on %s will be destroyed and all data on this disk "
+"will be lost. Do you want to continue?"
+msgstr ""
+
+#: parted/parted.c:439 parted/parted.c:625 parted/parted.c:1010
+#: parted/parted.c:1090 parted/parted.c:1733 parted/parted.c:1810
+#: parted/parted.c:1854
 #, fuzzy
 msgid "Partition number?"
 msgstr "Раздел используется."
 
-#: parted/parted.c:456
+#: parted/parted.c:482
 msgid "Source device?"
 msgstr ""
 
-#: parted/parted.c:460
+#: parted/parted.c:486
 #, fuzzy
 msgid "Source partition number?"
 msgstr "Исходный раздел не существует."
 
-#: parted/parted.c:465
+#: parted/parted.c:491
 #, fuzzy
 msgid "Can't copy an extended partition."
 msgstr "Невозможно скопировать расширенный раздел."
 
-#: parted/parted.c:471
+#: parted/parted.c:497
 #, fuzzy
 msgid "Destination partition number?"
 msgstr "Раздел назначения используется."
 
-#: parted/parted.c:564
+#: parted/parted.c:592
 msgid "New disk label type?"
 msgstr ""
 
-#: parted/parted.c:598
+#: parted/parted.c:629
 #, fuzzy
 msgid "File system?"
 msgstr "Файловая система полна!"
 
-#: parted/parted.c:645 parted/parted.c:815
+#: parted/parted.c:676 parted/parted.c:846
 #, fuzzy
 msgid "Partition type?"
 msgstr "Раздел не существует."
 
-#: parted/parted.c:652 parted/parted.c:822 parted/parted.c:1062
+#: parted/parted.c:683 parted/parted.c:853 parted/parted.c:1093
 #, fuzzy
 msgid "Partition name?"
 msgstr "Раздел не существует."
 
-#: parted/parted.c:660 parted/parted.c:832
+#: parted/parted.c:691 parted/parted.c:863
 #, fuzzy
 msgid "File system type?"
 msgstr "Файловая система полна!"
 
-#: parted/parted.c:667 parted/parted.c:834 parted/parted.c:994
-#: parted/parted.c:1547 parted/parted.c:1598
+#: parted/parted.c:698 parted/parted.c:865 parted/parted.c:1025
+#: parted/parted.c:1691 parted/parted.c:1742
 msgid "Start?"
 msgstr ""
 
-#: parted/parted.c:669 parted/parted.c:837 parted/parted.c:997
-#: parted/parted.c:1549 parted/parted.c:1600
+#: parted/parted.c:700 parted/parted.c:868 parted/parted.c:1028
+#: parted/parted.c:1693 parted/parted.c:1744
 msgid "End?"
 msgstr ""
 
-#: parted/parted.c:707 parted/parted.c:875
+#: parted/parted.c:738 parted/parted.c:906
 #, c-format
 msgid ""
 "You requested a partition from %s to %s.\n"
@@ -1725,160 +1741,160 @@ msgid ""
 "you?"
 msgstr ""
 
-#: parted/parted.c:827
+#: parted/parted.c:858
 msgid "An extended partition cannot hold a file system.  Did you want mkpart?"
 msgstr ""
 
-#: parted/parted.c:985
+#: parted/parted.c:1016
 #, fuzzy
 msgid "Can't move an extended partition."
 msgstr "Невозможно скопировать расширенный раздел."
 
-#: parted/parted.c:1014
+#: parted/parted.c:1045
 #, fuzzy
 msgid "Can't move a partition onto itself.  Try using resize, perhaps?"
 msgstr ""
 "Невозможно увеличить раздел за счет используемого пространства, или за "
 "пределы диска."
 
-#: parted/parted.c:1158
+#: parted/parted.c:1189
 #, c-format
 msgid "Minor: %d\n"
 msgstr ""
 
-#: parted/parted.c:1159
+#: parted/parted.c:1190
 #, fuzzy, c-format
 msgid "Flags: %s\n"
 msgstr "Файловая система полна!"
 
-#: parted/parted.c:1160
+#: parted/parted.c:1191
 #, fuzzy, c-format
 msgid "File System: %s\n"
 msgstr "Файловая система полна!"
 
-#: parted/parted.c:1161
+#: parted/parted.c:1192
 #, c-format
 msgid "Size:         "
 msgstr ""
 
-#: parted/parted.c:1166
+#: parted/parted.c:1197
 #, c-format
 msgid "Minimum size: "
 msgstr ""
 
-#: parted/parted.c:1169
+#: parted/parted.c:1200
 #, c-format
 msgid "Maximum size: "
 msgstr ""
 
-#: parted/parted.c:1257
+#: parted/parted.c:1322
 #, c-format
 msgid "Model: %s (%s)\n"
 msgstr ""
 
-#: parted/parted.c:1258
+#: parted/parted.c:1324
 #, c-format
 msgid "Disk %s: %s\n"
 msgstr ""
 
-#: parted/parted.c:1259
+#: parted/parted.c:1325
 #, c-format
 msgid "Sector size (logical/physical): %lldB/%lldB\n"
 msgstr ""
 
-#: parted/parted.c:1270
+#: parted/parted.c:1343
 #, c-format
 msgid "BIOS cylinder,head,sector geometry: %d,%d,%d.  Each cylinder is %s.\n"
 msgstr ""
 
-#: parted/parted.c:1276
+#: parted/parted.c:1352
 #, fuzzy, c-format
 msgid "Partition Table: %s\n"
 msgstr "Раздел не существует."
 
-#: parted/parted.c:1287 parted/parted.c:1290
+#: parted/parted.c:1365 parted/parted.c:1368
 msgid "Number"
 msgstr ""
 
-#: parted/parted.c:1287 parted/parted.c:1290
+#: parted/parted.c:1365 parted/parted.c:1368
 msgid "Start"
 msgstr ""
 
-#: parted/parted.c:1288 parted/parted.c:1291
+#: parted/parted.c:1366 parted/parted.c:1369
 msgid "End"
 msgstr ""
 
-#: parted/parted.c:1291
+#: parted/parted.c:1369
 #, fuzzy
 msgid "Size"
 msgstr "resize"
 
-#: parted/parted.c:1295
+#: parted/parted.c:1373
 msgid "Type"
 msgstr ""
 
-#: parted/parted.c:1297
+#: parted/parted.c:1375
 #, fuzzy
 msgid "File system"
 msgstr "Файловая система полна!"
 
-#: parted/parted.c:1300
+#: parted/parted.c:1378
 msgid "Name"
 msgstr ""
 
-#: parted/parted.c:1302
+#: parted/parted.c:1380
 msgid "Flags"
 msgstr ""
 
-#: parted/parted.c:1355
+#: parted/parted.c:1437
 msgid "Free Space"
 msgstr ""
 
-#: parted/parted.c:1444
+#: parted/parted.c:1588
 #, c-format
 msgid ""
 "A %s %s partition was found at %s -> %s.  Do you want to add it to the "
 "partition table?"
 msgstr ""
 
-#: parted/parted.c:1482
+#: parted/parted.c:1626
 #, fuzzy
 msgid "searching for file systems"
 msgstr "Неизвестный тип файловой системы."
 
-#: parted/parted.c:1687
+#: parted/parted.c:1831
 #, fuzzy
 msgid "New device?"
 msgstr "Не найдено ни одного устройства"
 
-#: parted/parted.c:1712
+#: parted/parted.c:1856
 msgid "Flag to Invert?"
 msgstr ""
 
-#: parted/parted.c:1717
+#: parted/parted.c:1861
 msgid "New state?"
 msgstr ""
 
-#: parted/parted.c:1750
+#: parted/parted.c:1894
 msgid "Unit?"
 msgstr ""
 
-#: parted/parted.c:1899
+#: parted/parted.c:2043
 msgid "check"
 msgstr "check"
 
-#: parted/parted.c:1902
+#: parted/parted.c:2046
 #, fuzzy
 msgid ""
 "check NUMBER                             do a simple check on the file system"
 msgstr ""
 "check MINOR                   производит простую проверку файловой системы"
 
-#: parted/parted.c:1908
+#: parted/parted.c:2052
 msgid "cp"
 msgstr "cp"
 
-#: parted/parted.c:1911
+#: parted/parted.c:2055
 #, fuzzy
 msgid ""
 "cp [FROM-DEVICE] FROM-NUMBER TO-NUMBER   copy file system to another "
@@ -1886,11 +1902,11 @@ msgid ""
 msgstr ""
 "cp MINOR [УСТРОЙСТВО] MINOR   скопировать файловую систему на другой раздел"
 
-#: parted/parted.c:1917
+#: parted/parted.c:2061
 msgid "help"
 msgstr "help"
 
-#: parted/parted.c:1920
+#: parted/parted.c:2064
 #, fuzzy
 msgid ""
 "help [COMMAND]                           prints general help, or help on "
@@ -1899,23 +1915,28 @@ msgstr ""
 "help [КОМАНДА]                распечатать общую справку, или справку по "
 "КОМАНДЕ"
 
-#: parted/parted.c:1926
+#: parted/parted.c:2070
 msgid "mklabel"
 msgstr "mklabel"
 
-#: parted/parted.c:1929
+#: parted/parted.c:2070
+#, fuzzy
+msgid "mktable"
+msgstr "mklabel"
+
+#: parted/parted.c:2073
 #, fuzzy
 msgid ""
-"mklabel LABEL-TYPE                       create a new disklabel (partition "
+"mklabel,mktable LABEL-TYPE               create a new disklabel (partition "
 "table)"
 msgstr ""
 "mklabel ТИП-МЕТКИ             создать новую метку диска (таблицу раздела)"
 
-#: parted/parted.c:1935
+#: parted/parted.c:2079
 msgid "mkfs"
 msgstr "mkfs"
 
-#: parted/parted.c:1938
+#: parted/parted.c:2082
 #, fuzzy
 msgid ""
 "mkfs NUMBER FS-TYPE                      make a FS-TYPE file system on "
@@ -1924,16 +1945,16 @@ msgstr ""
 "mkfs MINOR ТИП-ФС             создать файловую систему ТИП-ФС на разделе "
 "MINOR"
 
-#: parted/parted.c:1944
+#: parted/parted.c:2088
 msgid "mkpart"
 msgstr "mkpart"
 
-#: parted/parted.c:1947
+#: parted/parted.c:2091
 #, fuzzy
 msgid "mkpart PART-TYPE [FS-TYPE] START END     make a partition"
 msgstr "mkpart ТИП-РАЗД [ТИП-ФС] НАЧ КОН          создать раздел"
 
-#: parted/parted.c:1953
+#: parted/parted.c:2097
 #, fuzzy
 msgid ""
 "mkpart makes a partition without creating a new file system on the "
@@ -1943,83 +1964,99 @@ msgstr ""
 "должен быть указан для разделов с данными (в отличие от расширенных "
 "разделов).  Эта команда полезна, если вы удалили раздел случайно.\n"
 
-#: parted/parted.c:1958
+#: parted/parted.c:2102
 msgid "mkpartfs"
 msgstr "mkpartfs"
 
-#: parted/parted.c:1961
+#: parted/parted.c:2105
 #, fuzzy
 msgid ""
 "mkpartfs PART-TYPE FS-TYPE START END     make a partition with a file system"
 msgstr ""
 "mkpartfs ТИП-РАЗД ТИП-ФС НАЧ КОН          создать раздел с файловой системой"
 
-#: parted/parted.c:1967
+#: parted/parted.c:2111
 msgid "move"
 msgstr ""
 
-#: parted/parted.c:1970
+#: parted/parted.c:2114
 #, fuzzy
 msgid "move NUMBER START END                    move partition NUMBER"
 msgstr ""
 "resize MINOR НАЧ КОН          изменить размер файловой системы на разделе "
 "MINOR"
 
-#: parted/parted.c:1975
+#: parted/parted.c:2119
 msgid "name"
 msgstr ""
 
-#: parted/parted.c:1978
+#: parted/parted.c:2122
 #, fuzzy
 msgid "name NUMBER NAME                         name partition NUMBER as NAME"
 msgstr "unhide MINOR                  делает видимым раздел MINOR"
 
-#: parted/parted.c:1983
+#: parted/parted.c:2127
 msgid "print"
 msgstr "print"
 
-#: parted/parted.c:1986
+#: parted/parted.c:2130
 #, fuzzy
 msgid ""
-"print [free|NUMBER|all]                  display the partition table, a "
+"print [devices|free|list,all|NUMBER]     display the partition table, a "
 "partition, or all devices"
 msgstr "print                         вывести таблицу разделов"
 
-#: parted/parted.c:1990
+#: parted/parted.c:2134
 msgid ""
-"Without arguments, print displays the entire partition table. With 'free'\n"
-"argument, information about free space will be displayed otherwise if a\n"
-"partition number is given, then more detailed information is displayed\n"
-"about that partition. If the 'all' argument is passed instead, partition\n"
-"information for all devices will be displayed."
+"Without arguments, print displays the entire partition table. However with "
+"the following arguments it performs the various other actions.\n"
 msgstr ""
 
-#: parted/parted.c:1998
+#: parted/parted.c:2136
+msgid "a. devices : display all active block devices\n"
+msgstr ""
+
+#: parted/parted.c:2137
+msgid ""
+"b. free    : display information about free unpartitioned space on the "
+"current block device\n"
+msgstr ""
+
+#: parted/parted.c:2139
+msgid "c. list,all: display partition tables of all active block devices\n"
+msgstr ""
+
+#: parted/parted.c:2140
+msgid ""
+"d. NUMBER  : display more detail information about particular partition\n"
+msgstr ""
+
+#: parted/parted.c:2144
 msgid "quit"
 msgstr "quit"
 
-#: parted/parted.c:2001
+#: parted/parted.c:2147
 #, fuzzy
 msgid "quit                                     exit program"
 msgstr "quit                          выйти из программы"
 
-#: parted/parted.c:2006
+#: parted/parted.c:2152
 #, fuzzy
 msgid "rescue"
 msgstr "resize"
 
-#: parted/parted.c:2009
+#: parted/parted.c:2155
 #, fuzzy
 msgid ""
 "rescue START END                         rescue a lost partition near START "
 "and END"
 msgstr "rm MINOR                      удалить раздел MINOR"
 
-#: parted/parted.c:2015
+#: parted/parted.c:2161
 msgid "resize"
 msgstr "resize"
 
-#: parted/parted.c:2018
+#: parted/parted.c:2164
 #, fuzzy
 msgid ""
 "resize NUMBER START END                  resize partition NUMBER and its "
@@ -2028,82 +2065,82 @@ msgstr ""
 "resize MINOR НАЧ КОН          изменить размер файловой системы на разделе "
 "MINOR"
 
-#: parted/parted.c:2026
+#: parted/parted.c:2172
 msgid "rm"
 msgstr "rm"
 
-#: parted/parted.c:2029
+#: parted/parted.c:2175
 #, fuzzy
 msgid "rm NUMBER                                delete partition NUMBER"
 msgstr "rm MINOR                      удалить раздел MINOR"
 
-#: parted/parted.c:2034
+#: parted/parted.c:2180
 msgid "select"
 msgstr ""
 
-#: parted/parted.c:2037
+#: parted/parted.c:2183
 #, fuzzy
 msgid "select DEVICE                            choose the device to edit"
 msgstr "boot MINOR                    устанавливает загрузочный раздел в MINOR"
 
-#: parted/parted.c:2042
+#: parted/parted.c:2188
 msgid "set"
 msgstr ""
 
-#: parted/parted.c:2045
+#: parted/parted.c:2191
 #, fuzzy
 msgid ""
 "set NUMBER FLAG STATE                    change the FLAG on partition NUMBER"
 msgstr "rm MINOR                      удалить раздел MINOR"
 
-#: parted/parted.c:2051
+#: parted/parted.c:2197
 msgid "toggle"
 msgstr ""
 
-#: parted/parted.c:2054
+#: parted/parted.c:2200
 #, fuzzy
 msgid ""
 "toggle [NUMBER [FLAG]]                   toggle the state of FLAG on "
 "partition NUMBER"
 msgstr "rm MINOR                      удалить раздел MINOR"
 
-#: parted/parted.c:2060
+#: parted/parted.c:2206
 #, fuzzy
 msgid "unit"
 msgstr "quit"
 
-#: parted/parted.c:2063
+#: parted/parted.c:2209
 #, fuzzy
 msgid "unit UNIT                                set the default unit to UNIT"
 msgstr "boot MINOR                    устанавливает загрузочный раздел в MINOR"
 
-#: parted/parted.c:2068
+#: parted/parted.c:2214
 msgid "version"
 msgstr ""
 
-#: parted/parted.c:2071
+#: parted/parted.c:2217
 msgid ""
 "version                                  displays the current version of GNU "
 "Parted and copyright information"
 msgstr ""
 
-#: parted/parted.c:2075
+#: parted/parted.c:2221
 msgid ""
 "version displays copyright and version information corressponding to this "
 "copy of GNU Parted\n"
 msgstr ""
 
-#: parted/parted.c:2161
+#: parted/parted.c:2308
 msgid "No device found"
 msgstr "Не найдено ни одного устройства"
 
-#: parted/parted.c:2225
-msgid "Don't forget to update /etc/fstab, if necessary.\n"
-msgstr ""
-
-#: parted/parted.c:2245
+#: parted/parted.c:2341
 #, c-format
 msgid "WARNING: You are not superuser.  Watch out for permissions.\n"
+msgstr ""
+
+#: parted/parted.c:2380
+msgid "Don't forget to update /etc/fstab, if necessary.\n"
 msgstr ""
 
 #: parted/ui.c:68
@@ -2159,204 +2196,207 @@ msgstr ""
 #, c-format
 msgid ""
 "\n"
-"Error: SEGV_MAPERR (Address not mapped to object)"
+"Error: SEGV_MAPERR (Address not mapped to object)\n"
 msgstr ""
 
-#: parted/ui.c:258
+#: parted/ui.c:259
 #, c-format
 msgid ""
 "\n"
-"Error: SEGV_ACCERR (Invalid permissions for mapped object)"
+"Error: SEGV_ACCERR (Invalid permissions for mapped object)\n"
 msgstr ""
 
-#: parted/ui.c:263
+#: parted/ui.c:264
 #, c-format
 msgid ""
 "\n"
-"Error: A general SIGSEGV signal was encountered."
+"Error: A general SIGSEGV signal was encountered.\n"
 msgstr ""
 
-#: parted/ui.c:287
+#: parted/ui.c:289
 #, c-format
 msgid ""
 "\n"
 "Error: FPE_INTDIV (Integer: divide by zero)"
 msgstr ""
 
-#: parted/ui.c:291
+#: parted/ui.c:293
 #, c-format
 msgid ""
 "\n"
 "Error: FPE_INTOVF (Integer: overflow)"
 msgstr ""
 
-#: parted/ui.c:295
+#: parted/ui.c:297
 #, c-format
 msgid ""
 "\n"
 "Error: FPE_FLTDIV (Float: divide by zero)"
 msgstr ""
 
-#: parted/ui.c:299
+#: parted/ui.c:301
 #, c-format
 msgid ""
 "\n"
 "Error: FPE_FLTOVF (Float: overflow)"
 msgstr ""
 
-#: parted/ui.c:303
+#: parted/ui.c:305
 #, c-format
 msgid ""
 "\n"
 "Error: FPE_FLTUND (Float: underflow)"
 msgstr ""
 
-#: parted/ui.c:307
+#: parted/ui.c:309
 #, c-format
 msgid ""
 "\n"
 "Error: FPE_FLTRES (Float: inexact result)"
 msgstr ""
 
-#: parted/ui.c:311
+#: parted/ui.c:313
 #, c-format
 msgid ""
 "\n"
 "Error: FPE_FLTINV (Float: invalid operation)"
 msgstr ""
 
-#: parted/ui.c:315
+#: parted/ui.c:317
 #, c-format
 msgid ""
 "\n"
 "Error: FPE_FLTSUB (Float: subscript out of range)"
 msgstr ""
 
-#: parted/ui.c:320
+#: parted/ui.c:322
 #, c-format
 msgid ""
 "\n"
 "Error: A general SIGFPE signal was encountered."
 msgstr ""
 
-#: parted/ui.c:345
+#: parted/ui.c:347
 #, c-format
 msgid ""
 "\n"
 "Error: ILL_ILLOPC (Illegal Opcode)"
 msgstr ""
 
-#: parted/ui.c:349
+#: parted/ui.c:351
 #, c-format
 msgid ""
 "\n"
 "Error: ILL_ILLOPN (Illegal Operand)"
 msgstr ""
 
-#: parted/ui.c:353
+#: parted/ui.c:355
 #, c-format
 msgid ""
 "\n"
 "Error: ILL_ILLADR (Illegal addressing mode)"
 msgstr ""
 
-#: parted/ui.c:358
+#: parted/ui.c:360
 #, c-format
 msgid ""
 "\n"
 "Error: ILL_ILLTRP (Illegal Trap)"
 msgstr ""
 
-#: parted/ui.c:362
+#: parted/ui.c:364
 #, c-format
 msgid ""
 "\n"
 "Error: ILL_PRVOPC (Privileged Opcode)"
 msgstr ""
 
-#: parted/ui.c:366
+#: parted/ui.c:368
 #, c-format
 msgid ""
 "\n"
 "Error: ILL_PRVREG (Privileged Register)"
 msgstr ""
 
-#: parted/ui.c:370
+#: parted/ui.c:372
 #, c-format
 msgid ""
 "\n"
 "Error: ILL_COPROC (Coprocessor Error)"
 msgstr ""
 
-#: parted/ui.c:374
+#: parted/ui.c:376
 #, c-format
 msgid ""
 "\n"
 "Error: ILL_BADSTK (Internal Stack Error)"
 msgstr ""
 
-#: parted/ui.c:378
+#: parted/ui.c:380
 #, c-format
 msgid ""
 "\n"
 "Error: A general SIGILL signal was encountered."
 msgstr ""
 
-#: parted/ui.c:862
+#: parted/ui.c:864
 #, fuzzy
 msgid "Expecting a partition number."
 msgstr "Раздел назначения используется."
 
-#: parted/ui.c:871
+#: parted/ui.c:873
 msgid "Partition doesn't exist."
 msgstr "Раздел не существует."
 
-#: parted/ui.c:891
+#: parted/ui.c:893
 #, fuzzy
 msgid "Expecting a file system type."
 msgstr "Неизвестный тип файловой системы."
 
-#: parted/ui.c:897
+#: parted/ui.c:899
 #, fuzzy, c-format
 msgid "Unknown file system type \"%s\"."
 msgstr "Неизвестный тип файловой системы."
 
-#: parted/ui.c:917
+#: parted/ui.c:919
 msgid "Expecting a disk label type."
 msgstr ""
 
-#: parted/ui.c:1011
+#: parted/ui.c:1013
 #, fuzzy
 msgid "Can't create any more partitions."
 msgstr "Невозможно скопировать расширенный раздел."
 
-#: parted/ui.c:1021
+#: parted/ui.c:1023
 #, fuzzy
 msgid "Expecting a partition type."
 msgstr "Раздел назначения не существует."
 
-#: parted/ui.c:1149
+#: parted/ui.c:1151
 msgid "on"
 msgstr ""
 
-#: parted/ui.c:1150
+#: parted/ui.c:1152
 msgid "off"
 msgstr ""
 
-#: parted/ui.c:1261
+#: parted/ui.c:1263
 msgid "OPTIONs:"
 msgstr "КЛЮЧИ:"
 
-#: parted/ui.c:1264
+#: parted/ui.c:1266
 msgid "COMMANDs:"
 msgstr "КОМАНДЫ:"
 
-#: parted/ui.c:1272
+#: parted/ui.c:1274
 #, fuzzy, c-format
 msgid "Using %s\n"
 msgstr ""
 "\n"
 "Используется %s\n"
+
+#~ msgid "where necessary, prompts for user intervention"
+#~ msgstr "когда необходимо, запрашивает вмешательство пользователя"
 
 #, fuzzy
 #~ msgid "Attempt to read sectors %ld-%ld outside of partition on %s."
