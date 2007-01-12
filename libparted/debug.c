@@ -95,16 +95,18 @@ int ped_assert ( int cond, const char* cond_text,
 	/* Print backtrace stack */
 	void *stack[20];
 	size_t size;
-	char **strings;
+	char **strings, **string;
 	
 	size = backtrace(stack, 20);
 	strings = backtrace_symbols(stack, size);
 
-	printf(_("Backtrace has %d calls on stack:\n"), size);
-	for (; size > 0; size--, strings++)
-		printf("  %d: %s\n", size, *strings);
+	if (strings) {
+		printf(_("Backtrace has %d calls on stack:\n"), size);
+		for (string = strings; size > 0; size--, string++)
+			printf("  %d: %s\n", size, *string);
 
-	free(strings);
+		free(strings);
+	}
 #endif
 
 	/* Throw the exception */
