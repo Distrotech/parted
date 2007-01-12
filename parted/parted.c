@@ -1248,8 +1248,8 @@ do_print (PedDevice** dev)
                         command_line_pop_word ();
                         has_free_arg = 1;
                 } 
-                else if (strncmp (peek_word, "all", 3) == 0 ||
-                         strncmp (peek_word, "list", 4) == 0) {
+                else if (strncmp (peek_word, "list", 4) == 0 ||
+                         strncmp (peek_word, "all", 3) == 0) {
                         command_line_pop_word();
                         has_list_arg = 1;
                 }
@@ -1260,7 +1260,8 @@ do_print (PedDevice** dev)
         }
 
         if (has_devices_arg) {
-                PedDevice *current_dev = NULL;
+                char*           dev_name;
+                PedDevice*      current_dev = NULL;
 
                 ped_device_probe_all();
 
@@ -1269,10 +1270,19 @@ do_print (PedDevice** dev)
                                              current_dev->length
                                              * current_dev->sector_size);
                         printf ("%s (%s)\n", current_dev->path, end);
-                        ped_free(end);
+                        ped_free (end);
                 }    
 
-                ped_device_free_all();
+                dev_name = strdup ((*dev)->path);
+                ped_device_free_all ();
+
+                *dev = ped_device_get (dev_name);
+                if (!*dev)
+		        return 0;
+                if (!ped_device_open (*dev))
+                        return 0;
+
+                ped_free (dev_name);
 
                 return 1;
         }
@@ -1308,7 +1318,6 @@ do_print (PedDevice** dev)
                     (*dev)->sector_size, (*dev)->phys_sector_size,
                     disk->type->name, (*dev)->model);
         } else {
-            printf ("\n");
             printf (_("Model: %s (%s)\n"), 
                     (*dev)->model, transport[(*dev)->type]);
             printf (_("Disk %s: %s\n"), (*dev)->path, end);
