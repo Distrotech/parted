@@ -7,7 +7,7 @@ if [ ! -d parted ] && [ ! -d libparted ]; then
 fi
 
 rm -rf ChangeLog doc/mdate-sh doc/texinfo.tex
-rm -rf m4 configure config.rpath depcomp
+rm -rf m4 configure config.rpath depcomp config.h.in~
 rm -rf parted-*.*.*
 rm -rf compile config.guess config.sub ltmain.sh mkinstalldirs
 rm -rf config.h.in autom4te.cache missing aclocal.m4 install-sh
