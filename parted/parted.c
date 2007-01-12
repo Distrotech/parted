@@ -579,12 +579,13 @@ do_mklabel (PedDevice** dev)
         if (!disk) ped_exception_catch ();
         ped_exception_leave_all ();
 
-	if (!_disk_warn_loss (disk))
-                goto error_destroy_disk;
-
         if (disk) {
                 if (!_disk_warn_busy (disk))
                         goto error_destroy_disk;
+
+                if (!_disk_warn_loss (disk))
+                        goto error_destroy_disk;
+
                 ped_disk_destroy (disk);
         }
 
