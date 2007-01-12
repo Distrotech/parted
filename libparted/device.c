@@ -216,6 +216,12 @@ ped_device_destroy (PedDevice* dev)
 	ped_architecture->dev_ops->destroy (dev);
 }
 
+void
+ped_device_cache_remove(PedDevice *dev)
+{
+	_device_unregister (dev);
+}
+
 int
 ped_device_is_busy (PedDevice* dev)
 {
