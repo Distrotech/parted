@@ -1,26 +1,8 @@
-1.8.1
+1.8.2
 =====
 
 libparted:
-* Rework backtrace support.
-* Code cleanups.
-* Added --enable-selinux configure option to enable linking libparted with
-  libselinux and libsepol.
-* Disable ext2fs resize for now, tell user to use resize2fs.
 
 parted:
-* Fix loop in print_all().
-* Introduce the -list command-line switch.
-* Make mktable aliased to mklabel.
-* Warn before mklabel and mkfs.
-* Code cleanups in _partition_warn_busy(), _disk_warn_busy(),
-  _partition_warn_loss(), and _disk_warn_loss().
-* Avoid warning about user permissions when using --version.
-* Fix 'print' command help.
-* Proper print when there are no extended partitions, but partition names.
 
 misc:
-* Generate SHA-1 digest of the archive files and upload those along with the
-  actual archive files.
-* Update translation files.
-* Remove automatically generated files from version control.
