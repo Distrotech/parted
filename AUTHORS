@@ -197,17 +197,18 @@ Ithamar R. Adema <ithamar@unet.nl>
 
 David Cantrell <dcantrell@redhat.com>
 	* Added support for Promise SX8 devices (original patch from Jeremy
-	Katz <katzj@redhat.com>)
+	  Katz <katzj@redhat.com>)
 	* Brought IBM/Red Hat DASD patches forward to parted-1.7.x
-	Original IBM authors: Volker Sameske <sameske@de.ibm.com>
-	                      Horst Hummel <Horst.Hummel@de.ibm.com>
-	Original Red Hat authors: Phil Knirsch <phil@redhat.de>
-	                          Harald Hoyer <harald@redhat.de>
+	  Original IBM authors: Volker Sameske <sameske@de.ibm.com>
+	                        Horst Hummel <Horst.Hummel@de.ibm.com>
+	  Original Red Hat authors: Phil Knirsch <phil@redhat.de>
+	                            Harald Hoyer <harald@redhat.de>
 	* Prevent SIGFPE when FAT sector size is 0
 	* Add virtual DASD (VIODASD) on iSeries support
 	* Use O_DIRECT I/O to prevent first partition corruption on GPT disks
-        * Prevent sector reading exceptions from ped_geometry_check() on Mac
-        disklabels.
+   * Prevent sector reading exceptions from ped_geometry_check() on Mac
+     disklabels.
+   * Various bug fixes and other things.
 
 Peter Jones <pjones@redhat.com>
 	* Add ped_exception_get_handler()
@@ -216,16 +217,16 @@ Peter Jones <pjones@redhat.com>
 Darren Lavender <dl1@hppine99.gbr.hp.com>
 	* Fix SIGSEGV in parted 1.6.19 and assertion error in 1.7.0
 	* Add support for LUN/device resize detection and option GPT
-	header corruption
+	  header corruption
 	* Fixed off-by-one error in GPT header that allowed for overlap
-	between LDAs of LastUsableLBA and PartitionEntryLBA in backup GPT
+	  between LDAs of LastUsableLBA and PartitionEntryLBA in backup GPT
 
 Olaf Hering <olh@suse.de>
 	* Fixes for Macintosh disk label code
 
 Debarshi Ray <rishi@gnu.org>
-        * Display disk model and transport type in parted(8).
-        * '--list/-l' command line switch.
-        * Introduce 'print devices' and alias 'print list' to 'print all'.
-        * Alias 'mktable' to 'mklabel'.
-        * Code and API clean-up, bug fixes, and other miscellaneous stuff.
+   * Display disk model and transport type in parted(8).
+   * '--list/-l' command line switch.
+   * Introduce 'print devices' and alias 'print list' to 'print all'.
+   * Alias 'mktable' to 'mklabel'.
+   * Code and API clean-up, bug fixes, and other miscellaneous stuff.
