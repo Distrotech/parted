@@ -75,7 +75,7 @@ static struct option    options[] = {
 
 static char*    options_help [][2] = {
         {"help",        N_("displays this help message")},
-        {"list",        N_("lists partition tables of all detected devices")},
+        {"list",        N_("lists partition layout on all block devices")},
         {"machine",     N_("displays machine parseable output")},
         {"script",      N_("never prompts for user intervention")},
         {"version",     N_("displays the version")},
