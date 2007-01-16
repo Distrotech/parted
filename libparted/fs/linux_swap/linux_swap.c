@@ -44,12 +44,14 @@ typedef struct {
 
 /* ripped from mkswap */
 typedef struct {
-	char		bootbits[1024];    /* Space for disklabel etc. */
-	unsigned int	version;
-	unsigned int	last_page;
-	unsigned int	nr_badpages;
-	unsigned int	padding[125];
-	unsigned int	badpages[1];
+	char	        bootbits[1024];    /* Space for disklabel etc. */
+	uint32_t        version;
+	uint32_t        last_page;
+	uint32_t        nr_badpages;
+        unsigned char   sws_uuid[16];
+        unsigned char   sws_volume[16];
+	uint32_t	padding[117];
+	uint32_t	badpages[1];
 } SwapNewHeader;
 
 typedef struct {
