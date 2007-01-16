@@ -30,8 +30,6 @@
 #endif /* ENABLE_NLS */
 
 #include <unistd.h>
-#include <string.h>
-
 
 #define NTFS_BLOCK_SIZES       ((int[2]){512, 0})
 

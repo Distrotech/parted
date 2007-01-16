@@ -34,8 +34,6 @@
 #include "xfs_types.h"
 #include "xfs_sb.h"
 
-#include <string.h>
-
 #define XFS_BLOCK_SIZES		((int[2]){512, 0})
 
 static PedGeometry*

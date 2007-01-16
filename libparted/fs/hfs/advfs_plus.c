@@ -21,12 +21,9 @@
 
 #include "config.h"
 
-#include <stdlib.h>
-#include <string.h>
 #include <parted/parted.h>
 #include <parted/endian.h>
 #include <parted/debug.h>
-#include <stdint.h>
 
 #if ENABLE_NLS
 #  include <libintl.h>

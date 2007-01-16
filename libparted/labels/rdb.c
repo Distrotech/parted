@@ -23,8 +23,6 @@
 
 #include "config.h"
 
-#include <string.h>
-
 #include <parted/parted.h>
 #include <parted/debug.h>
 #include <parted/endian.h>

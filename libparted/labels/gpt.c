@@ -34,8 +34,6 @@
 #include <parted/crc32.h>
 #include <inttypes.h>
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>

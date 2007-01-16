@@ -35,8 +35,6 @@
 #  define _(String) (String)
 #endif /* ENABLE_NLS */
 
-#include <string.h>
-
 #define JFS_BLOCK_SIZES		((int[2]){512, 0})
 
 static PedGeometry*

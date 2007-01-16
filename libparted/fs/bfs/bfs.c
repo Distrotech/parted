@@ -31,7 +31,6 @@
 #endif /* ENABLE_NLS */
 
 #include <unistd.h>
-#include <string.h>
 
 #include "bfs.h"
 

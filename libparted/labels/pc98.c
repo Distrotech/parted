@@ -22,7 +22,6 @@
 #include <parted/parted.h>
 #include <parted/debug.h>
 #include <parted/endian.h>
-#include <string.h>
 
 #if ENABLE_NLS
 #  include <libintl.h>
