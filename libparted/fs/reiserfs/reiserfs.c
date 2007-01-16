@@ -36,7 +36,6 @@
 
 #include <uuid/uuid.h>
 #include <fcntl.h>
-#include <string.h>
 #include <errno.h>
 
 #ifdef DYNAMIC_LOADING

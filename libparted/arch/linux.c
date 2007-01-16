@@ -33,10 +33,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <libgen.h>
-#include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <syscall.h>
 #include <unistd.h>
 #include <dirent.h>

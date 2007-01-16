@@ -55,7 +55,6 @@
 
 #include <ctype.h>
 #include <stdio.h>
-#include <string.h>
 #include <float.h>
 
 #define N_(String) String

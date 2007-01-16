@@ -19,7 +19,6 @@
     Contributor:  Sven Luther <luther@debian.org>
 */
 
-#include <string.h>
 #include <parted/parted.h>
 #include <parted/debug.h>
 #include <parted/endian.h>

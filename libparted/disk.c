@@ -47,8 +47,6 @@
 #  define N_(String) (String)
 #endif /* ENABLE_NLS */
 
-#include <string.h>
-
 /* UPDATE MODE functions */
 #ifdef DEBUG
 static int _disk_check_sanity (PedDisk* disk);

@@ -30,9 +30,6 @@
 #  include <parted/gnu.h>
 #endif
 
-#include <string.h>
-#include <stdlib.h>
-
 #if ENABLE_NLS
 #  include <locale.h>
 #  include <libintl.h>

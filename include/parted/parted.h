@@ -34,7 +34,9 @@ typedef struct _PedArchitecture PedArchitecture;
 #include <parted/natmath.h>
 #include <parted/unit.h>
 
+#include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct _PedArchitecture {
 	PedDiskArchOps*		disk_ops;

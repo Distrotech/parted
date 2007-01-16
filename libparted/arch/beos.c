@@ -25,7 +25,6 @@
 
 /* POSIX headers */
 #include <sys/stat.h>
-#include <string.h>
 #include <dirent.h>
 #include <limits.h>
 #include <unistd.h>

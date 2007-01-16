@@ -31,7 +31,6 @@
 
 #include <parted/parted.h>
 #include <parted/debug.h>
-#include <string.h>
 
 #if ENABLE_NLS
 #  include <libintl.h>

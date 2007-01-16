@@ -25,7 +25,6 @@
 #include <parted/debug.h>
 #include <parted/gnu.h>
 
-#include <string.h>
 #include <errno.h>
 #include <hurd.h>
 #include <hurd/fs.h>
