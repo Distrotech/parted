@@ -44,14 +44,14 @@ typedef struct {
 
 /* ripped from mkswap */
 typedef struct {
-	char	        bootbits[1024];    /* Space for disklabel etc. */
-	uint32_t        version;
-	uint32_t        last_page;
-	uint32_t        nr_badpages;
+        char            bootbits[1024];    /* Space for disklabel etc. */
+        uint32_t        version;
+        uint32_t        last_page;
+        uint32_t        nr_badpages;
         unsigned char   sws_uuid[16];
         unsigned char   sws_volume[16];
-	uint32_t	padding[117];
-	uint32_t	badpages[1];
+        uint32_t        padding[117];
+        uint32_t        badpages[1];
 } SwapNewHeader;
 
 typedef struct {
@@ -69,20 +69,38 @@ typedef struct {
 	unsigned int	max_bad_pages;
 } SwapSpecific;
 
-static PedFileSystemType swap_type;
+static PedFileSystemType _swap_v1_type;
+static PedFileSystemType _swap_v2_type;
+static PedFileSystemType _swap_swsusp_type;
 
-static PedFileSystem* swap_open (PedGeometry* geom);
+static PedFileSystem* _swap_v1_open (PedGeometry* geom);
+static PedFileSystem* _swap_v2_open (PedGeometry* geom);
+static PedFileSystem* _swap_swsusp_open (PedGeometry* geom);
 static int swap_close (PedFileSystem* fs);
 
 static PedGeometry*
-swap_probe (PedGeometry* geom)
+_generic_swap_probe (PedGeometry* geom, int kind)
 {
 	PedFileSystem*	fs;
 	SwapSpecific*	fs_info;
 	PedGeometry*	probed_geom;
 	PedSector	length;
 
-	fs = swap_open (geom);
+        switch (kind) {
+	/* Check for old style swap partitions. */
+	        case 0:
+		        fs = _swap_v1_open(geom);
+		        break;
+	/* Check for new style swap partitions. */
+	        case 1:
+		  fs = _swap_v2_open(geom);
+		        break;
+	/* Check for swap partitions containing swsusp data. */
+	        case -1:
+		        fs = _swap_swsusp_open(geom);
+                        break;
+        }
+
 	if (!fs)
 		goto error;
 	fs_info = SWAP_SPECIFIC (fs);
@@ -90,7 +108,8 @@ swap_probe (PedGeometry* geom)
 	if (fs_info->version)
 		length = fs_info->page_sectors * fs_info->page_count;
 	else
-		length = geom->length;
+	        length = geom->length;
+
 	probed_geom = ped_geometry_new (geom->dev, geom->start, length);
 	if (!probed_geom)
 		goto error_close_fs;
@@ -105,12 +124,26 @@ error:
 
 #ifndef DISCOVER_ONLY
 static int
-swap_clobber (PedGeometry* geom)
+_generic_swap_clobber (PedGeometry* geom, int kind)
 {
 	PedFileSystem*		fs;
 	char			buf[512];
 
-	fs = swap_open (geom);
+        switch (kind) {
+	/* Check for old style swap partitions. */
+	        case 0:
+		        fs = _swap_v1_open(geom);
+		        break;
+	/* Check for new style swap partitions. */
+	        case 1:
+		  fs = _swap_v2_open(geom);
+		        break;
+	/* Check for swap partitions containing swsusp data. */
+	        case -1:
+		        fs = _swap_swsusp_open(geom);
+                        break;
+        }
+
 	if (!fs)
 		return 1;
 
@@ -128,7 +161,7 @@ error:
 }
 #endif /* !DISCOVER_ONLY */
 
-static void
+static int
 swap_init (PedFileSystem* fs, int fresh)
 {
 	SwapSpecific*	fs_info = SWAP_SPECIFIC (fs);
@@ -139,11 +172,13 @@ swap_init (PedFileSystem* fs, int fresh)
 	fs_info->max_bad_pages = (getpagesize()
 					- sizeof (SwapNewHeader)) / 4;
 
-	if (fresh)
+	if (fresh) {
 		memset (fs_info->header, 0, getpagesize());
+                return 1;
+        }
 	else
-		ped_geometry_read (fs->geom, fs_info->header,
-				   0, fs_info->page_sectors);
+                return ped_geometry_read (fs->geom, fs_info->header,
+                                          0, fs_info->page_sectors);
 }
 
 static PedFileSystem*
@@ -174,7 +209,7 @@ swap_alloc (PedGeometry* geom)
 	fs->geom = ped_geometry_duplicate (geom);
 	if (!fs->geom)
 		goto error_free_buffer;
-	fs->type = &swap_type;
+	fs->type = &_swap_v2_type;
 	return fs;
 
 error_free_buffer:
@@ -203,7 +238,7 @@ swap_free (PedFileSystem* fs)
 }
 
 static PedFileSystem*
-swap_open (PedGeometry* geom)
+_swap_v1_open (PedGeometry* geom)
 {
 	PedFileSystem*		fs;
 	SwapSpecific*		fs_info;
@@ -225,7 +260,47 @@ swap_open (PedGeometry* geom)
 		fs_info->page_count
 			= PED_MIN (fs->geom->length / fs_info->page_sectors,
 				   8 * (getpagesize() - 10));
-	} else if (strncmp (sig, "SWAPSPACE2", 10) == 0) {
+	} else {
+		char	_sig [11];
+
+		memcpy (_sig, sig, 10);
+		_sig [10] = 0;
+ 		ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
+			_("Unrecognised old style linux swap signature '%10s'."), _sig);
+ 		goto error_free_fs;
+	}
+
+	fs->checked = 1;
+	return fs;
+
+error_free_fs:
+	swap_free (fs);
+error:
+	return NULL;
+}
+
+static PedFileSystem*
+_swap_v2_open (PedGeometry* geom)
+{
+	PedFileSystem*		fs;
+	SwapSpecific*		fs_info;
+	const char*		sig;
+
+	fs = swap_alloc (geom);
+	if (!fs)
+		goto error;
+/* 	swap_init (fs, 0); */
+
+/* 	fs_info = SWAP_SPECIFIC (fs); */
+/* 	if (!ped_geometry_read (fs->geom, fs_info->header, 0, */
+/* 				fs_info->page_sectors)) */
+        if (!swap_init(fs, 0))
+		goto error_free_fs;
+
+        fs_info = SWAP_SPECIFIC (fs);
+
+	sig = ((char*) fs_info->header) + getpagesize() - 10;
+	if (strncmp (sig, "SWAPSPACE2", 10) == 0) {
 		fs_info->version = 1;
 		fs_info->page_count = fs_info->header->new.last_page;
 	} else {
@@ -234,7 +309,47 @@ swap_open (PedGeometry* geom)
 		memcpy (_sig, sig, 10);
 		_sig [10] = 0;
  		ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
-			_("Unrecognised linux swap signature '%10s'."), _sig);
+			_("Unrecognised new style linux swap signature '%10s'."), _sig);
+ 		goto error_free_fs;
+	}
+
+	fs->checked = 1;
+	return fs;
+
+error_free_fs:
+	swap_free (fs);
+error:
+	return NULL;
+}
+
+static PedFileSystem*
+_swap_swsusp_open (PedGeometry* geom)
+{
+	PedFileSystem*		fs;
+	SwapSpecific*		fs_info;
+	const char*		sig;
+
+	fs = swap_alloc (geom);
+	if (!fs)
+		goto error;
+        fs->type = &_swap_swsusp_type;
+	swap_init (fs, 0);
+
+	fs_info = SWAP_SPECIFIC (fs);
+	if (!ped_geometry_read (fs->geom, fs_info->header, 0,
+				fs_info->page_sectors))
+		goto error_free_fs;
+
+	sig = ((char*) fs_info->header) + getpagesize() - 10;
+       	if (strncmp (sig, "S1SUSPEND", 9) == 0) {
+	        fs_info->version = -1;
+	} else {
+		char	_sig [10];
+
+		memcpy (_sig, sig, 9);
+		_sig [9] = 0;
+ 		ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
+			_("Unrecognised swsusp linux swap signature '%9s'."), _sig);
  		goto error_free_fs;
 	}
 
@@ -437,7 +552,7 @@ error:
 static PedFileSystem*
 swap_copy (const PedFileSystem* fs, PedGeometry* geom, PedTimer* timer)
 {
-	return ped_file_system_create (geom, &swap_type, timer);
+	return ped_file_system_create (geom, &_swap_v2_type, timer);
 }
 
 static int
@@ -473,11 +588,41 @@ swap_get_copy_constraint (const PedFileSystem* fs, const PedDevice* dev)
 }
 #endif /* !DISCOVER_ONLY */
 
-static PedFileSystemOps swap_ops = {
-	probe:		swap_probe,
+static PedGeometry*
+_swap_v1_probe (PedGeometry* geom) {
+        return _generic_swap_probe (geom, 0);
+}
+
+static PedGeometry*
+_swap_v2_probe (PedGeometry* geom) {
+        return _generic_swap_probe (geom, 1);
+}
+
+static PedGeometry*
+_swap_swsusp_probe (PedGeometry* geom) {
+        return _generic_swap_probe (geom, -1);
+}
+
+static int
+_swap_v1_clobber (PedGeometry* geom) {
+        return _generic_swap_clobber (geom, 0);
+}
+
+static int
+_swap_v2_clobber (PedGeometry* geom) {
+        return _generic_swap_clobber (geom, 1);
+}
+
+static int
+_swap_swsusp_clobber (PedGeometry* geom) {
+        return _generic_swap_clobber (geom, -1);
+}
+
+static PedFileSystemOps _swap_v1_ops = {
+	probe:		_swap_v1_probe,
 #ifndef DISCOVER_ONLY
-	clobber:	swap_clobber,
-	open:		swap_open,
+	clobber:	_swap_v1_clobber,
+	open:		_swap_v1_open,
 	create:		swap_create,
 	close:		swap_close,
 	check:		swap_check,
@@ -500,22 +645,93 @@ static PedFileSystemOps swap_ops = {
 #endif /* !DISCOVER_ONLY */
 };
 
-static PedFileSystemType swap_type = {
+static PedFileSystemOps _swap_v2_ops = {
+	probe:		_swap_v2_probe,
+#ifndef DISCOVER_ONLY
+	clobber:	_swap_v2_clobber,
+	open:		_swap_v2_open,
+	create:		swap_create,
+	close:		swap_close,
+	check:		swap_check,
+	copy:		swap_copy,
+	resize:		swap_resize,
+	get_create_constraint:	swap_get_create_constraint,
+	get_resize_constraint:	swap_get_resize_constraint,
+	get_copy_constraint:	swap_get_copy_constraint
+#else
+	clobber:	NULL,
+	open:		NULL,
+	create:		NULL,
+	close:		NULL,
+	check:		NULL,
+	copy:		NULL,
+	resize:		NULL,
+	get_create_constraint:	NULL,
+	get_resize_constraint:	NULL,
+	get_copy_constraint:	NULL
+#endif /* !DISCOVER_ONLY */
+};
+
+static PedFileSystemOps _swap_swsusp_ops = {
+  probe:		_swap_swsusp_probe,
+#ifndef DISCOVER_ONLY
+	clobber:	_swap_swsusp_clobber,
+	open:		_swap_swsusp_open,
+	create:		swap_create,
+	close:		swap_close,
+	check:		swap_check,
+	copy:		swap_copy,
+	resize:		swap_resize,
+	get_create_constraint:	swap_get_create_constraint,
+	get_resize_constraint:	swap_get_resize_constraint,
+	get_copy_constraint:	swap_get_copy_constraint
+#else
+	clobber:	NULL,
+	open:		NULL,
+	create:		NULL,
+	close:		NULL,
+	check:		NULL,
+	copy:		NULL,
+	resize:		NULL,
+	get_create_constraint:	NULL,
+	get_resize_constraint:	NULL,
+	get_copy_constraint:	NULL
+#endif /* !DISCOVER_ONLY */
+};
+
+static PedFileSystemType _swap_v1_type = {
 	next:	NULL,
-	ops:	&swap_ops,
-	name:	"linux-swap",
+	ops:	&_swap_v1_ops,
+	name:	"linux-swap(old)",
 	block_sizes: LINUXSWAP_BLOCK_SIZES
+};
+
+static PedFileSystemType _swap_v2_type = {
+	next:	NULL,
+	ops:	&_swap_v2_ops,
+	name:	"linux-swap(new)",
+	block_sizes: LINUXSWAP_BLOCK_SIZES
+};
+
+static PedFileSystemType _swap_swsusp_type = {
+        next:   NULL,
+	ops:    &_swap_swsusp_ops,
+	name:   "swsusp",
+        block_sizes: LINUXSWAP_BLOCK_SIZES
 };
 
 void
 ped_file_system_linux_swap_init ()
 {
-	ped_file_system_type_register (&swap_type);
+	ped_file_system_type_register (&_swap_v1_type);
+	ped_file_system_type_register (&_swap_v2_type);
+	ped_file_system_type_register (&_swap_swsusp_type);
 }
 
 void
 ped_file_system_linux_swap_done ()
 {
-	ped_file_system_type_unregister (&swap_type);
+	ped_file_system_type_unregister (&_swap_v1_type);
+	ped_file_system_type_unregister (&_swap_v2_type);
+	ped_file_system_type_unregister (&_swap_swsusp_type);
 }
-
