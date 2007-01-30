@@ -54,7 +54,7 @@ static char MBR_BOOT_CODE[] = {
 #define PARTITION_EMPTY		0x00
 #define PARTITION_FAT12		0x01
 #define PARTITION_FAT16_SM	0x04
-#define PARTITION_EXT		0x05
+#define PARTITION_DOS_EXT	0x05
 #define PARTITION_FAT16		0x06
 #define PARTITION_NTFS		0x07
 #define PARTITION_HPFS		0x07
@@ -66,16 +66,15 @@ static char MBR_BOOT_CODE[] = {
 #define PART_FLAG_HIDDEN	0x10	/* Valid for FAT/NTFS only */
 #define PARTITION_FAT12_H	(PARTITION_FAT12	| PART_FLAG_HIDDEN)
 #define PARTITION_FAT16_SM_H	(PARTITION_FAT16_SM	| PART_FLAG_HIDDEN)
-#define PARTITION_EXT_H		(PARTITION_EXT		| PART_FLAG_HIDDEN)
+#define PARTITION_DOS_EXT_H	(PARTITION_DOS_EXT	| PART_FLAG_HIDDEN)
 #define PARTITION_FAT16_H	(PARTITION_FAT16	| PART_FLAG_HIDDEN)
 #define PARTITION_NTFS_H	(PARTITION_NTFS		| PART_FLAG_HIDDEN)
 #define PARTITION_FAT32_H	(PARTITION_FAT32	| PART_FLAG_HIDDEN)
 #define PARTITION_FAT32_LBA_H	(PARTITION_FAT32_LBA	| PART_FLAG_HIDDEN)
 #define PARTITION_FAT16_LBA_H	(PARTITION_FAT16_LBA	| PART_FLAG_HIDDEN)
 
-#define PARTITION_LDM		0x42
-
 #define PARTITION_COMPAQ_DIAG	0x12
+#define PARTITION_LDM		0x42
 #define PARTITION_LINUX_SWAP	0x82
 #define PARTITION_LINUX		0x83
 #define PARTITION_LINUX_EXT	0x85
@@ -698,7 +697,7 @@ raw_part_is_extended (const DosRawPartition* raw_part)
 	PED_ASSERT (raw_part != NULL, return 0);
 
 	switch (raw_part->type) {
-	case PARTITION_EXT:
+	case PARTITION_DOS_EXT:
 	case PARTITION_EXT_LBA:
 	case PARTITION_LINUX_EXT:
 		return 1;
@@ -985,7 +984,7 @@ fill_ext_raw_part_geom (DosRawPartition* raw_part, PedCHSGeometry* bios_geom,
 	PED_ASSERT (geom->dev != NULL, return 0);
 
 	raw_part->boot_ind = 0;
-	raw_part->type = PARTITION_EXT;
+	raw_part->type = PARTITION_DOS_EXT;
 	raw_part->start = PED_CPU_TO_LE32 ((geom->start - offset)
 				/ (geom->dev->sector_size / 512));
 	raw_part->length = PED_CPU_TO_LE32 (geom->length
@@ -1238,7 +1237,7 @@ msdos_partition_set_system (PedPartition* part,
 		if (dos_data->lba)
 			dos_data->system = PARTITION_EXT_LBA;
 		else
-			dos_data->system = PARTITION_EXT;
+			dos_data->system = PARTITION_DOS_EXT;
 		return 1;
 	}
 
