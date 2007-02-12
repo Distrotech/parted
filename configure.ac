@@ -494,6 +494,7 @@ libparted/fs/reiserfs/Makefile
 libparted/fs/ufs/Makefile
 libparted/fs/xfs/Makefile
 libparted/tests/Makefile
+libparted.pc
 parted/Makefile
 partprobe/Makefile
 doc/Makefile
