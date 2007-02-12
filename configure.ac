@@ -1,5 +1,5 @@
 dnl GNU Parted - a library and front end for manipulation hard disk partitions
-dnl Copyright (C) 1998, 1999, 2000, 2001, 2002, 2005
+dnl Copyright (C) 1998, 1999, 2000, 2001, 2002, 2005, 2007
 dnl                     Free Software Foundation, Inc.
 dnl
 dnl This file may be modified and/or distributed without restriction.
@@ -40,7 +40,7 @@ PACKAGE=parted
 VERSION=$PED_VERSION
 
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
- 
+
 AM_CONFIG_HEADER(config.h)
 
 AC_CANONICAL_HOST
@@ -165,6 +165,7 @@ dnl Check for programs.
 AC_ISC_POSIX
 AC_PROG_CC
 AC_PROG_GCC_TRADITIONAL
+AM_PROG_CC_C_O
 
 dnl This test must come as early as possible after the compiler configuration
 dnl tests, because the choice of the file model can (in principle) affect
@@ -364,7 +365,7 @@ if test "$OS" = beos; then
 	dnl Include the socket library, as it is a depedency of libuuid
 	dnl and so also of us (due to socket() call in libuuid)
 	OS_LIBS="$OS_LIBS -lsocket"
-fi	
+fi
 
 AC_SUBST(OS_LIBS)
 
@@ -387,7 +388,7 @@ If you can't find one try:
 	exit
 )
 
-AC_CHECK_HEADERS(getopt.h) 
+AC_CHECK_HEADERS(getopt.h)
 
 dnl required for libparted/llseek.c  (TODO: make linux-x86 only)
 if test "$OS" = linux; then
