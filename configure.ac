@@ -207,7 +207,6 @@ Or install gettext.  GNU gettext is available from
 )
 	exit
 fi
-CFLAGS="$CFLAGS -DLOCALEDIR=\"\\\"$datadir/locale\\\"\""
 
 dnl Check for libdl, if we are doing dynamic loading
 DL_LIBS=""
