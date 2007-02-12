@@ -1,7 +1,7 @@
 /* -*- Mode: c; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 8 -*-
 
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000, 2001, 2005 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2001, 2005, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -728,7 +728,7 @@ sun_partition_enumerate (PedPartition* part)
 	/* Ok, now allocate the Whole disk if it isn't already */
 	p = ped_disk_get_partition (part->disk, WHOLE_DISK_PART + 1);
 	if (!p) {
-		int i = ped_exception_throw (
+		int j = ped_exception_throw (
 				PED_EXCEPTION_WARNING,
 				PED_EXCEPTION_IGNORE_CANCEL,
 				_("The Whole Disk partition is the only "
@@ -737,7 +737,7 @@ sun_partition_enumerate (PedPartition* part)
 				  "a real one.  Solaris may not be able to "
 				  "boot without it, and SILO (the sparc boot "
 				  "loader) appreciates it as well."));
-		if (i == PED_EXCEPTION_IGNORE) {
+		if (j == PED_EXCEPTION_IGNORE) {
 			/* bad bad bad...you will suffer your own fate */
 			part->num = WHOLE_DISK_PART + 1;
 			return 1;

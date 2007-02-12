@@ -119,7 +119,7 @@ hfsc_delete_cache(HfsCPrivateCache* cache)
 HfsCPrivateExtent*
 hfsc_cache_add_extent(HfsCPrivateCache* cache, uint32_t start, uint32_t length,
 		      uint32_t block, uint16_t offset, uint8_t sbb,
-		      uint8_t where, uint8_t index)
+		      uint8_t where, uint8_t ref_index)
 {
 	HfsCPrivateExtent*	ext;
 	unsigned int		idx = start >> CR_SHIFT;
@@ -160,7 +160,7 @@ hfsc_cache_add_extent(HfsCPrivateCache* cache, uint32_t start, uint32_t length,
 	ext->ref_offset = offset;
 	ext->sect_by_block = sbb;
 	ext->where = where;
-	ext->ref_index = index;
+	ext->ref_index = ref_index;
 
 	ext->next = cache->linked_ref[idx];
 	cache->linked_ref[idx] = ext;

@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+    Copyright (C) 1999, 2000, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -126,9 +126,9 @@ ped_exception_get_option_string (PedExceptionOption ex_opt)
 }
 
 static PedExceptionOption
-default_handler (PedException* ex)
+default_handler (PedException* e)
 {
-	if (ex->type == PED_EXCEPTION_BUG)
+	if (e->type == PED_EXCEPTION_BUG)
 		fprintf (stderr,
 			_("A bug has been detected in GNU Parted.  "
 			"Refer to the web site of parted "
@@ -141,14 +141,14 @@ default_handler (PedException* ex)
 			VERSION);
 	else
 		fprintf (stderr, "%s: ",
-			 ped_exception_get_type_string (ex->type));
-	fprintf (stderr, "%s\n", ex->message);
+			 ped_exception_get_type_string (e->type));
+	fprintf (stderr, "%s\n", e->message);
 
-	switch (ex->options) {
+	switch (e->options) {
 		case PED_EXCEPTION_OK:
 		case PED_EXCEPTION_CANCEL:
 		case PED_EXCEPTION_IGNORE:
-			return ex->options;
+			return e->options;
 
 		default:
 			return PED_EXCEPTION_UNHANDLED;

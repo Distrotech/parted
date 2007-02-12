@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
+    Copyright (C) 1999, 2000, 2002, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -93,12 +93,15 @@ _generic_swap_probe (PedGeometry* geom, int kind)
 		        break;
 	/* Check for new style swap partitions. */
 	        case 1:
-		  fs = _swap_v2_open(geom);
+		        fs = _swap_v2_open(geom);
 		        break;
 	/* Check for swap partitions containing swsusp data. */
 	        case -1:
 		        fs = _swap_swsusp_open(geom);
                         break;
+
+	        default:
+			goto error; /* Not reached */
         }
 
 	if (!fs)
@@ -136,12 +139,15 @@ _generic_swap_clobber (PedGeometry* geom, int kind)
 		        break;
 	/* Check for new style swap partitions. */
 	        case 1:
-		  fs = _swap_v2_open(geom);
+		        fs = _swap_v2_open(geom);
 		        break;
 	/* Check for swap partitions containing swsusp data. */
 	        case -1:
 		        fs = _swap_swsusp_open(geom);
                         break;
+
+	        default:
+			goto error; /* Not reached */
         }
 
 	if (!fs)

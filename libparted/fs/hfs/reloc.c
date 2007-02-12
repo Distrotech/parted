@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+    Copyright (C) 2004, 2005, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -593,8 +593,8 @@ hfs_pack_free_space_from_block (PedFileSystem *fs, unsigned int fblock,
 	HfsCPrivateCache*	cache;
 	unsigned int 		to_fblock = fblock;
 	unsigned int		start = fblock;
-	unsigned int		div = PED_BE16_TO_CPU (mdb->total_blocks)
-				      + 1 - start - to_free;
+	unsigned int		divisor = PED_BE16_TO_CPU (mdb->total_blocks)
+				          + 1 - start - to_free;
 	int			ret;
 
 	PED_ASSERT (!hfs_block, return 0);
@@ -654,7 +654,7 @@ hfs_pack_free_space_from_block (PedFileSystem *fs, unsigned int fblock,
 			fblock++;
 		}
 
-		ped_timer_update(timer, (float)(to_fblock - start)/div);
+		ped_timer_update(timer, (float)(to_fblock - start)/divisor);
 	}
 
 	ped_free (hfs_block); hfs_block = NULL; hfs_block_count = 0;
