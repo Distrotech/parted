@@ -166,6 +166,7 @@ AC_ISC_POSIX
 AC_PROG_CC
 AC_PROG_GCC_TRADITIONAL
 AM_PROG_CC_C_O
+AC_GNU_SOURCE
 
 dnl This test must come as early as possible after the compiler configuration
 dnl tests, because the choice of the file model can (in principle) affect

@@ -1,6 +1,6 @@
 /*
     parted - a frontend to libparted
-    Copyright (C) 2006 Free Software Foundation, Inc.
+    Copyright (C) 2006, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
 */
 
-#define _GNU_SOURCE
 #include <wchar.h>
 
 #include <stdio.h>
@@ -30,7 +29,6 @@
 #include <config.h>
 
 #ifdef ENABLE_NLS
-#       define _GNU_SOURCE
 #       include <wchar.h>
 #else
 #       ifdef wchar_t

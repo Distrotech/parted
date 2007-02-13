@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1999 - 2005 Free Software Foundation, Inc.
+    Copyright (C) 1999 - 2005, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,10 +16,6 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
 */
-
-/* we need this for O_DIRECT on Linux, it's in the glibc headers */
-/* ... and for posix_memalign()                                  */
-#define _GNU_SOURCE
 
 #define PROC_DEVICES_BUFSIZ 16384
 

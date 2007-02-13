@@ -31,7 +31,6 @@
 #include <config.h>
 
 #ifdef ENABLE_NLS
-#       define _GNU_SOURCE
 #       include <wchar.h>
         int wcswidth (const wchar_t *s, size_t n);
 #	define L_(str) L##str
@@ -40,7 +39,6 @@
 #       ifdef wchar_t
 #               undef wchar_t
 #       endif
-#       define _GNU_SOURCE
 #       include <string.h>
 #       define wchar_t char
 #       define wcslen strlen
