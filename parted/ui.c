@@ -1,6 +1,6 @@
 /*
     parted - a frontend to libparted
-    Copyright (C) 1999, 2000, 2001, 2002, 2006 Free Software Foundation, Inc.
+    Copyright (C) 1999, 2000, 2001, 2002, 2006, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -144,9 +144,8 @@ wipe_line ()
 		return;
 
 	/* yuck */
-	printf (
-"\r                                                                          \r"
-	);
+	fputs ("\r                                     "
+	       "                                     \r", stdout);
 }
 
 
@@ -190,11 +189,11 @@ _add_history_unique (const char* line)
 static void
 _dump_history ()
 {
-    printf(_("\nCommand History:\n"));
+    fputs (_("\nCommand History:\n"), stdout);
     int i = 0;
     HIST_ENTRY** all_entries = history_list ();
     while (all_entries[i]) {
-        printf("%s\n", all_entries[i++]->line);
+        puts(all_entries[i++]->line);
     }
 }
 #endif /* HAVE_LIBREADLINE */
@@ -224,11 +223,11 @@ reset_env (int quit)
 	readline_state.in_readline = 0;
 	
 	if (in_readline) {
-		printf ("\n");
-        if (quit)    
-    	    exit (0);
+		putchar ('\n');
+		if (quit)    
+			exit (0);
 
-        siglongjmp (readline_state.jmp_state, 1);
+		siglongjmp (readline_state.jmp_state, 1);
 	}
 }
 
@@ -267,19 +266,19 @@ sigsegv_handler (int signum, siginfo_t* info, void* ucontext)
     switch (info->si_code) {
         
         case SEGV_MAPERR:
-            printf(_("\nError: SEGV_MAPERR (Address not mapped "
-                     "to object)\n"));
+            fputs(_("\nError: SEGV_MAPERR (Address not mapped "
+		    "to object)\n"), stdout);
             PED_ASSERT(0, break); /* Force a backtrace */
             break;
 
         case SEGV_ACCERR:
-            printf(_("\nError: SEGV_ACCERR (Invalid permissions "
-                     "for mapped object)\n"));
+            fputs(_("\nError: SEGV_ACCERR (Invalid permissions "
+		    "for mapped object)\n"), stdout);
             break;
 
         default:
-            printf(_("\nError: A general SIGSEGV signal was "
-                     "encountered.\n"));
+            fputs(_("\nError: A general SIGSEGV signal was "
+		    "encountered.\n"), stdout);
             PED_ASSERT(0, break); /* Force a backtrace */
             break;
     }
@@ -306,41 +305,41 @@ sigfpe_handler (int signum, siginfo_t* info, void* ucontext)
     switch (info->si_code) {
 
         case FPE_INTDIV:
-            printf(_("\nError: FPE_INTDIV (Integer: divide by zero)"));
+	    fputs(_("\nError: FPE_INTDIV (Integer: divide by zero)"), stdout);
             break;
         
         case FPE_INTOVF:
-            printf(_("\nError: FPE_INTOVF (Integer: overflow)"));
+            fputs(_("\nError: FPE_INTOVF (Integer: overflow)"), stdout);
             break;
         
         case FPE_FLTDIV:
-            printf(_("\nError: FPE_FLTDIV (Float: divide by zero)"));
+            fputs(_("\nError: FPE_FLTDIV (Float: divide by zero)"), stdout);
             break;
 
         case FPE_FLTOVF:
-            printf(_("\nError: FPE_FLTOVF (Float: overflow)"));
+            fputs(_("\nError: FPE_FLTOVF (Float: overflow)"), stdout);
             break;
 
         case FPE_FLTUND:
-            printf(_("\nError: FPE_FLTUND (Float: underflow)"));
+            fputs(_("\nError: FPE_FLTUND (Float: underflow)"), stdout);
             break;
 
         case FPE_FLTRES:
-            printf(_("\nError: FPE_FLTRES (Float: inexact result)"));
+            fputs(_("\nError: FPE_FLTRES (Float: inexact result)"), stdout);
             break;
 
         case FPE_FLTINV:
-            printf(_("\nError: FPE_FLTINV (Float: invalid operation)"));
+            fputs(_("\nError: FPE_FLTINV (Float: invalid operation)"), stdout);
             break;
 
         case FPE_FLTSUB:
-            printf(_("\nError: FPE_FLTSUB (Float: subscript out of "
-                     "range)"));
+            fputs(_("\nError: FPE_FLTSUB (Float: subscript out of "
+		    "range)"), stdout);
             break;
 
         default:
-            printf(_("\nError: A general SIGFPE signal was "
-                     "encountered."));
+            fputs(_("\nError: A general SIGFPE signal was "
+		    "encountered."), stdout);
             break;
 
     }
@@ -367,41 +366,41 @@ sigill_handler (int signum, siginfo_t* info, void* ucontext)
     switch (info->si_code) {
 
         case ILL_ILLOPC:
-            printf(_("\nError: ILL_ILLOPC (Illegal Opcode)"));
+            fputs(_("\nError: ILL_ILLOPC (Illegal Opcode)"), stdout);
             break;
         
         case ILL_ILLOPN:
-            printf(_("\nError: ILL_ILLOPN (Illegal Operand)"));
+	  fputs(_("\nError: ILL_ILLOPN (Illegal Operand)"), stdout);
             break;
         
         case ILL_ILLADR:
-            printf(_("\nError: ILL_ILLADR (Illegal addressing "
-                     "mode)"));
+	    fputs(_("\nError: ILL_ILLADR (Illegal addressing mode)"),
+		  stdout);
             break;
 
         case ILL_ILLTRP:
-            printf(_("\nError: ILL_ILLTRP (Illegal Trap)"));
+            fputs(_("\nError: ILL_ILLTRP (Illegal Trap)"), stdout);
             break;
 
         case ILL_PRVOPC:
-            printf(_("\nError: ILL_PRVOPC (Privileged Opcode)"));
+            fputs(_("\nError: ILL_PRVOPC (Privileged Opcode)"), stdout);
             break;
 
         case ILL_PRVREG:
-            printf(_("\nError: ILL_PRVREG (Privileged Register)"));
+            fputs(_("\nError: ILL_PRVREG (Privileged Register)"), stdout);
             break;
 
         case ILL_COPROC:
-            printf(_("\nError: ILL_COPROC (Coprocessor Error)"));
+            fputs(_("\nError: ILL_COPROC (Coprocessor Error)"), stdout);
             break;
 
         case ILL_BADSTK:
-            printf(_("\nError: ILL_BADSTK (Internal Stack Error)"));
+            fputs(_("\nError: ILL_BADSTK (Internal Stack Error)"), stdout);
             break;
 
         default:
-            printf(_("\nError: A general SIGILL signal was "
-                     "encountered."));
+            fputs(_("\nError: A general SIGILL signal was "
+		    "encountered."), stdout);
             break;
     }
    
@@ -432,7 +431,7 @@ _readline (const char* prompt, const StrList* possibilities)
 	} else
 #endif
 	{
-		printf ("%s", prompt);
+		fputs (prompt, stdout);
 		fflush (stdout);
 		line = (char*) malloc (256);
 		if (fgets (line, 256, stdin) && strcmp (line, "") != 0) {
@@ -1281,12 +1280,16 @@ done_ui ()
 void
 help_msg ()
 {
-	printf (_(usage_msg));
+	fputs (_(usage_msg), stdout);
 
-	printf ("\n%s\n", _("OPTIONs:"));
+	putchar ('\n');
+	fputs (_("OPTIONs:"), stdout);
+	putchar ('\n');
 	print_options_help ();
 
-	printf ("\n%s\n", _("COMMANDs:"));
+	putchar ('\n');
+	fputs (_("COMMANDs:"), stdout);
+	putchar ('\n');
 	print_commands_help ();
 	exit (0);
 }
@@ -1306,7 +1309,7 @@ interactive_mode (PedDevice** dev, Command* cmd_list[])
 
 	commands = cmd_list;	/* FIXME yucky, nasty, evil hack */
 
-	printf ("%s", prog_name);
+	fputs (prog_name, stdout);
 
     print_using_dev (*dev);
 
@@ -1320,7 +1323,7 @@ interactive_mode (PedDevice** dev, Command* cmd_list[])
 
 		while (!command_line_get_word_count ()) {
 			if (feof (stdin)) {
-				printf ("\n");
+				putchar ('\n');
 				return 1;
 			}
 			command_line_prompt_words ("(parted)", NULL,
@@ -1369,8 +1372,8 @@ non_interactive_mode (PedDevice** dev, Command* cmd_list[],
 		}
 
                 if (!(cmd->non_interactive)) {
-                        printf("This command does not make sense in "
-                               "non-interactive mode.\n");
+                        fputs(_("This command does not make sense in "
+				"non-interactive mode.\n"), stdout);
                         exit(1);
                         goto error;
                 }
@@ -1383,4 +1386,3 @@ non_interactive_mode (PedDevice** dev, Command* cmd_list[],
 error:
 	return 0;
 }
-
