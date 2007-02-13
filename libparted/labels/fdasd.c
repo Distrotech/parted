@@ -28,8 +28,6 @@
 #  define _(String) (String)
 #endif /* ENABLE_NLS */
 
-#define GETARG(x) {int k=strlen(optarg);x=malloc(k);strncpy(x,optarg,k);}
-
 static int
 getpos (fdasd_anchor_t *anc, int dsn)
 {
