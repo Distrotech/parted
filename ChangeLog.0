@@ -3042,8 +3042,8 @@ June 6th 1999 - Andrew Clausen <clausen@alphalink.com.au>
 -----------------------------------------------------------------------------
 
 This file is part of GNU Parted
-Copyright (C) 1999 - 2006 Free Software Foundation Inc.
+Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006
+Free Software Foundation Inc.
 
 This file may be modified and/or distributed without restriction.  This is
 not an invitation to misrepresent the history of GNU Parted.
-
