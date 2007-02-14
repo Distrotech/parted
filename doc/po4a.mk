@@ -58,6 +58,7 @@ updatepo:
 	tmpdir=`pwd`; \
 	cd $(srcdir); \
 	for po in *.$(lang).po; do \
+	  case "$$po" in '*'*) continue;; esac; \
 	  pot=../C/po/$${po%$(lang).po}pot; \
 	  echo "$(MSGMERGE) $$po $$pot -o $${po%po}new.po"; \
 	  if $(MSGMERGE) $$po $$pot -o $$tmpdir/$${po%po}new.po; then \
@@ -87,4 +88,3 @@ dist-hook: updatepo
 # Build the pages without addendum
 %: $(srcdir)/%.$(lang).po $(srcdir)/../C/%
 	po4a-translate -f man -m $(srcdir)/../C/$@ -p $< -l $@ $(po4a_translate_options)
-

@@ -9,8 +9,10 @@ man_MANS = $(dist_man_MANS)
 .PHONY: updatepo
 # Update the POT in srcdir
 # Make sure the update does not only consist in a new POT-Creation-Date
+# Don't do anything if $(srcdir) is read-only (i.e., for "make distcheck").
 updatepo:
 	cd $(srcdir); \
+	test -w . || exit 0; \
 	for name in $(dist_man_MANS); do \
 		echo $$name; \
 		cp po/$$name.pot po/$$name.new.pot; \
