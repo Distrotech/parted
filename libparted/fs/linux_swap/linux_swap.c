@@ -87,21 +87,21 @@ _generic_swap_probe (PedGeometry* geom, int kind)
 	PedSector	length;
 
         switch (kind) {
-	/* Check for old style swap partitions. */
-	        case 0:
-		        fs = _swap_v1_open(geom);
-		        break;
-	/* Check for new style swap partitions. */
-	        case 1:
-		        fs = _swap_v2_open(geom);
-		        break;
-	/* Check for swap partitions containing swsusp data. */
-	        case -1:
-		        fs = _swap_swsusp_open(geom);
+        /* Check for old style swap partitions. */
+                case 0:
+                        fs = _swap_v1_open(geom);
                         break;
-
-	        default:
-			goto error; /* Not reached */
+        /* Check for new style swap partitions. */
+                case 1:
+                        fs = _swap_v2_open(geom);
+                        break;
+        /* Check for swap partitions containing swsusp data. */
+                case -1:
+                        fs = _swap_swsusp_open(geom);
+                        break;
+        /* Not reached. */
+                default:
+                        goto error;
         }
 
 	if (!fs)
@@ -133,21 +133,21 @@ _generic_swap_clobber (PedGeometry* geom, int kind)
 	char			buf[512];
 
         switch (kind) {
-	/* Check for old style swap partitions. */
-	        case 0:
-		        fs = _swap_v1_open(geom);
-		        break;
-	/* Check for new style swap partitions. */
-	        case 1:
-		        fs = _swap_v2_open(geom);
-		        break;
-	/* Check for swap partitions containing swsusp data. */
-	        case -1:
-		        fs = _swap_swsusp_open(geom);
+        /* Check for old style swap partitions. */
+                case 0:
+                        fs = _swap_v1_open(geom);
                         break;
-
-	        default:
-			goto error; /* Not reached */
+        /* Check for new style swap partitions. */
+                case 1:
+                        fs = _swap_v2_open(geom);
+                        break;
+        /* Check for swap partitions containing swsusp data. */
+                case -1:
+                        fs = _swap_swsusp_open(geom);
+                        break;
+        /* Not reached */
+                default:
+                        goto error;
         }
 
 	if (!fs)
