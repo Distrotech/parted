@@ -1,7 +1,7 @@
 /* -*- Mode: c; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 8 -*-
 
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2001, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -114,7 +114,7 @@ static PedDiskOps dasd_disk_ops = {
 	duplicate: dasd_duplicate,
 	free: dasd_free,
 	partition_set_system: dasd_partition_set_system,
-	
+
 	partition_new: dasd_partition_new,
 	partition_destroy: dasd_partition_destroy,
 	partition_set_flag:	dasd_partition_set_flag,
@@ -151,13 +151,13 @@ dasd_alloc (const PedDevice* dev)
 	disk = _ped_disk_alloc (dev, &dasd_disk_type);
 	if (!disk)
 		return NULL;
-        
+
 	disk->disk_specific = disk_specific = ped_malloc(sizeof(DasdDiskSpecific));
 	if (!disk->disk_specific) {
 		ped_free (disk);
 		return NULL;
 	}
-        
+
 	/* because we lie to parted we have to compensate with the
 	   real sector size.  Record that now. */
 	if (ioctl(arch_specific->fd, BLKSSZGET,
@@ -238,7 +238,6 @@ dasd_probe (const PedDevice *dev)
 
 error_cleanup:
 	fdasd_cleanup(&anchor);
-error:
 	ped_exception_throw(PED_EXCEPTION_ERROR,PED_EXCEPTION_IGNORE_CANCEL,errstr);
 
 	return 0;
@@ -247,7 +246,6 @@ error:
 static int
 dasd_clobber (PedDevice* dev)
 {
-	int i;
 	LinuxSpecific* arch_specific;
 	struct fdasd_anchor anchor;
 
@@ -262,14 +260,12 @@ dasd_clobber (PedDevice* dev)
 	fdasd_write_labels(&anchor, arch_specific->fd);
 
 	return 1;
-error:
-	return 0;
 }
 
 static int
 dasd_read (PedDisk* disk)
 {
-	int i, s;
+	int i;
 	char str[20];
 	PedDevice* dev;
 	PedPartition* part;
@@ -354,13 +350,13 @@ dasd_read (PedDisk* disk)
 
         PDEBUG;
 
-		start = (long long)(long long) p->start_trk 
-				* (long long) disk->dev->hw_geom.sectors 
+		start = (long long)(long long) p->start_trk
+				* (long long) disk->dev->hw_geom.sectors
 				* (long long) disk_specific->real_sector_size
 				/ (long long) disk->dev->sector_size;
-		end   = (long long)((long long) p->end_trk + 1) 
+		end   = (long long)((long long) p->end_trk + 1)
 				* (long long) disk->dev->hw_geom.sectors
-				* (long long) disk_specific->real_sector_size 
+				* (long long) disk_specific->real_sector_size
 				/ (long long) disk->dev->sector_size - 1;
 		part = ped_partition_new(disk, 0, NULL, start, end);
         PDEBUG;
@@ -404,7 +400,7 @@ dasd_read (PedDisk* disk)
 		dasd_data->type = 0;
 
 		constraint_exact = ped_constraint_exact (&part->geom);
-		if (!constraint_exact) 
+		if (!constraint_exact)
 			goto error_close_dev;
 		if (!ped_disk_add_partition(disk, part, constraint_exact))
 			goto error_close_dev;
@@ -412,12 +408,12 @@ dasd_read (PedDisk* disk)
 
 		if (p->fspace_trk > 0) {
 			start = (long long)((long long) p->end_trk + 1)
-					* (long long) disk->dev->hw_geom.sectors 
+					* (long long) disk->dev->hw_geom.sectors
 					* (long long) disk_specific->real_sector_size
 					/ (long long) disk->dev->sector_size;
-			end   = (long long)((long long) p->end_trk + 1 + p->fspace_trk) 
+			end   = (long long)((long long) p->end_trk + 1 + p->fspace_trk)
 					* (long long) disk->dev->hw_geom.sectors
-					* (long long) disk_specific->real_sector_size 
+					* (long long) disk_specific->real_sector_size
 					/ (long long) disk->dev->sector_size - 1;
 			part = ped_partition_new (disk, 0, NULL, start, end);
 
@@ -427,7 +423,7 @@ dasd_read (PedDisk* disk)
 			part->type = PED_PARTITION_FREESPACE;
 			constraint_exact = ped_constraint_exact(&part->geom);
 
-			if (!constraint_exact) 
+			if (!constraint_exact)
 				goto error_close_dev;
 			if (!ped_disk_add_partition(disk, part, constraint_exact))
 				goto error_close_dev;
@@ -452,7 +448,6 @@ dasd_update_type (PedDisk* disk)
 	PedPartition* part;
 	LinuxSpecific* arch_specific;
 	DasdDiskSpecific* disk_specific;
-	char *sys = NULL;
 
 	arch_specific = LINUX_SPECIFIC(disk->dev);
 	disk_specific = disk->disk_specific;
@@ -492,7 +487,7 @@ dasd_update_type (PedDisk* disk)
 		}
 
 		ch += 9;
-                                
+
 		switch (dasd_data->system) {
 			case PARTITION_LINUX_LVM:
 				PDEBUG;
@@ -522,14 +517,13 @@ dasd_update_type (PedDisk* disk)
 
 	return 1;
 }
-        
+
 static int
 dasd_write (PedDisk* disk)
 {
 	DasdPartitionData* dasd_data;
 	PedPartition* part;
 	int i;
-	int ret;
 	partition_info_t *p;
 	LinuxSpecific* arch_specific;
 	DasdDiskSpecific* disk_specific;
@@ -570,15 +564,15 @@ dasd_write (PedDisk* disk)
 
 		PDEBUG;
 
-		start = part->geom.start * disk->dev->sector_size 
+		start = part->geom.start * disk->dev->sector_size
 				/ disk_specific->real_sector_size / disk->dev->hw_geom.sectors;
-		stop = (part->geom.end + 1) 
+		stop = (part->geom.end + 1)
 			   * disk->dev->sector_size / disk_specific->real_sector_size
 			   / disk->dev->hw_geom.sectors - 1;
 
 		PDEBUG;
 		dasd_data = part->disk_specific;
-                
+
 		type = dasd_data->type;
 		PDEBUG;
 
@@ -640,10 +634,7 @@ dasd_partition_destroy (PedPartition* part)
 static int
 dasd_partition_set_flag (PedPartition* part, PedPartitionFlag flag, int state)
 {
-	PedDisk* disk;
-	PedPartition* walk;
 	DasdPartitionData* dasd_data;
-	const PedFileSystemType* fs_type;
 
 	PED_ASSERT(part != NULL, return 0);
 	PED_ASSERT(part->disk_specific != NULL, return 0);
@@ -772,7 +763,7 @@ dasd_partition_enumerate (PedPartition* part)
 {
 	int i;
 	PedPartition* p;
-	
+
 	/* never change the partition numbers */
 	if (part->num != -1)
 		return 1;
@@ -851,7 +842,7 @@ dasd_alloc_metadata (PedDisk* disk)
 		vtoc_end = 23;
 	else
         /* Mark the start of the disk as metadata. */
-		vtoc_end = (FIRST_USABLE_TRK * (long long) disk->dev->hw_geom.sectors 
+		vtoc_end = (FIRST_USABLE_TRK * (long long) disk->dev->hw_geom.sectors
 				   * (long long) disk_specific->real_sector_size
 				   / (long long) disk->dev->sector_size) - 1;
 
