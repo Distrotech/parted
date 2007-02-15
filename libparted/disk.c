@@ -63,7 +63,7 @@ static int _disk_raw_add (PedDisk* disk, PedPartition* part);
 static PedDiskType*	disk_types = NULL;
 
 void
-ped_register_disk_type (PedDiskType* disk_type)
+ped_disk_type_register (PedDiskType* disk_type)
 {
 	PED_ASSERT (disk_type != NULL, return);
 	PED_ASSERT (disk_type->ops != NULL, return);
@@ -74,7 +74,8 @@ ped_register_disk_type (PedDiskType* disk_type)
 	disk_types = (struct _PedDiskType*) disk_type;
 }
 
-void ped_unregister_disk_type (PedDiskType* disk_type)
+void
+ped_disk_type_unregister (PedDiskType* disk_type)
 {
 	PedDiskType*	walk;
 	PedDiskType*	last = NULL;
@@ -90,6 +91,24 @@ void ped_unregister_disk_type (PedDiskType* disk_type)
 		((struct _PedDiskType*) last)->next = disk_type->next;
 	else
 		disk_types = disk_type->next;
+}
+
+/**
+ * Deprecated: use ped_disk_type_regiser.
+ */
+void
+ped_register_disk_type (PedDiskType* disk_type)
+{
+        ped_disk_type_register (disk_type);
+}
+
+/**
+ * Deprecated: use ped_disk_type_unregiser.
+ */
+void
+ped_unregister_disk_type (PedDiskType* disk_type)
+{
+        ped_disk_type_unregister (disk_type);
 }
 
 /**
@@ -2247,4 +2266,3 @@ ped_disk_print (PedDisk* disk)
 }
 
 /** @} */
-

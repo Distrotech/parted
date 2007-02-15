@@ -605,11 +605,11 @@ ped_disk_bsd_init ()
 	PED_ASSERT (sizeof (BSDRawPartition) == 16, return);
 	PED_ASSERT (sizeof (BSDRawLabel) == 276, return);
 
-	ped_register_disk_type (&bsd_disk_type);
+	ped_disk_type_register (&bsd_disk_type);
 }
 
 void
 ped_disk_bsd_done ()
 {
-	ped_unregister_disk_type (&bsd_disk_type);
+	ped_disk_type_unregister (&bsd_disk_type);
 }

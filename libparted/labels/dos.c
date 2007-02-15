@@ -2200,12 +2200,12 @@ ped_disk_msdos_init ()
 	PED_ASSERT (sizeof (DosRawPartition) == 16, return);
 	PED_ASSERT (sizeof (DosRawTable) == 512, return);
 
-	ped_register_disk_type (&msdos_disk_type);
+	ped_disk_type_register (&msdos_disk_type);
 }
 
 void
 ped_disk_msdos_done ()
 {
-	ped_unregister_disk_type (&msdos_disk_type);
+	ped_disk_type_unregister (&msdos_disk_type);
 }
 

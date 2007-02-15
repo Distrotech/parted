@@ -881,11 +881,11 @@ void
 ped_disk_pc98_init ()
 {
 	PED_ASSERT (sizeof (PC98RawTable) == 512 * 2, return);
-	ped_register_disk_type (&pc98_disk_type);
+	ped_disk_type_register (&pc98_disk_type);
 }
 
 void
 ped_disk_pc98_done ()
 {
-	ped_unregister_disk_type (&pc98_disk_type);
+	ped_disk_type_unregister (&pc98_disk_type);
 }

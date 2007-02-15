@@ -297,6 +297,8 @@ FUNC:ped_disk_sun_init
 FUNC:ped_disk_type_check_feature
 FUNC:ped_disk_type_get
 FUNC:ped_disk_type_get_next
+FUNC:ped_disk_type_register
+FUNC:ped_disk_type_unregister
 FUNC:ped_div_round_to_nearest
 FUNC:ped_div_round_up
 FUNC:ped_exception_catch

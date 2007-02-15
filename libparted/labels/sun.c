@@ -840,12 +840,12 @@ void
 ped_disk_sun_init ()
 {
 	PED_ASSERT (sizeof (SunRawLabel) == 512, return);
-	ped_register_disk_type (&sun_disk_type);
+	ped_disk_type_register (&sun_disk_type);
 }
 
 void
 ped_disk_sun_done ()
 {
-	ped_unregister_disk_type (&sun_disk_type);
+	ped_disk_type_unregister (&sun_disk_type);
 }
 

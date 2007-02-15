@@ -1490,15 +1490,15 @@ static PedDiskType gpt_disk_type = {
 void
 ped_disk_gpt_init()
 {
-	PED_ASSERT(sizeof(GuidPartitionEntryAttributes_t) == 8, return);
-	PED_ASSERT(sizeof(GuidPartitionEntry_t) == 128, return);
+	PED_ASSERT (sizeof (GuidPartitionEntryAttributes_t) == 8, return);
+	PED_ASSERT (sizeof (GuidPartitionEntry_t) == 128, return);
 
-	ped_register_disk_type(&gpt_disk_type);
+	ped_disk_type_register (&gpt_disk_type);
 }
 
 void
 ped_disk_gpt_done()
 {
-	ped_unregister_disk_type(&gpt_disk_type);
+	ped_disk_type_unregister (&gpt_disk_type);
 }
 

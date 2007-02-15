@@ -1604,12 +1604,12 @@ ped_disk_mac_init ()
 	PED_ASSERT (sizeof (MacRawPartition) == 512, return);
 	PED_ASSERT (sizeof (MacRawDisk) == 512, return);
 
-	ped_register_disk_type (&mac_disk_type);
+	ped_disk_type_register (&mac_disk_type);
 }
 
 void
 ped_disk_mac_done ()
 {
-	ped_unregister_disk_type (&mac_disk_type);
+	ped_disk_type_unregister (&mac_disk_type);
 }
 

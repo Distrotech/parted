@@ -200,13 +200,13 @@ dasd_free (PedDisk* disk)
 void
 ped_disk_dasd_init ()
 {
-	ped_register_disk_type(&dasd_disk_type);
+	ped_disk_type_register(&dasd_disk_type);
 }
 
 void
 ped_disk_dasd_done ()
 {
-	ped_unregister_disk_type(&dasd_disk_type);
+	ped_disk_type_unregister(&dasd_disk_type);
 }
 
 static int

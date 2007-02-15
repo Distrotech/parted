@@ -326,12 +326,12 @@ static PedDiskType loop_disk_type = {
 void
 ped_disk_loop_init ()
 {
-	ped_register_disk_type (&loop_disk_type);
+	ped_disk_type_register (&loop_disk_type);
 }
 
 void
 ped_disk_loop_done ()
 {
-	ped_unregister_disk_type (&loop_disk_type);
+	ped_disk_type_unregister (&loop_disk_type);
 }
 

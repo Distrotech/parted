@@ -270,11 +270,11 @@ void
 ped_disk_aix_init ()
 {
 	PED_ASSERT (sizeof (AixLabel) == 512, return);
-	ped_register_disk_type (&aix_disk_type);
+	ped_disk_type_register (&aix_disk_type);
 }
 
 void
 ped_disk_aix_done ()
 {
-	ped_unregister_disk_type (&aix_disk_type);
+	ped_disk_type_unregister (&aix_disk_type);
 }

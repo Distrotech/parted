@@ -903,12 +903,12 @@ ped_disk_dvh_init ()
 {
 	PED_ASSERT (sizeof (struct volume_header) == 512, return);
 
-	ped_register_disk_type (&dvh_disk_type);
+	ped_disk_type_register (&dvh_disk_type);
 }
 
 void
 ped_disk_dvh_done ()
 {
-	ped_unregister_disk_type (&dvh_disk_type);
+	ped_disk_type_unregister (&dvh_disk_type);
 }
 

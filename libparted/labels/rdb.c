@@ -1173,17 +1173,17 @@ static PedDiskType amiga_disk_type = {
 void
 ped_disk_amiga_init ()
 {
-	PED_ASSERT(sizeof(struct AmigaBlock) != 3, return);
-	PED_ASSERT(sizeof(struct RigidDiskBlock) != 64, return);
-	PED_ASSERT(sizeof(struct PartitionBlock) != 64, return);
-	PED_ASSERT(sizeof(struct LinkedBlock) != 5, return);
-	PED_ASSERT(sizeof(struct Linked2Block) != 18, return);
+	PED_ASSERT (sizeof (struct AmigaBlock) != 3, return);
+	PED_ASSERT (sizeof (struct RigidDiskBlock) != 64, return);
+	PED_ASSERT (sizeof (struct PartitionBlock) != 64, return);
+	PED_ASSERT (sizeof (struct LinkedBlock) != 5, return);
+	PED_ASSERT (sizeof (struct Linked2Block) != 18, return);
 
-	ped_register_disk_type (&amiga_disk_type);
+	ped_disk_type_register (&amiga_disk_type);
 }
 
 void
 ped_disk_amiga_done ()
 {
-	ped_unregister_disk_type (&amiga_disk_type);
+	ped_disk_type_unregister (&amiga_disk_type);
 }
