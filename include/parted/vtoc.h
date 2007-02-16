@@ -45,111 +45,113 @@
 
 #define VTOC_ERROR "VTOC error:"
 
-typedef struct ttr 
-{
+typedef struct ttr              ttr_t;
+typedef struct cchhb            cchhb_t;
+typedef struct cchh             cchh_t;
+typedef struct labeldate        labeldate_t;
+typedef struct volume_label     volume_label_t;
+typedef struct extent           extent_t;
+typedef struct dev_const        dev_const_t;
+typedef struct format1_label    format1_label_t;
+typedef struct format4_label    format4_label_t;
+typedef struct ds5ext           ds5ext_t;
+typedef struct format5_label    format5_label_t;
+typedef struct ds7ext           ds7ext_t;
+typedef struct format7_label    format7_label_t;
+
+struct __attribute__ ((packed)) ttr {
         u_int16_t tt;
         u_int8_t  r;
-} __attribute__ ((packed)) ttr_t;
+};
 
-typedef struct cchhb 
-{
+struct  __attribute__ ((packed)) cchhb {
         u_int16_t cc;
         u_int16_t hh;
         u_int8_t b;
-} __attribute__ ((packed)) cchhb_t;
+};
 
-typedef struct cchh 
-{
+struct __attribute__ ((packed)) cchh {
         u_int16_t cc;
         u_int16_t hh;
-} __attribute__ ((packed)) cchh_t;
+};
 
-typedef struct labeldate 
-{
+struct __attribute__ ((packed)) labeldate {
         u_int8_t  year;
         u_int16_t day;
-} __attribute__ ((packed)) labeldate_t;
+};
 
-typedef struct volume_label 
-{
+struct __attribute__ ((packed)) volume_label {
 	char volkey[4];         /* volume key = volume label                 */
 	char vollbl[4];	        /* volume label                              */
 	char volid[6];	        /* volume identifier                         */
-	u_int8_t security;	    /* security byte                             */
+	u_int8_t security;	/* security byte                             */
 	cchhb_t vtoc;           /* VTOC address                              */
 	char res1[5];	        /* reserved                                  */
 	char cisize[4];	        /* CI-size for FBA,...                       */
-                            /* ...blanks for CKD                         */
+                                /* ...blanks for CKD                         */
 	char blkperci[4];       /* no of blocks per CI (FBA), blanks for CKD */
 	char labperci[4];       /* no of labels per CI (FBA), blanks for CKD */
 	char res2[4];	        /* reserved                                  */
 	char lvtoc[14];	        /* owner code for LVTOC                      */
 	char res3[29];	        /* reserved                                  */
-} __attribute__ ((packed)) volume_label_t;
+};
 
-typedef struct extent 
-{
-        u_int8_t  typeind;          /* extent type indicator */
-        u_int8_t  seqno;            /* extent sequence number */
+struct __attribute__ ((packed)) extent {
+        u_int8_t  typeind;      /* extent type indicator */
+        u_int8_t  seqno;        /* extent sequence number */
         cchh_t llimit;          /* starting point of this extent */
         cchh_t ulimit;          /* ending point of this extent */
-} __attribute__ ((packed)) extent_t;
+};
 
+struct __attribute__ ((packed)) dev_const {
+        u_int16_t DS4DSCYL;     /* number of logical cyls */
+        u_int16_t DS4DSTRK;     /* number of tracks in a logical cylinder  */
+        u_int16_t DS4DEVTK;     /* device track length */
+        u_int8_t  DS4DEVI;      /* non-last keyed record overhead */
+        u_int8_t  DS4DEVL;      /* last keyed record overhead */
+        u_int8_t  DS4DEVK;      /* non-keyed record overhead differential */
+        u_int8_t  DS4DEVFG;     /* flag byte */
+        u_int16_t DS4DEVTL;     /* device tolerance */
+        u_int8_t  DS4DEVDT;     /* number of DSCB's per track */
+        u_int8_t  DS4DEVDB;     /* number of directory blocks per track */
+};
 
-typedef struct dev_const 
-{
-        u_int16_t DS4DSCYL;  /* number of logical cyls */
-        u_int16_t DS4DSTRK;  /* number of tracks in a logical cylinder  */
-        u_int16_t DS4DEVTK;  /* device track length */
-        u_int8_t  DS4DEVI;   /* non-last keyed record overhead */
-        u_int8_t  DS4DEVL;   /* last keyed record overhead */
-        u_int8_t  DS4DEVK;   /* non-keyed record overhead differential */
-        u_int8_t  DS4DEVFG;  /* flag byte */
-        u_int16_t DS4DEVTL;  /* device tolerance */
-        u_int8_t  DS4DEVDT;  /* number of DSCB's per track */
-        u_int8_t  DS4DEVDB;  /* number of directory blocks per track */
-} __attribute__ ((packed)) dev_const_t;
+struct __attribute__ ((packed)) format1_label {
+	char  DS1DSNAM[44];     /* data set name                           */
+	u_int8_t  DS1FMTID;     /* format identifier                       */
+	char  DS1DSSN[6];       /* data set serial number                  */
+	u_int16_t DS1VOLSQ;     /* volume sequence number                  */
+	labeldate_t DS1CREDT;   /* creation date: ydd                      */
+	labeldate_t DS1EXPDT;   /* expiration date                         */
+	u_int8_t  DS1NOEPV;     /* number of extents on volume             */
+	u_int8_t  DS1NOBDB;     /* no. of bytes used in last direction blk */
+	u_int8_t  DS1FLAG1;     /* flag 1                                  */
+	char  DS1SYSCD[13];     /* system code                             */
+	labeldate_t DS1REFD;    /* date last referenced                    */
+	u_int8_t  DS1SMSFG;     /* system managed storage indicators       */
+	u_int8_t  DS1SCXTF;     /* sec. space extension flag byte          */
+	u_int16_t DS1SCXTV;     /* secondary space extension value         */
+	u_int8_t  DS1DSRG1;     /* data set organisation byte 1            */
+	u_int8_t  DS1DSRG2;     /* data set organisation byte 2            */
+  	u_int8_t  DS1RECFM;     /* record format                           */
+	u_int8_t  DS1OPTCD;     /* option code                             */
+	u_int16_t DS1BLKL;      /* block length                            */
+	u_int16_t DS1LRECL;     /* record length                           */
+	u_int8_t  DS1KEYL;      /* key length                              */
+	u_int16_t DS1RKP;       /* relative key position                   */
+	u_int8_t  DS1DSIND;     /* data set indicators                     */
+	u_int8_t  DS1SCAL1;     /* secondary allocation flag byte          */
+  	char DS1SCAL3[3];       /* secondary allocation quantity           */
+	ttr_t DS1LSTAR;         /* last used track and block on track      */
+	u_int16_t DS1TRBAL;     /* space remaining on last used track      */
+	u_int16_t res1;         /* reserved                                */
+	extent_t DS1EXT1;       /* first extent description                */
+	extent_t DS1EXT2;       /* second extent description               */
+	extent_t DS1EXT3;       /* third extent description                */
+	cchhb_t DS1PTRDS;       /* possible pointer to f2 or f3 DSCB       */
+};
 
-
-typedef struct format1_label 
-{
-	char  DS1DSNAM[44];       /* data set name                           */
-	u_int8_t  DS1FMTID;       /* format identifier                       */
-	char  DS1DSSN[6];         /* data set serial number                  */
-	u_int16_t DS1VOLSQ;       /* volume sequence number                  */
-	labeldate_t DS1CREDT;     /* creation date: ydd                      */
-	labeldate_t DS1EXPDT;     /* expiration date                         */
-	u_int8_t  DS1NOEPV;       /* number of extents on volume             */
-	u_int8_t  DS1NOBDB;       /* no. of bytes used in last direction blk */
-	u_int8_t  DS1FLAG1;       /* flag 1                                  */
-	char  DS1SYSCD[13];       /* system code                             */
-	labeldate_t DS1REFD;      /* date last referenced                    */
-	u_int8_t  DS1SMSFG;       /* system managed storage indicators       */
-	u_int8_t  DS1SCXTF;       /* sec. space extension flag byte          */
-	u_int16_t DS1SCXTV;       /* secondary space extension value         */
-	u_int8_t  DS1DSRG1;       /* data set organisation byte 1            */
-	u_int8_t  DS1DSRG2;       /* data set organisation byte 2            */
-  	u_int8_t  DS1RECFM;       /* record format                           */
-	u_int8_t  DS1OPTCD;       /* option code                             */
-	u_int16_t DS1BLKL;        /* block length                            */
-	u_int16_t DS1LRECL;       /* record length                           */
-	u_int8_t  DS1KEYL;        /* key length                              */
-	u_int16_t DS1RKP;         /* relative key position                   */
-	u_int8_t  DS1DSIND;       /* data set indicators                     */
-	u_int8_t  DS1SCAL1;       /* secondary allocation flag byte          */
-  	char DS1SCAL3[3];         /* secondary allocation quantity           */
-	ttr_t DS1LSTAR;           /* last used track and block on track      */
-	u_int16_t DS1TRBAL;       /* space remaining on last used track      */
-	u_int16_t res1;           /* reserved                                */
-	extent_t DS1EXT1;         /* first extent description                */
-	extent_t DS1EXT2;         /* second extent description               */
-	extent_t DS1EXT3;         /* third extent description                */
-	cchhb_t DS1PTRDS;         /* possible pointer to f2 or f3 DSCB       */
-} __attribute__ ((packed)) format1_label_t;
-
-
-typedef struct format4_label 
-{
+struct __attribute__ ((packed)) format4_label {
 	char  DS4KEYCD[44];     /* key code for VTOC labels: 44 times 0x04 */
 	u_int8_t  DS4IDFMT;     /* format identifier                       */
 	cchhb_t DS4HPCHR;       /* highest address of a format 1 DSCB      */
@@ -160,8 +162,8 @@ typedef struct format4_label
 	u_int8_t  DS4NOEXT;     /* number of extents in VTOC               */
 	u_int8_t  DS4SMSFG;     /* system managed storage indicators       */
 	u_int8_t  DS4DEVAC;     /* number of alternate cylinders. 
-                               Subtract from first two bytes of 
-                               DS4DEVSZ to get number of usable
+                                   Subtract from first two bytes of 
+                                   DS4DEVSZ to get number of usable
 	                           cylinders. can be zero. valid
 	                           only if DS4DEVAV on.                    */
 	dev_const_t DS4DEVCT;   /* device constants                        */
@@ -175,41 +177,36 @@ typedef struct format4_label
 	u_int8_t DS4EFLVL;      /* extended free-space management level    */
 	cchhb_t DS4EFPTR;       /* pointer to extended free-space info     */
 	char res3[9];           /* reserved                                */
-} __attribute__ ((packed)) format4_label_t;
+};
 
-typedef struct ds5ext 
-{
+struct __attribute__ ((packed)) ds5ext {
 	u_int16_t t;            /* RTA of the first track of free extent   */
 	u_int16_t fc;           /* number of whole cylinders in free ext.  */
 	u_int8_t  ft;           /* number of remaining free tracks         */
-} __attribute__ ((packed)) ds5ext_t;
+};
 
-typedef struct format5_label 
-{
+struct __attribute__ ((packed)) format5_label {
 	char DS5KEYID[4];       /* key identifier                          */
 	ds5ext_t DS5AVEXT;      /* first available (free-space) extent.    */
 	ds5ext_t DS5EXTAV[7];   /* seven available extents                 */
 	u_int8_t DS5FMTID;      /* format identifier                       */
 	ds5ext_t DS5MAVET[18];  /* eighteen available extents              */
 	cchhb_t DS5PTRDS;       /* pointer to next format5 DSCB            */
-} __attribute__ ((packed)) format5_label_t;
+};
 
-typedef struct ds7ext 
-{
+struct __attribute__ ((packed)) ds7ext {
 	u_int32_t a;            /* starting RTA value                      */
 	u_int32_t b;            /* ending RTA value + 1                    */
-} __attribute__ ((packed)) ds7ext_t;
+};
 
-typedef struct format7_label 
-{
+struct __attribute__ ((packed)) format7_label {
 	char DS7KEYID[4];       /* key identifier                          */
 	ds7ext_t DS7EXTNT[5];   /* space for 5 extent descriptions         */
 	u_int8_t DS7FMTID;      /* format identifier                       */
 	ds7ext_t DS7ADEXT[11];  /* space for 11 extent descriptions        */
 	char res1[2];           /* reserved                                */
 	cchhb_t DS7PTRDS;       /* pointer to next FMT7 DSCB               */
-} __attribute__ ((packed)) format7_label_t;
-
+};
 
 char * vtoc_ebcdic_enc (char source[LINE_LENGTH], char target[LINE_LENGTH],
                         int l);

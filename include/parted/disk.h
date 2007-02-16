@@ -27,6 +27,9 @@
 #ifndef PED_DISK_H_INCLUDED
 #define PED_DISK_H_INCLUDED
 
+typedef enum _PedPartitionType          PedPartitionType;
+typedef enum _PedPartitionFlag          PedPartitionFlag;
+typedef enum _PedDiskTypeFeature        PedDiskTypeFeature;
 typedef struct _PedDisk                 PedDisk;
 typedef struct _PedPartition            PedPartition;
 typedef const struct _PedDiskOps        PedDiskOps;
@@ -41,19 +44,19 @@ typedef const struct _PedDiskArchOps    PedDiskArchOps;
 /**
  * Partition types
  */
-typedef enum {
+enum _PedPartitionType {
         PED_PARTITION_NORMAL            = 0x00,
         PED_PARTITION_LOGICAL           = 0x01,
         PED_PARTITION_EXTENDED          = 0x02,
         PED_PARTITION_FREESPACE         = 0x04,
         PED_PARTITION_METADATA          = 0x08,
         PED_PARTITION_PROTECTED         = 0x10
-} PedPartitionType;
+};
 
 /**
  * Partition flags.
  */
-typedef enum {
+enum _PedPartitionFlag {
         PED_PARTITION_BOOT=1,
         PED_PARTITION_ROOT=2,
         PED_PARTITION_SWAP=3,
@@ -65,14 +68,14 @@ typedef enum {
         PED_PARTITION_PALO=9,
         PED_PARTITION_PREP=10,
         PED_PARTITION_MSFT_RESERVED=11
-} PedPartitionFlag;
+};
 #define PED_PARTITION_FIRST_FLAG        PED_PARTITION_BOOT
 #define PED_PARTITION_LAST_FLAG         PED_PARTITION_MSFT_RESERVED
 
-typedef enum {
+enum _PedDiskTypeFeature {
         PED_DISK_TYPE_EXTENDED=1,       /**< supports extended partitions */
         PED_DISK_TYPE_PARTITION_NAME=2  /**< supports partition names */
-} PedDiskTypeFeature;
+};
 #define PED_DISK_TYPE_FIRST_FEATURE    PED_DISK_TYPE_EXTENDED
 #define PED_DISK_TYPE_LAST_FEATURE     PED_DISK_TYPE_PARTITION_NAME
 

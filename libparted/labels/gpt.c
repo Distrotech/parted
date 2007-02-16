@@ -60,7 +60,12 @@
 #define GPT_HEADER_REVISION_V0_99 0x00009900
 
 typedef uint16_t efi_char16_t;	/* UNICODE character */
-
+typedef struct _GuidPartitionTableHeader_t GuidPartitionTableHeader_t;
+typedef struct _GuidPartitionEntryAttributes_t GuidPartitionEntryAttributes_t;
+typedef struct _GuidPartitionEntry_t GuidPartitionEntry_t;
+typedef struct _PartitionRecord_t PartitionRecord_t;
+typedef struct _LegacyMBR_t LegacyMBR_t;
+typedef struct _GPTDiskData GPTDiskData;
 typedef struct {
         uint32_t time_low;
         uint16_t time_mid;
@@ -119,7 +124,7 @@ typedef struct {
 		    PED_CPU_TO_LE16 (0x11AA), 0xaa, 0x11, \
 		    { 0x00, 0x30, 0x65, 0x43, 0xEC, 0xAC }})
 
-typedef struct _GuidPartitionTableHeader_t {
+struct __attribute__ ((packed)) _GuidPartitionTableHeader_t {
 	uint64_t Signature;
 	uint32_t Revision;
 	uint32_t HeaderSize;
@@ -135,9 +140,9 @@ typedef struct _GuidPartitionTableHeader_t {
 	uint32_t SizeOfPartitionEntry;
 	uint32_t PartitionEntryArrayCRC32;
 	uint8_t* Reserved2;
-} __attribute__ ((packed)) GuidPartitionTableHeader_t;
+};
 
-typedef struct _GuidPartitionEntryAttributes_t {
+struct __attribute__ ((packed)) _GuidPartitionEntryAttributes_t {
 #ifdef __GNUC__ /* XXX narrow this down to !TinyCC */
 	uint64_t RequiredToFunction:1;
 	uint64_t Reserved:47;
@@ -149,16 +154,16 @@ typedef struct _GuidPartitionEntryAttributes_t {
 	uint32_t LOST:5;
         uint32_t GuidSpecific:16;
 #endif
-} __attribute__ ((packed)) GuidPartitionEntryAttributes_t;
+};
 
-typedef struct _GuidPartitionEntry_t {
+struct __attribute__ ((packed)) _GuidPartitionEntry_t {
 	efi_guid_t PartitionTypeGuid;
 	efi_guid_t UniquePartitionGuid;
 	uint64_t StartingLBA;
 	uint64_t EndingLBA;
 	GuidPartitionEntryAttributes_t Attributes;
 	efi_char16_t PartitionName[72 / sizeof(efi_char16_t)];
-} __attribute__ ((packed)) GuidPartitionEntry_t;
+};
 
 #define GPT_PMBR_LBA 0
 #define GPT_PMBR_SECTORS 1
@@ -179,7 +184,7 @@ typedef struct _GuidPartitionEntry_t {
          sizeof(GuidPartitionEntry_t))
 
 
-typedef struct _PartitionRecord_t {
+struct __attribute__ ((packed)) _PartitionRecord_t {
 	/* Not used by EFI firmware. Set to 0x80 to indicate that this
 	   is the bootable legacy partition. */
 	uint8_t BootIndicator;
@@ -214,24 +219,24 @@ typedef struct _PartitionRecord_t {
 	/* Size of partition in LBA. Used by EFI firmware to determine
 	   the size of the partition. */
 	uint32_t SizeInLBA;
-} __attribute__ ((packed)) PartitionRecord_t;
+};
 
 /* Protected Master Boot Record  & Legacy MBR share same structure */
 /* Needs to be packed because the u16s force misalignment. */
-typedef struct _LegacyMBR_t {
+struct __attribute__ ((packed)) _LegacyMBR_t {
 	uint8_t BootCode[440];
 	uint32_t UniqueMBRSignature;
 	uint16_t Unknown;
 	PartitionRecord_t PartitionRecord[4];
 	uint16_t Signature;
-} __attribute__ ((packed)) LegacyMBR_t;
+};
 
 /* uses libparted's disk_specific field in PedDisk, to store our info */
-typedef struct _GPTDiskData {
+struct __attribute__ ((packed)) _GPTDiskData {
 	PedGeometry	data_area;
 	int		entry_count;
 	efi_guid_t	uuid;
-} GPTDiskData;
+};
 
 /* uses libparted's disk_specific field in PedPartition, to store our info */
 typedef struct _GPTPartitionData {

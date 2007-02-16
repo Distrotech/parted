@@ -63,7 +63,7 @@ typedef struct _FatDirEntry	FatDirEntry;
 #include "count.h"
 #include "clstdup.h"
 
-struct _FatDirEntry {
+struct __attribute__ ((packed)) _FatDirEntry {
 	char		name[8];
 	uint8_t		extension[3];
 	uint8_t		attributes;
@@ -77,7 +77,7 @@ struct _FatDirEntry {
 	uint16_t	date;
 	uint16_t	first_cluster;
 	uint32_t	length;
-} __attribute__ ((packed));
+};
 
 struct _FatSpecific {
 	FatBootSector	boot_sector;    /* structure of boot sector */

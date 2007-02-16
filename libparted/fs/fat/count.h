@@ -27,19 +27,20 @@
 #ifndef COUNT_H_INCLUDED
 #define COUNT_H_INCLUDED
 
+typedef enum _FatClusterFlag FatClusterFlag;
+typedef struct _FatClusterInfo FatClusterInfo;
+
 enum _FatClusterFlag {
 	FAT_FLAG_FREE=0,
 	FAT_FLAG_FILE=1,
 	FAT_FLAG_DIRECTORY=2,
 	FAT_FLAG_BAD=3
 };
-typedef enum _FatClusterFlag FatClusterFlag;
 
-struct _FatClusterInfo {
+struct __attribute__ ((packed)) _FatClusterInfo {
 	unsigned int    units_used:6;   /* 1 unit = cluster_size / 64 */
 	FatClusterFlag  flag:2;
-} __attribute__ ((packed)) fat16;
-typedef struct _FatClusterInfo FatClusterInfo;
+} fat16;
 
 extern int fat_collect_cluster_info (PedFileSystem *fs);
 extern FatClusterFlag fat_get_cluster_flag (PedFileSystem* fs,

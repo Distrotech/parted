@@ -80,7 +80,13 @@
 
 #define MAC_STATUS_BOOTABLE     8       /* partition is bootable */
 
-typedef struct {
+typedef struct _MacRawPartition     MacRawPartition;
+typedef struct _MacRawDisk          MacRawDisk;
+typedef struct _MacDeviceDriver     MacDeviceDriver;
+typedef struct _MacPartitionData    MacPartitionData;
+typedef struct _MacDiskData         MacDiskData;
+
+struct __attribute__ ((packed)) _MacRawPartition {
 	uint16_t	signature;      /* expected to be MAC_PARTITION_MAGIC */
 	uint16_t	res1;
 	uint32_t	map_count;      /* # blocks in partition map */
@@ -101,10 +107,10 @@ typedef struct {
 	char		processor[16];  /* Contains 680x0, x=0,2,3,4; or empty */
 	uint32_t	driver_sig;
 	char		_padding[372];
-} __attribute__ ((packed)) MacRawPartition;
+};
 
 /* Driver descriptor structure, in block 0 */
-typedef struct {
+struct __attribute__ ((packed)) _MacRawDisk {
 	uint16_t	signature;      /* expected to be MAC_DRIVER_MAGIC */
 	uint16_t	block_size;	/* physical sector size */
 	uint32_t	block_count;	/* size of device in blocks */
@@ -112,17 +118,17 @@ typedef struct {
 	uint16_t	dev_id;		/* reserved */
 	uint32_t	data;		/* reserved */
 	uint16_t	driver_count;	/* # of driver descriptor entries */
-	uint8_t		driverlist[488]; /* info about available drivers */
+	uint8_t		driverlist[488];/* info about available drivers */
 	uint16_t	padding[3];	/* pad to 512 bytes */
-} __attribute__ ((packed)) MacRawDisk;
+};
 
-typedef struct {
+struct __attribute__ ((packed)) _MacDeviceDriver {
 	uint32_t	block;		/* startblock in MacRawDisk->block_size units */
 	uint16_t	size;		/* size in 512 byte units */
 	uint16_t	type;		/* operating system type (MacOS = 1) */
-} __attribute__ ((packed)) MacDeviceDriver;
+};
 
-typedef struct {
+struct _MacPartitionData {
 	char		volume_name[33];	/* eg: "Games" */
 	char		system_name[33];	/* eg: "Apple_Unix_SVR2" */
 	char		processor_name[17];
@@ -144,9 +150,9 @@ typedef struct {
 
 	uint32_t	status;
 	uint32_t	driver_sig;
-} MacPartitionData;
+};
 
-typedef struct {
+struct _MacDiskData {
 	int		ghost_size;		/* sectors per "driver" block */
 	int		part_map_entry_count;	/* # entries (incl. ghost) */
 	int		part_map_entry_num;	/* partition map location */
@@ -158,7 +164,7 @@ typedef struct {
 	uint16_t	block_size;		/* physical sector size */
 	uint16_t	driver_count;
 	MacDeviceDriver	driverlist[1 + 60];	/* 488 bytes */
-} MacDiskData;
+};
 
 static PedDiskType mac_disk_type;
 

@@ -43,19 +43,25 @@
 #define WHOLE_DISK_PART		2	/* as in 0, 1, 2 (3rd partition) */
 #define LINUX_SWAP_ID		0x82
 
-typedef struct {
+typedef struct _SunRawPartition     SunRawPartition;
+typedef struct _SunPartitionInfo    SunPartitionInfo;
+typedef struct _SunRawLabel         SunRawLabel;
+typedef struct _SunPartitionData    SunPartitionData;
+typedef struct _SunDiskData         SunDiskData;
+
+struct __attribute__ ((packed)) _SunRawPartition {
 	u_int32_t	start_cylinder; /* where the part starts... */
 	u_int32_t	num_sectors;	/* ...and it's length */
-} __attribute__ ((packed)) SunRawPartition;
+};
 
-typedef struct {
+struct __attribute__ ((packed)) _SunPartitionInfo {
 	u_int8_t	spare1;
 	u_int8_t	id;		/* Partition type */
 	u_int8_t	spare2;
 	u_int8_t	flags;		/* Partition flags */
-} __attribute__ ((packed)) SunPartitionInfo;
+};
 
-typedef struct {
+struct __attribute__ ((packed)) _SunRawLabel {
 	char 		info[128];	/* Informative text string */
 	u_int8_t	spare0[14];
 	SunPartitionInfo infos[SUN_DISK_MAXPARTITIONS];
@@ -73,19 +79,19 @@ typedef struct {
 	SunRawPartition partitions[SUN_DISK_MAXPARTITIONS];
 	u_int16_t	magic;		/* Magic number */
 	u_int16_t	csum;		/* Label xor'd checksum */
-}  __attribute__ ((packed)) SunRawLabel;
+};
 
-typedef struct {
+struct _SunPartitionData {
 	u_int8_t		type;
 	int			is_boot;
 	int			is_root;
 	int			is_lvm;
-} SunPartitionData;
+};
 
-typedef struct {
+struct _SunDiskData {
 	PedSector		length; /* This is based on cyl - alt-cyl */
 	SunRawLabel		raw_label;
-} SunDiskData;
+};
 
 static PedDiskType sun_disk_type;
 

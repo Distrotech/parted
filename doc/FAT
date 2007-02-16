@@ -124,7 +124,7 @@ Microsoft's implementation - they are calculated independently.
 
 Taken from libparted/fs_fat/bootsector.h:
 
-struct _FatBootSector {
+struct __attribute__ ((packed)) _FatBootSector {
 	__u8    boot_jump[3];   /* 00: Boot strap short or near jump */
 	__u8    system_id[8];   /* 03: system name */
 	__u16   sector_size;    /* 0b: bytes per logical sector */
@@ -140,9 +140,9 @@ struct _FatBootSector {
 	__u32   hidden;         /* 1c: hidden sectors (partition start) */
 	__u32   sector_count;   /* 20: no. of sectors (if sectors == 0) */
 
-union {
+union __attribute__ ((packed)) {
 /* FAT16 fields */
-struct {
+struct __attribute__ ((packed)) {
         __u8    drive_num;      /* 24: */
         __u8    empty_1;        /* 25: */
         __u8    ext_signature;  /* 26: always 0x29 */
@@ -151,10 +151,10 @@ struct {
         __u8    fat_name [8];   /* 37: */
 
         __u8    boot_code[448]; /* 3f: Boot code (or message) */
-} __attribute__ ((packed)) fat16;
+} fat16;
 
 /* FAT32 fields */
-struct {
+struct __attribute__ ((packed)) {
         __u32   fat_length;     /* 24: size of FAT in sectors */
         __u16   flags;          /* 28: bit8: fat mirroring, low4: active fat */
         __u16   version;        /* 2a: minor * 256 + major */
@@ -171,11 +171,11 @@ struct {
         __u8    fat_name [8];   /* 52: */
 
         __u8    boot_code[420]; /* 5a: Boot code (or message) */
-} __attribute__ ((packed)) fat32;
+} fat32;
 } u;
 
         __u16   boot_sign;      /* 1fe: always 0xAA55 */
-} __attribute__ ((packed));
+};
 
 
 3.2	Descriptions of Fields
@@ -475,7 +475,7 @@ file system.
 4.1	Data Layout
 -------------------------------------------------------------------------------
 
-struct _FatInfoSector {
+struct __attribute__ ((packed)) _FatInfoSector {
         __u32   signature_1;    /* should be 0x41615252 */
         __u8    unused [480];
         __u32   signature_2;    /* should be 0x61417272 */
@@ -483,7 +483,7 @@ struct _FatInfoSector {
         __u32   next_cluster;   /* most recently allocated cluster */
         __u8    unused2 [0xe];
         __u16   signature_3;    /* should be 0xaa55 */
-} __attribute__ ((packed));
+};
 
 
 4.2	Descriptions of Fields
@@ -571,7 +571,7 @@ Each directory (except the root directory) contains a '.' (this directory) and
 
 From libparted/fs_fat/fat.h:
 
-struct _FatDirEntry {
+struct __attribute__ ((packed)) _FatDirEntry {
         __u8            name[8];
         __u8            extension[3];
         __u8            attributes;
@@ -585,7 +585,7 @@ struct _FatDirEntry {
         __u16           date;
         __u16           first_cluster;
         __u32           length;
-} __attribute__ ((packed));
+};
 
 6.1.2	Field Descriptions
 --------------------------

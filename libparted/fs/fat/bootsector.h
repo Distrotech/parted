@@ -59,7 +59,7 @@ typedef struct _FatInfoSector	FatInfoSector;
 
 #define FAT_BOOT_CODE_LENGTH 128
 
-struct _FatBootSector {
+struct __attribute__ ((packed)) _FatBootSector {
 	uint8_t		boot_jump[3];	/* 00: Boot strap short or near jump */
 	uint8_t		system_id[8];	/* 03: system name */
 	uint16_t	sector_size;	/* 0b: bytes per logical sector */
@@ -75,9 +75,10 @@ struct _FatBootSector {
 	uint32_t	hidden;		/* 1c: hidden sectors (partition start) */
 	uint32_t	sector_count;	/* 20: no. of sectors (if sectors == 0) */
 
-union {
+union __attribute__ ((packed)) {
+
 /* FAT16 fields */
-struct {
+struct __attribute__ ((packed)) {
 	uint8_t		drive_num;	/* 24: */
 	uint8_t		empty_1;	/* 25: */
 	uint8_t		ext_signature;	/* 26: always 0x29 */
@@ -86,10 +87,10 @@ struct {
 	uint8_t		fat_name [8];	/* 36: */
 
 	uint8_t		boot_code[448];	/* 3f: Boot code (or message) */
-} __attribute__ ((packed)) fat16;
+} fat16;
 
 /* FAT32 fields */
-struct {
+struct __attribute__ ((packed)) {
 	uint32_t	fat_length;	/* 24: size of FAT in sectors */
 	uint16_t	flags;		/* 28: bit8: fat mirroring, low4: active fat */
 	uint16_t	version;        /* 2a: minor * 256 + major */
@@ -106,13 +107,13 @@ struct {
 	uint8_t		fat_name [8];	/* 52: */
 
 	uint8_t		boot_code[420];	/* 5a: Boot code (or message) */
-} __attribute ((packed)) fat32;
-} __attribute ((packed)) u;
+} fat32;
+} u;
 
 	uint16_t	boot_sign;	/* 1fe: always 0xAA55 */
-} __attribute__ ((packed));
+};
 
-struct _FatInfoSector {
+struct __attribute__ ((packed)) _FatInfoSector {
 	uint32_t	signature_1;	/* should be 0x41615252 */
 	uint8_t		unused [480];
 	uint32_t	signature_2;	/* should be 0x61417272 */
@@ -120,7 +121,7 @@ struct _FatInfoSector {
 	uint32_t	next_cluster;	/* most recently allocated cluster */
 	uint8_t		unused2 [0xe];
 	uint16_t	signature_3;	/* should be 0xaa55 */
-} __attribute__ ((packed));
+};
 
 int fat_boot_sector_read (FatBootSector* bs, const PedGeometry* geom);
 FatType fat_boot_sector_probe_type (const FatBootSector* bs,
