@@ -120,9 +120,6 @@
 
 #endif /* HFS_EXTRACT_FS */
 
-static PedFileSystemType hfs_type;
-static PedFileSystemType hfsplus_type;
-
 
 
 /* ----------------------------------- */

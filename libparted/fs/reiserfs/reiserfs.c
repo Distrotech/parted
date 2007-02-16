@@ -1,6 +1,6 @@
 /*
     reiserfs.c -- libparted / libreiserfs glue
-    Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+    Copyright (C) 2001, 2002, 2007  Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -101,7 +101,9 @@ FCLASS reiserfs_fs_t* (FPTR reiserfs_fs_create) (dal_t *, dal_t *,
 				          reiserfs_gauge_t *);
 
 FCLASS int (FPTR reiserfs_fs_resize) (reiserfs_fs_t *, blk_t, reiserfs_gauge_t *);
+#ifdef HAVE_REISERFS_FS_CHECK
 FCLASS int (FPTR reiserfs_fs_check) (reiserfs_fs_t *, reiserfs_gauge_t *);
+#endif
 
 FCLASS reiserfs_fs_t *(FPTR reiserfs_fs_copy) (reiserfs_fs_t *, dal_t *,
 					reiserfs_gauge_t *);
@@ -349,7 +351,6 @@ error_free_dal:
 	geom_dal_free(dal);
 error_fs_geom_free:
 	ped_geometry_destroy(fs_geom);
-error:
 	return NULL;
 }
 
@@ -387,7 +388,9 @@ static PedConstraint *reiserfs_get_create_constraint(const PedDevice *dev)
 static int reiserfs_check(PedFileSystem *fs, PedTimer *timer)
 {
 	reiserfs_fs_t *fs_info;
+#ifdef HAVE_REISERFS_FS_CHECK
 	reiserfs_gauge_t *gauge = NULL;
+#endif
 
 	PED_ASSERT(fs != NULL, return 0);
 
@@ -531,7 +534,6 @@ static int reiserfs_resize(PedFileSystem *fs, PedGeometry *geom,
 error_free_gauge:
 	if (gauge)
 		libreiserfs_gauge_free(gauge);
-error:
 	ped_geometry_set_end (fs->geom, fs->geom->start + old_length - 1);
 	return 0;
 }
@@ -642,7 +644,6 @@ error_free_dal:
 	geom_dal_free(dal);
 error_free_fs_geom:
 	ped_geometry_destroy(fs_geom);
-error:
 	return NULL;
 }
 

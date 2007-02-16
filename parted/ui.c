@@ -109,8 +109,6 @@ static struct {
 	sigjmp_buf	jmp_state;
 } readline_state;
 
-static PedExceptionOption	current_exception_opt = 0;
-
 static struct sigaction sig_segv;
 static struct sigaction sig_int;
 static struct sigaction sig_fpe;
@@ -412,7 +410,6 @@ static char*
 _readline (const char* prompt, const StrList* possibilities)
 {
 	char*	line;
-        int     val;
 
 	readline_state.possibilities = possibilities;
 	readline_state.cur_pos = NULL;
@@ -931,7 +928,6 @@ int
 command_line_get_disk_type (const char* prompt, const PedDiskType*(* value))
 {
 	char*		disk_type_name;
-	PedDiskType*	disk_type;
 
 	disk_type_name = command_line_get_word (prompt,
 						*value ? (*value)->name : NULL,
@@ -1303,7 +1299,6 @@ print_using_dev (PedDevice* dev)
 int
 interactive_mode (PedDevice** dev, Command* cmd_list[])
 {
-	char*		line;
 	StrList*	list;
 	StrList*	command_names = command_get_names (cmd_list);
 

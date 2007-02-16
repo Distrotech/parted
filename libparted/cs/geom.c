@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1999, 2000, 2005 Free Software Foundation, Inc.
+    Copyright (C) 1999, 2000, 2005, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -288,7 +288,6 @@ int
 ped_geometry_read (const PedGeometry* geom, void* buffer, PedSector start,
 		   PedSector count)
 {
-	int		exception_status;
 	PedSector	real_start;
 
 	PED_ASSERT (geom != NULL, return 0);

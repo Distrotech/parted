@@ -1,6 +1,6 @@
 /*
     libparted
-    Copyright (C) 1998, 1999, 2000, 2002, 2004 Free Software Foundation, Inc.
+    Copyright (C) 1998, 1999, 2000, 2002, 2004, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -126,7 +126,6 @@ int
 fat_boot_sector_analyse (FatBootSector* bs, PedFileSystem* fs)
 {
 	FatSpecific*		fs_info = FAT_SPECIFIC (fs);
-	PedExceptionOption	ex_status;
 	int			fat_entry_size;
 
 	PED_ASSERT (bs != NULL, return 0);
@@ -186,6 +185,9 @@ fat_boot_sector_analyse (FatBootSector* bs, PedFileSystem* fs)
 
 		case PED_EXCEPTION_IGNORE:
 			break;
+
+                default:
+                        break;
 		}
 	}
 

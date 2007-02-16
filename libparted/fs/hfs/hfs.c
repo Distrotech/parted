@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000, 2003, 2004, 2005 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -52,6 +52,9 @@ unsigned hfsp_block_count;
 #include "file.h"
 #include "reloc.h"
 #include "advfs.h"
+
+static PedFileSystemType hfs_type;
+static PedFileSystemType hfsplus_type;
 
 
 /* ----- HFS ----- */
@@ -569,8 +572,6 @@ hpo:	return NULL;
 static PedConstraint* 
 hfsplus_get_resize_constraint (const PedFileSystem *fs)
 {
-	HfsPPrivateFSData* 	priv_data = (HfsPPrivateFSData*)
-						fs->type_specific;
 	PedDevice*	dev = fs->geom->dev;
 	PedAlignment	start_align;
 	PedGeometry	start_sector;
@@ -771,7 +772,7 @@ hfsplus_wrapper_update (PedFileSystem* fs)
 	HfsNodeDescriptor*	node_desc = (HfsNodeDescriptor*) node;
 	HfsExtentKey*		ret_key;
 	HfsExtDescriptor*	ret_data;
-	unsigned int		i, j;
+	unsigned int		i;
 	HfsPPrivateFSData* 	priv_data = (HfsPPrivateFSData*)
 						fs->type_specific;
 	HfsPrivateFSData* 	hfs_priv_data = (HfsPrivateFSData*)

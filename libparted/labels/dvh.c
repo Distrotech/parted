@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2001, 2002, 2005 Free Software Foundation, Inc.
+    Copyright (C) 2001, 2002, 2005, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -119,7 +119,6 @@ dvh_alloc (const PedDevice* dev)
 
 error_destroy_constraint_any:
 	ped_constraint_destroy (constraint_any);
-error_destroy_volume_part:
 	ped_partition_destroy (volume_part);
 error_free_disk_specific:
 	ped_free (disk->disk_specific);
@@ -364,6 +363,9 @@ dvh_read (PedDisk* disk)
 				return 1;
 			case PED_EXCEPTION_FIX:
 				write_back = 1;
+				break;
+			default:
+				break;
 		}
 #endif
 	}
@@ -401,7 +403,6 @@ dvh_read (PedDisk* disk)
 
 error_delete_all:
 	ped_disk_delete_all (disk);
-error:
 	return 0;
 }
 
@@ -686,8 +687,6 @@ static int
 dvh_partition_is_flag_available (const PedPartition* part,
 				  PedPartitionFlag flag)
 {
-	DVHDiskData* dvh_disk_data = part->disk->disk_specific;
-
 	switch (flag) {
 	case PED_PARTITION_ROOT:
 	case PED_PARTITION_SWAP:
@@ -849,7 +848,6 @@ dvh_alloc_metadata (PedDisk* disk)
 	ped_constraint_destroy (constraint_exact);
 	return 1;
 
-error_destroy_constraint:
 	ped_constraint_destroy (constraint_exact);
 error_destroy_part:
 	ped_partition_destroy (part);

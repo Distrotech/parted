@@ -1,6 +1,6 @@
 /*
     libparted
-    Copyright (C) 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
+    Copyright (C) 1998, 1999, 2000, 2002, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -290,8 +290,6 @@ fat_calc_resize_sizes (
 	FatCluster* out_cluster_count,
 	PedSector* out_fat_size)
 {
-	PedSector	min_cluster_sectors;
-
 	PED_ASSERT (geom != NULL, return 0);
 	PED_ASSERT (out_cluster_sectors != NULL, return 0);
 	PED_ASSERT (out_cluster_count != NULL, return 0);

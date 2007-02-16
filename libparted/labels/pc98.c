@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2001, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -244,8 +244,6 @@ pc98_clobber (PedDevice* dev)
 static PedDisk*
 pc98_alloc (const PedDevice* dev)
 {
-	PedDisk*	disk;
-
 	PED_ASSERT (dev != NULL, return 0);
 
 	return _ped_disk_alloc (dev, &pc98_disk_type);
@@ -562,7 +560,6 @@ pc98_partition_new (
 	}
 	return part;
 
-error_free_pc98_data:
 	ped_free (pc98_data);
 error_free_part:
 	ped_free (part);
@@ -639,7 +636,6 @@ pc98_partition_set_system (PedPartition* part, const PedFileSystemType* fs_type)
 static int
 pc98_partition_set_flag (PedPartition* part, PedPartitionFlag flag, int state)
 {
-	PedDisk*			disk;
 	PC98PartitionData*		pc98_data;
 
 	PED_ASSERT (part != NULL, return 0);

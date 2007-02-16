@@ -1,6 +1,6 @@
  /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1999, 2000, 2001, 2002, 2003, 2005
+    Copyright (C) 1999, 2000, 2001, 2002, 2003, 2005, 2007
                   Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
@@ -391,7 +391,6 @@ _ped_disk_alloc (const PedDevice* dev, const PedDiskType* disk_type)
 	disk->part_list = NULL;
 	return disk;
 
-error_free_disk:
 	ped_free (disk);
 error:
 	return NULL;
@@ -1218,7 +1217,6 @@ ped_partition_is_flag_available (const PedPartition* part,
 int
 ped_partition_set_system (PedPartition* part, const PedFileSystemType* fs_type)
 {
-	PedFileSystem*		fs;
 	const PedDiskType*	disk_type;
 
 	PED_ASSERT (part != NULL, return 0);
@@ -1965,7 +1963,6 @@ ped_disk_set_partition_geom (PedDisk* disk, PedPartition* part,
 
 error_pop_update_mode:
 	_disk_pop_update_mode (disk);
-error:
 	ped_constraint_destroy (overlap_constraint);
 	ped_constraint_destroy (constraints);
 	part->geom = old_geom;

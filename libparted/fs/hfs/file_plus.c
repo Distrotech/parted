@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+    Copyright (C) 2004, 2005, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -192,6 +192,7 @@ hfsplus_file_read(HfsPPrivateFile* file, void *buf, PedSector sector,
 	HfsPPrivateExtent phy_area;
 	HfsPPrivateFSData* priv_data = (HfsPPrivateFSData*)
 					file->fs->type_specific;
+        char *b = buf;
 
 	if (sector+nb < sector /* detect overflow */
 	    || sector+nb > file->sect_nb) /* out of file */ {
@@ -214,14 +215,14 @@ hfsplus_file_read(HfsPPrivateFile* file, void *buf, PedSector sector,
 				sector, PED_BE32_TO_CPU(file->CNID));
 			return 0;
 		}
-		if (!ped_geometry_read(priv_data->plus_geom, buf,
+                if (!ped_geometry_read(priv_data->plus_geom, b,
 				       phy_area.start_sector,
 				       phy_area.sector_count))
 			return 0;
 
 		nb -= phy_area.sector_count; /* < nb anyway ... */
 		sector += phy_area.sector_count;
-		buf += phy_area.sector_count * PED_SECTOR_SIZE_DEFAULT;
+                b += phy_area.sector_count * PED_SECTOR_SIZE_DEFAULT;
 	}
 
 	return 1;
@@ -234,6 +235,7 @@ hfsplus_file_write(HfsPPrivateFile* file, void *buf, PedSector sector,
 	HfsPPrivateExtent phy_area;
 	HfsPPrivateFSData* priv_data = (HfsPPrivateFSData*)
 					file->fs->type_specific;
+        char *b = buf;
 
 	if (sector+nb < sector /* detect overflow */
 	    || sector+nb > file->sect_nb) /* out of file */ {
@@ -256,14 +258,14 @@ hfsplus_file_write(HfsPPrivateFile* file, void *buf, PedSector sector,
 				sector, PED_BE32_TO_CPU(file->CNID));
 			return 0;
 		}
-		if (!ped_geometry_write(priv_data->plus_geom, buf,
+                if (!ped_geometry_write(priv_data->plus_geom, b,
 				       phy_area.start_sector,
 				       phy_area.sector_count))
 			return 0;
 
 		nb -= phy_area.sector_count; /* < nb anyway ... */
 		sector += phy_area.sector_count;
-		buf += phy_area.sector_count * PED_SECTOR_SIZE_DEFAULT;
+                b += phy_area.sector_count * PED_SECTOR_SIZE_DEFAULT;
 	}
 
 	return 1;

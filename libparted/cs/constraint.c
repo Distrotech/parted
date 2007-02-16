@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2001, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -296,7 +296,6 @@ _constraint_get_canonical_start_range (const PedConstraint* constraint)
 	PedSector	min_start;
 	PedSector	max_start;
 	PedGeometry	start_min_max_range;
-	PedGeometry*	result;
 
 	if (constraint->min_size > constraint->max_size)
 		return NULL;

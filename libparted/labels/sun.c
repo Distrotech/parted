@@ -123,9 +123,7 @@ sun_verify_checksum (SunRawLabel *label)
 static int
 sun_probe (const PedDevice *dev)
 {
-	PedDiskType*	disk_type;
 	SunRawLabel	label;
-	int		i;
 
 	PED_ASSERT (dev != NULL, return 0);
 
@@ -488,7 +486,6 @@ sun_partition_new (const PedDisk* disk, PedPartitionType part_type,
 
 	return part;
 
-error_free_sun_data:
 	ped_free (sun_data);
 error_free_part:
 	ped_free (part);

@@ -1,7 +1,7 @@
 /* -*- Mode: c; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 8 -*-
 
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2001, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -45,9 +45,7 @@ static PedDiskType aix_disk_type;
 static int
 aix_probe (const PedDevice *dev)
 {
-	PedDiskType*	disk_type;
 	AixLabel	label;
-	int		i;
 
 	PED_ASSERT (dev != NULL, return 0);
 
@@ -135,8 +133,6 @@ aix_partition_new (const PedDisk* disk, PedPartitionType part_type,
 		   const PedFileSystemType* fs_type,
 		   PedSector start, PedSector end)
 {
-	PedPartition*		part;
-
         ped_exception_throw (PED_EXCEPTION_NO_FEATURE,
                              PED_EXCEPTION_CANCEL,
                              _("Support for adding partitions to AIX disk "
@@ -147,8 +143,6 @@ aix_partition_new (const PedDisk* disk, PedPartitionType part_type,
 static PedPartition*
 aix_partition_duplicate (const PedPartition* part)
 {
-	PedPartition*		new_part;
-
         ped_exception_throw (PED_EXCEPTION_NO_FEATURE,
                              PED_EXCEPTION_CANCEL,
                              _("Support for duplicating partitions in AIX "

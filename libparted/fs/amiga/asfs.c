@@ -1,6 +1,6 @@
 /*
     asfs.c -- parted asfs filesystem support
-    Copyright (C) 1998-2000 Free Software Foundation, Inc.
+    Copyright (C) 1998-2000, 2007 Free Software Foundation, Inc.
   
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -58,8 +58,8 @@ _asfs_probe (PedGeometry* geom)
 	uint32_t *block;
 	struct PartitionBlock * part;
 	int blocksize = 1, reserved = 1, prealloc = 1;
-	PedSector root, root2;
-	int found = 0;
+        PedSector root;
+        int found = 0;
 
 	PED_ASSERT (geom != NULL, return NULL);
 	PED_ASSERT (geom->dev != NULL, return NULL);

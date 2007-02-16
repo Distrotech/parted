@@ -1,6 +1,6 @@
 /*
     libparted
-    Copyright (C) 1998, 1999, 2000, 2005 Free Software Foundation, Inc.
+    Copyright (C) 1998, 1999, 2000, 2005, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -259,6 +259,10 @@ fat_dir_entry_set_first_cluster (FatDirEntry* dir_entry, PedFileSystem* fs,
 	FatSpecific*		fs_info = FAT_SPECIFIC (fs);
 
 	switch (fs_info->fat_type) {
+                case FAT_TYPE_FAT12:
+                PED_ASSERT (0, (void) 0);
+                break;
+
 		case FAT_TYPE_FAT16:
 		dir_entry->first_cluster = PED_CPU_TO_LE16 (cluster);
 		break;

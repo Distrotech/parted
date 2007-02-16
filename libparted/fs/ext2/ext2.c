@@ -1,6 +1,6 @@
 /*
     ext2.c -- generic ext2 stuff
-    Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+    Copyright (C) 1998, 1999, 2000, 2001, 2007 Free Software Foundation, Inc.
   
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -781,7 +781,6 @@ struct ext2_fs *ext2_open(struct ext2_dev_handle *handle, int state)
 	fs->metadirty = 0;
 	return fs;
 
-error_free_gd:
 	ped_free(fs->gd);
 error_deinit_bcache:
 	ext2_bcache_deinit(fs);

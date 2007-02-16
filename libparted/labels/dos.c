@@ -1156,7 +1156,6 @@ msdos_partition_new (const PedDisk* disk, PedPartitionType part_type,
 	}
 	return part;
 
-error_free_dos_data:
 	ped_free (dos_data);
 error_free_part:
 	ped_free (part);
@@ -1446,7 +1445,6 @@ static PedGeometry*
 _best_solution (const PedPartition* part, const PedCHSGeometry* bios_geom,
 		PedGeometry* a, PedGeometry* b)
 {
-	PedDevice*	dev = part->disk->dev;
 	PedSector	cyl_size = bios_geom->heads * bios_geom->sectors;
 	int		a_cylinder;
 	int		b_cylinder;
@@ -1659,7 +1657,6 @@ _align_primary (PedPartition* part, const PedCHSGeometry* bios_geom,
 		const PedConstraint* constraint)
 {
 	PedDisk*	disk = part->disk;
-	PedDevice*	dev = disk->dev;
 	PedGeometry*	min_geom = NULL;
 	PedGeometry*	solution = NULL;
 
@@ -1692,7 +1689,6 @@ static int
 _logical_min_start_head (PedPartition* part, const PedCHSGeometry* bios_geom,
 			 PedPartition* ext_part, int is_start_ext_part)
 {
-	PedDevice*	dev = part->disk->dev;
 	PedSector	cylinder_size = bios_geom->sectors * bios_geom->heads;
 	PedSector	base_head;
 
@@ -1767,7 +1763,6 @@ _align_logical (PedPartition* part, const PedCHSGeometry* bios_geom,
 		const PedConstraint* constraint)
 {
 	PedDisk*	disk = part->disk;
-	PedDevice*	dev = disk->dev;
 	PedPartition*	ext_part = ped_disk_extended_partition (disk);
 	PedSector	cyl_size = bios_geom->sectors * bios_geom->heads;
 	PedSector	start_base;
@@ -1984,7 +1979,6 @@ add_logical_part_metadata (PedDisk* disk, PedPartition* log_part)
 {
 	PedPartition*	ext_part = ped_disk_extended_partition (disk);
 	PedPartition*	prev = log_part->prev;
-	PedDevice*	dev = disk->dev;
 	PedCHSGeometry	bios_geom;
 	PedSector	cyl_size;
 	PedSector	metadata_start;

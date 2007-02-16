@@ -424,7 +424,6 @@ _device_probe_type (PedDevice* dev)
         struct stat             dev_stat;
         int                     dev_major;
         int                     dev_minor;
-        PedExceptionOption      ex_status;
 
         if (!_device_stat (dev, &dev_stat))
                 return 0;
@@ -680,6 +679,10 @@ init_ide (PedDevice* dev)
                                 ped_exception_catch ();
                         case PED_EXCEPTION_IGNORE:
                                 dev->model = strdup(_("Generic IDE"));
+                                break;
+                        default:
+                                PED_ASSERT (0, (void) 0);
+                                break;
                 }
         } else {
                 /* hdi.model is not guaranteed to be NULL terminated */
@@ -712,7 +715,10 @@ init_ide (PedDevice* dev)
                                 case PED_EXCEPTION_UNHANDLED:
                                         ped_exception_catch ();
                                 case PED_EXCEPTION_IGNORE:
-                                        ;
+                                        break;
+                                default:
+                                        PED_ASSERT (0, (void) 0);
+                                        break;
                         }
                 }
                 
@@ -950,10 +956,7 @@ static int
 init_dasd (PedDevice* dev, char* model_name)
 {
         struct stat             dev_stat;
-        PedExceptionOption      ex_status;
-        dasd_information_t      dasd_info;
         struct hd_geometry      geo;
-        int f, blksize = 0;
         char *errstr = 0;
 
         if (!_device_stat (dev, &dev_stat))
@@ -995,7 +998,6 @@ init_dasd (PedDevice* dev, char* model_name)
         ped_device_close (dev);
         return 1;
 
-except:
         ped_exception_throw ( PED_EXCEPTION_ERROR,
                               PED_EXCEPTION_IGNORE_CANCEL,
                               errstr );
@@ -1040,7 +1042,10 @@ init_generic (PedDevice* dev, char* model_name)
                         case PED_EXCEPTION_UNHANDLED:
                                 ped_exception_catch ();
                         case PED_EXCEPTION_IGNORE:
-                                ; // just workaround for gcc 3.0
+                                break;
+                        default:
+                                PED_ASSERT (0, (void) 0);
+                                break;
                 }
 
                 /* what should we stick in here? */
@@ -1417,7 +1422,7 @@ linux_read (const PedDevice* dev, void* buffer, PedSector start,
                     && start + count - 1 == dev->length - 1)
                         return ped_device_read (dev, buffer, start, count - 1)
                                 && _read_lastoddsector (
-                                        dev, buffer + (count-1) * 512);
+                                        dev, (char *) buffer + (count-1) * 512);
         }
         while (1) {
                 if (_device_seek (dev, start))
@@ -1440,6 +1445,9 @@ linux_read (const PedDevice* dev, void* buffer, PedSector start,
                                 ped_exception_catch ();
                         case PED_EXCEPTION_CANCEL:
                                 return 0;
+                        default:
+                                PED_ASSERT (0, (void) 0);
+                                break;
                 }
         }
 
@@ -1455,7 +1463,7 @@ linux_read (const PedDevice* dev, void* buffer, PedSector start,
                 if (status == count * dev->sector_size) break;
                 if (status > 0) {
                         read_length -= status;
-                        buffer += status;
+                        buffer = (char *) buffer + status;
                         continue;
                 }
 
@@ -1479,6 +1487,9 @@ linux_read (const PedDevice* dev, void* buffer, PedSector start,
                         case PED_EXCEPTION_CANCEL:
                                 free(diobuf);
                                 return 0;
+                        default:
+                                PED_ASSERT (0, (void) 0);
+                                break;
                 }
         }
         free(diobuf);
@@ -1552,7 +1563,7 @@ linux_write (PedDevice* dev, const void* buffer, PedSector start,
                     && start + count - 1 == dev->length - 1)
                         return ped_device_write (dev, buffer, start, count - 1)
                                 && _write_lastoddsector (
-                                        dev, buffer + (count-1) * 512);
+                                        dev, (char*) buffer + (count-1) * 512);
         }
         while (1) {
                 if (_device_seek (dev, start))
@@ -1574,6 +1585,9 @@ linux_write (PedDevice* dev, const void* buffer, PedSector start,
                                 ped_exception_catch ();
                         case PED_EXCEPTION_CANCEL:
                                 return 0;
+                        default:
+                                PED_ASSERT (0, (void) 0);
+                                break;
                 }
         }
 
@@ -1592,7 +1606,7 @@ linux_write (PedDevice* dev, const void* buffer, PedSector start,
                 if (status == count * dev->sector_size) break;
                 if (status > 0) {
                         write_length -= status;
-                        diobuf += status;
+                        diobuf = (char *) diobuf + status;
                         continue;
                 }
 
@@ -1615,6 +1629,9 @@ linux_write (PedDevice* dev, const void* buffer, PedSector start,
                         case PED_EXCEPTION_CANCEL:
                                 free(diobuf_start);
                                 return 0;
+                        default:
+                                PED_ASSERT (0, (void) 0);
+                                break;
                 }
         }
         free(diobuf_start);
@@ -1682,6 +1699,9 @@ _do_fsync (PedDevice* dev)
                                 ped_exception_catch ();
                         case PED_EXCEPTION_CANCEL:
                                 return 0;
+                        default:
+                                PED_ASSERT (0, (void) 0);
+                                break;
                 }
         } 
         return 1;

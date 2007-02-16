@@ -1,6 +1,6 @@
 /*
     clear_fat - a tool to clear unused space (for testing purposes)
-    Copyright (C) 2000 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -130,6 +130,10 @@ _calc_fat_entry_offset (PedFileSystem* fs, FatCluster cluster)
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 
 	switch (fs_info->fat_type) {
+                case FAT_TYPE_FAT12:
+                        PED_ASSERT (0, (void) 0);
+                        break;
+
 		case FAT_TYPE_FAT16:
 			return cluster * 2;
 

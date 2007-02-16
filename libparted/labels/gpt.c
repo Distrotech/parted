@@ -4,7 +4,7 @@
     original version by Matt Domsch <Matt_Domsch@dell.com>
     Disclaimed into the Public Domain
 
-    Portions Copyright (C) 2001, 2002, 2003, 2005, 2006
+    Portions Copyright (C) 2001, 2002, 2003, 2005, 2006, 2007
         Free Software Foundation, Inc.
 
     EFI GUID Partition Table handling
@@ -363,7 +363,6 @@ pth_get_raw (const PedDevice* dev, const GuidPartitionTableHeader_t* pth)
 static void
 swap_uuid_and_efi_guid(uuid_t uuid)
 {
-	int i;
 	efi_guid_t *guid = (efi_guid_t *)uuid;
 
 	PED_ASSERT(uuid != NULL, return);
@@ -478,7 +477,6 @@ gpt_clobber(PedDevice * dev)
         uint8_t* zeroed_pth_raw = ped_malloc (pth_get_size (dev));
         uint8_t* pth_raw = ped_malloc (pth_get_size (dev));
 	GuidPartitionTableHeader_t* gpt;
-	GuidPartitionEntry_t ptes[GPT_DEFAULT_PARTITION_ENTRIES];
 
 	PED_ASSERT (dev != NULL, return 0);
 
@@ -1028,7 +1026,6 @@ gpt_write(PedDisk * disk)
 	GuidPartitionTableHeader_t* gpt;
 	PedPartition* part;
 	int ptes_size;
-	unsigned int i;
 
 	PED_ASSERT (disk != NULL, goto error);
 	PED_ASSERT (disk->dev != NULL, goto error);
@@ -1102,7 +1099,6 @@ add_metadata_part(PedDisk * disk, PedSector start, PedSector length)
 
 error_destroy_constraint:
 	ped_constraint_destroy (constraint_exact);
-error_destroy_part:
 	ped_partition_destroy (part);
 error:
 	return 0;

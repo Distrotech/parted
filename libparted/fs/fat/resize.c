@@ -1,6 +1,6 @@
 /*
     libparted
-    Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+    Copyright (C) 1998, 1999, 2000, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -342,6 +342,10 @@ fat_construct_dir_tree (FatOpContext* ctx)
 
 	if (new_fs_info->fat_type == old_fs_info->fat_type) {
 		switch (old_fs_info->fat_type) {
+                        case FAT_TYPE_FAT12:
+                        PED_ASSERT (0, (void) 0);
+                        break;
+
 			case FAT_TYPE_FAT16:
 			return fat_construct_legacy_root (ctx);
 
@@ -530,6 +534,10 @@ ask_type (PedFileSystem* fs, int fat16_ok, int fat32_ok, FatType* out_fat_type)
 
 		case PED_EXCEPTION_CANCEL:
 			return 0;
+
+                default:
+                        PED_ASSERT (0, (void) 0);
+                        break;
 		}
 	}
 
@@ -583,7 +591,6 @@ get_fat_type (PedFileSystem* fs, const PedGeometry* new_geom,
 	      FatType* out_fat_type)
 {
 	FatSpecific*		fs_info = FAT_SPECIFIC (fs);
-	PedExceptionOption	status;
 	PedSector		fat16_cluster_sectors;
 	PedSector		fat32_cluster_sectors;
 	FatCluster		dummy_cluster_count;

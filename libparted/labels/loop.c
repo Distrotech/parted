@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+    Copyright (C) 1999, 2000, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -95,8 +95,6 @@ loop_clobber (PedDevice* dev)
 static PedDisk*
 loop_alloc (const PedDevice* dev)
 {
-	PedDisk*		disk;
-
 	PED_ASSERT (dev != NULL, return 0);
 
 	if (dev->length < 256)

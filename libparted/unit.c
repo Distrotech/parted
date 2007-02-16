@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2005 Free Software Foundation, Inc.
+    Copyright (C) 2005, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -421,7 +421,6 @@ parse_chs (const char* str, PedDevice* dev, PedSector* sector,
 
 error_free_copy:
 	ped_free (copy);
-error:
 	*sector = 0;
 	if (range)
 		*range = NULL;

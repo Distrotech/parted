@@ -1,6 +1,6 @@
 /* 
     libparted/fs_amiga - amiga file system support.
-    Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2001, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,23 +32,6 @@
 #  define _(String) (String)
 #endif /* ENABLE_NLS */
 
-/* String manipulation */
-static void _amiga_set_bstr (const char *cstr, char *bstr, int maxsize) {
-	int size = strlen (cstr);
-	int i;
-
-	if (size >= maxsize) return;
-	bstr[0] = size;
-	for (i = 0; i<size; i++) bstr[i+1] = cstr[i];
-}
-static const char * _amiga_get_bstr (char * bstr) {
-	char * cstr = bstr + 1;
-	int size = bstr[0];
-	
-	cstr[size] = '\0';
-	return cstr;
-}
-
 #define	IDNAME_RIGIDDISK	(uint32_t)0x5244534B	/* 'RDSK' */
 #define IDNAME_BADBLOCK		(uint32_t)0x42414442	/* 'BADB' */
 #define	IDNAME_PARTITION	(uint32_t)0x50415254	/* 'PART' */
@@ -76,21 +59,6 @@ _amiga_block_id (uint32_t id) {
 			return "<free>";
 		default :
 			return "<unknown>";
-	}
-}
-static int
-_amiga_valid_block_id (uint32_t id) {
-	switch (id) {
-		case IDNAME_RIGIDDISK :
-		case IDNAME_BADBLOCK :
-		case IDNAME_PARTITION :
-		case IDNAME_FILESYSHEADER :
-		case IDNAME_LOADSEG :
-		case IDNAME_BOOT :
-			return 1;
-		case IDNAME_FREE :
-		default :
-			return 0;
 	}
 }
 

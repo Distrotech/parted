@@ -1,6 +1,6 @@
 /*
     parted - a frontend to libparted
-    Copyright (C) 1999, 2000, 2001, 2002, 2003, 2005, 2006
+    Copyright (C) 1999, 2000, 2001, 2002, 2003, 2005, 2006, 2007
     Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
@@ -105,7 +105,6 @@ static char* name_msg =         N_("NAME is any word you want\n");
 static char* resize_msg_start = N_("The partition must have one of the "
                                    "following FS-TYPEs: ");
 
-static char* version_msg = N_("GNU Parted Version information:\n");
 static char* copyright_msg = N_(
 "Copyright (C) 1998 - 2006 Free Software Foundation, Inc.\n"
 "This program is free software, covered by the GNU General Public License.\n"
@@ -124,7 +123,7 @@ static char* mkpart_fs_type_msg;
 static char* resize_fs_type_msg;
 
 static Command* commands [256] = {NULL};
-static PedTimer* timer;
+static PedTimer* g_timer;
 static TimerContext timer_context;
 
 static int _print_list (int cli);
@@ -155,8 +154,8 @@ _timer_handler (PedTimer* timer, void* context)
                         printf ("%s... ", timer->state_name);
                 printf (_("%0.f%%\t(time left %.2d:%.2d)"),
                         100.0 * timer->frac,
-                        tcontext->predicted_time_left / 60,
-                        tcontext->predicted_time_left % 60);
+                        (int) (tcontext->predicted_time_left / 60),
+                        (int) (tcontext->predicted_time_left % 60));
 
                 fflush (stdout);
         }
@@ -430,7 +429,6 @@ do_check (PedDevice** dev)
         PedDisk*        disk;
         PedFileSystem*  fs;
         PedPartition*   part = NULL;
-        int             part_num;
 
         disk = ped_disk_new (*dev);
         if (!disk)
@@ -447,7 +445,7 @@ do_check (PedDevice** dev)
         fs = ped_file_system_open (&part->geom);
         if (!fs)
                 goto error_destroy_disk;
-        if (!ped_file_system_check (fs, timer))
+        if (!ped_file_system_check (fs, g_timer))
                 goto error_close_fs;
         ped_file_system_close (fs);
         ped_disk_destroy (disk);
@@ -466,7 +464,6 @@ do_cp (PedDevice** dev)
 {
         PedDisk*                src_disk;
         PedDisk*                dst_disk;
-        PedDevice*              src_device;
         PedPartition*           src = NULL;
         PedPartition*           dst = NULL;
         PedFileSystem*          src_fs;
@@ -504,7 +501,7 @@ do_cp (PedDevice** dev)
         src_fs = ped_file_system_open (&src->geom);
         if (!src_fs)
                 goto error_destroy_disk;
-        dst_fs = ped_file_system_copy (src_fs, &dst->geom, timer);
+        dst_fs = ped_file_system_copy (src_fs, &dst->geom, g_timer);
         if (!dst_fs)
                 goto error_close_src_fs;
         dst_fs_type = dst_fs->type;     /* may be different to src_fs->type */
@@ -629,7 +626,7 @@ do_mkfs (PedDevice** dev)
         if (!command_line_get_fs_type (_("File system?"), &type))
                 goto error_destroy_disk;
 
-        fs = ped_file_system_create (&part->geom, type, timer);
+        fs = ped_file_system_create (&part->geom, type, g_timer);
         if (!fs)
                 goto error_destroy_disk;
         ped_file_system_close (fs);
@@ -792,12 +789,10 @@ do_mkpart (PedDevice** dev)
 
 error_remove_part:
         ped_disk_remove_partition (disk, part);
-error_destroy_all_constraints:
         ped_constraint_destroy (final_constraint);
 error_destroy_simple_constraints:
         ped_constraint_destroy (user_constraint);
         ped_constraint_destroy (dev_constraint);
-error_destroy_part:
         ped_partition_destroy (part);
 error_destroy_disk:
         ped_disk_destroy (disk);
@@ -928,7 +923,7 @@ do_mkpartfs (PedDevice** dev)
                 ped_partition_set_flag (part, PED_PARTITION_LBA, 1);
 
         /* fs creation */
-        fs = ped_file_system_create (&part->geom, fs_type, timer);
+        fs = ped_file_system_create (&part->geom, fs_type, g_timer);
         if (!fs) 
                 goto error_destroy_disk;
         ped_file_system_close (fs);
@@ -964,12 +959,10 @@ do_mkpartfs (PedDevice** dev)
 
 error_remove_part:
         ped_disk_remove_partition (disk, part);
-error_destroy_all_constraints:
         ped_constraint_destroy (final_constraint);
 error_destroy_simple_constraints:
         ped_constraint_destroy (user_constraint);
         ped_constraint_destroy (dev_constraint);
-error_destroy_part:
         ped_partition_destroy (part);
 error_destroy_disk:
         ped_disk_destroy (disk);
@@ -1048,7 +1041,7 @@ do_move (PedDevice** dev)
         }
 
         /* do the move */
-        fs_copy = ped_file_system_copy (fs, &part->geom, timer);
+        fs_copy = ped_file_system_copy (fs, &part->geom, g_timer);
         if (!fs_copy)
                 goto error_close_fs;
         ped_file_system_close (fs_copy);
@@ -1215,7 +1208,6 @@ static int
 do_print (PedDevice** dev)
 {
         PedDisk*        disk;
-        PedPartition*   part;
         Table*          table;
         StrList*        row;
         int             has_extended;
@@ -1359,6 +1351,7 @@ do_print (PedDevice** dev)
                                          PED_DISK_TYPE_PARTITION_NAME);
 
         
+        PedPartition* part;
         if (!opt_machine_mode) {
 
             if (ped_unit_get_default() == PED_UNIT_CHS) {
@@ -1501,7 +1494,6 @@ do_print (PedDevice** dev)
 
         return 1;
 
-error_destroy_disk:
         ped_disk_destroy (disk);
 error:
         return 0;
@@ -1596,6 +1588,7 @@ _rescue_add_partition (PedPartition* part)
         switch (ex_opt) {
                 case PED_EXCEPTION_CANCEL: return -1;
                 case PED_EXCEPTION_NO: return 0;
+                default: break;
         }
 
         ped_partition_set_system (part, fs_type);
@@ -1622,10 +1615,10 @@ _rescue_pass (PedDisk* disk, PedGeometry* start_range, PedGeometry* end_range)
 
         ped_geometry_init (&entire_dev, disk->dev, 0, disk->dev->length);
 
-        ped_timer_reset (timer);
-        ped_timer_set_state_name (timer, _("searching for file systems"));
+        ped_timer_reset (g_timer);
+        ped_timer_set_state_name (g_timer, _("searching for file systems"));
         for (start = start_range->start; start <= start_range->end; start++) {
-                ped_timer_update (timer, 1.0 * (start - start_range->start)
+                ped_timer_update (g_timer, 1.0 * (start - start_range->start)
                                          / start_range->length);
 
                 ped_geometry_init (&start_geom_exact, disk->dev, start, 1);
@@ -1661,17 +1654,14 @@ _rescue_pass (PedDisk* disk, PedGeometry* start_range, PedGeometry* end_range)
                 ped_partition_destroy (part);
                 ped_constraint_done (&constraint);
         }
-        ped_timer_update (timer, 1.0);
+        ped_timer_update (g_timer, 1.0);
 
         return 1;
 
 error_remove_partition:
         ped_disk_remove_partition (disk, part);
-error_partition_destroy:
         ped_partition_destroy (part);
-error_constraint_done:
         ped_constraint_done (&constraint);
-error:
         return 0;
 }
 
@@ -1767,7 +1757,7 @@ do_resize (PedDevice** dev)
                 if (!ped_disk_set_partition_geom (disk, part, constraint,
                                                   new_geom.start, new_geom.end))
                         goto error_close_fs;
-                if (!ped_file_system_resize (fs, &part->geom, timer))
+                if (!ped_file_system_resize (fs, &part->geom, g_timer))
                         goto error_close_fs;
                 /* may have changed... eg fat16 -> fat32 */
                 ped_partition_set_system (part, fs->type);
@@ -2281,9 +2271,6 @@ while (1)
 *argc_ptr -= optind;
 *argv_ptr += optind;
 return 1;
-
-error:
-return 0;
 }
 
 static PedDevice*
@@ -2347,8 +2334,8 @@ dev = _choose_device (argc_ptr, argv_ptr);
 if (!dev)
         goto error_done_commands;
 
-timer = ped_timer_new (_timer_handler, &timer_context);
-if (!timer)
+g_timer = ped_timer_new (_timer_handler, &timer_context);
+if (!g_timer)
         goto error_done_commands;
 timer_context.last_update = 0;
 
@@ -2357,7 +2344,6 @@ return dev;
 error_done_commands:
 _done_commands ();
 _done_messages ();
-error_done_ui:
 done_ui ();
 error:
 return NULL;
@@ -2383,7 +2369,7 @@ if (dev->type != PED_DEVICE_FILE && !opt_script_mode && !opt_machine_mode) {
 
 ped_device_close (dev);
 
-ped_timer_destroy (timer);
+ped_timer_destroy (g_timer);
 _done_commands ();
 _done_messages ();
 done_ui();

@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000, 2002, 2004 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2002, 2004, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -327,7 +327,6 @@ mac_duplicate (const PedDisk* disk)
 	memcpy (new_mac_data, old_mac_data, sizeof (MacDiskData));
 	return new_disk;
 
-error_free_new_disk:
 	_ped_disk_free (new_disk);
 error:
 	return NULL;
@@ -1143,7 +1142,6 @@ mac_partition_new (
 	}
 	return part;
 
-error_free_mac_data:
 	ped_free (mac_data);
 error_free_part:
 	ped_free (part);
@@ -1217,7 +1215,6 @@ mac_partition_set_system (PedPartition* part, const PedFileSystemType* fs_type)
 static int
 mac_partition_set_flag (PedPartition* part, PedPartitionFlag flag, int state)
 {
-	PedFileSystemType*	hfs = ped_file_system_type_get ("hfs");
 	MacPartitionData*	mac_data;
 
 	PED_ASSERT (part != NULL, return 0);

@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000, 2005 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2005, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -94,10 +94,8 @@ int ped_assert ( int cond, const char* cond_text,
 #if HAVE_BACKTRACE
 	/* Print backtrace stack */
 	void *stack[20];
-	size_t size;
 	char **strings, **string;
-	
-	size = backtrace(stack, 20);
+        int size = backtrace(stack, 20);
 	strings = backtrace_symbols(stack, size);
 
 	if (strings) {
