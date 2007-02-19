@@ -16,3 +16,4 @@ EXTRA_DIST	= HOWTO testrc $(noinst_SCRIPTS)
 
 CLEANFILES	= test_log test_out
 
+MAINTAINERCLEANFILES = Makefile.in

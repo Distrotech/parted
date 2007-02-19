@@ -18,3 +18,4 @@ partedinclude_HEADERS = gnu.h		\
 noinst_HEADERS	      = crc32.h		\
 			endian.h
 
+MAINTAINERCLEANFILES = Makefile.in

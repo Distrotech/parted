@@ -16,7 +16,7 @@ LIBS = @INTLLIBS@ @LIBS@
 partedincludedir      =	-I$(top_srcdir)/include
 lib_LTLIBRARIES	      =	libparted.la
 libparted_la_LDFLAGS  = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
- 						-release $(LT_RELEASE)
+						-release $(LT_RELEASE)
 
 libparted_la_SOURCES  = debug.c			\
 			device.c		\
@@ -46,3 +46,5 @@ libparted_la_LIBADD   = @OS_LIBS@			\
 EXTRA_DIST	      = mbr.s
 
 INCLUDES = $(partedincludedir) @INTLINCS@
+
+MAINTAINERCLEANFILES = Makefile.in

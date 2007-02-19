@@ -13,3 +13,5 @@ libhfs_la_SOURCES	= hfs.c hfs.h \
 			  journal.c journal.h
 
 INCLUDES = $(partedincludedir) @INTLINCS@
+
+MAINTAINERCLEANFILES = Makefile.in

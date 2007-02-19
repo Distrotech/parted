@@ -57,3 +57,20 @@ check-abi: baseline_symbols current_symbols.txt
 	@test `wc -l < libparted.abi-diff` -gt 0 \
          && (echo "ABI has changed. Please, update you ABI package version."; exit 1) \
          || exit 0
+
+MAINTAINERCLEANFILES = ABOUT-NLS     \
+                       ChangeLog     \
+                       INSTALL       \
+                       Makefile.in   \
+                       aclocal.m4    \
+                       compile       \
+                       config.guess  \
+                       config.h.in   \
+                       config.rpath  \
+                       config.sub    \
+                       configure     \
+                       depcomp       \
+                       install-sh    \
+                       ltmain.sh     \
+                       missing       \
+                       mkinstalldirs

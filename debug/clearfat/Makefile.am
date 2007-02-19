@@ -10,3 +10,4 @@ partedincludedir	= -I$(top_srcdir)/include
 
 INCLUDES 		= $(partedincludedir) @INTLINCS@
 
+MAINTAINERCLEANFILES = Makefile.in

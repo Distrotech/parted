@@ -12,3 +12,5 @@ libamigafs_la_SOURCES   =	amiga.h		\
 			interface.c
 
 INCLUDES = $(partedincludedir) @INTLINCS@
+
+MAINTAINERCLEANFILES = Makefile.in

@@ -23,3 +23,4 @@ libfat_la_SOURCES     = bootsector.c	\
 
 INCLUDES = $(partedincludedir) @INTLINCS@
 
+MAINTAINERCLEANFILES = Makefile.in

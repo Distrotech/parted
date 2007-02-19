@@ -10,7 +10,7 @@ LIBS = @INTLLIBS@ @LIBS@
 partedincludedir      =	-I$(top_srcdir)/include
 noinst_LTLIBRARIES    =	libfs.la
 libfs_la_LDFLAGS  = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
- 			-release $(LT_RELEASE)
+			-release $(LT_RELEASE)
 
 libfs_la_LIBADD   = @UUID_LIBS@			\
 		    @OS_LIBS@			\
@@ -31,3 +31,4 @@ libfs_la_SOURCES   =
 
 INCLUDES = $(partedincludedir) @INTLINCS@
 
+MAINTAINERCLEANFILES = Makefile.in

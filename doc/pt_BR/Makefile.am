@@ -3,3 +3,5 @@
 lang=pt_BR
 
 include ../po4a.mk
+
+MAINTAINERCLEANFILES = Makefile.in

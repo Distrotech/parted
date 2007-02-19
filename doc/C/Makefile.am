@@ -26,3 +26,5 @@ updatepo:
 	done
 
 dist-hook: updatepo
+
+MAINTAINERCLEANFILES = Makefile.in

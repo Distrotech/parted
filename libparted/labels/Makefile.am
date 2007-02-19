@@ -8,7 +8,7 @@ LIBS = @INTLLIBS@ @LIBS@
 partedincludedir      =	-I$(top_srcdir)/include
 noinst_LTLIBRARIES    =	liblabels.la
 liblabels_la_LDFLAGS  = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
- 			-release $(LT_RELEASE)
+			-release $(LT_RELEASE)
 
 liblabels_la_SOURCES  = rdb.c		\
 			bsd.c  		\
@@ -23,11 +23,11 @@ liblabels_la_SOURCES  = rdb.c		\
 			loop.c 		\
 			mac.c  		\
 			pc98.c 		\
-			sun.c			\
+			sun.c		\
 			aix.c
-			
 
 liblabels_la_LIBADD   = @OS_LIBS@
 
 INCLUDES = $(partedincludedir) @INTLINCS@
 
+MAINTAINERCLEANFILES = Makefile.in

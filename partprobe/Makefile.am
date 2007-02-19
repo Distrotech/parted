@@ -11,3 +11,4 @@ partprobe_LDFLAGS = @PARTEDLDFLAGS@
 
 INCLUDES	= $(partedincludedir) @INTLINCS@
 
+MAINTAINERCLEANFILES = Makefile.in
