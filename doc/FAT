@@ -125,54 +125,49 @@ Microsoft's implementation - they are calculated independently.
 Taken from libparted/fs_fat/bootsector.h:
 
 struct __attribute__ ((packed)) _FatBootSector {
-	__u8    boot_jump[3];   /* 00: Boot strap short or near jump */
-	__u8    system_id[8];   /* 03: system name */
-	__u16   sector_size;    /* 0b: bytes per logical sector */
-	__u8    cluster_size;   /* 0d: sectors/cluster */
-	__u16   reserved;       /* 0e: reserved sectors */
-	__u8    fats;           /* 10: number of FATs */
-	__u16   dir_entries;    /* 11: number of root directory entries */
-	__u16   sectors;        /* 13: if 0, sector_count supersedes */
-	__u8    media;          /* 15: media code */
-	__u16   fat_length;     /* 16: sectors/FAT for FAT12/16 */
-	__u16   secs_track;     /* 18: sectors per track */
-	__u16   heads;          /* 1a: number of heads */
-	__u32   hidden;         /* 1c: hidden sectors (partition start) */
-	__u32   sector_count;   /* 20: no. of sectors (if sectors == 0) */
+        __u8    boot_jump[3];   /* 00: Boot strap short or near jump */
+        __u8    system_id[8];   /* 03: system name */
+        __u16   sector_size;    /* 0b: bytes per logical sector */
+        __u8    cluster_size;   /* 0d: sectors/cluster */
+        __u16   reserved;       /* 0e: reserved sectors */
+        __u8    fats;           /* 10: number of FATs */
+        __u16   dir_entries;    /* 11: number of root directory entries */
+        __u16   sectors;        /* 13: if 0, sector_count supersedes */
+        __u8    media;          /* 15: media code */
+        __u16   fat_length;     /* 16: sectors/FAT for FAT12/16 */
+        __u16   secs_track;     /* 18: sectors per track */
+        __u16   heads;          /* 1a: number of heads */
+        __u32   hidden;         /* 1c: hidden sectors (partition start) */
+        __u32   sector_count;   /* 20: no. of sectors (if sectors == 0) */
 
-union __attribute__ ((packed)) {
-/* FAT16 fields */
-struct __attribute__ ((packed)) {
-        __u8    drive_num;      /* 24: */
-        __u8    empty_1;        /* 25: */
-        __u8    ext_signature;  /* 26: always 0x29 */
-        __u32   serial_number;  /* 27: */
-        __u8    volume_name [11];       /* 2b: */
-        __u8    fat_name [8];   /* 37: */
-
-        __u8    boot_code[448]; /* 3f: Boot code (or message) */
-} fat16;
-
-/* FAT32 fields */
-struct __attribute__ ((packed)) {
-        __u32   fat_length;     /* 24: size of FAT in sectors */
-        __u16   flags;          /* 28: bit8: fat mirroring, low4: active fat */
-        __u16   version;        /* 2a: minor * 256 + major */
-        __u32   root_dir_cluster;       /* 2c: */
-        __u16   info_sector;    /* 30: */
-        __u16   backup_sector;  /* 32: */
-
-        __u8    empty_1 [12];   /* 34: */
-
-        __u16   drive_num;      /* 40: */
-        __u8    ext_signature;  /* 42: always 0x29 */
-        __u32   serial_number;  /* 43: */
-        __u8    volume_name [11];       /* 47: */
-        __u8    fat_name [8];   /* 52: */
-
-        __u8    boot_code[420]; /* 5a: Boot code (or message) */
-} fat32;
-} u;
+        union __attribute__ ((packed)) {
+                /* FAT16 fields */
+                struct __attribute__ ((packed)) {
+                        __u8    drive_num;      /* 24: */
+                        __u8    empty_1;        /* 25: */
+                        __u8    ext_signature;  /* 26: always 0x29 */
+                        __u32   serial_number;  /* 27: */
+                        __u8    volume_name [11];       /* 2b: */
+                        __u8    fat_name [8];   /* 37: */
+                        __u8    boot_code[448]; /* 3f: Boot code (or message) */
+                } fat16;
+                /* FAT32 fields */
+                struct __attribute__ ((packed)) {
+                        __u32   fat_length;     /* 24: size of FAT in sectors */
+                        __u16   flags;          /* 28: bit8: fat mirroring, low4: active fat */
+                        __u16   version;        /* 2a: minor * 256 + major */
+                        __u32   root_dir_cluster;       /* 2c: */
+                        __u16   info_sector;    /* 30: */
+                        __u16   backup_sector;  /* 32: */
+                        __u8    empty_1 [12];   /* 34: */
+                        __u16   drive_num;      /* 40: */
+                        __u8    ext_signature;  /* 42: always 0x29 */
+                        __u32   serial_number;  /* 43: */
+                        __u8    volume_name [11];       /* 47: */
+                        __u8    fat_name [8];   /* 52: */
+                        __u8    boot_code[420]; /* 5a: Boot code (or message) */
+                } fat32;
+        } u;
 
         __u16   boot_sign;      /* 1fe: always 0xAA55 */
 };
