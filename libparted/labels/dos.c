@@ -420,6 +420,7 @@ probe_filesystem_for_geom (const PedPartition* part, PedCHSGeometry* bios_geom)
 	unsigned char* buf;
 	int sectors;
 	int heads;
+	int res = 0;
 
 	PED_ASSERT (bios_geom        != NULL, return 0);
         PED_ASSERT (part             != NULL, return 0);
@@ -429,8 +430,11 @@ probe_filesystem_for_geom (const PedPartition* part, PedCHSGeometry* bios_geom)
 
         buf = ped_malloc (part->disk->dev->sector_size);
         
-	if (!part->fs_type)
+	if (!buf)
 		return 0;
+
+	if (!part->fs_type)
+		goto end;
 
 	found = 0;
 	for (i = 0; ms_types[i]; i++) {
@@ -438,24 +442,27 @@ probe_filesystem_for_geom (const PedPartition* part, PedCHSGeometry* bios_geom)
 			found = 1;
 	}
 	if (!found)
-		return 0;
+		goto end;
 
 	if (!ped_geometry_read(&part->geom, buf, 0, 1))
-		return 0;
+		goto end;
 
 	/* shared by the start of all Microsoft file systems */
 	sectors = buf[0x18] + (buf[0x19] << 8);
 	heads = buf[0x1a] + (buf[0x1b] << 8);
 
 	if (sectors < 1 || sectors > 63)
-		return 0;
+		goto end;
 	if (heads > 255 || heads < 1)
-		return 0;
+		goto end;
 
 	bios_geom->sectors = sectors;
 	bios_geom->heads = heads;
 	bios_geom->cylinders = part->disk->dev->length / (sectors * heads);
-	return 1;
+	res = 1;
+end:
+	ped_free(buf);
+	return res;
 }
 
 /* This function attempts to infer the BIOS CHS geometry of the hard disk
