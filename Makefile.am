@@ -5,12 +5,10 @@ EXTRA_DIST = \
              BUGS                                  \
 	     libparted.pc.in			   \
              parted.spec.in                        \
-             parted.m4                             \
              scripts/data/abi/baseline_symbols.txt \
              scripts/extract_symvers
 
 aclocaldir=$(datadir)/aclocal
-aclocal_DATA=parted.m4
 
 pcdir = $(libdir)/pkgconfig
 pc_DATA = libparted.pc.in
