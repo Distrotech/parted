@@ -1,3 +1,4 @@
+#include <config.h>
 #include <parted/vtoc.h>
 
 #ifdef DEBUG_DASD

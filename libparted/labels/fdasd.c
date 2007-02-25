@@ -16,6 +16,7 @@
  *           
  */
 
+#include <config.h>
 #include <parted/vtoc.h>
 #include <parted/fdasd.h>
 

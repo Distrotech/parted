@@ -25,6 +25,7 @@
 
 */
 
+#include <config.h>
 #include "fat.h"
 #include "traverse.h"
 

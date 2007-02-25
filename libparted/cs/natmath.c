@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@
  * @{
  */
 
+#include <config.h>
 #include <stdlib.h>
 #include <parted/parted.h>
 #include <parted/debug.h>
