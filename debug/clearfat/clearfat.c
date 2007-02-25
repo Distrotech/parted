@@ -40,7 +40,7 @@ static char buffer [CLEAR_BUFFER_SIZE];
 static int
 _do_help ()
 {
-	printf (help_msg);
+	fputs (help_msg, stdout);
 	exit (1);
 }
 
