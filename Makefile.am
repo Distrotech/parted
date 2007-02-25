@@ -1,13 +1,8 @@
 ACLOCAL_AMFLAGS = -I m4
-SUBDIRS = po libparted parted partprobe include doc debug
+SUBDIRS = po lib libparted parted partprobe include doc debug
 
-EXTRA_DIST = config.rpath                          \
-             ABOUT-NLS                             \
-             AUTHORS                               \
+EXTRA_DIST = \
              BUGS                                  \
-             COPYING                               \
-             THANKS                                \
-             TODO                                  \
 	     libparted.pc.in			   \
              parted.spec.in                        \
              parted.m4                             \
@@ -28,7 +23,7 @@ dist-hook: parted.spec
 baseline_file = ${top_srcdir}/scripts/data/abi/baseline_symbols.txt
 extract_symvers = $(top_srcdir)/scripts/extract_symvers
 
-current_symbols.txt: ${extract_symvers} 
+current_symbols.txt: ${extract_symvers}
 	  -@(sh ${extract_symvers} libparted/.libs/libparted.so current_symbols.txt)
 
 baseline_symbols:
@@ -57,6 +52,8 @@ check-abi: baseline_symbols current_symbols.txt
 	@test `wc -l < libparted.abi-diff` -gt 0 \
          && (echo "ABI has changed. Please, update you ABI package version."; exit 1) \
          || exit 0
+
+MOSTLYCLEANDIRS = m4
 
 MAINTAINERCLEANFILES = ABOUT-NLS     \
                        ChangeLog     \

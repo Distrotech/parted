@@ -4,9 +4,13 @@ dnl Free Software Foundation, Inc.
 dnl
 dnl This file may be modified and/or distributed without restriction.
 
-AC_PREREQ(2.50)
+AC_PREREQ(2.61)
+AC_INIT([GNU parted],[1.9.9],[bug-parted@gnu.org])
 
-AC_INIT(include/parted/parted.h)
+AC_CONFIG_SRCDIR(include/parted/parted.h)
+
+AC_CONFIG_HEADERS([lib/config.h:lib/config.h.in])
+AC_CONFIG_AUX_DIR(build-aux)
 
 dnl Versioning
 dnl Shamelessly pulled straight from glib's configure.in ...
@@ -30,18 +34,17 @@ LT_RELEASE=$PED_MAJOR_VERSION.$PED_MINOR_VERSION
 LT_CURRENT=`expr $PED_MICRO_VERSION - $PED_INTERFACE_AGE`
 LT_REVISION=$PED_INTERFACE_AGE
 LT_AGE=`expr $PED_BINARY_AGE - $PED_INTERFACE_AGE`
-
 AC_SUBST(LT_RELEASE)
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
 AC_SUBST(LT_AGE)
 
-PACKAGE=parted
-VERSION=$PED_VERSION
+# Ensure that the PED_*-specified version is the same as the literal
+# in the AC_INIT line, above.
+test $PACKAGE_VERSION = $PED_VERSION ||
+  AC_MSG_ERROR(configure.ac: version mismatch: $PACKAGE_VERSION != $PED_VERSION)
 
-AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
-
-AM_CONFIG_HEADER(config.h)
+AM_INIT_AUTOMAKE([1.10 dist-bzip2])
 
 AC_CANONICAL_HOST
 case "$host_os" in
@@ -159,21 +162,23 @@ fi
 
 dnl make libc threadsafe (not required for us, but useful other users of
 dnl libparted)
-CFLAGS="$CFLAGS -D_REENTRANT"
+AM_CPPFLAGS="$AM_CPPFLAGS -D_REENTRANT"
 
 dnl Check for programs.
 AC_ISC_POSIX
 AC_PROG_CC
 AC_PROG_GCC_TRADITIONAL
 AM_PROG_CC_C_O
-AC_GNU_SOURCE
+
+gl_EARLY
 
 dnl This test must come as early as possible after the compiler configuration
 dnl tests, because the choice of the file model can (in principle) affect
 dnl whether functions and headers are available, whether they work, etc.
 AC_SYS_LARGEFILE
 
-CFLAGS="$CFLAGS -D_FILE_OFFSET_BITS=${ac_cv_sys_file_offset_bits}"
+gl_INIT
+
 AC_CHECK_SIZEOF(off_t, 64, [
 	#include <stdio.h>
 	#include <sys/types.h>
@@ -193,11 +198,8 @@ libraries.)
 fi
 AM_PROG_LIBTOOL
 
-dnl Initialize i18n:
-ALL_LINGUAS="ca cs da de es fr gl id it ja nl nn hu pl pt pt_BR ru sv tr uk vi zh_CN zh_TW"
-AM_GNU_GETTEXT_VERSION([0.12.1])
+AM_GNU_GETTEXT_VERSION([0.15])
 AM_GNU_GETTEXT([external])
-CFLAGS="$CFLAGS -DLOCALEDIR=\"\\\"$datadir/locale\\\"\""
 if test "$USE_INCLUDED_LIBINTL" = "yes"; then
 	AC_MSG_ERROR(
 GNU Parted requires gettext to be installed for compilation -
@@ -328,8 +330,6 @@ dnl Check for OS specific libraries
 
 dnl GNU/Hurd:
 if test "$OS" = gnu; then
-	CFLAGS="$CFLAGS -D_GNU_SOURCE=1"
-
 dnl libshouldbeinlibc
 	AC_CHECK_LIB(shouldbeinlibc, vm_deallocate,
 		OS_LIBS="$OS_LIBS -lshouldbeinlibc",
@@ -460,12 +460,9 @@ if test "$with_readline" = yes; then
 	LIBS="$OLD_LIBS"
 fi
 
-OLD_CFLAGS="$CFLAGS"
-CFLAGS=-D_GNU_SOURCE=1
 AC_CHECK_FUNCS(canonicalize_file_name)
-CFLAGS="$OLD_CFLAGS"
 
-CFLAGS="$CFLAGS -W -Wall -Wno-unused -Wno-switch -Wno-format"
+# CFLAGS="$CFLAGS -W -Wall -Wno-unused -Wno-switch -Wno-format"
 
 if test "$enable_Werror" = yes; then
 	CFLAGS="$CFLAGS -Werror"
@@ -479,6 +476,7 @@ AC_SUBST(BUILDINFO)
 
 AC_OUTPUT([
 Makefile
+lib/Makefile
 include/Makefile
 include/parted/Makefile
 libparted/Makefile
