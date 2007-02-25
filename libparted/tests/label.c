@@ -7,14 +7,16 @@
 
 #include "common.h"
 
-char *temporary_disk;
+static char *temporary_disk;
 
-void create_disk(void)
+static void create_disk(void)
 {
 		temporary_disk = _create_disk(20);
+		fail_if(temporary_disk == NULL,
+                        "Failed to create temporary disk");
 }
 
-void destroy_disk(void)
+static void destroy_disk(void)
 {
 		unlink(temporary_disk);
 		free(temporary_disk);
@@ -39,7 +41,7 @@ START_TEST (test_create_label)
 						 type->name);
 		}
 }
-END_TEST		
+END_TEST
 
 int main(void)
 {
@@ -56,6 +58,6 @@ int main(void)
 
 		number_failed = srunner_ntests_failed(srunner);
 		srunner_free(srunner);
-		
+
 		return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

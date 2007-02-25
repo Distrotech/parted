@@ -6,18 +6,22 @@
 
 #include "common.h"
 
-
-char *_create_disk(const off_t size)
+char *_create_disk (const off_t size)
 {
 		char filename[] = "parted-test-XXXXXX";
-		mktemp(filename);
+		mktemp (filename);
 
-		FILE *disk = fopen(filename, "w");
-		off_t total_size = size * 1024 * 1024; /* Mb */
+		FILE *disk = fopen (filename, "w");
+		if (disk == NULL)
+			/* FIXME: give a diagnostic? */
+			return NULL;
+		off_t total_size = size * 1024 * 1024;	/* Mb */
 
-		fseek(disk, total_size, SEEK_SET);
-		fwrite("", sizeof(char), sizeof(char), disk);
-		fclose(disk);
+		fseek (disk, total_size, SEEK_SET);
+		fwrite ("", sizeof (char), 1, disk);
+		if (fclose (disk) != 0)
+		      /* FIXME: give a diagnostic? */
+		      return NULL;
 
-		return strdup(filename);
+		return strdup (filename);
 }
