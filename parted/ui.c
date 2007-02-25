@@ -27,7 +27,7 @@
 #include <unistd.h>
 #include <setjmp.h>
 
-#include "../config.h"
+#include <config.h>
 #include "command.h"
 #include "strlist.h"
 #include "ui.h"
