@@ -4,8 +4,11 @@ sbin_PROGRAMS = partprobe
 
 partprobe_SOURCES = partprobe.c
 
-partprobe_LDADD = @INTLLIBS@ @LIBS@ \
-	       $(top_builddir)/libparted/libparted.la @PARTED_LIBS@ 
+partprobe_LDADD = \
+  $(top_builddir)/lib/libparted.la \
+  $(top_builddir)/libparted/libparted.la \
+  $(INTLLIBS) $(LIBS) \
+  $(PARTED_LIBS)
 
 partprobe_LDFLAGS = @PARTEDLDFLAGS@
 

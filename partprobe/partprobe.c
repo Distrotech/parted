@@ -1,6 +1,6 @@
 /*
     partprobe - informs the OS kernel of partition layout
-    Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+    Copyright (C) 2001, 2002, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
  *
  * 	 CFLAGS=-Os ./configure --disable-nls --disable-shared --disable-debug
  * 	 	    --enable-discover-only
- * 
+ *
  * And strip(1) afterwards!
  */
 
@@ -31,6 +31,17 @@
 
 #include <stdio.h>
 #include <string.h>
+
+#include "closeout.h"
+#include "version-etc.h"
+
+#define AUTHORS \
+  "<http://parted.alioth.debian.org/cgi-bin/trac.cgi/browser/AUTHORS>"
+
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "partprobe"
+
+char *program_name;
 
 /* initialized to 0 according to the language lawyers */
 static int	opt_no_probe;
@@ -98,16 +109,17 @@ error:
 static void
 help ()
 {
-	printf ("usage:  partprobe [-d] [-h] [-s] [-v] [DEVICES...]\n\n"
+	printf ("usage: %s [-d] [-h] [-s] [-v] [DEVICES...]\n\n"
 		"-d	don't update the kernel\n"
 		"-s	print a summary of contents\n"
-		"-v	version info\n");
+		"-v	version info\n", PROGRAM_NAME);
 }
 
 static void
 version ()
 {
-	printf ("partprobe (" PACKAGE VERSION ")\n");
+	version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, VERSION, AUTHORS,
+                     (char *) NULL);
 }
 
 int
@@ -117,6 +129,9 @@ main (int argc, char* argv[])
 	int		i;
 	PedDevice*	dev;
 	int		status = 1;
+
+	program_name = argv[0];
+	atexit (close_stdout);
 
 	for (i = 1; i < argc; i++) {
 		if (argv[i][0] != '-') {
@@ -158,4 +173,3 @@ main (int argc, char* argv[])
 
 	return !status;
 }
-
