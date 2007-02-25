@@ -19,9 +19,19 @@
 */
 
 #include <config.h>
+
+#include "closeout.h"
+#include "configmake.h"
+#include "version-etc.h"
 #include "command.h"
 #include "ui.h"
 #include "table.h"
+
+#define AUTHORS \
+  "<http://parted.alioth.debian.org/cgi-bin/trac.cgi/browser/AUTHORS>"
+
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "parted"
 
 #define N_(String) String
 #if ENABLE_NLS
@@ -45,7 +55,6 @@
 #include <mcheck.h>
 #endif
 
-#ifdef HAVE_GETOPT_H
 #include <getopt.h>
 
 /* minimum amount of free space to leave, or maximum amount to gobble up */
@@ -71,7 +80,6 @@ static struct option    options[] = {
         {"version",     0, NULL, 'v'},
         {NULL,          0, NULL, 0}
 };
-#endif
 
 static char*    options_help [][2] = {
         {"help",        N_("displays this help message")},
@@ -81,6 +89,8 @@ static char*    options_help [][2] = {
         {"version",     N_("displays the version")},
         {NULL,          NULL}
 };
+
+char *program_name;
 
 int     opt_script_mode = 0;
 int     opt_machine_mode = 0;
@@ -2239,8 +2249,9 @@ textdomain(PACKAGE);
 void
 _version ()
 {
-printf (prog_name);
-exit (0);
+  version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, VERSION, AUTHORS,
+               (char *) NULL);
+  exit (EXIT_SUCCESS);
 }
 
 static int
@@ -2250,12 +2261,8 @@ int     opt;
 
 while (1)
 {
-#ifdef HAVE_GETOPT_H
         opt = getopt_long (*argc_ptr, *argv_ptr, "hilmsv",
                            options, NULL);
-#else
-        opt = getopt (*argc_ptr, *argv_ptr, "hilmsv");
-#endif
         if (opt == -1)
                 break;
 
@@ -2380,6 +2387,9 @@ main (int argc, char** argv)
 {
         PedDevice*      dev;
         int             status;
+
+        program_name = argv[0];
+        atexit (close_stdout);
 
         dev = _init (&argc, &argv);
         if (!dev)
