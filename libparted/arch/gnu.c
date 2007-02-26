@@ -394,8 +394,8 @@ gnu_refresh_close (PedDevice* dev)
 }
 
 static int
-gnu_read (PedDevice* dev, void* user_buffer,
-	  PedSector device_start, PedSector count)
+gnu_read (const PedDevice* dev, void* user_buffer, PedSector device_start,
+          PedSector count)
 {
 	GNUSpecific*		arch_specific = GNU_SPECIFIC (dev);
 	error_t			err;
@@ -654,7 +654,7 @@ doggy_first_block_write:
 
 	/* We are now left with (strictly) less then a store block to write
 	   to disk.  Thus, we read the block, overlay the buffer and flush.  */
-	PED_ASSERT (count * PED_SECTOR_SIZE
+	PED_ASSERT (count * PED_SECTOR_SIZE_DEFAULT
 			< arch_specific->store->block_size, return 0);
 
 doggy_last_block_read:
