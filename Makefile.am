@@ -5,6 +5,7 @@ EXTRA_DIST = \
              BUGS                                  \
 	     libparted.pc.in			   \
              parted.spec.in                        \
+             parted.spec                           \
              scripts/data/abi/baseline_symbols.txt \
              scripts/extract_symvers
 
@@ -13,8 +14,13 @@ aclocaldir=$(datadir)/aclocal
 pcdir = $(libdir)/pkgconfig
 pc_DATA = libparted.pc.in
 
-dist-hook: parted.spec
-	cp parted.spec $(distdir)
+# This is best not done via configure.ac, because automake's
+# make distcheck target does not like auto-generated files
+# being included in the distributed archive.
+parted.spec: parted.spec.in
+	sed 's/@''PACKAGE@/@PACKAGE@/;s/@''VERSION@/@VERSION@/' $< > $@-tmp
+	mv $@-tmp $@
+MAINTAINERCLEANFILES = parted.spec
 
 ### ABI Checking scripts ###
 
@@ -53,19 +59,20 @@ check-abi: baseline_symbols current_symbols.txt
 
 MOSTLYCLEANDIRS = m4
 
-MAINTAINERCLEANFILES = ABOUT-NLS     \
-                       ChangeLog     \
-                       INSTALL       \
-                       Makefile.in   \
-                       aclocal.m4    \
-                       compile       \
-                       config.guess  \
-                       config.h.in   \
-                       config.rpath  \
-                       config.sub    \
-                       configure     \
-                       depcomp       \
-                       install-sh    \
-                       ltmain.sh     \
-                       missing       \
-                       mkinstalldirs
+MAINTAINERCLEANFILES += \
+  ABOUT-NLS     \
+  ChangeLog     \
+  INSTALL       \
+  Makefile.in   \
+  aclocal.m4    \
+  compile       \
+  config.guess  \
+  config.h.in   \
+  config.rpath  \
+  config.sub    \
+  configure     \
+  depcomp       \
+  install-sh    \
+  ltmain.sh     \
+  missing       \
+  mkinstalldirs

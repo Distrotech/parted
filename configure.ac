@@ -503,7 +503,6 @@ debug/Makefile
 debug/clearfat/Makefile
 debug/test/Makefile
 po/Makefile.in
-parted.spec
 ])
 
 echo
