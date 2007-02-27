@@ -1,4 +1,4 @@
-partedincludedir      = -I$(top_srcdir)/include
+partedincludedir      = -I$(top_srcdir)/lib -I$(top_srcdir)/include
 
 sbin_PROGRAMS = partprobe
 
