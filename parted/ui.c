@@ -1,6 +1,7 @@
 /*
     parted - a frontend to libparted
-    Copyright (C) 1999, 2000, 2001, 2002, 2006, 2007 Free Software Foundation, Inc.
+    Copyright (C) 1999, 2000, 2001, 2002, 2006, 2007
+    Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -119,7 +120,7 @@ volatile int got_ctrl_c = 0; /* used in exception_handler */
 int
 screen_width ()
 {
-	int	width = 0;
+	int    width = 0;
 
 	if (opt_script_mode)
 		return 32768;	/* no wrapping ;) */
@@ -146,7 +147,6 @@ wipe_line ()
 	       "                                     \r", stdout);
 }
 
-
 #ifdef HAVE_LIBREADLINE
 /* returns matching commands for text */
 static char*
@@ -170,7 +170,7 @@ char**
 complete_function (char* text, int start, int end)
 {
 	return rl_completion_matches (text,
-				      (rl_compentry_func_t*) command_generator);
+	        (rl_compentry_func_t*) command_generator);
 }
 
 static void
@@ -187,12 +187,12 @@ _add_history_unique (const char* line)
 static void
 _dump_history ()
 {
-    fputs (_("\nCommand History:\n"), stdout);
-    int i = 0;
-    HIST_ENTRY** all_entries = history_list ();
-    while (all_entries[i]) {
-        puts(all_entries[i++]->line);
-    }
+        fputs (_("\nCommand History:\n"), stdout);
+        int i = 0;
+        HIST_ENTRY** all_entries = history_list ();
+        while (all_entries[i]) {
+                puts(all_entries[i++]->line);
+        }
 }
 #endif /* HAVE_LIBREADLINE */
 
@@ -200,11 +200,11 @@ _dump_history ()
 static void
 mask_signal()
 {
-    sigset_t curr;
-    sigset_t prev;
+        sigset_t curr;
+        sigset_t prev;
   
-    sigfillset(&curr);
-    sigprocmask(SIG_SETMASK, &curr, &prev);
+        sigfillset(&curr);
+        sigprocmask(SIG_SETMASK, &curr, &prev);
 }
 #endif /* HAVE_SIGACTION */
 
@@ -216,7 +216,7 @@ mask_signal()
 static void
 reset_env (int quit)
 {
-    int	in_readline = readline_state.in_readline;
+        int	in_readline = readline_state.in_readline;
 
 	readline_state.in_readline = 0;
 	
@@ -233,192 +233,206 @@ reset_env (int quit)
 static void
 sigint_handler (int signum, siginfo_t* info, void *ucontext)
 {
-    got_ctrl_c = 1;
+        got_ctrl_c = 1;
 
-    #ifdef HAVE_SIGACTION
-    sigaction (SIGINT, &sig_int, NULL);
-    #else
-    signal (SIGINT, &sigint_handler);
-    mask_signal();
-    #endif /* HAVE_SIGACTION */
+        #ifdef HAVE_SIGACTION
+        sigaction (SIGINT, &sig_int, NULL);
+        #else
+        signal (SIGINT, &sigint_handler);
+        mask_signal();
+        #endif /* HAVE_SIGACTION */
 
-    reset_env (0);
+        reset_env (0);
 }
 
 /* Signal handler for SIGSEGV */
 static void
 sigsegv_handler (int signum, siginfo_t* info, void* ucontext)
 {
-    #ifdef HAVE_SIGACTION   
-    sigaction (SIGSEGV, &sig_segv, NULL);
-    #else
-    signal (SIGSEGV, &sigsegv_handler);
-    mask_signal();
-    #endif /* HAVE_SIGACTION */
+        #ifdef HAVE_SIGACTION   
+        sigaction (SIGSEGV, &sig_segv, NULL);
+        #else
+        signal (SIGSEGV, &sigsegv_handler);
+        mask_signal();
+        #endif /* HAVE_SIGACTION */
 
-    printf (bug_msg, VERSION);
-    #ifdef HAVE_LIBREADLINE
-    _dump_history ();
-    #endif
+        printf (bug_msg, VERSION);
+        #ifdef HAVE_LIBREADLINE
+        _dump_history ();
+        #endif
  
-    switch (info->si_code) {
-        
-        case SEGV_MAPERR:
-            fputs(_("\nError: SEGV_MAPERR (Address not mapped "
-		    "to object)\n"), stdout);
-            PED_ASSERT(0, break); /* Force a backtrace */
-            break;
+        switch (info->si_code) {
 
-        case SEGV_ACCERR:
-            fputs(_("\nError: SEGV_ACCERR (Invalid permissions "
-		    "for mapped object)\n"), stdout);
-            break;
+                case SEGV_MAPERR:
+                        fputs(_("\nError: SEGV_MAPERR (Address not mapped "
+		                "to object)\n"), stdout);
+                        PED_ASSERT(0, break); /* Force a backtrace */
+                        break;
 
-        default:
-            fputs(_("\nError: A general SIGSEGV signal was "
-		    "encountered.\n"), stdout);
-            PED_ASSERT(0, break); /* Force a backtrace */
-            break;
-    }
+                case SEGV_ACCERR:
+                        fputs(_("\nError: SEGV_ACCERR (Invalid permissions "
+		                "for mapped object)\n"), stdout);
+                        break;
 
-    abort ();
+                default:
+                        fputs(_("\nError: A general SIGSEGV signal was "
+		                "encountered.\n"), stdout);
+                        PED_ASSERT(0, break); /* Force a backtrace */
+                        break;
+        }
+
+        abort ();
 }
 
 /* Signal handler for SIGFPE */
 static void
 sigfpe_handler (int signum, siginfo_t* info, void* ucontext)
 {
-    #ifdef HAVE_SIGACTION
-    sigaction (SIGFPE, &sig_fpe, NULL);
-    #else
-    signal (SIGFPE, &sigfpe_handler);
-    mask_signal();
-    #endif /* HAVE_SIGACTION */
+        #ifdef HAVE_SIGACTION
+        sigaction (SIGFPE, &sig_fpe, NULL);
+        #else
+        signal (SIGFPE, &sigfpe_handler);
+        mask_signal();
+        #endif /* HAVE_SIGACTION */
 
-    printf (bug_msg, VERSION);
-    #ifdef HAVE_LIBREADLINE
-    _dump_history ();
-    #endif
+        printf (bug_msg, VERSION);
+        #ifdef HAVE_LIBREADLINE
+        _dump_history ();
+        #endif
 
-    switch (info->si_code) {
+        switch (info->si_code) {
 
-        case FPE_INTDIV:
-	    fputs(_("\nError: FPE_INTDIV (Integer: divide by zero)"), stdout);
-            break;
+                case FPE_INTDIV:
+                        fputs(_("\nError: FPE_INTDIV (Integer: "
+                                "divide by zero)"), stdout);
+                        break;
+
+                case FPE_INTOVF:
+                        fputs(_("\nError: FPE_INTOVF (Integer: "
+                                "overflow)"), stdout);
+                        break;
         
-        case FPE_INTOVF:
-            fputs(_("\nError: FPE_INTOVF (Integer: overflow)"), stdout);
-            break;
-        
-        case FPE_FLTDIV:
-            fputs(_("\nError: FPE_FLTDIV (Float: divide by zero)"), stdout);
-            break;
+                case FPE_FLTDIV:
+                        fputs(_("\nError: FPE_FLTDIV (Float: "
+                                "divide by zero)"), stdout);
+                        break;
 
-        case FPE_FLTOVF:
-            fputs(_("\nError: FPE_FLTOVF (Float: overflow)"), stdout);
-            break;
+                case FPE_FLTOVF:
+                        fputs(_("\nError: FPE_FLTOVF (Float: "
+                                "overflow)"), stdout);
+                        break;
 
-        case FPE_FLTUND:
-            fputs(_("\nError: FPE_FLTUND (Float: underflow)"), stdout);
-            break;
+                case FPE_FLTUND:
+                        fputs(_("\nError: FPE_FLTUND (Float: "
+                                "underflow)"), stdout);
+                        break;
 
-        case FPE_FLTRES:
-            fputs(_("\nError: FPE_FLTRES (Float: inexact result)"), stdout);
-            break;
+                case FPE_FLTRES:
+                        fputs(_("\nError: FPE_FLTRES (Float: "
+                                "inexact result)"), stdout);
+                        break;
 
-        case FPE_FLTINV:
-            fputs(_("\nError: FPE_FLTINV (Float: invalid operation)"), stdout);
-            break;
+                case FPE_FLTINV:
+                        fputs(_("\nError: FPE_FLTINV (Float: "
+                                "invalid operation)"), stdout);
+                        break;
 
-        case FPE_FLTSUB:
-            fputs(_("\nError: FPE_FLTSUB (Float: subscript out of "
-		    "range)"), stdout);
-            break;
+                case FPE_FLTSUB:
+                        fputs(_("\nError: FPE_FLTSUB (Float: "
+                                "subscript out of range)"), stdout);
+                        break;
 
-        default:
-            fputs(_("\nError: A general SIGFPE signal was "
-		    "encountered."), stdout);
-            break;
+                default:
+                        fputs(_("\nError: A general SIGFPE signal "
+                                "was encountered."), stdout);
+                        break;
 
-    }
+        }
    
-    abort ();
+        abort ();
 }
 
 /* Signal handler for SIGILL */
 static void
 sigill_handler (int signum, siginfo_t* info, void* ucontext)
 {
-    #ifdef HAVE_SIGACTION
-    sigaction (SIGILL, &sig_ill, NULL);
-    #else
-    signal (SIGILL, &sigill_handler);
-    mask_signal();
-    #endif /* HAVE_SIGACTION */
+        #ifdef HAVE_SIGACTION
+        sigaction (SIGILL, &sig_ill, NULL);
+        #else
+        signal (SIGILL, &sigill_handler);
+        mask_signal();
+        #endif /* HAVE_SIGACTION */
 
-    printf (bug_msg, VERSION);
-    #ifdef HAVE_LIBREADLINE
-    _dump_history ();
-    #endif
+        printf (bug_msg, VERSION);
+        #ifdef HAVE_LIBREADLINE
+        _dump_history ();
+        #endif
 
-    switch (info->si_code) {
+        switch (info->si_code) {
 
-        case ILL_ILLOPC:
-            fputs(_("\nError: ILL_ILLOPC (Illegal Opcode)"), stdout);
-            break;
-        
-        case ILL_ILLOPN:
-	  fputs(_("\nError: ILL_ILLOPN (Illegal Operand)"), stdout);
-            break;
-        
-        case ILL_ILLADR:
-	    fputs(_("\nError: ILL_ILLADR (Illegal addressing mode)"),
-		  stdout);
-            break;
+                case ILL_ILLOPC:
+                        fputs(_("\nError: ILL_ILLOPC "
+                                "(Illegal Opcode)"), stdout);
+                        break;
 
-        case ILL_ILLTRP:
-            fputs(_("\nError: ILL_ILLTRP (Illegal Trap)"), stdout);
-            break;
+                case ILL_ILLOPN:
+                        fputs(_("\nError: ILL_ILLOPN "
+                                "(Illegal Operand)"), stdout);
+                        break;
 
-        case ILL_PRVOPC:
-            fputs(_("\nError: ILL_PRVOPC (Privileged Opcode)"), stdout);
-            break;
+                case ILL_ILLADR:
+                        fputs(_("\nError: ILL_ILLADR "
+                                "(Illegal addressing mode)"), stdout);
+                        break;
 
-        case ILL_PRVREG:
-            fputs(_("\nError: ILL_PRVREG (Privileged Register)"), stdout);
-            break;
+                case ILL_ILLTRP:
+                        fputs(_("\nError: ILL_ILLTRP "
+                                "(Illegal Trap)"), stdout);
+                        break;
 
-        case ILL_COPROC:
-            fputs(_("\nError: ILL_COPROC (Coprocessor Error)"), stdout);
-            break;
+                case ILL_PRVOPC:
+                        fputs(_("\nError: ILL_PRVOPC "
+                                "(Privileged Opcode)"), stdout);
+                        break;
 
-        case ILL_BADSTK:
-            fputs(_("\nError: ILL_BADSTK (Internal Stack Error)"), stdout);
-            break;
+                case ILL_PRVREG:
+                        fputs(_("\nError: ILL_PRVREG "
+                                "(Privileged Register)"), stdout);
+                        break;
 
-        default:
-            fputs(_("\nError: A general SIGILL signal was "
-		    "encountered."), stdout);
-            break;
-    }
+                case ILL_COPROC:
+                        fputs(_("\nError: ILL_COPROC "
+                                "(Coprocessor Error)"), stdout);
+                        break;
+
+                case ILL_BADSTK:
+                        fputs(_("\nError: ILL_BADSTK "
+                                "(Internal Stack Error)"), stdout);
+                        break;
+
+                default:
+                        fputs(_("\nError: A general SIGILL "
+                                "signal was encountered."), stdout);
+                        break;
+        }
    
-    abort ();
+        abort ();
 }
 
 
 static char*
 _readline (const char* prompt, const StrList* possibilities)
 {
-	char*	line;
+	char*    line;
 
 	readline_state.possibilities = possibilities;
 	readline_state.cur_pos = NULL;
 	readline_state.in_readline = 1;
 
-    if (sigsetjmp (readline_state.jmp_state,1))
-        return NULL;
+        if (sigsetjmp (readline_state.jmp_state,1))
+                return NULL;
 
-    wipe_line ();
+        wipe_line ();
 #ifdef HAVE_LIBREADLINE
 	if (!opt_script_mode) {
 		/* XXX: why isn't prompt const? */
@@ -434,7 +448,7 @@ _readline (const char* prompt, const StrList* possibilities)
 		if (fgets (line, 256, stdin) && strcmp (line, "") != 0) {
 			line [strlen (line) - 1] = 0;	/* kill trailing CR */
 		} else {
-			free (line);
+v			free (line);
 			line = NULL;
 		}
 	}
@@ -446,7 +460,7 @@ _readline (const char* prompt, const StrList* possibilities)
 static PedExceptionOption
 option_get_next (PedExceptionOption options, PedExceptionOption current)
 {
-	PedExceptionOption	i;
+	PedExceptionOption    i;
 
 	if (current == 0)
 		i = PED_EXCEPTION_OPTION_FIRST;
@@ -464,7 +478,7 @@ option_get_next (PedExceptionOption options, PedExceptionOption current)
 static void
 _print_exception_text (PedException* ex)
 {
-	StrList*		text;
+	StrList*    text;
 
 	wipe_line ();
 
@@ -484,7 +498,7 @@ _print_exception_text (PedException* ex)
 static PedExceptionOption
 exception_handler (PedException* ex)
 {
-	PedExceptionOption	opt;
+	PedExceptionOption    opt;
 
 	_print_exception_text (ex);
 
@@ -724,8 +738,8 @@ command_line_get_word (const char* prompt, const char* def,
 {
 	do {
 		if (command_line_get_word_count ()) {
-			char*		result = command_line_pop_word ();
-			StrList*	result_node;
+			char*	   result = command_line_pop_word ();
+			StrList*   result_node;
 
 			if (!possibilities)
 				return result;
@@ -746,9 +760,9 @@ command_line_get_word (const char* prompt, const char* def,
 int
 command_line_get_integer (const char* prompt, int* value)
 {
-	char	def_str [10];
-	char*	input;
-	int	valid;
+	char	 def_str [10];
+	char*    input;
+	int	 valid;
 
 	snprintf (def_str, 10, "%d", *value);
 	input = command_line_get_word (prompt, *value ? def_str : NULL,
@@ -764,9 +778,9 @@ int
 command_line_get_sector (const char* prompt, PedDevice* dev, PedSector* value,
 			 PedGeometry** range)
 {
-	char*	def_str;
-	char*	input;
-	int	valid;
+	char*    def_str;
+	char*    input;
+	int      valid;
 
 	def_str = ped_unit_format (dev, *value);
 	input = command_line_get_word (prompt, *value ? def_str : NULL,
@@ -804,8 +818,8 @@ command_line_get_sector (const char* prompt, PedDevice* dev, PedSector* value,
 int
 command_line_get_state (const char* prompt, int* value)
 {
-	char*	def_word;
-	char*	input;
+	char*    def_word;
+	char*    input;
 
 	if (*value)
 		def_word = str_list_convert_node (on_list);
@@ -826,9 +840,9 @@ command_line_get_state (const char* prompt, int* value)
 int
 command_line_get_device (const char* prompt, PedDevice** value)
 {
-	char*		def_dev_name = *value ? (*value)->path : NULL;
-	char*		dev_name;
-	PedDevice*	dev;
+	char*	      def_dev_name = *value ? (*value)->path : NULL;
+	char*	      dev_name;
+	PedDevice*    dev;
 
 	dev_name = command_line_get_word (prompt, def_dev_name, NULL, 1);
 	if (!dev_name)
@@ -844,11 +858,11 @@ command_line_get_device (const char* prompt, PedDevice** value)
 int
 command_line_get_disk (const char* prompt, PedDisk** value)
 {
-	PedDevice*	dev = *value ? (*value)->dev : NULL;
+	PedDevice*    dev = *value ? (*value)->dev : NULL;
 	if (!command_line_get_device (prompt, &dev))
 		return 0;
 	if (dev != (*value)->dev) {
-		PedDisk* new_disk = ped_disk_new (dev);
+		PedDisk*    new_disk = ped_disk_new (dev);
 		if (!new_disk)
 			return 0;
 		*value = new_disk;
@@ -860,21 +874,21 @@ int
 command_line_get_partition (const char* prompt, PedDisk* disk,
 			    PedPartition** value)
 {
-    PedPartition*   part;
-    
-    /* Flawed logic, doesn't seem to work?! 
-    check = ped_disk_next_partition (disk, part);
-    part  = ped_disk_next_partition (disk, check);
-    
-    if (part == NULL) {
-    
+        PedPartition*    part;
+
+        /* Flawed logic, doesn't seem to work?! 
+        check = ped_disk_next_partition (disk, part);
+        part  = ped_disk_next_partition (disk, check);
+
+        if (part == NULL) {
+
         *value = check; 	 
         printf (_("The (only) primary partition has "
                   "been automatically selected\n"));
         return 1; 	 
 
-    } else {
-    */
+        } else {
+        */
         int num = (*value) ? (*value)->num : 0;
 
         if (!command_line_get_integer (prompt, &num)) {
@@ -895,14 +909,14 @@ command_line_get_partition (const char* prompt, PedDisk* disk,
 
         *value = part;
         return 1;
-    //}
+        //}
 }
 
 int
 command_line_get_fs_type (const char* prompt, const PedFileSystemType*(* value))
 {
-	char*			fs_type_name;
-	PedFileSystemType*	fs_type;
+	char*		      fs_type_name;
+	PedFileSystemType*    fs_type;
 
 	fs_type_name = command_line_get_word (prompt,
 					      *value ? (*value)->name : NULL,
@@ -927,7 +941,7 @@ command_line_get_fs_type (const char* prompt, const PedFileSystemType*(* value))
 int
 command_line_get_disk_type (const char* prompt, const PedDiskType*(* value))
 {
-	char*		disk_type_name;
+	char*    disk_type_name;
 
 	disk_type_name = command_line_get_word (prompt,
 						*value ? (*value)->name : NULL,
@@ -947,9 +961,9 @@ int
 command_line_get_part_flag (const char* prompt, const PedPartition* part,
 			    PedPartitionFlag* flag)
 {
-	StrList*		opts = NULL;
-	PedPartitionFlag	walk = 0;
-	char*			flag_name;
+	StrList*            opts = NULL;
+	PedPartitionFlag    walk = 0;
+	char*		    flag_name;
 
 	while ( (walk = ped_partition_flag_next (walk)) ) {
 		if (ped_partition_is_flag_available (part, walk)) {
@@ -976,7 +990,7 @@ command_line_get_part_flag (const char* prompt, const PedPartition* part,
 static int
 _can_create_primary (const PedDisk* disk)
 {
-	int	i;
+	int    i;
 
 	for (i = 1; i <= ped_disk_get_max_primary_partition_count (disk); i++) {
 		if (!ped_disk_get_partition (disk, i))
@@ -1010,8 +1024,8 @@ int
 command_line_get_part_type (const char* prompt, const PedDisk* disk,
 	       		    PedPartitionType* type)
 {
-	StrList*	opts = NULL;
-	char*		type_name;
+	StrList*    opts = NULL;
+	char*	    type_name;
 
 	if (_can_create_primary (disk)) {
 		opts = str_list_append_unique (opts, "primary");
@@ -1062,9 +1076,9 @@ command_line_get_part_type (const char* prompt, const PedDisk* disk,
 PedExceptionOption
 command_line_get_ex_opt (const char* prompt, PedExceptionOption options)
 {
-	StrList*		options_strlist = NULL;
-	PedExceptionOption	opt;
-	char*			opt_name;
+        StrList*              options_strlist = NULL;
+        PedExceptionOption    opt;
+        char*		      opt_name;
 
 	for (opt = option_get_next (options, 0); opt; 
 	     opt = option_get_next (options, opt)) {
@@ -1096,10 +1110,10 @@ command_line_get_ex_opt (const char* prompt, PedExceptionOption options)
 int
 command_line_get_unit (const char* prompt, PedUnit* unit)
 {
-	StrList*	opts = NULL;
-	PedUnit		walk;
-	char*		unit_name;
-	const char*	default_unit_name;
+	StrList*       opts = NULL;
+	PedUnit	       walk;
+	char*	       unit_name;
+	const char*    default_unit_name;
 
 	for (walk = PED_UNIT_FIRST; walk <= PED_UNIT_LAST; walk++)
 		opts = str_list_append (opts, ped_unit_get_name (walk));
@@ -1120,8 +1134,8 @@ command_line_get_unit (const char* prompt, PedUnit* unit)
 int
 command_line_is_integer ()
 {
-	char*	word;
-	int	is_integer;
+	char*    word;
+	int	 is_integer;
 	int	scratch;
 
 	word = command_line_peek_word ();
@@ -1136,8 +1150,8 @@ command_line_is_integer ()
 static int
 init_ex_opt_str ()
 {
-	int			i;
-	PedExceptionOption	opt;
+	int		      i;
+	PedExceptionOption    opt;
 
 	for (i = 0; (1 << i) <= PED_EXCEPTION_OPTION_LAST; i++) {
 		opt = (1 << i);
@@ -1157,7 +1171,7 @@ init_ex_opt_str ()
 static void
 done_ex_opt_str ()
 {
-	int	i;
+	int    i;
 
 	for (i=0; ex_opt_str [i]; i++)
 		str_list_destroy (ex_opt_str [i]);
@@ -1184,7 +1198,7 @@ done_state_str ()
 static int
 init_fs_type_str ()
 {
-	PedFileSystemType*	walk;
+	PedFileSystemType*    walk;
 
 	fs_type_list = NULL;
 
@@ -1202,7 +1216,7 @@ init_fs_type_str ()
 static int
 init_disk_type_str ()
 {
-	PedDiskType*	walk;
+	PedDiskType*    walk;
 
 	disk_type_list = NULL;
 
@@ -1236,31 +1250,31 @@ init_ui ()
 #endif
 
 #ifdef HAVE_SIGACTION
-    sigset_t curr;
-    sigfillset (&curr);
+        sigset_t curr;
+        sigfillset (&curr);
 
-    sig_segv.sa_sigaction = &sigsegv_handler;
-    sig_int.sa_sigaction  = &sigint_handler;
-    sig_fpe.sa_sigaction  = &sigfpe_handler;
-    sig_ill.sa_sigaction  = &sigill_handler;
+        sig_segv.sa_sigaction = &sigsegv_handler;
+        sig_int.sa_sigaction  = &sigint_handler;
+        sig_fpe.sa_sigaction  = &sigfpe_handler;
+        sig_ill.sa_sigaction  = &sigill_handler;
 
-    sig_segv.sa_mask = 
-        sig_int.sa_mask = 
-            sig_fpe.sa_mask = 
-                sig_ill.sa_mask = curr;
+        sig_segv.sa_mask = 
+                sig_int.sa_mask = 
+                        sig_fpe.sa_mask = 
+                                sig_ill.sa_mask = curr;
     
-    sig_segv.sa_flags = 
-        sig_int.sa_flags = 
-            sig_fpe.sa_flags = 
-                sig_ill.sa_flags = SA_SIGINFO;
+        sig_segv.sa_flags = 
+                sig_int.sa_flags = 
+                        sig_fpe.sa_flags = 
+                                sig_ill.sa_flags = SA_SIGINFO;
 
-    sigaction (SIGSEGV, &sig_segv, NULL);
-    sigaction (SIGINT, &sig_int, NULL);
-    sigaction (SIGFPE, &sig_fpe, NULL);
-    sigaction (SIGILL, &sig_ill, NULL);
+        sigaction (SIGSEGV, &sig_segv, NULL);
+        sigaction (SIGINT, &sig_int, NULL);
+        sigaction (SIGFPE, &sig_fpe, NULL);
+        sigaction (SIGILL, &sig_ill, NULL);
 #endif /* HAVE_SIGACTION */
 
-    return 1;
+        return 1;
 }
 
 void
@@ -1299,16 +1313,16 @@ print_using_dev (PedDevice* dev)
 int
 interactive_mode (PedDevice** dev, Command* cmd_list[])
 {
-	StrList*	list;
-	StrList*	command_names = command_get_names (cmd_list);
+	StrList*    list;
+	StrList*    command_names = command_get_names (cmd_list);
 
 	commands = cmd_list;	/* FIXME yucky, nasty, evil hack */
 
 	fputs (prog_name, stdout);
 
-    print_using_dev (*dev);
+        print_using_dev (*dev);
 
-    list = str_list_create (_(banner_msg), NULL);
+        list = str_list_create (_(banner_msg), NULL);
 	str_list_print_wrap (list, screen_width (), 0, 0);
 	str_list_destroy (list);
 
