@@ -1,13 +1,17 @@
 ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = po lib libparted parted partprobe include doc debug
 
-EXTRA_DIST = \
-             BUGS                                  \
-	     libparted.pc.in			   \
-             parted.spec.in                        \
-             parted.spec                           \
-             scripts/data/abi/baseline_symbols.txt \
-             scripts/extract_symvers
+EXTRA_DIST =				\
+  .prev-version				\
+  BUGS					\
+  libparted.pc.in			\
+  parted.spec.in			\
+  parted.spec				\
+  scripts/data/abi/baseline_symbols.txt \
+  scripts/extract_symvers		\
+  Makefile.cfg				\
+  Makefile.maint			\
+  GNUmakefile
 
 aclocaldir=$(datadir)/aclocal
 
@@ -21,6 +25,9 @@ parted.spec: parted.spec.in
 	sed 's/@''PACKAGE@/@PACKAGE@/;s/@''VERSION@/@VERSION@/' $< > $@-tmp
 	mv $@-tmp $@
 MAINTAINERCLEANFILES = parted.spec
+
+distcheck-hook:
+	$(MAKE) my-distcheck
 
 ### ABI Checking scripts ###
 
@@ -63,16 +70,5 @@ MAINTAINERCLEANFILES += \
   ABOUT-NLS     \
   ChangeLog     \
   INSTALL       \
-  Makefile.in   \
   aclocal.m4    \
-  compile       \
-  config.guess  \
-  config.h.in   \
-  config.rpath  \
-  config.sub    \
-  configure     \
-  depcomp       \
-  install-sh    \
-  ltmain.sh     \
-  missing       \
-  mkinstalldirs
+  configure
