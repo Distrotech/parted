@@ -12,6 +12,6 @@ libhfs_la_SOURCES	= hfs.c hfs.h \
 			  reloc_plus.c reloc_plus.h \
 			  journal.c journal.h
 
-INCLUDES = $(partedincludedir) @INTLINCS@
+INCLUDES = $(partedincludedir) $(INTLINCS)
 
 MAINTAINERCLEANFILES = Makefile.in

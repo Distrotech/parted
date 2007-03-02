@@ -22,7 +22,7 @@ pc_DATA = libparted.pc.in
 # make distcheck target does not like auto-generated files
 # being included in the distributed archive.
 parted.spec: parted.spec.in
-	sed 's/@''PACKAGE@/@PACKAGE@/;s/@''VERSION@/@VERSION@/' $< > $@-tmp
+	sed 's/@''PACKAGE@/$(PACKAGE)/;s/@''VERSION@/$(VERSION)/' $< > $@-tmp
 	mv $@-tmp $@
 MAINTAINERCLEANFILES = parted.spec
 

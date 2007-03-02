@@ -11,13 +11,11 @@ endif
 
 SUBDIRS       = labels fs . $(SUBDIRS_CHECK)
 
-LIBS = @INTLLIBS@ @LIBS@
 
 partedincludedir      = -I$(top_srcdir)/lib -I$(top_srcdir)/include
 lib_LTLIBRARIES	      =	libparted.la
 libparted_la_LDFLAGS  = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
 						-release $(LT_RELEASE)
-
 libparted_la_SOURCES  = debug.c			\
 			device.c		\
 			exception.c		\
@@ -30,21 +28,22 @@ libparted_la_SOURCES  = debug.c			\
 			cs/constraint.c		\
 			cs/natmath.c		\
 			arch/blkpg.h		\
-			arch/@OS@.c
+			arch/$(OS).c
 
 EXTRA_libparted_la_SOURCES    = arch/linux.c		\
 				arch/gnu.c \
 				arch/beos.c
 
-libparted_la_LIBADD   = @OS_LIBS@			\
-			@DL_LIBS@			\
-			@DM_LIBS@			\
-			@SELINUX_LIBS@		\
-			fs/libfs.la			\
+libparted_la_LIBADD   = $(OS_LIBS)		\
+			$(DL_LIBS)		\
+			$(DM_LIBS)		\
+			$(SELINUX_LIBS)		\
+			$(INTLLIBS)		\
+			fs/libfs.la		\
 			labels/liblabels.la
 
 EXTRA_DIST	      = mbr.s
 
-INCLUDES = $(partedincludedir) @INTLINCS@
+INCLUDES = $(partedincludedir) $(INTLINCS)
 
 MAINTAINERCLEANFILES = Makefile.in

@@ -12,7 +12,7 @@ parted_SOURCES = command.c	\
 		 table.c	\
 		 table.h
 
-#parted_CFLAGS = -DBUILDINFO='"\"'@BUILDINFO@'\""'
+#parted_CFLAGS = -DBUILDINFO='"\"'$(BUILDINFO)'\""'
 parted_CFLAGS = -DBUILDINFO=
 
 parted_LDADD = \
@@ -21,8 +21,8 @@ parted_LDADD = \
   $(INTLLIBS) $(LIBS) \
   $(PARTED_LIBS)
 
-parted_LDFLAGS = @PARTEDLDFLAGS@
+parted_LDFLAGS = $(PARTEDLDFLAGS)
 
-INCLUDES	= $(partedincludedir) @INTLINCS@
+INCLUDES	= $(partedincludedir) $(INTLINCS)
 
 MAINTAINERCLEANFILES = Makefile.in

@@ -5,16 +5,16 @@
 
 SUBDIRS       = amiga ext2 ufs fat ntfs hfs linux_swap xfs jfs reiserfs # bfs
 
-LIBS = @INTLLIBS@ @LIBS@
+LIBS = $(INTLLIBS) $(LIBS)
 
 partedincludedir      =	-I$(top_srcdir)/include
 noinst_LTLIBRARIES    =	libfs.la
 libfs_la_LDFLAGS  = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
 			-release $(LT_RELEASE)
 
-libfs_la_LIBADD   = @UUID_LIBS@			\
-		    @OS_LIBS@			\
-		    @REISER_LIBS@		\
+libfs_la_LIBADD   = $(UUID_LIBS)			\
+		    $(OS_LIBS)			\
+		    $(REISER_LIBS)		\
 		    amiga/libamigafs.la		\
 		    ext2/libext2.la		\
 		    ufs/libufs.la		\
@@ -29,6 +29,6 @@ libfs_la_LIBADD   = @UUID_LIBS@			\
 
 libfs_la_SOURCES   = 
 
-INCLUDES = $(partedincludedir) @INTLINCS@
+INCLUDES = $(partedincludedir) $(INTLINCS)
 
 MAINTAINERCLEANFILES = Makefile.in

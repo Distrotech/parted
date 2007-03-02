@@ -16,6 +16,6 @@ libext2_la_SOURCES    =	ext2.c \
 			tune.c \
 			tune.h
 
-INCLUDES = $(partedincludedir) @INTLINCS@
+INCLUDES = $(partedincludedir) $(INTLINCS)
 
 MAINTAINERCLEANFILES = Makefile.in

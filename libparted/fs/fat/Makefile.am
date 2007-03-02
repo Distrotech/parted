@@ -21,6 +21,6 @@ libfat_la_SOURCES     = bootsector.c	\
 			traverse.h	\
 			resize.c
 
-INCLUDES = $(partedincludedir) @INTLINCS@
+INCLUDES = $(partedincludedir) $(INTLINCS)
 
 MAINTAINERCLEANFILES = Makefile.in

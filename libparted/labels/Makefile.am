@@ -3,7 +3,7 @@
 #
 # This file may be modified and/or distributed without restriction.
 
-LIBS = @INTLLIBS@ @LIBS@
+LIBS = $(INTLLIBS) $(LIBS)
 
 partedincludedir      =	-I$(top_srcdir)/include
 noinst_LTLIBRARIES    =	liblabels.la
@@ -26,8 +26,8 @@ liblabels_la_SOURCES  = rdb.c		\
 			sun.c		\
 			aix.c
 
-liblabels_la_LIBADD   = @OS_LIBS@
+liblabels_la_LIBADD   = $(OS_LIBS)
 
-INCLUDES = $(partedincludedir) @INTLINCS@
+INCLUDES = $(partedincludedir) $(INTLINCS)
 
 MAINTAINERCLEANFILES = Makefile.in

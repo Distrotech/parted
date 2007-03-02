@@ -10,8 +10,8 @@ partprobe_LDADD = \
   $(INTLLIBS) $(LIBS) \
   $(PARTED_LIBS)
 
-partprobe_LDFLAGS = @PARTEDLDFLAGS@
+partprobe_LDFLAGS = $(PARTEDLDFLAGS)
 
-INCLUDES	= $(partedincludedir) @INTLINCS@
+INCLUDES	= $(partedincludedir) $(INTLINCS)
 
 MAINTAINERCLEANFILES = Makefile.in

@@ -11,6 +11,6 @@ libamigafs_la_SOURCES   =	amiga.h		\
 			apfs.c		\
 			interface.c
 
-INCLUDES = $(partedincludedir) @INTLINCS@
+INCLUDES = $(partedincludedir) $(INTLINCS)
 
 MAINTAINERCLEANFILES = Makefile.in
