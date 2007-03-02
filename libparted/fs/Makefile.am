@@ -1,18 +1,17 @@
 # This file is part of GNU Parted
-# Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2001, 2007 Free Software Foundation, Inc.
 #
 # This file may be modified and/or distributed without restriction.
 
 SUBDIRS       = amiga ext2 ufs fat ntfs hfs linux_swap xfs jfs reiserfs # bfs
-
-LIBS = $(INTLLIBS) $(LIBS)
 
 partedincludedir      =	-I$(top_srcdir)/include
 noinst_LTLIBRARIES    =	libfs.la
 libfs_la_LDFLAGS  = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
 			-release $(LT_RELEASE)
 
-libfs_la_LIBADD   = $(UUID_LIBS)			\
+libfs_la_LIBADD   = $(UUID_LIBS)		\
+		    $(INTLLIBS)			\
 		    $(OS_LIBS)			\
 		    $(REISER_LIBS)		\
 		    amiga/libamigafs.la		\
@@ -24,10 +23,10 @@ libfs_la_LIBADD   = $(UUID_LIBS)			\
 		    linux_swap/liblinuxswap.la	\
 		    xfs/libxfs.la		\
 		    jfs/libjfs.la		\
-		    reiserfs/libreiserfs.la	
+		    reiserfs/libreiserfs.la
 #		    bfs/libbfs.la
 
-libfs_la_SOURCES   = 
+libfs_la_SOURCES   =
 
 INCLUDES = $(partedincludedir) $(INTLINCS)
 
