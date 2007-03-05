@@ -272,7 +272,7 @@ chs_get_sector (const RawCHS* chs)
 }
 
 static PedSector
-chs_to_sector (PedDevice* dev, const PedCHSGeometry *bios_geom,
+chs_to_sector (const PedDevice* dev, const PedCHSGeometry *bios_geom,
 	       const RawCHS* chs)
 {
 	PedSector	c;		/* not measured in sectors, but need */
@@ -295,7 +295,7 @@ chs_to_sector (PedDevice* dev, const PedCHSGeometry *bios_geom,
 }
 
 static void
-sector_to_chs (PedDevice* dev, const PedCHSGeometry* bios_geom,
+sector_to_chs (const PedDevice* dev, const PedCHSGeometry* bios_geom,
 	       PedSector sector, RawCHS* chs)
 {
 	PedSector	real_c, real_h, real_s;
@@ -324,7 +324,7 @@ sector_to_chs (PedDevice* dev, const PedCHSGeometry* bios_geom,
 }
 
 static PedSector
-legacy_start (PedDisk* disk, const PedCHSGeometry* bios_geom,
+legacy_start (const PedDisk* disk, const PedCHSGeometry* bios_geom,
 	      const DosRawPartition* raw_part)
 {
 	PED_ASSERT (disk != NULL, return 0);
@@ -334,7 +334,7 @@ legacy_start (PedDisk* disk, const PedCHSGeometry* bios_geom,
 }
 
 static PedSector
-legacy_end (PedDisk* disk, const PedCHSGeometry* bios_geom,
+legacy_end (const PedDisk* disk, const PedCHSGeometry* bios_geom,
 	    const DosRawPartition* raw_part)
 {
 	PED_ASSERT (disk != NULL, return 0);
@@ -395,7 +395,7 @@ partition_check_bios_geometry (PedPartition* part, PedCHSGeometry* bios_geom)
 }
 
 static int
-disk_check_bios_geometry (PedDisk* disk, PedCHSGeometry* bios_geom)
+disk_check_bios_geometry (const PedDisk* disk, PedCHSGeometry* bios_geom)
 {
 	PedPartition* part = NULL;
 
@@ -501,7 +501,7 @@ end:
  * 	the algorithm.  We know, however, that C > 0.
  */
 static int
-probe_partition_for_geom (PedPartition* part, PedCHSGeometry* bios_geom)
+probe_partition_for_geom (const PedPartition* part, PedCHSGeometry* bios_geom)
 {
 	DosPartitionData* dos_data;
 	RawCHS* start_chs;
@@ -637,7 +637,8 @@ probe_partition_for_geom (PedPartition* part, PedCHSGeometry* bios_geom)
 }
 
 static void
-partition_probe_bios_geometry (PedPartition* part, PedCHSGeometry* bios_geom)
+partition_probe_bios_geometry (const PedPartition* part,
+                               PedCHSGeometry* bios_geom)
 {
 	PED_ASSERT (part != NULL, return);
 	PED_ASSERT (part->disk != NULL, return);
@@ -662,7 +663,7 @@ partition_probe_bios_geometry (PedPartition* part, PedCHSGeometry* bios_geom)
 }
 
 static void
-disk_probe_bios_geometry (PedDisk* disk, PedCHSGeometry* bios_geom)
+disk_probe_bios_geometry (const PedDisk* disk, PedCHSGeometry* bios_geom)
 {
 	PedPartition*	part;
 
@@ -760,7 +761,7 @@ raw_part_is_lba (const DosRawPartition* raw_part)
 }
 
 PedPartition*
-raw_part_parse (PedDisk* disk, const DosRawPartition* raw_part,
+raw_part_parse (const PedDisk* disk, const DosRawPartition* raw_part,
 	        PedSector lba_offset, PedPartitionType type)
 {
 	PedPartition* part;
@@ -948,7 +949,8 @@ msdos_read (PedDisk* disk)
 
 #ifndef DISCOVER_ONLY
 static int
-fill_raw_part (DosRawPartition* raw_part, PedPartition* part, PedSector offset)
+fill_raw_part (DosRawPartition* raw_part,
+               const PedPartition* part, PedSector offset)
 {
 	DosPartitionData*	dos_data;
 	PedCHSGeometry		bios_geom;
@@ -984,8 +986,9 @@ fill_raw_part (DosRawPartition* raw_part, PedPartition* part, PedSector offset)
 }
 
 static int
-fill_ext_raw_part_geom (DosRawPartition* raw_part, PedCHSGeometry* bios_geom,
-			PedGeometry* geom, PedSector offset)
+fill_ext_raw_part_geom (DosRawPartition* raw_part,
+                        const PedCHSGeometry* bios_geom,
+			const PedGeometry* geom, PedSector offset)
 {
 	PED_ASSERT (raw_part != NULL, return 0);
 	PED_ASSERT (geom != NULL, return 0);
@@ -1006,7 +1009,8 @@ fill_ext_raw_part_geom (DosRawPartition* raw_part, PedCHSGeometry* bios_geom,
 }
 
 static int
-write_ext_table (PedDisk* disk, PedSector sector, PedPartition* logical)
+write_ext_table (const PedDisk* disk,
+                 PedSector sector, const PedPartition* logical)
 {
 	DosRawTable		table;
 	PedPartition*		part;
@@ -1046,7 +1050,7 @@ write_ext_table (PedDisk* disk, PedSector sector, PedPartition* logical)
 }
 
 static int
-write_empty_table (PedDisk* disk, PedSector sector)
+write_empty_table (const PedDisk* disk, PedSector sector)
 {
 	DosRawTable		table;
 
@@ -1061,7 +1065,7 @@ write_empty_table (PedDisk* disk, PedSector sector)
 /* Find the first logical partition, and write the partition table for it.
  */
 static int
-write_extended_partitions (PedDisk* disk)
+write_extended_partitions (const PedDisk* disk)
 {
 	PedPartition*		ext_part;
 	PedPartition*		part;
@@ -1078,7 +1082,7 @@ write_extended_partitions (PedDisk* disk)
 		return write_empty_table (disk, ext_part->geom.start);
 }
 
-static inline uint32_t generate_random_id()
+static inline uint32_t generate_random_id (void)
 {
 	struct timeval tv;
 	int rc;
@@ -1089,7 +1093,7 @@ static inline uint32_t generate_random_id()
 }
 
 static int
-msdos_write (PedDisk* disk)
+msdos_write (const PedDisk* disk)
 {
 	DosRawTable		table;
 	PedPartition*		part;
@@ -1541,8 +1545,9 @@ _primary_constraint (PedDisk* disk, const PedCHSGeometry* bios_geom,
  * must start on the 2nd head of the 1st cylinder.
  */
 static PedConstraint*
-_primary_start_constraint (PedDisk* disk, const PedCHSGeometry* bios_geom,
-			   PedGeometry* min_geom)
+_primary_start_constraint (const PedDisk* disk,
+                           const PedCHSGeometry* bios_geom,
+			   const PedGeometry* min_geom)
 {
 	PedDevice*	dev = disk->dev;
 	PedSector	cylinder_size = bios_geom->sectors * bios_geom->heads;
@@ -1828,7 +1833,7 @@ _align (PedPartition* part, const PedCHSGeometry* bios_geom,
 }
 
 static PedConstraint*
-_no_geom_constraint (PedDisk* disk, PedSector start, PedSector end)
+_no_geom_constraint (const PedDisk* disk, PedSector start, PedSector end)
 {
 	PedGeometry	 max;
 
@@ -1837,7 +1842,7 @@ _no_geom_constraint (PedDisk* disk, PedSector start, PedSector end)
 }
 
 static PedConstraint*
-_no_geom_extended_constraint (PedPartition* part)
+_no_geom_extended_constraint (const PedPartition* part)
 {
 	PedDevice*	dev = part->disk->dev;
 	PedGeometry*	min = _get_min_extended_part_geom (part, NULL);
@@ -1982,7 +1987,7 @@ error:
  * tables, etc.
  */
 static int
-add_logical_part_metadata (PedDisk* disk, PedPartition* log_part)
+add_logical_part_metadata (PedDisk* disk, const PedPartition* log_part)
 {
 	PedPartition*	ext_part = ped_disk_extended_partition (disk);
 	PedPartition*	prev = log_part->prev;
@@ -2022,7 +2027,7 @@ add_logical_part_metadata (PedDisk* disk, PedPartition* log_part)
 }
 
 static PedPartition*
-get_last_part (PedDisk* disk)
+get_last_part (const PedDisk* disk)
 {
 	PedPartition* first_part = disk->part_list;
 	PedPartition* walk;
@@ -2209,4 +2214,3 @@ ped_disk_msdos_done ()
 {
 	ped_disk_type_unregister (&msdos_disk_type);
 }
-

@@ -499,7 +499,7 @@ fill_raw_part (PC98RawPartition* raw_part, const PedPartition* part)
 }
 
 static int
-pc98_write (PedDisk* disk)
+pc98_write (const PedDisk* disk)
 {
 	PC98RawTable		table;
 	PedPartition*		part;

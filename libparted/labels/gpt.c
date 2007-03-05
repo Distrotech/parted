@@ -950,7 +950,7 @@ _write_pmbr (PedDevice * dev)
 }
 
 static void
-_generate_header (PedDisk* disk, int alternate, uint32_t ptes_crc,
+_generate_header (const PedDisk* disk, int alternate, uint32_t ptes_crc,
 		  GuidPartitionTableHeader_t** gpt_p)
 {
 	GPTDiskData* gpt_disk_data = disk->disk_specific;
@@ -1017,7 +1017,7 @@ _partition_generate_part_entry (PedPartition* part, GuidPartitionEntry_t* pte)
 }
 
 static int
-gpt_write(PedDisk * disk)
+gpt_write(const PedDisk * disk)
 {
 	GPTDiskData* gpt_disk_data;
 	GuidPartitionEntry_t* ptes;
@@ -1502,4 +1502,3 @@ ped_disk_gpt_done()
 {
 	ped_disk_type_unregister (&gpt_disk_type);
 }
-

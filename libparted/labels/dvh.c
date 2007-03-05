@@ -263,7 +263,7 @@ _parse_boot_file (PedDisk* disk, struct volume_directory* vd)
 	return part;
 }
 
-static int dvh_write (PedDisk* disk);
+static int dvh_write (const PedDisk* disk);
 
 /* YUCK
  *
@@ -273,7 +273,7 @@ static int dvh_write (PedDisk* disk);
  * new partition numbers, and before we write to disk.
  */
 static void
-_flush_stale_flags (PedDisk* disk)
+_flush_stale_flags (const PedDisk* disk)
 {
 	DVHDiskData*		dvh_disk_data = disk->disk_specific;
 
@@ -437,7 +437,7 @@ _generate_boot_file (PedPartition* part, struct volume_directory* vd)
 }
 
 static int
-dvh_write (PedDisk* disk)
+dvh_write (const PedDisk* disk)
 {
 	DVHDiskData*		dvh_disk_data = disk->disk_specific;
 	struct volume_header	vh;
@@ -910,4 +910,3 @@ ped_disk_dvh_done ()
 {
 	ped_disk_type_unregister (&dvh_disk_type);
 }
-

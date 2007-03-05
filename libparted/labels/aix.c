@@ -118,7 +118,7 @@ aix_read (PedDisk* disk)
 
 #ifndef DISCOVER_ONLY
 static int
-aix_write (PedDisk* disk)
+aix_write (const PedDisk* disk)
 {
         ped_exception_throw (PED_EXCEPTION_NO_FEATURE,
                              PED_EXCEPTION_CANCEL,

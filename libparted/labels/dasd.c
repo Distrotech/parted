@@ -77,7 +77,7 @@ typedef struct {
 static int dasd_probe (const PedDevice *dev);
 static int dasd_clobber (PedDevice* dev);
 static int dasd_read (PedDisk* disk);
-static int dasd_write (PedDisk* disk);
+static int dasd_write (const PedDisk* disk);
 
 static PedPartition* dasd_partition_new (const PedDisk* disk,
 										 PedPartitionType part_type,
@@ -443,7 +443,7 @@ error_close_dev:
 }
 
 static int
-dasd_update_type (PedDisk* disk)
+dasd_update_type (const PedDisk* disk)
 {
 	PedPartition* part;
 	LinuxSpecific* arch_specific;
@@ -519,7 +519,7 @@ dasd_update_type (PedDisk* disk)
 }
 
 static int
-dasd_write (PedDisk* disk)
+dasd_write (const PedDisk* disk)
 {
 	DasdPartitionData* dasd_data;
 	PedPartition* part;

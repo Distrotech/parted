@@ -165,7 +165,7 @@ error:
 
 #ifndef DISCOVER_ONLY
 static int
-loop_write (PedDisk* disk)
+loop_write (const PedDisk* disk)
 {
 	char		buf [512];
 
@@ -332,4 +332,3 @@ ped_disk_loop_done ()
 {
 	ped_disk_type_unregister (&loop_disk_type);
 }
-

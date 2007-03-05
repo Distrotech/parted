@@ -1,7 +1,7 @@
 /* -*- Mode: c; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 8 -*-
 
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2001, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -305,7 +305,7 @@ error:
 }
 
 static void
-_probe_and_add_boot_code (PedDisk* disk)
+_probe_and_add_boot_code (const PedDisk* disk)
 {
 	BSDDiskData*		bsd_specific;
 	BSDRawLabel*		old_label;
@@ -323,7 +323,7 @@ _probe_and_add_boot_code (PedDisk* disk)
 
 #ifndef DISCOVER_ONLY
 static int
-bsd_write (PedDisk* disk)
+bsd_write (const PedDisk* disk)
 {
 	BSDDiskData*		bsd_specific;
 	BSDRawLabel*		label;

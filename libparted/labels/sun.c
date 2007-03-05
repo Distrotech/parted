@@ -363,7 +363,7 @@ sun_read (PedDisk* disk)
 
 #ifndef DISCOVER_ONLY
 static void
-_probe_and_use_old_info (PedDisk* disk)
+_probe_and_use_old_info (const PedDisk* disk)
 {
 	SunDiskData*		sun_specific;
 	SunRawLabel		old_label;
@@ -378,7 +378,7 @@ _probe_and_use_old_info (PedDisk* disk)
 }
 
 static int
-sun_write (PedDisk* disk)
+sun_write (const PedDisk* disk)
 {
 	SunRawLabel*		label;
 	SunPartitionData*	sun_data;
@@ -851,4 +851,3 @@ ped_disk_sun_done ()
 {
 	ped_disk_type_unregister (&sun_disk_type);
 }
-

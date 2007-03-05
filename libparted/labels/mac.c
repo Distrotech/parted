@@ -1572,7 +1572,9 @@ static PedDiskOps mac_disk_ops = {
 	free:			mac_free,
 	read:			mac_read,
 #ifndef DISCOVER_ONLY
-	write:			mac_write,
+        /* FIXME: remove this cast, once mac_write is fixed not to
+           modify its *DISK parameter.  */
+	write:			(int (*) (const PedDisk*)) mac_write,
 #else
 	write:			NULL,
 #endif
