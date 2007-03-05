@@ -15,6 +15,7 @@ lib/xalloc-die.c
 libparted/arch/beos.c
 
 debug/clearfat/clearfat.c
+partprobe/partprobe.c
 
 # libparted
 libparted/arch/gnu.c
