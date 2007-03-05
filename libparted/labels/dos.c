@@ -148,7 +148,7 @@ typedef struct {
 	OrigState*	orig;			/* used for CHS stuff */
 } DosPartitionData;
 
-static const PedDiskType msdos_disk_type;
+static PedDiskType msdos_disk_type;
 
 static int
 msdos_probe (const PedDevice *dev)
@@ -2196,7 +2196,7 @@ static PedDiskOps msdos_disk_ops = {
 				msdos_get_max_primary_partition_count
 };
 
-static const PedDiskType msdos_disk_type = {
+static PedDiskType msdos_disk_type = {
 	next:		NULL,
 	name:		"msdos",
 	ops:		&msdos_disk_ops,

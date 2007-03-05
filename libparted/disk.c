@@ -63,7 +63,7 @@ static int _disk_raw_add (PedDisk* disk, PedPartition* part);
 static PedDiskType*	disk_types = NULL;
 
 void
-ped_disk_type_register (const PedDiskType* disk_type)
+ped_disk_type_register (PedDiskType* disk_type)
 {
 	PED_ASSERT (disk_type != NULL, return);
 	PED_ASSERT (disk_type->ops != NULL, return);
@@ -75,7 +75,7 @@ ped_disk_type_register (const PedDiskType* disk_type)
 }
 
 void
-ped_disk_type_unregister (const PedDiskType* disk_type)
+ped_disk_type_unregister (PedDiskType* disk_type)
 {
 	PedDiskType*	walk;
 	PedDiskType*	last = NULL;

@@ -225,8 +225,8 @@ struct _PedDiskArchOps {
         int (*disk_commit) (PedDisk* disk);
 };
 
-extern void ped_disk_type_register (const PedDiskType* type);
-extern void ped_disk_type_unregister (const PedDiskType* type);
+extern void ped_disk_type_register (PedDiskType* type);
+extern void ped_disk_type_unregister (PedDiskType* type);
 
 /**
  * Deprecated: use ped_disk_type_register.
