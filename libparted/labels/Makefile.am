@@ -5,8 +5,6 @@
 
 partedincludedir      =	-I$(top_srcdir)/include
 noinst_LTLIBRARIES    =	liblabels.la
-liblabels_la_LDFLAGS  = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
-			-release $(LT_RELEASE)
 
 liblabels_la_SOURCES  = rdb.c		\
 			bsd.c  		\
