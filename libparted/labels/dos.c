@@ -148,7 +148,7 @@ typedef struct {
 	OrigState*	orig;			/* used for CHS stuff */
 } DosPartitionData;
 
-static PedDiskType msdos_disk_type;
+static const PedDiskType msdos_disk_type;
 
 static int
 msdos_probe (const PedDevice *dev)
@@ -1294,7 +1294,8 @@ msdos_partition_set_system (PedPartition* part,
 }
 
 static int
-msdos_partition_set_flag (PedPartition* part, PedPartitionFlag flag, int state)
+msdos_partition_set_flag (PedPartition* part,
+                          PedPartitionFlag flag, int state)
 {
 	PedDisk*			disk;
 	PedPartition*			walk;
@@ -1436,7 +1437,7 @@ msdos_partition_is_flag_available (const PedPartition* part,
 }
 
 static PedGeometry*
-_try_constraint (PedPartition* part, const PedConstraint* external,
+_try_constraint (const PedPartition* part, const PedConstraint* external,
 		 PedConstraint* internal)
 {
 	PedConstraint*		intersection;
@@ -1505,7 +1506,7 @@ choose_b:
  * rules for that - see the _primary_start_constraint.
  */
 static PedConstraint*
-_primary_constraint (PedDisk* disk, const PedCHSGeometry* bios_geom,
+_primary_constraint (const PedDisk* disk, const PedCHSGeometry* bios_geom,
 		     PedGeometry* min_geom)
 {
 	PedDevice*	dev = disk->dev;
@@ -1588,7 +1589,7 @@ _primary_start_constraint (const PedDisk* disk,
  * onwards of the extended partition.
  */
 static PedConstraint*
-_logical_constraint (PedDisk* disk, const PedCHSGeometry* bios_geom,
+_logical_constraint (const PedDisk* disk, const PedCHSGeometry* bios_geom,
 		     PedSector start_offset, int is_start_part)
 {
 	PedPartition*	ext_part = ped_disk_extended_partition (disk);
@@ -1698,8 +1699,10 @@ _align_primary (PedPartition* part, const PedCHSGeometry* bios_geom,
 }
 
 static int
-_logical_min_start_head (PedPartition* part, const PedCHSGeometry* bios_geom,
-			 PedPartition* ext_part, int is_start_ext_part)
+_logical_min_start_head (const PedPartition* part,
+                         const PedCHSGeometry* bios_geom,
+			 const PedPartition* ext_part,
+                         int is_start_ext_part)
 {
 	PedSector	cylinder_size = bios_geom->sectors * bios_geom->heads;
 	PedSector	base_head;
@@ -1731,7 +1734,7 @@ _logical_min_start_head (PedPartition* part, const PedCHSGeometry* bios_geom,
  * those cases.
  */
 static PedConstraint*
-_log_meta_overlap_constraint (PedPartition* part, PedGeometry* geom)
+_log_meta_overlap_constraint (PedPartition* part, const PedGeometry* geom)
 {
 	PedGeometry	safe_space;
 	PedSector	min_start;
@@ -2113,7 +2116,7 @@ msdos_alloc_metadata (PedDisk* disk)
 }
 
 static int
-next_primary (PedDisk* disk)
+next_primary (const PedDisk* disk)
 {
 	int	i;
 	for (i=1; i<=4; i++) {
@@ -2124,7 +2127,7 @@ next_primary (PedDisk* disk)
 }
 
 static int
-next_logical (PedDisk* disk)
+next_logical (const PedDisk* disk)
 {
 	int	i;
 	for (i=5; 1; i++) {
@@ -2193,7 +2196,7 @@ static PedDiskOps msdos_disk_ops = {
 				msdos_get_max_primary_partition_count
 };
 
-static PedDiskType msdos_disk_type = {
+static const PedDiskType msdos_disk_type = {
 	next:		NULL,
 	name:		"msdos",
 	ops:		&msdos_disk_ops,
