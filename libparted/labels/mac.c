@@ -257,7 +257,7 @@ error:
 	return 0;
 }
 
-PedDisk*
+static PedDisk*
 mac_alloc (const PedDevice* dev)
 {
 	PedDisk*		disk;

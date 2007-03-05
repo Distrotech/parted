@@ -760,7 +760,7 @@ raw_part_is_lba (const DosRawPartition* raw_part)
 	return 0;
 }
 
-PedPartition*
+static PedPartition*
 raw_part_parse (const PedDisk* disk, const DosRawPartition* raw_part,
 	        PedSector lba_offset, PedPartitionType type)
 {
