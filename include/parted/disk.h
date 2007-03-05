@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+    Copyright (C) 1999, 2000, 2001, 2002, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -171,7 +171,7 @@ struct _PedDiskOps {
         PedDisk* (*duplicate) (const PedDisk* disk);
         void (*free) (PedDisk* disk);
         int (*read) (PedDisk* disk);
-        int (*write) (PedDisk* disk);
+        int (*write) (const PedDisk* disk);
         /** \todo add label guessing op here */
         
         /* partition operations */
