@@ -21,28 +21,68 @@
 
 #include <string.h>
 #include <stdio.h>
-
-#ifndef DISCOVER_ONLY
+#include <stdlib.h>
+#include <getopt.h>
+#include "closeout.h"
+#include "configmake.h"
+#include "error.h"
+#include "long-options.h"
 
 #include "../../libparted/fs/fat/fat.h"
 
-static char* help_msg =
-"Usage:  clearfat DEVICE MINOR\n"
-"\n"
-"This program is used to enhance the automated testing.  It is not useful for\n"
-"anything much else.\n";
+#include <locale.h>
+
+/* Take care of NLS matters.  */
+
+#include "gettext.h"
+#if ! ENABLE_NLS
+# undef textdomain
+# define textdomain(Domainname) /* empty */
+# undef bindtextdomain
+# define bindtextdomain(Domainname, Dirname) /* empty */
+#endif
+
+#undef _
+#define _(msgid) gettext (msgid)
+
+#ifndef DISCOVER_ONLY
+
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "clearfat"
+
+#define AUTHORS \
+  "<http://parted.alioth.debian.org/cgi-bin/trac.cgi/browser/AUTHORS>"
+
+/* The name this program was run with. */
+char *program_name;
+
+void
+usage (int status)
+{
+  if (status != EXIT_SUCCESS)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+	     program_name);
+  else
+    {
+      printf (_("\
+Usage: %s [OPTION]\n\
+  or:  %s DEVICE MINOR\n"), PROGRAM_NAME, PROGRAM_NAME);
+      fputs (_("\
+Clear unused space on a FAT partition (a GNU Parted testing tool).\n\
+\n\
+"), stdout);
+      fputs (_("      --help     display this help and exit\n"), stdout);
+      fputs (_("      --version  output version information and exit\n"),
+             stdout);
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+    }
+  exit (status);
+}
 
 #define CLEAR_BUFFER_SIZE		(1024 * 1024)
 #define CLEAR_BUFFER_SECTORS		(CLEAR_BUFFER_SIZE/512)
 
 static char buffer [CLEAR_BUFFER_SIZE];
-
-static int
-_do_help ()
-{
-	fputs (help_msg, stdout);
-	exit (1);
-}
 
 /* generic clearing code ***************************************************/
 
@@ -228,8 +268,28 @@ main (int argc, char* argv[])
 	PedPartition*		part;
 	PedFileSystem*		fs;
 
-	if (argc < 3)
-		_do_help ();
+        program_name = argv[0];
+        setlocale (LC_ALL, "");
+        bindtextdomain (PACKAGE, LOCALEDIR);
+        textdomain (PACKAGE);
+
+	atexit (close_stdout);
+
+	parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
+                            usage, AUTHORS, (char const *) NULL);
+	if (getopt_long (argc, argv, "", NULL, NULL) != -1)
+	  usage (EXIT_FAILURE);
+
+	if (argc - optind < 2)
+          {
+            error (0, 0, _("too few arguments"));
+            usage (EXIT_FAILURE);
+          }
+	if (2 < argc - optind)
+          {
+            error (0, 0, _("too many arguments"));
+            usage (EXIT_FAILURE);
+          }
 
 	dev = ped_device_get (argv [1]);
 	if (!dev)
@@ -284,4 +344,3 @@ main()
 }
 
 #endif /* DISCOVER_ONLY */
-

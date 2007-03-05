@@ -31,6 +31,8 @@ inttypes.h
 inttypes_.h
 localcharset.c
 localcharset.h
+long-options.c
+long-options.h
 malloc.c
 memchr.c
 memcmp.c
