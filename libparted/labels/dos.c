@@ -1544,11 +1544,16 @@ _primary_constraint (const PedDisk* disk, const PedCHSGeometry* bios_geom,
 
 /* This constraint is for partitions starting on the first cylinder.  They
  * must start on the 2nd head of the 1st cylinder.
+ *
+ * NOTE: We don't always start on the 2nd head of the 1st cylinder.  Windows
+ * Vista aligns starting partitions at sector 2048 (0x800) by default.  See:
+ * http://support.microsoft.com/kb/923332
  */
 static PedConstraint*
 _primary_start_constraint (const PedDisk* disk,
+                           const PedPartition *part,
                            const PedCHSGeometry* bios_geom,
-			   const PedGeometry* min_geom)
+                           const PedGeometry* min_geom)
 {
 	PedDevice*	dev = disk->dev;
 	PedSector	cylinder_size = bios_geom->sectors * bios_geom->heads;
@@ -1556,21 +1561,30 @@ _primary_start_constraint (const PedDisk* disk,
 	PedAlignment	end_align;
 	PedGeometry	start_geom;
 	PedGeometry	end_geom;
+	PedGeometry start_pos;
 
-	if (!ped_alignment_init (&start_align, bios_geom->sectors, 0))
+	if (part->geom.start == 2048)
+		/* check for known Windows Vista (NTFS >= 3.1) alignments */
+		/* sector 0x800 == 2048                                   */
+		start_pos = 2048;
+	else
+		/* all other primary partitions on a DOS label align to   */
+		/* the 2nd head of the first cylinder (0x3F == 63)        */
+		start_pos = bios_geom->sectors;
+
+	if (!ped_alignment_init (&start_align, start_pos, 0))
 		return NULL;
 	if (!ped_alignment_init (&end_align, -1, cylinder_size))
 		return NULL;
 	if (min_geom) {
-		if (!ped_geometry_init (&start_geom, dev,
-					bios_geom->sectors, 1))
+		if (!ped_geometry_init (&start_geom, dev, start_pos, 1))
 			return NULL;
 		if (!ped_geometry_init (&end_geom, dev, min_geom->end,
 			       		dev->length - min_geom->end))
 			return NULL;
 	} else {
-		if (!ped_geometry_init (&start_geom, dev, bios_geom->sectors,
-					dev->length - bios_geom->sectors))
+		if (!ped_geometry_init (&start_geom, dev, start_pos,
+			dev->length - start_pos))
 			return NULL;
 		if (!ped_geometry_init (&end_geom, dev, 0, dev->length))
 			return NULL;
@@ -1678,12 +1692,14 @@ _align_primary (PedPartition* part, const PedCHSGeometry* bios_geom,
 
 	solution = _best_solution (part, bios_geom, solution,
 			_try_constraint (part, constraint,
-					 _primary_start_constraint (disk,
+					 _primary_start_constraint (disk, part,
 						 bios_geom, min_geom)));
-	solution = _best_solution (part, bios_geom, solution,
+
+	if (!solution)
+		solution = _best_solution (part, bios_geom, solution,
 			_try_constraint (part, constraint,
-					 _primary_constraint (disk, bios_geom,
-						 min_geom)));
+				_primary_constraint (disk, bios_geom,
+				min_geom)));
 
 	if (min_geom)
 		ped_geometry_destroy (min_geom);
