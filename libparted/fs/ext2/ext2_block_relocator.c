@@ -429,7 +429,7 @@ static int doscan(struct ext2_fs *fs, struct ext2_block_relocator_state *state)
 	}
 
 	if (fs->opt_verbose)
-		fprintf(stderr, "\n");
+                fputc('\n', stderr);
 
 	state->start[3].dst = state->block;
 	state->start[2].dst = state->start[3].dst + state->start[3].num;
@@ -499,7 +499,7 @@ static int ext2_block_relocator_copy(struct ext2_fs *fs, struct ext2_block_reloc
 			ext2_sync(fs);
 
 		if (fs->opt_verbose)
-			fprintf(stderr, "\n");
+                        fputc('\n', stderr);
 	}
 	else
 	{
@@ -558,7 +558,7 @@ static int ext2_block_relocator_ref(struct ext2_fs *fs, struct ext2_block_reloca
 			if (numerrors++ < 4)
 				return 1;
 
-			fprintf(stderr, "all is not well!\n");
+			fputs("all is not well!\n", stderr);
 			return 0;
 		}
 	}
@@ -642,7 +642,7 @@ static int ext2_block_relocator_flush(struct ext2_fs *fs, struct ext2_block_relo
 		return 1;
 
 	if (fs->opt_verbose)
-		fprintf(stderr, "ext2_block_relocator_flush\n");
+                fputs("ext2_block_relocator_flush\n", stderr);
 
 	if (fs->opt_debug)
 	{
@@ -651,9 +651,8 @@ static int ext2_block_relocator_flush(struct ext2_fs *fs, struct ext2_block_relo
 		for (i=0; (unsigned int) i < state->usedentries-1; i++)
 			if (state->block[i].num >= state->block[i+1].num)
 			{
-				fprintf(stderr,
-					"ext2_block_relocator_flush: "
-					"blocks not in order!\n");
+				fputs("ext2_block_relocator_flush: "
+				      "blocks not in order!\n", stderr);
 
 				qsort(state->block,
 				      state->usedentries,
@@ -715,7 +714,7 @@ static int ext2_block_relocator_flush(struct ext2_fs *fs, struct ext2_block_relo
 		}
 
 		if (fs->opt_verbose)
-			fprintf(stderr, "\n");
+		        fputc('\n', stderr);
 	}
 
 	state->usedentries = 0;
@@ -907,7 +906,7 @@ int ext2_block_relocate(struct ext2_fs *fs, blk_t newsize)
 	struct ext2_block_relocator_state state;
 
 	if (fs->opt_verbose)
-		fprintf(stderr, "relocating blocks....\n");
+                fputs("relocating blocks....\n", stderr);
 
 	state.newallocoffset = 0;
 	state.allocentries = (ext2_relocator_pool_size << 10) /
