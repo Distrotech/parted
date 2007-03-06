@@ -63,6 +63,97 @@ extern int tgetnum (char* key);
 
 #endif /* HAVE_LIBREADLINE */
 
+#ifndef SA_SIGINFO
+#  ifndef HAVE_SIGACTION
+
+struct sigaction {
+};
+
+static inline int
+sigaction (int signum, const struct* sigaction, struct* sigaction)
+{
+}
+
+#  endif /* HAVE_SIGACTON */
+
+struct siginfo_t {
+        int si_code;
+};
+
+#endif /* SA_SIGINFO */
+
+#ifndef SEGV_MAPERR
+#  define SEGV_MAPERR (INTMAX - 1)
+#endif
+
+#ifndef SEGV_ACCERR
+#  define SEGV_ACCERR (INTMAX - 2)
+#endif
+
+#ifndef FPE_INTDIV
+#  define FPE_INTDIV (INTMAX - 1)
+#endif
+
+#ifndef FPE_INTOVF
+#  define FPE_INTOVF (INTMAX - 2)
+#endif
+
+#ifndef FPE_FLTDIV
+#  define FPE_FLTDIV (INTMAX - 3)
+#endif
+
+#ifndef FPE_FLTOVF
+#  define FPE_FLTOVF (INTMAX - 4)
+#endif
+
+#ifndef FPE_FLTUND
+#  define FPE_FLTUND (INTMAX - 5)
+#endif
+
+#ifndef FPE_FLTRES
+#  define FPE_FLTRES (INTMAX - 6)
+#endif
+
+#ifndef FPE_FLTINV
+#  define FPE_FLTINV (INTMAX - 7)
+#endif
+
+#ifndef FPE_FLTSUB
+#  define FPE_FLTSUB (INTMAX - 8)
+#endif
+
+#ifndef ILL_ILLOPC
+#  define ILL_ILLOPC (INTMAX - 1)
+#endif
+
+#ifndef ILL_ILLOPN
+#  define ILL_ILLOPN (INTMAX - 2)
+#endif
+
+#ifndef ILL_ILLADR
+#  define ILL_ILLADR (INTMAX - 3)
+#endif
+
+#ifndef ILL_ILLTRP
+#  define ILL_ILLTRP (INTMAX - 4)
+#endif
+
+#ifndef ILL_PRVOPC
+#  define ILL_PRVOPC (INTMAX - 5)
+#endif
+
+#ifndef ILL_PRVREG
+#  define ILL_PRVREG (INTMAX - 6)
+#endif
+
+#ifndef ILL_COPROC
+#  define ILL_COPROC (INTMAX - 7)
+#endif
+
+#ifndef ILL_BADSTK
+#  define ILL_BADSTK (INTMAX - 8)
+#endif
+
 char* prog_name = "GNU Parted " VERSION "\n";
 
 static char* banner_msg = N_(
@@ -197,7 +288,6 @@ _dump_history ()
 }
 #endif /* HAVE_LIBREADLINE */
 
-#ifndef HAVE_SIGACTION
 static void
 mask_signal()
 {
@@ -207,7 +297,6 @@ mask_signal()
         sigfillset(&curr);
         sigprocmask(SIG_SETMASK, &curr, &prev);
 }
-#endif /* HAVE_SIGACTION */
 
 /* Resets the environment by jumping to the initial state
  * saved during ui intitialisation.
@@ -230,38 +319,40 @@ reset_env (int quit)
         }
 }
 
-/* Signal handler for SIGINT */
+/* Signal handler for SIGINT using 'sigaction'. */
 static void
-sigint_handler (int signum, siginfo_t* info, void *ucontext)
+sa_sigint_handler (int signum, siginfo_t* info, void *ucontext)
 {
+        if (info)
+                sigaction (SIGINT, &sig_int, NULL);
+
         got_ctrl_c = 1;
-
-        #ifdef HAVE_SIGACTION
-        sigaction (SIGINT, &sig_int, NULL);
-        #else
-        signal (SIGINT, &sigint_handler);
-        mask_signal();
-        #endif /* HAVE_SIGACTION */
-
         reset_env (0);
 }
 
-/* Signal handler for SIGSEGV */
+/* Signal handler for SIGINT using 'signal'. */
 static void
-sigsegv_handler (int signum, siginfo_t* info, void* ucontext)
+s_sigint_handler (int signum)
 {
-        #ifdef HAVE_SIGACTION   
-        sigaction (SIGSEGV, &sig_segv, NULL);
-        #else
-        signal (SIGSEGV, &sigsegv_handler);
-        mask_signal();
-        #endif /* HAVE_SIGACTION */
+        signal (SIGINT, &s_sigint_handler);
+        mask_signal ();
+        sa_sigint_handler (signum, NULL, NULL);
+}
 
+/* Signal handler for SIGSEGV using 'sigaction'. */
+static void
+sa_sigsegv_handler (int signum, siginfo_t* info, void* ucontext)
+{
         printf (bug_msg, VERSION);
         #ifdef HAVE_LIBREADLINE
         _dump_history ();
         #endif
- 
+
+        if (!info)
+                abort ();
+
+        sigaction (SIGSEGV, &sig_segv, NULL);
+
         switch (info->si_code) {
 
                 case SEGV_MAPERR:
@@ -285,21 +376,28 @@ sigsegv_handler (int signum, siginfo_t* info, void* ucontext)
         abort ();
 }
 
-/* Signal handler for SIGFPE */
+/* Signal handler for SIGSEGV using 'signal'. */
 static void
-sigfpe_handler (int signum, siginfo_t* info, void* ucontext)
+s_sigsegv_handler (int signum)
 {
-        #ifdef HAVE_SIGACTION
-        sigaction (SIGFPE, &sig_fpe, NULL);
-        #else
-        signal (SIGFPE, &sigfpe_handler);
-        mask_signal();
-        #endif /* HAVE_SIGACTION */
+        signal (SIGSEGV, &s_sigsegv_handler);
+        mask_signal ();
+        sa_sigsegv_handler (signum, NULL, NULL);
+}
 
+/* Signal handler for SIGFPE using 'sigaction'. */
+static void
+sa_sigfpe_handler (int signum, siginfo_t* info, void* ucontext)
+{
         printf (bug_msg, VERSION);
         #ifdef HAVE_LIBREADLINE
         _dump_history ();
         #endif
+
+        if (!info)
+                abort ();
+
+        sigaction (SIGFPE, &sig_fpe, NULL);
 
         switch (info->si_code) {
 
@@ -307,7 +405,7 @@ sigfpe_handler (int signum, siginfo_t* info, void* ucontext)
                         fputs(_("\nError: FPE_INTDIV (Integer: "
                                 "divide by zero)"), stdout);
                         break;
-
+        
                 case FPE_INTOVF:
                         fputs(_("\nError: FPE_INTOVF (Integer: "
                                 "overflow)"), stdout);
@@ -349,25 +447,32 @@ sigfpe_handler (int signum, siginfo_t* info, void* ucontext)
                         break;
 
         }
-   
+
         abort ();
 }
 
-/* Signal handler for SIGILL */
+/* Signal handler for SIGFPE using 'signal'. */
 static void
-sigill_handler (int signum, siginfo_t* info, void* ucontext)
+s_sigfpe_handler (int signum)
 {
-        #ifdef HAVE_SIGACTION
-        sigaction (SIGILL, &sig_ill, NULL);
-        #else
-        signal (SIGILL, &sigill_handler);
-        mask_signal();
-        #endif /* HAVE_SIGACTION */
+        signal (SIGFPE, &s_sigfpe_handler);
+        mask_signal ();
+        sa_sigfpe_handler (signum, NULL, NULL);
+}
 
+/* Signal handler for SIGILL using 'sigaction'. */
+static void
+sa_sigill_handler (int signum, siginfo_t* info, void* ucontext)
+{
         printf (bug_msg, VERSION);
         #ifdef HAVE_LIBREADLINE
         _dump_history ();
         #endif
+
+        if (!info)
+                abort();
+
+        sigaction (SIGILL, &sig_ill, NULL);
 
         switch (info->si_code) {
 
@@ -420,6 +525,14 @@ sigill_handler (int signum, siginfo_t* info, void* ucontext)
         abort ();
 }
 
+/* Signal handler for SIGILL using 'signal'. */
+static void
+s_sigill_handler (int signum)
+{
+        signal (SIGILL, &s_sigill_handler);
+        mask_signal ();
+        sa_sigill_handler (signum, NULL, NULL);
+}
 
 static char*
 _readline (const char* prompt, const StrList* possibilities)
@@ -1264,14 +1377,14 @@ init_ui ()
         readline_state.in_readline = 0;
 #endif
 
-#ifdef HAVE_SIGACTION
+#ifdef SA_SIGINFO
         sigset_t curr;
         sigfillset (&curr);
 
-        sig_segv.sa_sigaction = &sigsegv_handler;
-        sig_int.sa_sigaction  = &sigint_handler;
-        sig_fpe.sa_sigaction  = &sigfpe_handler;
-        sig_ill.sa_sigaction  = &sigill_handler;
+        sig_segv.sa_sigaction = &sa_sigsegv_handler;
+        sig_int.sa_sigaction = &sa_sigint_handler;
+        sig_fpe.sa_sigaction = &sa_sigfpe_handler;
+        sig_ill.sa_sigaction = &sa_sigill_handler;
 
         sig_segv.sa_mask = 
                 sig_int.sa_mask = 
@@ -1287,7 +1400,12 @@ init_ui ()
         sigaction (SIGINT, &sig_int, NULL);
         sigaction (SIGFPE, &sig_fpe, NULL);
         sigaction (SIGILL, &sig_ill, NULL);
-#endif /* HAVE_SIGACTION */
+#else
+        signal (SIGSEGV, s_sigsegv_handler);
+        signal (SIGINT, s_sigint_handler);
+        signal (SIGFPE, s_sigfpe_handler);
+        signal (SIGILL, s_sigill_handler);
+#endif /* SA_SIGINFO */
 
         return 1;
 }
