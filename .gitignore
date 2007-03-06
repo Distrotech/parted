@@ -17,6 +17,7 @@ config.status
 configure
 doc/C/po/parted.8.pot
 doc/pt_BR/parted.8.pt_BR.po
+libparted/tests/label
 libparted.pc
 libtool
 m4
