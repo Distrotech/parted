@@ -286,6 +286,15 @@ _dump_history ()
                 puts(all_entries[i++]->line);
         }
 }
+
+#else
+
+/* Print nothing because Readline is absent. */
+static inline void
+_dump_history (void)
+{
+}
+
 #endif /* HAVE_LIBREADLINE */
 
 static void
@@ -344,9 +353,7 @@ static void
 sa_sigsegv_handler (int signum, siginfo_t* info, void* ucontext)
 {
         printf (bug_msg, VERSION);
-        #ifdef HAVE_LIBREADLINE
         _dump_history ();
-        #endif
 
         if (!info)
                 abort ();
@@ -390,9 +397,7 @@ static void
 sa_sigfpe_handler (int signum, siginfo_t* info, void* ucontext)
 {
         printf (bug_msg, VERSION);
-        #ifdef HAVE_LIBREADLINE
         _dump_history ();
-        #endif
 
         if (!info)
                 abort ();
@@ -465,9 +470,7 @@ static void
 sa_sigill_handler (int signum, siginfo_t* info, void* ucontext)
 {
         printf (bug_msg, VERSION);
-        #ifdef HAVE_LIBREADLINE
         _dump_history ();
-        #endif
 
         if (!info)
                 abort();
