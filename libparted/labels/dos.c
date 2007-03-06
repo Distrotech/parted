@@ -1561,7 +1561,7 @@ _primary_start_constraint (const PedDisk* disk,
 	PedAlignment	end_align;
 	PedGeometry	start_geom;
 	PedGeometry	end_geom;
-	PedGeometry start_pos;
+	PedSector start_pos;
 
 	if (part->geom.start == 2048)
 		/* check for known Windows Vista (NTFS >= 3.1) alignments */
