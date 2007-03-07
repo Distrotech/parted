@@ -563,7 +563,7 @@ ped_partition_get_path (const PedPartition* part)
  * \return 0 if the check fails, 1 otherwise.
  */
 int
-ped_disk_check (PedDisk* disk)
+ped_disk_check (const PedDisk* disk)
 {
 	PedPartition*	walk;
 
@@ -626,7 +626,7 @@ ped_disk_type_check_feature (const PedDiskType* disk_type,
  * Get the number of primary partitions.
  */
 int
-ped_disk_get_primary_partition_count (PedDisk* disk)
+ped_disk_get_primary_partition_count (const PedDisk* disk)
 {
 	PedPartition*	walk;
 	int		count = 0;
@@ -647,7 +647,7 @@ ped_disk_get_primary_partition_count (PedDisk* disk)
  * Get the highest partition number on \p disk.
  */
 int
-ped_disk_get_last_partition_num (PedDisk* disk)
+ped_disk_get_last_partition_num (const PedDisk* disk)
 {
 	PedPartition*	walk;
 	int		highest = -1;
@@ -2228,8 +2228,8 @@ ped_partition_flag_get_by_name (const char* name)
 	return 0;
 }
 
-void
-ped_partition_print (PedPartition* part)
+static void
+ped_partition_print (const PedPartition* part)
 {
 	PED_ASSERT (part != NULL, return);
 
@@ -2251,7 +2251,7 @@ ped_partition_print (PedPartition* part)
  * Prints a summary of disk's partitions.  Useful for debugging.
  */
 void
-ped_disk_print (PedDisk* disk)
+ped_disk_print (const PedDisk* disk)
 {
 	PedPartition*	part;
 

@@ -257,11 +257,11 @@ extern void ped_disk_destroy (PedDisk* disk);
 extern int ped_disk_commit (PedDisk* disk);
 extern int ped_disk_commit_to_dev (PedDisk* disk);
 extern int ped_disk_commit_to_os (PedDisk* disk);
-extern int ped_disk_check (PedDisk* disk);
-extern void ped_disk_print (PedDisk* disk);
+extern int ped_disk_check (const PedDisk* disk);
+extern void ped_disk_print (const PedDisk* disk);
 
-extern int ped_disk_get_primary_partition_count (PedDisk* disk);
-extern int ped_disk_get_last_partition_num (PedDisk* disk);
+extern int ped_disk_get_primary_partition_count (const PedDisk* disk);
+extern int ped_disk_get_last_partition_num (const PedDisk* disk);
 extern int ped_disk_get_max_primary_partition_count (const PedDisk* disk);
 
 /** @} */
