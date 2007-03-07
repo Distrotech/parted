@@ -19,7 +19,7 @@
 #  define _(String) (String)
 #endif /* ENABLE_NLS */
 
-static unsigned char EBCtoASC[256] =
+static const unsigned char EBCtoASC[256] =
 {
 /* 0x00  NUL   SOH   STX   ETX  *SEL    HT  *RNL   DEL */
 	0x00, 0x01, 0x02, 0x03, 0x07, 0x09, 0x07, 0x7F,
@@ -91,7 +91,7 @@ static unsigned char EBCtoASC[256] =
 	0x38, 0x39, 0x07, 0x07, 0x9A, 0x07, 0x07, 0x07
 };
 
-static unsigned char ASCtoEBC[256] =
+static const unsigned char ASCtoEBC[256] =
 {
     /*00  NL    SH    SX    EX    ET    NQ    AK    BL */
 	0x00, 0x01, 0x02, 0x03, 0x37, 0x2D, 0x2E, 0x2F,
