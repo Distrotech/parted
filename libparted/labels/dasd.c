@@ -21,7 +21,7 @@
                   Harald Hoyer <harald@redhat.de>
 */
 
-#include "config.h"
+#include <config.h>
 
 #include <stdio.h>
 #include <errno.h>

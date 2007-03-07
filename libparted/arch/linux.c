@@ -19,7 +19,7 @@
 
 #define PROC_DEVICES_BUFSIZ 16384
 
-#include "config.h"
+#include <config.h>
 
 #include <parted/parted.h>
 #include <parted/debug.h>

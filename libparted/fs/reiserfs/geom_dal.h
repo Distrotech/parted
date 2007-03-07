@@ -20,7 +20,7 @@
 #ifndef GEOM_DAL_H
 #define GEOM_DAL_H
 
-#include "config.h"
+#include <config.h>
 
 #include <parted/parted.h>
 

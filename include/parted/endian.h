@@ -22,7 +22,7 @@
 #ifndef PED_ENDIAN_H_INCLUDED
 #define PED_ENDIAN_H_INCLUDED
 
-#include "config.h"
+#include <config.h>
 #include <stdint.h>
 
 /* returns the n'th least significant byte */

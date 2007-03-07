@@ -22,7 +22,7 @@
    Report bug to <bug-parted@gnu.org>
 */
 
-#include "config.h"
+#include <config.h>
 
 #include <parted/parted.h>
 #include <parted/endian.h>

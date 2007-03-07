@@ -33,7 +33,7 @@
  * @{
  */
 
-#include "config.h"
+#include <config.h>
 
 #include <parted/parted.h>
 #include <parted/debug.h>

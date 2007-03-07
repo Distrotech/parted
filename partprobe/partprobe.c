@@ -25,7 +25,7 @@
  * And strip(1) afterwards!
  */
 
-#include "config.h"
+#include <config.h>
 
 #include <parted/parted.h>
 

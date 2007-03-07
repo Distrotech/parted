@@ -20,7 +20,7 @@
 #ifndef _EXT2_H
 #define _EXT2_H
 
-#include "config.h"
+#include <config.h>
 
 #include <parted/parted.h>
 #include <parted/debug.h>

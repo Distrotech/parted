@@ -20,7 +20,7 @@
 #ifndef PED_DEBUG_H_INCLUDED
 #define PED_DEBUG_H_INCLUDED
 
-#include "config.h"
+#include <config.h>
 
 #include <stdarg.h>
 

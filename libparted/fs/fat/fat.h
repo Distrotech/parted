@@ -20,7 +20,7 @@
 #ifndef FAT_H_INCLUDED
 #define FAT_H_INCLUDED
 
-#include "config.h"
+#include <config.h>
 
 #include <parted/parted.h>
 #include <parted/endian.h>

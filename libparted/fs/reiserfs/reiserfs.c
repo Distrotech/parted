@@ -28,7 +28,7 @@
     all worth it?
 */
 
-#include "config.h"
+#include <config.h>
 
 #if (HAVE_LIBREISERFS || DYNAMIC_LOADING) && !DISCOVER_ONLY
 #	define REISER_FULL_SUPPORT
