@@ -112,7 +112,7 @@ ped_unit_get_default ()
  * Get the byte size of a given \p unit.
  */
 long long
-ped_unit_get_size (PedDevice* dev, PedUnit unit)
+ped_unit_get_size (const PedDevice* dev, PedUnit unit)
 {
 	PedSector cyl_size = dev->bios_geom.heads * dev->bios_geom.sectors;
 
@@ -192,7 +192,7 @@ ped_strdup (const char *str)
  * The returned string must be freed with ped_free().
  */
 char*
-ped_unit_format_custom_byte (PedDevice* dev, PedSector byte, PedUnit unit)
+ped_unit_format_custom_byte (const PedDevice* dev, PedSector byte, PedUnit unit)
 {
 	char buf[100];
 	PedSector sector = byte / dev->sector_size;
@@ -203,7 +203,7 @@ ped_unit_format_custom_byte (PedDevice* dev, PedSector byte, PedUnit unit)
 	
 	/* CHS has a special comma-separated format. */
 	if (unit == PED_UNIT_CHS) {
-		PedCHSGeometry *chs = &dev->bios_geom;
+		const PedCHSGeometry *chs = &dev->bios_geom;
 		snprintf (buf, 100, "%lld,%lld,%lld",
 			  sector / chs->sectors / chs->heads,
 			  (sector / chs->sectors) % chs->heads,
@@ -265,7 +265,7 @@ ped_unit_format_custom_byte (PedDevice* dev, PedSector byte, PedUnit unit)
  * The returned string must be freed with ped_free().
  */
 char*
-ped_unit_format_byte (PedDevice* dev, PedSector byte)
+ped_unit_format_byte (const PedDevice* dev, PedSector byte)
 {
 	PED_ASSERT (dev != NULL, return NULL);
 	return ped_unit_format_custom_byte (dev, byte, default_unit);
@@ -278,7 +278,7 @@ ped_unit_format_byte (PedDevice* dev, PedSector byte)
  * The returned string must be freed with ped_free().
  */
 char*
-ped_unit_format_custom (PedDevice* dev, PedSector sector, PedUnit unit)
+ped_unit_format_custom (const PedDevice* dev, PedSector sector, PedUnit unit)
 {
 	PED_ASSERT (dev != NULL, return NULL);
 	return ped_unit_format_custom_byte(dev, sector*dev->sector_size, unit);
@@ -292,7 +292,7 @@ ped_unit_format_custom (PedDevice* dev, PedSector sector, PedUnit unit)
  * The returned string must be freed with ped_free().
  */
 char*
-ped_unit_format (PedDevice* dev, PedSector sector)
+ped_unit_format (const PedDevice* dev, PedSector sector)
 {
 	PED_ASSERT (dev != NULL, return NULL);
 	return ped_unit_format_custom_byte (dev, sector * dev->sector_size,
@@ -311,7 +311,7 @@ ped_unit_format (PedDevice* dev, PedSector sector)
  * \return \c 1 if \p str is a valid location description, \c 0 otherwise
  */
 int
-ped_unit_parse (const char* str, PedDevice* dev, PedSector *sector,
+ped_unit_parse (const char* str, const PedDevice* dev, PedSector *sector,
 		PedGeometry** range)
 {
 	return ped_unit_parse_custom (str, dev, default_unit, sector, range);
@@ -336,11 +336,11 @@ strip_string (char* str)
 /* Find non-number suffix.  Eg: find_suffix("32Mb") returns a pointer to
  * "Mb". */
 static char*
-find_suffix (char* str)
+find_suffix (const char* str)
 {
 	while (str[0] != 0 && (isdigit (str[0]) || strchr(",.-", str[0])))
 		str++;
-	return str;
+	return (char *) str;
 }
 
 static void
@@ -366,7 +366,7 @@ is_chs (const char* str)
 }
 
 static int
-parse_chs (const char* str, PedDevice* dev, PedSector* sector,
+parse_chs (const char* str, const PedDevice* dev, PedSector* sector,
 		PedGeometry** range)
 {
 	PedSector cyl_size = dev->bios_geom.heads * dev->bios_geom.sectors;
@@ -429,7 +429,7 @@ error_free_copy:
 }
 
 static PedSector
-clip (PedDevice* dev, PedSector sector)
+clip (const PedDevice* dev, PedSector sector)
 {
 	if (sector < 0)
 		return 0;
@@ -439,7 +439,8 @@ clip (PedDevice* dev, PedSector sector)
 }
 
 static PedGeometry*
-geometry_from_centre_radius (PedDevice* dev, PedSector sector, PedSector radius)
+geometry_from_centre_radius (const PedDevice* dev,
+                             PedSector sector, PedSector radius)
 {
 	PedSector start = clip (dev, sector - radius);
 	PedSector end = clip (dev, sector + radius);
@@ -498,7 +499,7 @@ parse_unit_suffix (const char* suffix, PedUnit suggested_unit)
  * \return \c 1 if \p str is a valid location description, \c 0 otherwise.
  */
 int
-ped_unit_parse_custom (const char* str, PedDevice* dev, PedUnit unit,
+ped_unit_parse_custom (const char* str, const PedDevice* dev, PedUnit unit,
 		       PedSector* sector, PedGeometry** range)
 {
 	char*     copy;

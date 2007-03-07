@@ -435,7 +435,7 @@ AC_CHECK_HEADER([execinfo.h], [
 
 dnl check for "check", unit testing library/header
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.3], have_check=yes, have_check=no)
-if test "$have_scintilla" != "yes"; then
+if test "$have_check" != "yes"; then
     AC_MSG_RESULT([Unable to locate check version 0.9.3 or higher: not building])
 fi
 AM_CONDITIONAL([HAVE_CHECK], [test "$have_check" = yes])

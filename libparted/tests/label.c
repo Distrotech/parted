@@ -26,6 +26,8 @@ static void destroy_disk(void)
 START_TEST (test_create_label)
 {
 		PedDevice *dev = ped_device_get(temporary_disk);
+		if (dev == NULL)
+			return;
 		PedDiskType *type;
 		PedDisk *disk;
 

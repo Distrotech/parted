@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2005 Free Software Foundation, Inc.
+    Copyright (C) 2005, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -65,24 +65,25 @@ typedef enum {
 #define PED_UNIT_FIRST PED_UNIT_SECTOR
 #define PED_UNIT_LAST PED_UNIT_TEBIBYTE
 
-extern long long ped_unit_get_size (PedDevice* dev, PedUnit unit);
+extern long long ped_unit_get_size (const PedDevice* dev, PedUnit unit);
 extern const char* ped_unit_get_name (PedUnit unit);
 extern PedUnit ped_unit_get_by_name (const char* unit_name);
 
 extern void ped_unit_set_default (PedUnit unit);
 extern PedUnit ped_unit_get_default ();
 
-extern char* ped_unit_format_byte (PedDevice* dev, PedSector byte);
-extern char* ped_unit_format_custom_byte (PedDevice* dev, PedSector byte,
+extern char* ped_unit_format_byte (const PedDevice* dev, PedSector byte);
+extern char* ped_unit_format_custom_byte (const PedDevice* dev, PedSector byte,
 					  PedUnit unit);
 
-extern char* ped_unit_format (PedDevice* dev, PedSector sector);
-extern char* ped_unit_format_custom (PedDevice* dev, PedSector sector,
+extern char* ped_unit_format (const PedDevice* dev, PedSector sector);
+extern char* ped_unit_format_custom (const PedDevice* dev, PedSector sector,
 				     PedUnit unit);
 
-extern int ped_unit_parse (const char* str, PedDevice* dev, PedSector* sector,
+extern int ped_unit_parse (const char* str, const PedDevice* dev,
+                           PedSector* sector,
 			   PedGeometry** range);
-extern int ped_unit_parse_custom (const char* str, PedDevice* dev,
+extern int ped_unit_parse_custom (const char* str, const PedDevice* dev,
 				  PedUnit unit, PedSector* sector,
 				  PedGeometry** range);
 
