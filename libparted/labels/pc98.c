@@ -113,7 +113,7 @@ typedef struct {
 } PC98PartitionData;
 
 /* this MBR boot code is dummy */
-static char MBR_BOOT_CODE[] = {
+static const char MBR_BOOT_CODE[] = {
 	0xcb,			/* retf */
 	0x00, 0x00, 0x00,	/* */
 	0x49, 0x50, 0x4c, 0x31  /* "IPL1" */
