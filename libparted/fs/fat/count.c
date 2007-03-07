@@ -112,11 +112,11 @@ print_chain (PedFileSystem* fs, FatCluster start)
 	     clst = fat_table_get (fs_info->fat, clst)) {
 		printf ("  %d", (int) clst);
 		if (++this_row == 7) {
-			printf ("\n");
+                        putchar ('\n');
 			this_row = 0;
 		}
 	}
-	printf ("\n");
+	putchar ('\n');
 }
 #endif /* PED_VERBOSE */
 

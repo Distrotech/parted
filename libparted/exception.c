@@ -262,7 +262,7 @@ ped_exception_throw (PedExceptionType ex_type,
 	return do_throw ();
 
 no_memory:
-	fprintf (stderr, "Out of memory in exception handler!\n");
+	fputs ("Out of memory in exception handler!\n", stderr);
 
 	va_start (arg_list, message);
 	vfprintf (stderr, message, arg_list);

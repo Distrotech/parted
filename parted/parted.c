@@ -1185,28 +1185,28 @@ partition_print (PedPartition* part)
         if (!fs)
                 return 1;
 
-        printf ("\n");
+        putchar ('\n');
 
         flags = partition_print_flags (part);
      
         printf (_("Minor: %d\n"), part->num);
         printf (_("Flags: %s\n"), flags);
         printf (_("File System: %s\n"), fs->type->name);
-        printf (_("Size:         "));
+        fputs (_("Size:         "), stdout);
         print_sector_compact_and_percent (part->geom.length, part->geom.dev);
 
         resize_constraint = ped_file_system_get_resize_constraint (fs);
         if (resize_constraint) {
-                printf (_("Minimum size: "));
+                fputs (_("Minimum size: "), stdout);
                 print_sector_compact_and_percent (resize_constraint->min_size,
                         part->geom.dev);
-                printf (_("Maximum size: "));
+                fputs (_("Maximum size: "), stdout);
                 print_sector_compact_and_percent (resize_constraint->max_size,
                         part->geom.dev);
                 ped_constraint_destroy (resize_constraint);
         }
 
-        printf ("\n");
+        putchar ('\n');
 
         ped_free (flags);
         ped_file_system_close (fs);
@@ -1308,11 +1308,11 @@ do_print (PedDevice** dev)
         
         if (opt_machine_mode) {
             switch (ped_unit_get_default ()) {
-                case PED_UNIT_CHS:      printf ("CHS;\n");
+                case PED_UNIT_CHS:      puts ("CHS;");
                                         break;
-                case PED_UNIT_CYLINDER: printf ("CYL;\n");
+                case PED_UNIT_CYLINDER: puts ("CYL;");
                                         break;
-                default:                printf ("BYT;\n");
+                default:                puts ("BYT;");
                                         break;
 
             }
@@ -1352,7 +1352,7 @@ do_print (PedDevice** dev)
 
         if (!opt_machine_mode) {
             printf (_("Partition Table: %s\n"), disk->type->name);
-            printf ("\n");
+            putchar ('\n');
         }
         
         has_extended = ped_disk_type_check_feature (disk->type,
@@ -1468,7 +1468,7 @@ do_print (PedDevice** dev)
                 if (part->num >= 0)
                     printf ("%d:", part->num);
                 else
-                    printf ("1:");
+                    fputs ("1:", stdout);
 
                 printf ("%s:", ped_unit_format (*dev, part->geom.start));
                 printf ("%s:", ped_unit_format_byte (
@@ -1485,17 +1485,17 @@ do_print (PedDevice** dev)
                     if (part->fs_type)
                         printf ("%s:", part->fs_type->name);
                     else
-                        printf (":");
+                        putchar (':');
 
                     if (has_name) 
                         printf ("%s:", _(ped_partition_get_name (part)));
                     else
-                        printf (":");
+                        putchar (':');
 
                     printf ("%s;\n", partition_print_flags (part));
 
                 } else {
-                    printf ("free;\n");
+                    puts ("free;");
                 }
             }
         }
@@ -1518,7 +1518,7 @@ _print_list (int cli)
 
         while ((current_dev = ped_device_get_next(current_dev))) {
                 do_print (&current_dev);
-                printf ("\n");
+                putchar ('\n');
         }    
 
         if(cli)
@@ -2332,8 +2332,8 @@ if (!_parse_options (argc_ptr, argv_ptr))
 
 #ifdef HAVE_GETUID
         if (getuid() != 0) {
-            printf(_("WARNING: You are not superuser.  Watch out for "
-                     "permissions.\n"));
+            puts (_("WARNING: You are not superuser.  Watch out for "
+                    "permissions."));
         }
 #endif
 

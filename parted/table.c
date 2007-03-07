@@ -141,10 +141,10 @@ void table_add_row (Table* t, wchar_t** row)
         assert(t);
 
         /*unsigned int i;
-        printf("adding row: ");
+        fputs ("adding row: ", stdout);
         for (i = 0; i < t->ncols; ++i)
                 printf("[%s]", row[i]);
-        printf("\n");*/
+        putchar ('\n');*/
 
         t->rows = (wchar_t***)realloc (t->rows, (t->nrows + 1)
                                                 * sizeof(wchar_t***));
