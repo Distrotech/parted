@@ -139,7 +139,7 @@ int ext2_metadata_push(struct ext2_fs *fs, blk_t newsize)
 	fs->itoffset = newitoffset;
 
 	if (fs->opt_verbose)
-		fprintf(stderr, "\n");
+                fputc ('\n', stderr);
 
 	return 1;
 }

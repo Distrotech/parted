@@ -118,9 +118,9 @@ command_get_names (Command** list)
 void
 command_print_summary (Command* cmd)
 {
-	printf ("  ");
+        fputs ("  ", stdout);
 	str_list_print_wrap (cmd->summary, screen_width(), 2, 8);
-	printf ("\n");
+	putchar ('\n');
 }
 
 void
@@ -128,7 +128,7 @@ command_print_help (Command* cmd)
 {
 	command_print_summary (cmd);
 	if (cmd->help) {
-		printf ("\n\t");
+                fputs ("\n\t", stdout);
 		str_list_print_wrap (cmd->help, screen_width(), 8, 8);
 	}
 }

@@ -309,7 +309,7 @@ static int doscan(struct ext2_fs *fs, struct ext2_inode_relocator_state *state)
 		}
 
 	if (fs->opt_verbose)
-		fprintf(stderr, "\n");
+                fputc ('\n', stderr);
 
 	return 1;
 }
@@ -334,7 +334,7 @@ static int ext2_inode_relocator_copy(struct ext2_fs *fs, struct ext2_inode_reloc
 		if (fs->opt_debug)
 			if (!ext2_get_inode_state(fs, entry->num) ||
 			    ext2_get_inode_state(fs, entry->dest))
-				fprintf(stderr, "inodebitmaperror\n");
+                                fputs ("inodebitmaperror\n", stderr);
 
 		if (!ext2_read_inode(fs, entry->num, &buf))
 			return 0;
@@ -408,7 +408,7 @@ static int ext2_inode_relocator_ref(struct ext2_fs *fs, struct ext2_inode_reloca
 					if (numerrors++ < 4)
 						continue;
 
-					fprintf(stderr, "all is not well!\n");
+					fputs ("all is not well!\n", stderr);
 					return 0;
 				}
 			}
@@ -565,7 +565,7 @@ int ext2_inode_relocate(struct ext2_fs *fs, int newgroups)
 	struct ext2_inode_relocator_state state;
 
 	if (fs->opt_verbose)
-		fprintf(stderr, "ext2_inode_relocate\n");
+                fputs ("ext2_inode_relocate\n", stderr);
 
 	state.usedentries = 0;
 	state.resolvedentries = 0;

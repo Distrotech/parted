@@ -730,8 +730,8 @@ vtoc_update_format5_label_add (format5_label_t *f5, int verbose, int cyl,
 		if (((a < ext->t) && (a + b*trk + c > ext->t)) || 
 		    ((a > ext->t) && (ext->t + ext->fc*trk + ext->ft > a)))
 		{
-			printf("BUG: overlapping free space extents " \
-			       "in FMT5 DSCB!\nexiting...\n");
+			puts ("BUG: overlapping free space extents "
+			      "in FMT5 DSCB!\nexiting...");
 			exit(1);
 		}
 
@@ -741,15 +741,14 @@ vtoc_update_format5_label_add (format5_label_t *f5, int verbose, int cyl,
 			ext->ft = c;
 			tmp = ext;
 			if (verbose) 
-				printf("FMT5 add extent: " \
-				       "add new extent\n");
+                                puts ("FMT5 add extent: add new extent");
 			break;
 		}
 	}
 
 	if (tmp == NULL) {
 		/* BUG: no free extent found */
-		printf("BUG: no free FMT5 DSCB extent found!\nexiting...\n");
+		puts ("BUG: no free FMT5 DSCB extent found!\nexiting...");
 		exit(1);
 	}
 
@@ -772,8 +771,8 @@ vtoc_update_format5_label_add (format5_label_t *f5, int verbose, int cyl,
 			tmp = ext;
 
 			if (verbose) 
-				printf("FMT5 add extent: " \
-				       "merge with predecessor\n");
+				puts ("FMT5 add extent: "
+                                      "merge with predecessor");
 
 			i = -1;
 			continue;
@@ -788,8 +787,8 @@ vtoc_update_format5_label_add (format5_label_t *f5, int verbose, int cyl,
 			tmp = ext;
 
 			if (verbose) 
-				printf("FMT5 add extent: " \
-				       "merge with successor\n");
+				puts ("FMT5 add extent: "
+				      "merge with successor");
 
 			i = -1;
 			continue;
@@ -821,7 +820,7 @@ vtoc_update_format5_label_del (format5_label_t *f5, int verbose, int cyl,
 			bzero(ext, sizeof(ds5ext_t));
 
 			if (verbose) 
-				printf("FMT5 del extent: fills whole gap\n");
+				puts ("FMT5 del extent: fills whole gap");
 
 			counter++;
 			break;
@@ -840,7 +839,7 @@ vtoc_update_format5_label_del (format5_label_t *f5, int verbose, int cyl,
 			}
 
 			if (verbose) 
-				printf("FMT5 del extent: left bounded\n");
+				puts ("FMT5 del extent: left bounded");
 
 			counter++;
 			break;
@@ -859,7 +858,7 @@ vtoc_update_format5_label_del (format5_label_t *f5, int verbose, int cyl,
 			}
 
 			if (verbose) 
-				printf("FMT5 del extent: right bounded\n");
+				puts ("FMT5 del extent: right bounded");
 
 			counter++;
 			break;
@@ -884,7 +883,7 @@ vtoc_update_format5_label_del (format5_label_t *f5, int verbose, int cyl,
 						      cyl, trk, x, y, z);
 
 			if (verbose) 
-				printf("FMT5 del extent: 2 pieces\n");
+				puts ("FMT5 del extent: 2 pieces");
 
 			counter++;
 			break;
@@ -893,19 +892,19 @@ vtoc_update_format5_label_del (format5_label_t *f5, int verbose, int cyl,
 		if ((a < ext->t) && (a + b*trk + c > ext->t)
 		    && (a + b*trk + c < ext->t + ext->fc*trk + ext->ft))
 		{
-			printf("BUG: corresponding free space extent " \
-			       "doesn't match free space currently shown " \
-			       "in FMT5 DSCB!\nexiting...\n");
+			puts ("BUG: corresponding free space extent "
+			      "doesn't match free space currently shown "
+			      "in FMT5 DSCB!\nexiting...");
 			exit(1);
 		}
 		
 		if ((a > ext->t) && (a < ext->t + ext->fc*trk + ext->ft)
 		    && (a + b*trk + c > ext->t + ext->fc*trk + ext->ft))
 		{
-			printf("BUG: specified free space extent for " \
-			       "deleting doesn't match free space " \
-			       "currently shown in FMT5 DSCB!\n" \
-			       "exiting...\n");
+			puts ("BUG: specified free space extent for "
+			      "deleting doesn't match free space "
+			      "currently shown in FMT5 DSCB!\n"
+			      "exiting...");
 			exit(1);
 		}
 	}
@@ -913,9 +912,9 @@ vtoc_update_format5_label_del (format5_label_t *f5, int verbose, int cyl,
 	if (counter > 0)
 		return;
 
-	printf("BUG: specified free space extent for " \
-	       "deleting not found in FMT5 DSCB!\n" \
-	       "exiting...\n");
+	puts ("BUG: specified free space extent for "
+	      "deleting not found in FMT5 DSCB!\n"
+	      "exiting...");
 	exit(1);
 }
 
@@ -975,8 +974,8 @@ vtoc_update_format7_label_add (format7_label_t *f7, int verbose,
 		if (((a < ext->a) && (b > ext->a) && (b < ext->b))
 		    || ((a > ext->a) && (a < ext->b) && (b > ext->b)))
 		{
-			printf("BUG: overlapping free space extents " \
-			       "in FMT7 DSCB!\nexiting...\n");
+			puts ("BUG: overlapping free space extents "
+			      "in FMT7 DSCB!\nexiting...");
 			exit(1);
 		}
 
@@ -986,8 +985,7 @@ vtoc_update_format7_label_add (format7_label_t *f7, int verbose,
 			tmp = ext;
 
 			if (verbose) 
-				printf("FMT7 add extent: " \
-				       "add new extent\n");
+				puts ("FMT7 add extent: add new extent");
 
 			break;
 		}
@@ -995,7 +993,7 @@ vtoc_update_format7_label_add (format7_label_t *f7, int verbose,
 
 	if (tmp == NULL) {
 		/* BUG: no free extent found */
-		printf("BUG: no free FMT7 DSCB extent found!\nexiting...\n");
+		puts ("BUG: no free FMT7 DSCB extent found!\nexiting...");
 		exit(1);
 	}
 
@@ -1015,8 +1013,8 @@ vtoc_update_format7_label_add (format7_label_t *f7, int verbose,
 			tmp = ext;
 
 			if (verbose) 
-				printf("FMT7 add extent: " \
-				       "merge with predecessor\n");
+                                puts ("FMT7 add extent: "
+                                      "merge with predecessor");
 
 			i = -1;
 			continue;
@@ -1029,8 +1027,7 @@ vtoc_update_format7_label_add (format7_label_t *f7, int verbose,
 			tmp = ext;
 
 			if (verbose) 
-				printf("FMT7 add extent: " \
-				       "merge with successor\n");
+				puts ("FMT7 add extent: merge with successor");
 
 			i = -1;
 			continue;
@@ -1060,8 +1057,7 @@ vtoc_update_format7_label_del (format7_label_t *f7, int verbose,
 			bzero(ext, sizeof(ds7ext_t));
 
 			if (verbose) 
-				printf("FMT7 del extent: " \
-				       "fills whole gap\n");
+				puts ("FMT7 del extent: fills whole gap");
 
 			counter++;
 			break;
@@ -1072,8 +1068,7 @@ vtoc_update_format7_label_del (format7_label_t *f7, int verbose,
 			ext->a = b + 1;
 
 			if (verbose) 
-				printf("FMT7 add extent: " \
-				       "left-bounded\n");
+				puts ("FMT7 add extent: left-bounded");
 
 			counter++;
 			break;
@@ -1084,8 +1079,7 @@ vtoc_update_format7_label_del (format7_label_t *f7, int verbose,
 			ext->b = a - 1;
 
 			if (verbose) 
-				printf("FMT7 add extent: " \
-				       "right-bounded\n");
+				puts ("FMT7 add extent: right-bounded");
 
 			counter++;
 			break;
@@ -1097,17 +1091,16 @@ vtoc_update_format7_label_del (format7_label_t *f7, int verbose,
 			ext->b = a - 1;
 
 			if (verbose) 
-				printf("FMT7 add extent: " \
-				       "2 pieces\n");
+				puts ("FMT7 add extent: 2 pieces");
 
 			counter++;
 			break;
 		}
 
 		if (((a < ext->a) && (b > ext->a)) || ((a < ext->b) && (b > ext->b))) {
-			printf ("BUG: specified free space extent for deleting "
-					"doesn't match free space currently shown in "
-					"FMT7 DSCB!\nexiting...\n");
+                        puts ("BUG: specified free space extent for deleting "
+                              "doesn't match free space currently shown in "
+                              "FMT7 DSCB!\nexiting...");
 			printf ("%d %d %d %d\n", a, b, ext->a, ext->b);
 			exit(1);
 		}
@@ -1116,9 +1109,9 @@ vtoc_update_format7_label_del (format7_label_t *f7, int verbose,
 	if (counter > 0)
 		return;
 
-	printf("BUG: specified free space extent for " \
-	       "deleting not found in FMT7 DSCB!\n" \
-	       "exiting...\n");
+	puts ("BUG: specified free space extent for "
+	      "deleting not found in FMT7 DSCB!\n"
+	      "exiting...");
 	exit(1);
 }
 
@@ -1134,8 +1127,7 @@ vtoc_set_freespace(format4_label_t *f4, format5_label_t *f5,
 		else if (ch == '-')
 			vtoc_update_format7_label_del(f7, verbose, start, stop);
 		else
-			printf("BUG: syntax error in " \
-			       "vtoc_set_freespace call\n");
+			puts ("BUG: syntax error in vtoc_set_freespace call");
 
 		vtoc_reorganize_FMT7_extents (f7);
 
@@ -1155,8 +1147,7 @@ vtoc_set_freespace(format4_label_t *f4, format5_label_t *f5,
 		else if (ch == '-')
 			vtoc_update_format5_label_del(f5, verbose, cyl, trk, x, y, z);
 		else
-			printf("BUG: syntax error in " \
-			       "vtoc_set_freespace call\n");
+			puts ("BUG: syntax error in vtoc_set_freespace call");
 
 		vtoc_reorganize_FMT5_extents (f5);
 	}
