@@ -39,6 +39,7 @@ START_TEST (test_create_label)
 				disk = ped_disk_new_fresh(dev, type);
 				fail_if(!disk, "Failed to create a label of type: %s",
 						 type->name);
+				ped_disk_destroy (disk);
 		}
 }
 END_TEST
