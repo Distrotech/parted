@@ -1511,6 +1511,7 @@ non_interactive_mode (PedDevice** dev, Command* cmd_list[],
                         break;
 
                 cmd = command_get (commands, word);
+                free (word);
                 if (!cmd) {
                         help_msg ();
                         goto error;
