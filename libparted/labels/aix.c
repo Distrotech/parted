@@ -33,45 +33,68 @@
 #  define _(String) (String)
 #endif /* ENABLE_NLS */
 
-typedef struct {
-	unsigned int   magic;        /* expect AIX_LABEL_MAGIC */
-	unsigned int   fillbytes[127];
-} AixLabel;
-
 #define	AIX_LABEL_MAGIC		0xc9c2d4c1
 
 static PedDiskType aix_disk_type;
 
+static inline int
+aix_label_magic_get (const char *label)
+{
+	return *(unsigned int *)label;
+}
+
+static inline void
+aix_label_magic_set (char *label, int magic_val)
+{
+	*(unsigned int *)label = magic_val;
+}
+
+/* Read a single sector, of length DEV->sector_size, into malloc'd storage.
+   If the read fails, free the memory and return zero without modifying *BUF.
+   Otherwise, set *BUF to the new buffer and return 1.  */
+static int
+read_sector (const PedDevice *dev, char **buf)
+{
+	char *b = ped_malloc (dev->sector_size);
+	PED_ASSERT (b != NULL, return 0);
+	if (!ped_device_read (dev, b, 0, 1)) {
+		ped_free (b);
+		return 0;
+	}
+	*buf = b;
+	return 1;
+}
+
 static int
 aix_probe (const PedDevice *dev)
 {
-	AixLabel	label;
-
 	PED_ASSERT (dev != NULL, return 0);
 
-	if (!ped_device_read (dev, &label, 0, 1))
+	char *label;
+	if (!read_sector (dev, &label))
 		return 0;
-
-	if (PED_BE32_TO_CPU (label.magic) != AIX_LABEL_MAGIC)
-		return 0;
-
-	return 1;
+	unsigned int magic = aix_label_magic_get (label);
+	ped_free (label);
+	return magic == AIX_LABEL_MAGIC;
 }
 
 #ifndef DISCOVER_ONLY
 static int
 aix_clobber (PedDevice* dev)
 {
-	AixLabel label;
-
 	PED_ASSERT (dev != NULL, return 0);
-	PED_ASSERT (aix_probe (dev), return 0);
 
-	if (!ped_device_read (dev, &label, 0, 1))
+	if (!aix_probe (dev))
 		return 0;
-	
-	label.magic = 0;
-	return ped_device_write (dev, &label, 0, 1);
+
+	char *label;
+	if (!read_sector (dev, &label))
+		return 0;
+
+	aix_label_magic_set (label, 0);
+	int result = ped_device_write (dev, label, 0, 1);
+	ped_free (label);
+	return result;
 }
 #endif /* !DISCOVER_ONLY */
 
@@ -263,7 +286,6 @@ static PedDiskType aix_disk_type = {
 void
 ped_disk_aix_init ()
 {
-	PED_ASSERT (sizeof (AixLabel) == 512, return);
 	ped_disk_type_register (&aix_disk_type);
 }
 
