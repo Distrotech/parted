@@ -174,7 +174,7 @@ bsd_alloc (const PedDevice* dev)
 	BSDDiskData*	bsd_specific;
 	BSDRawLabel*	label;
 
-	PED_ASSERT(dev->sector_size % 512 == 0, return 0);
+	PED_ASSERT(dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0, return 0);
 
 	disk = _ped_disk_alloc ((PedDevice*)dev, &bsd_disk_type);
 	if (!disk)

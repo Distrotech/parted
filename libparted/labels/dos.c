@@ -426,7 +426,8 @@ probe_filesystem_for_geom (const PedPartition* part, PedCHSGeometry* bios_geom)
         PED_ASSERT (part             != NULL, return 0);
         PED_ASSERT (part->disk       != NULL, return 0);
         PED_ASSERT (part->disk->dev  != NULL, return 0);
-	PED_ASSERT (part->disk->dev->sector_size % 512 == 0, return 0);
+        PED_ASSERT (part->disk->dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0,
+                    return 0);
 
         buf = ped_malloc (part->disk->dev->sector_size);
         

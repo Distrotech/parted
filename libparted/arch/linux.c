@@ -568,7 +568,7 @@ _device_get_length (PedDevice* dev)
 
 
         PED_ASSERT (dev->open_count > 0, return 0);
-        PED_ASSERT (dev->sector_size % 512 == 0, return 0);
+        PED_ASSERT (dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0, return 0);
 
         if (_kernel_has_blkgetsize64()) {
                 if (ioctl(arch_specific->fd, BLKGETSIZE64, &bytes) == 0) {
@@ -1351,7 +1351,7 @@ _device_seek (const PedDevice* dev, PedSector sector)
 {
         LinuxSpecific*  arch_specific;
         
-        PED_ASSERT (dev->sector_size % 512 == 0, return 0);
+        PED_ASSERT (dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0, return 0);
         PED_ASSERT (dev != NULL, return 0);
         PED_ASSERT (!dev->external_mode, return 0);
         
@@ -1411,7 +1411,7 @@ linux_read (const PedDevice* dev, void* buffer, PedSector start,
         PedExceptionOption      ex_status;
         void*                   diobuf;
 
-        PED_ASSERT (dev->sector_size % 512 == 0, return 0);
+        PED_ASSERT (dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0, return 0);
 
         if (_get_linux_version() < KERNEL_VERSION (2,6,0)) {
                 /* Kludge.  This is necessary to read/write the last
@@ -1539,7 +1539,7 @@ linux_write (PedDevice* dev, const void* buffer, PedSector start,
         void*                   diobuf;
         void*                   diobuf_start;
 
-        PED_ASSERT(dev->sector_size % 512 == 0, return 0);
+        PED_ASSERT(dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0, return 0);
 
         if (dev->read_only) {
                 if (ped_exception_throw (
@@ -2047,7 +2047,8 @@ _blkpg_add_partition (PedDisk* disk, PedPartition* part)
         char*                   dev_name;
 
         PED_ASSERT(disk != NULL, return 0);
-        PED_ASSERT(disk->dev->sector_size % 512 == 0, return 0);
+        PED_ASSERT(disk->dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0,
+                   return 0);
 
         if (ped_disk_type_check_feature (disk->type,
                                          PED_DISK_TYPE_PARTITION_NAME))

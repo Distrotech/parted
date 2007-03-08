@@ -487,7 +487,8 @@ amiga_read (PedDisk* disk)
 
 	PED_ASSERT(disk != NULL, return 0);
 	PED_ASSERT(disk->dev != NULL, return 0);
-	PED_ASSERT(disk->dev->sector_size % 512 == 0, return 0);
+	PED_ASSERT(disk->dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0,
+                   return 0);
 	PED_ASSERT(disk->disk_specific != NULL, return 0);
 	rdb = RDSK(disk->disk_specific);
 
