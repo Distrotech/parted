@@ -1409,7 +1409,6 @@ linux_read (const PedDevice* dev, void* buffer, PedSector start,
         LinuxSpecific*          arch_specific = LINUX_SPECIFIC (dev);
         int                     status;
         PedExceptionOption      ex_status;
-        size_t                  read_length = count * dev->sector_size;
         void*                   diobuf;
 
         PED_ASSERT (dev->sector_size % 512 == 0, return 0);
@@ -1451,9 +1450,8 @@ linux_read (const PedDevice* dev, void* buffer, PedSector start,
                 }
         }
 
-
-        if (posix_memalign(&diobuf, PED_SECTOR_SIZE_DEFAULT,
-                           count * PED_SECTOR_SIZE_DEFAULT) != 0)
+        size_t read_length = count * dev->sector_size;
+        if (posix_memalign (&diobuf, dev->sector_size, read_length) != 0)
                 return 0;
 
         while (1) {
