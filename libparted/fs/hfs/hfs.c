@@ -1037,8 +1037,8 @@ hfs_extract_file(const char* filename, HfsPrivateFile* hfs_file)
 			goto err_close;
 	}
 
-	fclose(fout);
-	return 1;
+	return (fclose(fout) == 0 ? 1 : 0);
+
 err_close:
 	fclose(fout);
 	return 0;
@@ -1070,8 +1070,8 @@ hfs_extract_bitmap(const char* filename, PedFileSystem* fs)
 			goto err_close;
 	}
 
-	fclose(fout);
-	return 1;
+	return (fclose(fout) == 0 ? 1 : 0);
+
 err_close:
 	fclose(fout);
 	return 0;
@@ -1090,8 +1090,8 @@ hfs_extract_mdb (const char* filename, PedFileSystem* fs)
 	if (!fwrite(extract_buffer, PED_SECTOR_SIZE_DEFAULT, 1, fout))
 		goto err_close;
 
-	fclose(fout);
-	return 1;
+	return (fclose(fout) == 0 ? 1 : 0);
+
 err_close:
 	fclose(fout);
 	return 0;
@@ -1142,8 +1142,8 @@ hfsplus_extract_file(const char* filename, HfsPPrivateFile* hfsp_file)
 			goto err_close;
 	}
 
-	fclose(fout);
-	return 1;
+	return (fclose(fout) == 0 ? 1 : 0);
+
 err_close:
 	fclose(fout);
 	return 0;
@@ -1166,8 +1166,8 @@ hfsplus_extract_vh (const char* filename, PedFileSystem* fs)
 	if (!fwrite(extract_buffer, PED_SECTOR_SIZE_DEFAULT, 1, fout))
 		goto err_close;
 
-	fclose(fout);
-	return 1;
+	return (fclose(fout) == 0 ? 1 : 0);
+
 err_close:
 	fclose(fout);
 	return 0;
