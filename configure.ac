@@ -5,7 +5,7 @@ dnl
 dnl This file may be modified and/or distributed without restriction.
 
 AC_PREREQ(2.61)
-AC_INIT([GNU parted],[1.9.9],[bug-parted@gnu.org])
+AC_INIT([GNU parted],[1.8.3],[bug-parted@gnu.org])
 
 AC_CONFIG_SRCDIR(include/parted/parted.h)
 
