@@ -25,6 +25,11 @@ exitfail.h
 free.c
 full-write.c
 full-write.h
+getopt.c
+getopt.h
+getopt1.c
+getopt_.h
+getopt_int.h
 gettext.h
 gnulib.mk
 inttypes.h
@@ -72,6 +77,8 @@ strndup.c
 strnlen.c
 strtod.c
 strtol.c
+unistd.h
+unistd_.h
 utime.c
 version-etc-fsf.c
 version-etc.c
