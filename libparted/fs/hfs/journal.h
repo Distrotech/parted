@@ -26,6 +26,8 @@
 
 #include "hfs.h"
 
+static int little_endian = 0;
+
 int
 hfsj_replay_journal(PedFileSystem* fs);
 
@@ -34,5 +36,12 @@ hfsj_update_jib(PedFileSystem* fs, uint32_t block);
 
 int
 hfsj_update_jl(PedFileSystem* fs, uint32_t block);
+
+#define HFS_16_TO_CPU(x) (little_endian ? (uint16_t)PED_LE16_TO_CPU(x) : (uint16_t)PED_BE16_TO_CPU(x))
+#define HFS_32_TO_CPU(x) (little_endian ? (uint32_t)PED_LE32_TO_CPU(x) : (uint32_t)PED_BE32_TO_CPU(x))
+#define HFS_64_TO_CPU(x) (little_endian ? (uint64_t)PED_LE64_TO_CPU(x) : (uint64_t)PED_BE64_TO_CPU(x))
+#define HFS_CPU_TO_16(x) (little_endian ? (uint16_t)PED_CPU_TO_LE16(x) : (uint16_t)PED_CPU_TO_BE16(x))
+#define HFS_CPU_TO_32(x) (little_endian ? (uint32_t)PED_CPU_TO_LE32(x) : (uint32_t)PED_CPU_TO_BE32(x))
+#define HFS_CPU_TO_64(x) (little_endian ? (uint64_t)PED_CPU_TO_LE64(x) : (uint64_t)PED_CPU_TO_BE64(x))
 
 #endif /* _JOURNAL_H */
