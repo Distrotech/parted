@@ -1,78 +1,97 @@
-%define	name	@PACKAGE@
-%define	ver	@VERSION@
-%define	rel	1
-%define	prefix	/usr
-%define	sbindir	/sbin
-%define mandir	/usr/share/man
-%define aclocaldir	/usr/share/aclocal
+# Default to disabling device-mapper and SELinux
+%define use_devmapper 0
+%define use_selinux 0
+%define use_sepol 0
 
+# Enable device-mapper support if we find devmapper
+%define use_devmapper %(pkg-config --libs devmapper >/dev/null 2>&1; [ $? -eq 0 ] && echo 1)
 
-Summary		: flexible partitioning tool
-Name		: %{name}
-Version		: %{ver}
-Release		: %{rel}
-Source		: ftp://ftp.gnu.org/gnu/%{name}/%{name}-%{ver}.tar.gz
-Buildroot	: %{_tmppath}/%{name}-root
-Packager	: Fabian Emmes <fab@orlen.de>
-Copyright	: GPL
-Group		: Applications/System
-Requires	: e2fsprogs, readline
-BuildPrereq	: e2fsprogs-devel, readline-devel
+# Enable SELinux if we find libselinux and libsepol
+%define use_selinux %([ -r %{_libdir}/libselinux.a ] && echo 1)
+%define use_sepol %([ -r %{_libdir}/libsepol.so ] && echo 1)
+
+Summary:   The GNU disk partition manipulation program
+Name:      @PACKAGE@
+Version:   @VERSION@
+Release:   1
+Source:    ftp://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.bz2
+Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+License:   GPL
+Group:     Applications/System
+
+BuildRequires: e2fsprogs-devel readline-devel ncurses-devel
+BuildRequires: automake libtool gettext-devel texinfo pkgconfig
+
+BuildRequires: device-mapper-devel >= 1.02.17, libselinux-devel libsepol-devel
+
+Prereq: /sbin/install-info
+
 %description
-GNU Parted is a program that allows you to create, destroy,
-resize, move and copy hard disk partitions. This is useful for
-creating space for new operating systems, reorganising disk
-usage, and copying data to new hard disks.
-
+The GNU Parted program allows you to create, destroy, resize, move,
+and copy hard disk partitions. Parted can be used for creating space
+for new operating systems, reorganizing disk usage, and copying data
+to new hard disks.
 
 %package devel
-Summary		: files required to compile software that uses libparted
-Group		: Development/System
-Requires	: e2fsprogs
-BuildPrereq	: e2fsprogs-devel, readline-devel
+Summary:  Files for developing apps which will manipulate disk partitions
+Group:    Development/Libraries
+Requires: %{name}-%{version}-%{release}
 %description devel
-This package includes the header files and libraries needed to
-statically link software with libparted.
-
+The GNU Parted library is a set of routines for hard disk partition
+manipulation. If you want to develop programs that manipulate disk
+partitions and filesystems using the routines provided by the GNU
+Parted library, you need to install this package.
 
 %prep
-%setup
+%setup -q
 
 %build
-if [ -n "$LINGUAS" ]; then unset LINGUAS; fi
-%configure --prefix=%{prefix} --sbindir=%{sbindir}
-make
-
+%configure \
+   --enable-shared \
+%if "%{use_devmapper}" == "1"
+   --enable-device-mapper \
+%else
+   --disable-devmapper \
+%endif
+%if "%{use_selinux}" == "1" && "%{use_sepol}" == "1"
+   --enable-selinux \
+%else
+   --disable-selinux \
+%endif
+   --enable-part-static \
+   --enable-pc98=no \
+   --enable-Werror=no \
+   --disable-dynamic-loading
+%{__make} %{?_smp_mflags}
 
 %install
-rm -rf "$RPM_BUILD_ROOT"
-make DESTDIR="$RPM_BUILD_ROOT" install
-strip "${RPM_BUILD_ROOT}%{sbindir}"/parted
+%{__rm} -rf %{buildroot}
+%{__make} install DESTDIR=%{buildroot}
 
+%find_lang %{name}
 
 %clean
-rm -rf "$RPM_BUILD_ROOT"
+%{__rm} -rf %{buildroot}
 
-
-%files
-%defattr(-,root,root)
-%doc AUTHORS BUGS COPYING ChangeLog NEWS README THANKS TODO doc/COPYING.DOC doc/API doc/USER doc/FAT
-%{prefix}/share/locale/*/*/*
-%{sbindir}/*
-%{mandir}/*/*
-%{prefix}/lib/*.so*
-
+%files -f %{name}.lang
+%defattr(-,root,root,-)
+%doc AUTHORS BUGS COPYING ChangeLog NEWS README THANKS TODO doc/API doc/FAT
+%{_sbindir}/*
+%{_mandir}/*/*
+%{_libdir}/*.so.*
+%{_infodir}/parted.info*
 
 %files devel
-%defattr(-,root,root)
-%{prefix}/include/*
-%{aclocaldir}/*
+%defattr(-,root,root,-)
+%{_includedir}/*
 %{prefix}/lib/*.a*
-%{prefix}/lib/*.la*
+%{prefix}/lib/*.so
 
 %changelog
+* Tue Mar 13 2007 David Cantrell <dcantrell@redhat.com>
+- Updated spec file
+
 * Mon Mar 13 2000 Fabian Emmes <fab@orlen.de>
 - changed "unset LINGUAS" line
 - reintroduced %build section ;)
 - started changelog
-
