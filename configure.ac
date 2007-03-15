@@ -308,8 +308,6 @@ dnl NOTE: We need to remove the gl_cv_ignore_unused_libraries flag if we
 dnl detected one earlier.  libreadline on some platforms (e.g., RHEL and
 dnl Fedora) is left with 
 if test "$with_readline" = yes; then
-   OLD_LDFLAGS="$LDFLAGS"
-   LDFLAGS="$(echo $LDFLAGS | sed -e 's/-Wl,--as-needed//g' | sed -e 's/-Wl,-z,ignore//g' | sed -e 's/-z\ ignore//g')"
 	OLD_LIBS="$LIBS"
 	LIBS="$LIBS $PARTED_LIBS"
 	AC_CHECK_LIB(readline, readline,
@@ -327,7 +325,6 @@ package as well (which may be called readline-devel or something similar).
 		$PARTED_LIBS
 	)
  	LIBS="$OLD_LIBS"
-   LDFLAGS="$OLD_LDFLAGS"
 fi
 
 AC_SUBST(PARTED_LIBS)
@@ -463,13 +460,10 @@ dnl NOTE: We need to remove the gl_cv_ignore_unused_libraries flag if we
 dnl detected one earlier.  libreadline on some platforms (e.g., RHEL and
 dnl Fedora) is left with 
 if test "$with_readline" = yes; then
-   OLD_LDFLAGS="$LDFLAGS"
-   LDFLAGS="$(echo $LDFLAGS | sed -e 's/-Wl,--as-needed//g' | sed -e 's/-Wl,-z,ignore//g' | sed -e 's/-z\ ignore//g')"
 	OLD_LIBS="$LIBS"
 	LIBS="$LIBS $PARTED_LIBS -lreadline"
 	AC_CHECK_FUNCS(rl_completion_matches)
 	LIBS="$OLD_LIBS"
-   LDFLAGS="$OLD_LDFLAGS"
 fi
 
 AC_CHECK_FUNCS(canonicalize_file_name)
