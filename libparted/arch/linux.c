@@ -1530,7 +1530,9 @@ linux_write (PedDevice* dev, const void* buffer, PedSector start,
              PedSector count)
 {
         LinuxSpecific*          arch_specific = LINUX_SPECIFIC (dev);
+        int                     status;
         PedExceptionOption      ex_status;
+        size_t                  write_length = count * dev->sector_size;
         void*                   diobuf;
         void*                   diobuf_start;
 
@@ -1588,15 +1590,15 @@ linux_write (PedDevice* dev, const void* buffer, PedSector start,
         printf ("ped_device_write (\"%s\", %p, %d, %d)\n",
                 dev->path, buffer, (int) start, (int) count);
 #else
-        size_t write_length = count * dev->sector_size;
         dev->dirty = 1;
-        if (posix_memalign(&diobuf, dev->sector_size, write_length) != 0)
+        if (posix_memalign(&diobuf, PED_SECTOR_SIZE_DEFAULT,
+                           count * PED_SECTOR_SIZE_DEFAULT) != 0)
                 return 0;
-        memcpy(diobuf, buffer, write_length);
+        memcpy(diobuf, buffer, count * PED_SECTOR_SIZE_DEFAULT);
         diobuf_start = diobuf;
         while (1) {
-                ssize_t status = write (arch_specific->fd, diobuf, write_length);
-                if (status == write_length) break;
+                status = write (arch_specific->fd, diobuf, write_length);
+                if (status == count * dev->sector_size) break;
                 if (status > 0) {
                         write_length -= status;
                         diobuf = (char *) diobuf + status;
