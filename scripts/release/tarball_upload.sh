@@ -4,15 +4,19 @@
 
 SRCDIR=.
 FTPURL=ftp://ftp-upload.gnu.org/incoming/ftp/
+NOUPLOAD=no
 
 case $1 in
 	-a|--alpha)
 		FTPURL=ftp://ftp-upload.gnu.org/incoming/alpha/ ;;
+	-n|--noupload)
+		NOUPLOAD=yes ;;
 	-?|--help)
 		echo "Upload tarball to ftp.gnu.org"
 		echo "Usage: $(basename $0) [option]"
 		echo "Options:"
 		echo "   -a, --alpha     Upload to alpha.gnu.org"
+		echo "   -n, --noupload  Do all steps except upload via FTP"
 		echo "   -?, --help      Display usage screen"
 		exit 0 ;;
 esac
@@ -51,8 +55,8 @@ for p in sha1sum gpg curl git; do
 	check_for_program $p
 done
 
-if [ -x ./autogen.sh ]; then
-	./autogen.sh
+if [ -x ./bootstrap ]; then
+	./bootstrap
 else
 	exit 1
 fi
@@ -66,7 +70,7 @@ fi
 message "* generating ChangeLog"
 git log --pretty=medium | fold -s > ChangeLog
 
-VERSION=$(grep ' VERSION' config.h | awk '{print $3}' | tr -d '"')
+VERSION=$(grep ' VERSION' lib/config.h | awk '{print $3}' | tr -d '"')
 
 message "* checking for correct version in files"
 for f in NEWS; do
@@ -172,12 +176,17 @@ for EXT in gz bz2; do
 	SDIR=$SHA1FILE.directive.asc
 
 	for f in $T $TSIG $TDIR $S $SSIG $SDIR; do
+		if [ "$NOUPLOAD" = "yes" ]; then
+			echo "-> skipping upload of $f"
+			continue
+		fi
 		curl --upload-file $PWD/$f $FTPURL
 		if [ $? -eq 0 ]; then
 			echo "-> successfully uploaded $f."
 		else
 			echo "-> upload of $f FAILED, exiting."
 		fi
+		sleep 1
 	done
 done
 
