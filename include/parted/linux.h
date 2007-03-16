@@ -23,6 +23,10 @@
 #include <parted/parted.h>
 #include <parted/device.h>
 
+#if defined __s390__ || defined __s390x__
+#  include <parted/fdasd.h>
+#endif
+
 #define LINUX_SPECIFIC(dev)	((LinuxSpecific*) (dev)->arch_specific)
 
 typedef	struct _LinuxSpecific	LinuxSpecific;

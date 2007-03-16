@@ -65,9 +65,6 @@
 #define HDIO_GETGEO             0x0301  /* get device geometry */
 #define HDIO_GET_IDENTITY       0x030d  /* get IDE identification info */
 
-#include <parted/vtoc.h>
-#include <parted/fdasd.h>
-
 #if defined(O_DIRECT) && (!defined(__s390__) || !defined(__s390x__))
 #define RD_MODE (O_RDONLY | O_DIRECT)
 #define WR_MODE (O_WRONLY | O_DIRECT)
