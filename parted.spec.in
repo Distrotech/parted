@@ -22,7 +22,7 @@ Group:     Applications/System
 BuildRequires: e2fsprogs-devel readline-devel ncurses-devel
 BuildRequires: automake libtool gettext-devel texinfo pkgconfig
 
-BuildRequires: device-mapper-devel >= 1.02.17, libselinux-devel libsepol-devel
+BuildRequires: device-mapper-devel, libselinux-devel libsepol-devel
 
 Prereq: /sbin/install-info
 
@@ -68,24 +68,30 @@ Parted library, you need to install this package.
 %{__rm} -rf %{buildroot}
 %{__make} install DESTDIR=%{buildroot}
 
-%find_lang %{name}
-
 %clean
 %{__rm} -rf %{buildroot}
 
-%files -f %{name}.lang
+%post -p /sbin/ldconfig
+
+%postun -p /sbin/ldconfig
+
+%files
 %defattr(-,root,root,-)
 %doc AUTHORS BUGS COPYING ChangeLog NEWS README THANKS TODO doc/API doc/FAT
-%{_sbindir}/*
-%{_mandir}/*/*
-%{_libdir}/*.so.*
-%{_infodir}/parted.info*
+%{_sbindir}/parted
+%{_sbindir}/partprobe
+%{_mandir}/man8/parted.8.gz
+%{_mandir}/man8/partprobe.8.gz
+%{_libdir}/libparted-*.so.*
+%{_libdir}/libparted-*.so.*
+%{_infodir}/parted.info.gz
 
 %files devel
 %defattr(-,root,root,-)
-%{_includedir}/*
-%{prefix}/lib/*.a*
-%{prefix}/lib/*.so
+%{_includedir}/parted
+%{_libdir}/libparted.a
+%{_libdir}/libparted.so
+%{_libdir}/pkgconfig/libparted.pc
 
 %changelog
 * Tue Mar 13 2007 David Cantrell <dcantrell@redhat.com>
