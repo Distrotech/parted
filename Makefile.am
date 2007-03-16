@@ -16,7 +16,7 @@ EXTRA_DIST =				\
 aclocaldir=$(datadir)/aclocal
 
 pcdir = $(libdir)/pkgconfig
-pc_DATA = libparted.pc.in
+pc_DATA = libparted.pc
 
 # This is best not done via configure.ac, because automake's
 # make distcheck target does not like auto-generated files
