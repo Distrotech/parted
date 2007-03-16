@@ -7,6 +7,7 @@
 # lib
 lib/closeout.c
 lib/error.c
+lib/getopt.c
 lib/quotearg.c
 lib/regcomp.c
 lib/rpmatch.c
