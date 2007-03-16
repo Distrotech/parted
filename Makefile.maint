@@ -1,6 +1,4 @@
 # -*-Makefile-*-
-# This Makefile fragment is shared between the coreutils,
-# CPPI, Bison, and Autoconf.
 
 ## Copyright (C) 2001-2007 Free Software Foundation, Inc.
 ##
