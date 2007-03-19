@@ -2,6 +2,15 @@
 =====
 
 Minor bug fix release for 1.8.3 to fix build issues on various platforms:
+* Use 'uname -m' to determine if we build on System Z or not.
+* Include <parted/vtoc.h> in <parted/fdasd.h> for format1_label_t definition.
+* Remove unused variables in libparted/arch/linux.c (-Werror).
+* Check return values on fgets() and asprint() in libparted/arch/linux.c
+  (-Werror).
+* Check for tgetent() in libtinfo in the configure script.
+* Move some macro definitions in <parted/disk.h> to fix a compile problem
+  with gcc-4.1.2 as indicated here:
+  http://lists.gnu.org/archive/html/bug-parted/2007-03/msg00008.html
 
 
 1.8.3
