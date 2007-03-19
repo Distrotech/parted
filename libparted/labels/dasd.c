@@ -47,6 +47,9 @@
 #  define _(String) (String)
 #endif /* ENABLE_NLS */
 
+/* S390 */
+#if defined (__s390__) || defined (__s390x__)
+
 #define PARTITION_LINUX_SWAP 0x82
 #define PARTITION_LINUX 0x83
 #define PARTITION_LINUX_EXT 0x85
@@ -862,3 +865,5 @@ error:
 	ped_constraint_destroy (constraint_any);
 	return 0;
 }
+
+#endif /* S390 */
