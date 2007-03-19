@@ -286,7 +286,7 @@ dnl Check for termcap
 if test "$with_readline" = yes; then
 	OLD_LIBS="$LIBS"
 	LIBS=""
-	AC_SEARCH_LIBS(tgetent, ncurses curses termcap termlib,
+	AC_SEARCH_LIBS(tgetent, tinfo ncurses curses termcap termlib,
 		PARTED_LIBS="$PARTED_LIBS $LIBS",
 		AC_MSG_ERROR(
 termcap could not be found which is required for the
