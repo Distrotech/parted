@@ -16,6 +16,8 @@
 #ifndef FDASD_H
 #define FDASD_H
 
+#include <parted/vtoc.h>
+
 /*****************************************************************************
  * SECTION: Definitions needed for DASD-API (see dasd.h)                     *
  *****************************************************************************/
