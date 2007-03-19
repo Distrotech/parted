@@ -206,14 +206,17 @@ get_translations() {
   subdir=$1
   domain=$2
 
-  case $WGET_COMMAND in
+  case $DL_COMMAND in
   '')
-    echo "$0: wget not available; skipping translations";;
+    echo "$0: downloader not available; skipping translations";;
   ?*)
     echo "$0: getting translations into $subdir for $domain..." &&
 
     (cd $subdir && rm -f dummy `ls | sed -n '/\.gmo$/p; /\.po/p'`) &&
-    $WGET_COMMAND -O "$subdir/$domain.html" "$TP_URL$domain" &&
+    $DL_COMMAND -o "$subdir/$domain.html" "$TP_URL$domain"
+    if [ $? -eq 1 ]; then
+      exit 1
+    fi
 
     sed -n 's|.*"http://[^"]*/translation/teams/PO/\([^/"]*\)/'"$domain"'-\([^/"]*\)\.[^."]*\.po".*|\1.\2|p' <"$subdir/$domain.html" |
     sort -k 1,1 -k 2,2n -k2,2 -k3,3n -k3,3 -k4,4n -k4,4 -k5,5n -k5.5 |
@@ -226,13 +229,13 @@ get_translations() {
 	lang = $1
 	ver = $2
 	urlfmt = ""
-	printf "{ $WGET_COMMAND -O %s/%s.po '\'"$TP_PO_URL"'/%s/%s-%s.%s.po'\'' &&\n", subdir, lang, lang, domain, ver, lang
+	printf "{ $DL_COMMAND -o %s/%s.po '\'"$TP_PO_URL"'/%s/%s-%s.%s.po'\'' &&\n", subdir, lang, lang, domain, ver, lang
 	printf "  msgfmt -c -o /dev/null %s/%s.po || {\n", subdir, lang
 	printf "    echo >&2 '\'"$0"': omitting translation for %s'\''\n", lang
 	printf "    rm -f %s/%s.po; }; } &&\n", subdir, lang
       }
       END { print ":" }
-    ' | WGET_COMMAND="$WGET_COMMAND" sh;;
+    ' | DL_COMMAND="$DL_COMMAND" sh;;
   esac &&
   ls "$subdir"/*.po 2>/dev/null |
     sed 's|.*/||; s|\.po$||' >"$subdir/LINGUAS" &&
@@ -241,16 +244,12 @@ get_translations() {
 
 case $SKIP_PO in
 '')
-  case `wget --help` in
-  *'--no-cache'*)
-    WGET_COMMAND='wget -nv --no-cache';;
-  *'--cache=on/off'*)
-    WGET_COMMAND='wget -nv --cache=off';;
-  *'--non-verbose'*)
-    WGET_COMMAND='wget -nv';;
-  *)
-    WGET_COMMAND='';;
-  esac
+  curl --help >/dev/null 2>&1
+  if [ $? -eq 127 ]; then
+    DL_COMMAND=''
+  else
+    DL_COMMAND='curl'
+  fi
 
   if test -d po; then
     get_translations po $package || exit
