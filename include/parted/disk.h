@@ -27,20 +27,6 @@
 #ifndef PED_DISK_H_INCLUDED
 #define PED_DISK_H_INCLUDED
 
-typedef enum _PedPartitionType          PedPartitionType;
-typedef enum _PedPartitionFlag          PedPartitionFlag;
-typedef enum _PedDiskTypeFeature        PedDiskTypeFeature;
-typedef struct _PedDisk                 PedDisk;
-typedef struct _PedPartition            PedPartition;
-typedef const struct _PedDiskOps        PedDiskOps;
-typedef struct _PedDiskType             PedDiskType;
-typedef const struct _PedDiskArchOps    PedDiskArchOps;
-
-#include <parted/device.h>
-#include <parted/filesys.h>
-#include <parted/natmath.h>
-#include <parted/geom.h>
-
 /**
  * Partition types
  */
@@ -78,6 +64,26 @@ enum _PedDiskTypeFeature {
 };
 #define PED_DISK_TYPE_FIRST_FEATURE    PED_DISK_TYPE_EXTENDED
 #define PED_DISK_TYPE_LAST_FEATURE     PED_DISK_TYPE_PARTITION_NAME
+
+struct _PedDisk;
+struct _PedPartition;
+struct _PedDiskOps;
+struct _PedDiskType;
+struct _PedDiskArchOps;
+
+typedef enum _PedPartitionType          PedPartitionType;
+typedef enum _PedPartitionFlag          PedPartitionFlag;
+typedef enum _PedDiskTypeFeature        PedDiskTypeFeature;
+typedef struct _PedDisk                 PedDisk;
+typedef struct _PedPartition            PedPartition;
+typedef const struct _PedDiskOps        PedDiskOps;
+typedef struct _PedDiskType             PedDiskType;
+typedef const struct _PedDiskArchOps    PedDiskArchOps;
+
+#include <parted/device.h>
+#include <parted/filesys.h>
+#include <parted/natmath.h>
+#include <parted/geom.h>
 
 /** @} */
 
