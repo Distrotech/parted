@@ -181,6 +181,7 @@ for EXT in gz bz2; do
 			continue
 		fi
 		curl --upload-file $PWD/$f $FTPURL
+		sleep 1
 		if [ $? -eq 0 ]; then
 			echo "-> successfully uploaded $f."
 		else
