@@ -29,6 +29,9 @@
 #  define _(String) (String)
 #endif /* ENABLE_NLS */
 
+/* S390 */
+#if defined (__s390__) || defined (__s390x__)
+
 static int
 getpos (fdasd_anchor_t *anc, int dsn)
 {
@@ -1047,5 +1050,7 @@ fdasd_add_partition (fdasd_anchor_t *anc, unsigned int start,
 	PDEBUG;
 	return p;
 }
+
+#endif /* S390 */
 
 /* vim:set tabstop=4 shiftwidth=4 softtabstop=4: */

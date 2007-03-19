@@ -19,6 +19,9 @@
 #  define _(String) (String)
 #endif /* ENABLE_NLS */
 
+/* S390 */
+#if defined (__s390__) || defined (__s390x__)
+
 static const unsigned char EBCtoASC[256] =
 {
 /* 0x00  NUL   SOH   STX   ETX  *SEL    HT  *RNL   DEL */
@@ -1152,3 +1155,5 @@ vtoc_set_freespace(format4_label_t *f4, format5_label_t *f5,
 		vtoc_reorganize_FMT5_extents (f5);
 	}
 }
+
+#endif /* S390 */
