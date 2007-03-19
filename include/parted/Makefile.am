@@ -1,7 +1,8 @@
-if COMPILE_FOR_S390
-S390_HDRS = fdasd.h vtoc.h
-else
+ZARCH = $(shell uname -m 2>/dev/null | tr [A-Z] [a-z] | sed -e 's/s390x/s390/g)
+
 S390_HDRS =
+ifeq ($(ZARCH),s390)
+S390_HDRS = fdasd.h vtoc.h
 endif
 
 partedincludedir      =	$(includedir)/parted

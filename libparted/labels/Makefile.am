@@ -3,10 +3,11 @@
 #
 # This file may be modified and/or distributed without restriction.
 
-if COMPILE_FOR_S390
-S390_SRCS = dasd.c fdasd.c vtoc.c
-else
+ZARCH = $(shell uname -m 2>/dev/null | tr [A-Z] [a-z] | sed -e 's/s390x/s390/g)
+
 S390_SRCS =
+ifeq ($(ZARCH),s390)
+S390_SRCS = dasd.c fdasd.c vtoc.c
 endif
 
 partedincludedir      =	-I$(top_srcdir)/include

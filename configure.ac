@@ -436,12 +436,6 @@ AC_CHECK_HEADER([execinfo.h], [
 	])
 ])
 
-dnl Checks for #defines.
-compile_for_s390=no
-AC_EGREP_CPP([__s390__], , compile_for_s390=yes)
-AC_EGREP_CPP([__s390x__], , compile_for_s390=yes)
-AM_CONDITIONAL([COMPILE_FOR_S390], [test "$compile_for_s390" = yes])
-
 dnl check for "check", unit testing library/header
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.3], have_check=yes, have_check=no)
 if test "$have_scintilla" != "yes"; then
