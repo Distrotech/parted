@@ -344,7 +344,6 @@ _is_dm_major (int major)
         char* line;
         char* end;
         int bd = 0;
-        int rc = 0;
         char c;
 
         fd = open ("/proc/devices", O_RDONLY);
@@ -751,7 +750,9 @@ read_device_sysfs_file (PedDevice *dev, const char *file)
         if ((f = fopen (name_buf, "r")) == NULL)
                 return NULL;
 
-        fgets (buf, 255, f);
+        if (fgets (buf, 255, f) == NULL)
+                return NULL;
+
         fclose (f);
         return strip_name (buf);
 }
@@ -1782,8 +1783,11 @@ _probe_proc_partitions ()
         if (!proc_part_file)
                 return 0;
 
-        fgets (buf, 256, proc_part_file);
-        fgets (buf, 256, proc_part_file);
+        if (fgets (buf, 256, proc_part_file) == NULL)
+                return 0;
+
+        if (fgets (buf, 256, proc_part_file) == NULL)
+                return 0;
 
         while (fgets (buf, 512, proc_part_file)
                && sscanf (buf, "%d %d %d %255s", &major, &minor, &size,
@@ -2138,28 +2142,6 @@ _disk_sync_part_table (PedDisk* disk)
 
 #ifdef ENABLE_DEVICE_MAPPER
 static int
-_dm_remove_map(int major, int minor)
-{
-        struct dm_task  *task = NULL;
-        int             rc;
-
-        task = dm_task_create(DM_DEVICE_REMOVE);
-        if (!task)
-                return 1;
-
-        dm_task_set_major (task, major);
-        dm_task_set_minor (task, minor);
-
-        rc = dm_task_run(task);
-        dm_task_update_nodes();
-        dm_task_destroy(task);
-        if (rc < 0)
-                return 1;
-
-        return 0;
-}
-
-static int
 _dm_remove_map_name(char *name)
 {
         struct dm_task  *task = NULL;
@@ -2232,7 +2214,6 @@ _dm_remove_parts (PedDevice* dev)
         struct dm_info*         info = alloca(sizeof *info);
         struct dm_names*        names = NULL;
         unsigned int            next = 0;
-        int                     i;
         int                     rc;
 
         if (!_device_stat (dev, &dev_stat))
@@ -2310,9 +2291,10 @@ _dm_add_partition (PedDisk* disk, PedPartition* part)
         if (!_device_stat (disk->dev, &dev_stat))
                 goto err;
 
-        asprintf (&params, "%d:%d %lu", major (dev_stat.st_rdev),
-                        minor (dev_stat.st_rdev),
-                        part->geom.start);
+        if (asprintf (&params, "%d:%d %lld", major (dev_stat.st_rdev),
+                      minor (dev_stat.st_rdev), part->geom.start) == -1)
+                goto err;
+
         if (!params)
                 goto err;
 
