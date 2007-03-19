@@ -17,6 +17,7 @@ config.status
 configure
 doc/C/po/parted.8.pot
 doc/pt_BR/parted.8.pt_BR.po
+gnulib/
 libparted.pc
 libparted/tests/label
 libtool
@@ -30,4 +31,3 @@ parted-*.xdelta.sig
 parted.spec
 partprobe/partprobe
 stamp-h1
-gnulib/
