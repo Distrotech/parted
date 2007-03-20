@@ -68,6 +68,8 @@ Parted library, you need to install this package.
 %{__rm} -rf %{buildroot}
 %{__make} install DESTDIR=%{buildroot}
 
+%find_lang %{name}
+
 %clean
 %{__rm} -rf %{buildroot}
 
@@ -75,7 +77,7 @@ Parted library, you need to install this package.
 
 %postun -p /sbin/ldconfig
 
-%files
+%files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc AUTHORS BUGS COPYING ChangeLog NEWS README THANKS TODO doc/API doc/FAT
 %{_sbindir}/parted
