@@ -168,12 +168,12 @@ read
 message "* uploading files to ftp-upload.gnu.org..."
 for EXT in gz bz2; do
 	T=parted-$VERSION.tar.$EXT
-	TSIG=$TARBALL.sig
-	TDIR=$TARBALL.directive.asc
+	TSIG=$T.sig
+	TDIR=$T.directive.asc
 
-	S=$TARBALL.sha1
-	SSIG=$SHA1FILE.sig
-	SDIR=$SHA1FILE.directive.asc
+	S=$T.sha1
+	SSIG=$S.sig
+	SDIR=$S.directive.asc
 
 	for f in $T $TSIG $TDIR $S $SSIG $SDIR; do
 		if [ "$NOUPLOAD" = "yes" ]; then
