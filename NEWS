@@ -1,3 +1,10 @@
+1.8.6
+=====
+
+Revert the implementation of the linux-swap(new) and linux-swap(old) types.
+The type is 'linux-swap' for v1, v2, and s1suspend swap partitions on Linux.
+
+
 1.8.5
 =====
 
