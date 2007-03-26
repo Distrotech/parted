@@ -2061,7 +2061,7 @@ NULL),
                 str_list_create_unique ("help", _("help"), NULL),
                 do_help,
                 str_list_create (
-_("help [COMMAND]                           prints general help, or help "
+_("help [COMMAND]                           print general help, or help "
   "on COMMAND"),
 NULL),
                 NULL, 1));
@@ -2094,7 +2094,7 @@ NULL),
                                  _(mkpart_fs_type_msg),
                                  _(start_end_msg),
                                  "\n",
-_("mkpart makes a partition without creating a new file system on the "
+_("'mkpart' makes a partition without creating a new file system on the "
   "partition.  FS-TYPE may be specified to set an appropriate partition ID.\n"),
 NULL), 1));
 
@@ -2128,16 +2128,18 @@ command_register (commands, command_create (
         do_print,
         str_list_create (
 _("print [devices|free|list,all|NUMBER]     display the partition table, "
-  "a partition, or all devices"),
+  "available devices, free space, all found partitions, or a particular "
+  "partition"),
 NULL),
         str_list_create (
-_("Without arguments, print displays the entire partition table. However "
-  "with the following arguments it performs the various other actions.\n"),
-_("a. devices : display all active block devices\n"),
-_("b. free    : display information about free unpartitioned space on the "
+_("Without arguments, 'print' displays the entire partition table. However "
+  "with the following arguments it performs various other actions.\n"),
+_("  devices   : display all active block devices\n"),
+_("  free      : display information about free unpartitioned space on the "
   "current block device\n"),
-_("c. list,all: display partition tables of all active block devices\n"),
-_("d. NUMBER  : display more detail information about particular partition\n"),
+_("  list, all : display the partition tables of all active block devices\n"),
+_("  NUMBER    : display more detailed information about this particular "
+  "partition\n"),
 NULL), 1));
 
 command_register (commands, command_create (
@@ -2214,11 +2216,11 @@ command_register (commands, command_create (
         str_list_create_unique ("version", _("version"), NULL),
         do_version,
         str_list_create (
-_("version                                  displays the current version "
-"of GNU Parted and copyright information"),
+_("version                                  display the version number "
+"and copyright information of GNU Parted"),
 NULL),
         str_list_create (
-_("version displays copyright and version information corressponding to this "
+_("'version' displays copyright and version information corresponding to this "
 "copy of GNU Parted\n"),
 NULL), 1));
 
