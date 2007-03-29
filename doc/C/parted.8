@@ -1,21 +1,19 @@
-.TH PARTED 8 "18 Mar, 2002" parted "GNU Parted Manual"
+.TH PARTED 8 "2007 March 29" parted "GNU Parted Manual"
 .SH NAME
 GNU Parted \- a partition manipulation program
 .SH SYNOPSIS
 .B parted
 [options] [device [command [options...]...]]
 .SH DESCRIPTION
-This manual page documents briefly the
-.BR parted
-command.  Complete documentation is distributed with the package in
-GNU Info format; see below.
-.PP
 .B parted
 is a disk partitioning and partition resizing program.  It allows you to
 create, destroy, resize, move and copy ext2, ext3, linux-swap, FAT, FAT32, and reiserfs
-partitions.  It can create, resize and move Macintosh HFS partitions, as well as detect jfs, 
+partitions.  It can create, resize, and move Macintosh HFS partitions, as well as detect jfs,
 ntfs, ufs, and xfs partitions.  It is useful for creating space for new operating systems,
 reorganising disk usage, and copying data to new hard disks.
+.PP
+This manual page documents \fBparted\fP briefly.  Complete documentation is
+distributed with the package in GNU Info format; see near the bottom.
 .SH OPTIONS
 .TP
 .B -h, --help
@@ -38,75 +36,93 @@ displays the version
 .SH COMMANDS
 .TP
 .B [device]
-The block device to partition.
+The block device to be used.  When none is given, \fBparted\fP will use the
+first block device it finds.
 .TP
 .B [command [options]]
-Specifies a command to parted. If no command is given, parted will give you
-a command prompt. Commands are:
+Specifies the command to be executed.  If no command is given,
+.BR parted
+will present a command prompt.  Possible commands are:
 .RS
 .TP
 .B check \fIpartition\fP
-does a simple check on \fIpartition\fP.
+Do a simple check on \fIpartition\fP.
 .TP
 .B cp \fI[source-device]\fP \fIsource\fP \fIdest\fP
-copies the \fIsource\fP partition's filesystem on \fIsource-device\fP (or the
+Copy the \fIsource\fP partition's filesystem on \fIsource-device\fP (or the
 current device if no other device was specified) to the \fIdest\fP partition
 on the current device.
 .TP
 .B help \fI[command]\fP
-prints general help, or help on \fIcommand\fP if specified.
+Print general help, or help on \fIcommand\fP if specified.
 .TP
 .B mkfs \fIpartition\fP \fIfs-type\fP
-make a filesystem \fIfs-type\fP on \fIpartition\fP. \fIfs-type\fP can be one
-of "fat16", "fat32", "ext2", "linux-swap" or "reiserfs".
+Make a filesystem \fIfs-type\fP on \fIpartition\fP. \fIfs-type\fP can be one
+of "fat16", "fat32", "ext2", "linux-swap", or "reiserfs".
 .TP
 .B mklabel \fIlabel-type\fP
-Creates a new disklabel (partition table) of \fIlabel-type\fP.
+Create a new disklabel (partition table) of \fIlabel-type\fP.
 \fIlabel-type\fP should be one of "bsd", "dvh", "gpt", "loop", "mac", "msdos",
-"pc98" or "sun".
+"pc98", or "sun".
 .TP
 .B mkpart \fIpart-type\fP \fI[fs-type]\fP \fIstart\fP \fIend\fP
-make a \fIpart-type\fP partition with filesystem \fIfs-type\fP (if specified),
-beginning at \fIstart\fP and ending at \fIend\fP (in megabytes).
+Make a \fIpart-type\fP partition with filesystem \fIfs-type\fP (if specified),
+beginning at \fIstart\fP and ending at \fIend\fP (by default in megabytes).
 \fIfs-type\fP can be one of 
-"fat16", "fat32", "ext2", "HFS", "linux-swap", "NTFS", "reiserfs" or "ufs".
-\fIpart-type\fP should be one of "primary", "logical" or "extended"
+"fat16", "fat32", "ext2", "HFS", "linux-swap", "NTFS", "reiserfs", or "ufs".
+\fIpart-type\fP should be one of "primary", "logical", or "extended".
 .TP
 .B mkpartfs \fIpart-type\fP \fIfs-type\fP \fIstart\fP \fIend\fP
-make a \fIpart-type\fP partition with filesystem \fIfs-type\fP beginning at
-\fIstart\fP and ending at \fIend\fP (in megabytes)
+Make a \fIpart-type\fP partition with filesystem \fIfs-type\fP beginning at
+\fIstart\fP and ending at \fIend\fP (by default in megabytes).
 .TP
 .B move \fIpartition\fP \fIstart\fP \fIend\fP
-move \fIpartition\fP to start at \fIstart\fP and end at \fIend\fP. Note: move
-never changes the minor number
+Move \fIpartition\fP so that it begins at \fIstart\fP and ends at \fIend\fP.
+Note: \fBmove\fP never changes the minor number.
 .TP
 .B name \fIpartition\fP \fIname\fP
-set the name of \fIpartition\fP to \fIname\fP. This option works only on Mac,
-PC98, and GPT disklabels. The name can be placed in quotes, if necessary
+Set the name of \fIpartition\fP to \fIname\fP. This option works only on Mac,
+PC98, and GPT disklabels. The name can be placed in quotes, if necessary.
 .TP
 .B print
-displays the partition table
+Display the partition table.
 .TP
 .B quit
-exits parted
+Exit from \fBparted\fP.
+.TP
+.B rescue \fIstart\fP \fIend\fP
+Rescue a lost partition that was located somewhere between \fIstart\fP and
+\fIend\fP.  If a partition is found, \fBparted\fP will ask if you want to
+create an entry for it in the partition table.
 .TP
 .B resize \fIpartition\fP \fIstart\fP \fIend\fP
-resize the filesystem on \fIpartition\fP to start at \fIstart\fP and end at
-\fIend\fP megabytes
+Resize the filesystem on \fIpartition\fP so that it begins at \fIstart\fP and
+ends at \fIend\fP (by default in megabytes).
 .TP
 .B rm \fIpartition\fP
-deletes \fIpartition\fP
+Delete \fIpartition\fP.
 .TP
 .B select \fIdevice\fP
-choose \fIdevice\fP as the current device to edit. \fIdevice\fP should usually
-be a Linux hard disk device, but it can be a partition, software raid device or
-a LVM logical volume if that is necessary
+Choose \fIdevice\fP as the current device to edit. \fIdevice\fP should usually
+be a Linux hard disk device, but it can be a partition, software raid device,
+or an LVM logical volume if necessary.
 .TP
 .B set \fIpartition\fP \fIflag\fP \fIstate\fP
-change the state of the \fIflag\fP on \fIpartition\fP to \fIstate\fP. Flags
-supported are: "boot", "root", "swap", "hidden", "raid", "lvm", "lba" and
-"palo".
-\fIstate\fP should be either "on" or "off"
+Change the state of the \fIflag\fP on \fIpartition\fP to \fIstate\fP.
+Supported flags are: "boot", "root", "swap", "hidden", "raid", "lvm", "lba",
+and "palo".
+\fIstate\fP should be either "on" or "off".
+.TP
+.B unit \fIunit\fP
+Set \fIunit\fP as the unit to use when displaying locations and sizes,
+and for interpreting those given by the user when not suffixed with an
+explicit unit.  \fIunit\fP can be one of "s" (sectors), "B" (bytes), "kB",
+"MB", "GB", "TB", "%" (percentage of device size), "cyl" (cylinders),
+"chs" (cylinders, heads, sectors), or "compact" (megabytes for input,
+and a human-friendly form for output).
+.TP
+.B version
+Display version information and a copyright message.
 .RE
 .SH REPORTING BUGS
 Report bugs to <bug-parted@gnu.org>
