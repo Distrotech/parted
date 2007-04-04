@@ -690,11 +690,10 @@ int ext2_resize_fs(struct ext2_fs *fs, blk_t newsize, PedTimer* timer)
                         PED_EXCEPTION_OK_CANCEL,
                         _("A resize operation on this file system will "
                           "use EXPERIMENTAL code\n"
-                          "that MAY CORRUPT it (although it hasn't done"
-                          "so yet\n"
-                          "in the past).\n"
-                          "You should at least backup your data and "
-                          "run 'e2fsck -f' afterwards."))
+                          "that MAY CORRUPT it (although no one has "
+                          "reported any such damage yet).\n"
+                          "You should at least backup your data first, "
+                          "and run 'e2fsck -f' afterwards."))
                 == PED_EXCEPTION_CANCEL)
         {
 	        return 0;
