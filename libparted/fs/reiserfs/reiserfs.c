@@ -773,6 +773,7 @@ static int reiserfs_ops_init(void)
 
 error_free_libreiserfs_handle:
 	dlclose(libreiserfs_handle);
+	libreiserfs_handle = NULL;
 error:
 	return 0;
 }
@@ -864,4 +865,3 @@ void ped_file_system_reiserfs_done()
 	reiserfs_ops_done();
 #endif /* DYNAMIC_LOADING */
 }
-
