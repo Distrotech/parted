@@ -285,17 +285,17 @@ ped_geometry_test_sector_inside (const PedGeometry* geom, PedSector sector)
  * \return 0 on failure
  */
 int
-ped_geometry_read (const PedGeometry* geom, void* buffer, PedSector start,
+ped_geometry_read (const PedGeometry* geom, void* buffer, PedSector offset,
 		   PedSector count)
 {
 	PedSector	real_start;
 
 	PED_ASSERT (geom != NULL, return 0);
 	PED_ASSERT (buffer != NULL, return 0);
-	PED_ASSERT (start >= 0, return 0);
+	PED_ASSERT (offset >= 0, return 0);
 	PED_ASSERT (count >= 0, return 0);
 	
-	real_start = geom->start + start;
+	real_start = geom->start + offset;
 
 	if (real_start + count - 1 > geom->end)
 		return 0;
@@ -346,7 +346,7 @@ ped_geometry_sync_fast (PedGeometry* geom)
  * \return 0 on failure
  */
 int
-ped_geometry_write (PedGeometry* geom, const void* buffer, PedSector start,
+ped_geometry_write (PedGeometry* geom, const void* buffer, PedSector offset,
 		    PedSector count)
 {
 	int		exception_status;
@@ -354,10 +354,10 @@ ped_geometry_write (PedGeometry* geom, const void* buffer, PedSector start,
 
 	PED_ASSERT (geom != NULL, return 0);
 	PED_ASSERT (buffer != NULL, return 0);
-	PED_ASSERT (start >= 0, return 0);
+	PED_ASSERT (offset >= 0, return 0);
 	PED_ASSERT (count >= 0, return 0);
 	
-	real_start = geom->start + start;
+	real_start = geom->start + offset;
 
 	if (real_start + count - 1 > geom->end) {
 		exception_status = ped_exception_throw (
@@ -365,7 +365,7 @@ ped_geometry_write (PedGeometry* geom, const void* buffer, PedSector start,
 			PED_EXCEPTION_IGNORE_CANCEL,
 			_("Attempt to write sectors %ld-%ld outside of "
 			  "partition on %s."),
-			(long) start, (long) (start + count - 1),
+			(long) offset, (long) (offset + count - 1),
 			geom->dev->path);
 		return exception_status == PED_EXCEPTION_IGNORE;
 	}
