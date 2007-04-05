@@ -1039,7 +1039,7 @@ fail:
 /**
  * Create a new \link _PedPartition PedPartition \endlink on \p disk.
  *
- * \param type One of \p PED_PARTITION_PRIMARY, \p PED_PARTITION_EXTENDED,
+ * \param type One of \p PED_PARTITION_NORMAL, \p PED_PARTITION_EXTENDED,
  *      \p PED_PARTITION_LOGICAL.
  *
  * \note The constructed partition is not added to <tt>disk</tt>'s
