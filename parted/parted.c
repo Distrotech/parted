@@ -97,6 +97,9 @@ int     opt_machine_mode = 0;
 int     disk_is_modified = 0;
 int     is_toggle_mode = 0;
 
+static char* short_usage_msg =  N_(
+"Usage: parted [-hlmsv] [DEVICE [COMMAND [PARAMETERS]]...]\n");
+
 static char* number_msg = N_(
 "NUMBER is the partition number used by Linux.  On MS-DOS disk labels, the "
 "primary partitions number from 1 to 4, logical partitions from 5 onwards.\n");
@@ -137,7 +140,7 @@ static Command* commands [256] = {NULL};
 static PedTimer* g_timer;
 static TimerContext timer_context;
 
-static int _print_list (int cli);
+static int _print_list ();
 static void _done (PedDevice* dev);
 
 static void
@@ -1314,7 +1317,7 @@ do_print (PedDevice** dev)
         }
 
         else if (has_list_arg) 
-                return _print_list (0);
+                return _print_list ();
 
         else if (has_num_arg) {
                 PedPartition*   part = NULL;
@@ -1533,7 +1536,7 @@ error:
 }
 
 static int
-_print_list (int cli)
+_print_list ()
 {
         PedDevice *current_dev = NULL;
 
@@ -1543,9 +1546,6 @@ _print_list (int cli)
                 do_print (&current_dev);
                 putchar ('\n');
         }    
-
-        if(cli)
-                exit(0);
 
         return 1;
 }
@@ -2292,13 +2292,12 @@ _version ()
 {
   version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, VERSION, AUTHORS,
                (char *) NULL);
-  exit (EXIT_SUCCESS);
 }
 
 static int
 _parse_options (int* argc_ptr, char*** argv_ptr)
 {
-int     opt;
+int     opt, help = 0, list = 0, version = 0, wrong = 0;
 
 while (1)
 {
@@ -2308,12 +2307,33 @@ while (1)
                 break;
 
         switch (opt) {
-                case 'h': help_msg (); break;
-                case 'l': _print_list(1); break;
+                case 'h': help = 1; break;
+                case 'l': list = 1; break;
                 case 'm': opt_machine_mode = 1; break;
                 case 's': opt_script_mode = 1; break;
-                case 'v': _version (); break;
+                case 'v': version = 1; break;
+                default:  wrong = 1; break;
         }
+}
+
+if (wrong == 1) {
+        printf (_(short_usage_msg));
+        return 0;
+}
+
+if (version == 1) {
+        _version ();
+        exit (EXIT_SUCCESS);
+}
+
+if (help == 1) {
+        help_msg ();
+        exit (EXIT_SUCCESS);
+}
+
+if (list == 1) {
+        _print_list ();
+        exit (EXIT_SUCCESS);
 }
 
 *argc_ptr -= optind;
