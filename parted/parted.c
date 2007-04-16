@@ -94,6 +94,7 @@ char *program_name;
 
 int     opt_script_mode = 0;
 int     opt_machine_mode = 0;
+int     disk_is_modified = 0;
 int     is_toggle_mode = 0;
 
 static char* number_msg = N_(
@@ -526,6 +527,10 @@ do_cp (PedDevice** dev)
         if (src_disk != dst_disk)
                 ped_disk_destroy (src_disk);
         ped_disk_destroy (dst_disk);
+
+        if ((*dev)->type != PED_DEVICE_FILE)
+                disk_is_modified = 1;
+
         return 1;
 
 error_close_src_fs:
@@ -606,6 +611,10 @@ do_mklabel (PedDevice** dev)
         if (!ped_disk_commit (disk))
                 goto error_destroy_disk;
         ped_disk_destroy (disk);
+
+        if ((*dev)->type != PED_DEVICE_FILE)
+                disk_is_modified = 1;
+
         return 1;
 
 error_destroy_disk:
@@ -648,6 +657,10 @@ do_mkfs (PedDevice** dev)
         if (!ped_disk_commit (disk))
                 goto error_destroy_disk;
         ped_disk_destroy (disk);
+
+        if ((*dev)->type != PED_DEVICE_FILE)
+                disk_is_modified = 1;
+
         return 1;
 
 error_destroy_disk:
@@ -794,6 +807,9 @@ do_mkpart (PedDevice** dev)
                 ped_free (start_sol);
         if (end_sol != NULL)
                 ped_free (end_sol);
+
+        if ((*dev)->type != PED_DEVICE_FILE)
+                disk_is_modified = 1;
 
         return 1;
 
@@ -965,6 +981,9 @@ do_mkpartfs (PedDevice** dev)
         if (end_sol != NULL)
                 ped_free (end_sol);
 
+        if ((*dev)->type != PED_DEVICE_FILE)
+                disk_is_modified = 1;
+
         return 1;
 
 error_remove_part:
@@ -1063,6 +1082,10 @@ do_move (PedDevice** dev)
                 ped_geometry_destroy (range_start);
         if (range_end != NULL)
                 ped_geometry_destroy (range_end);
+
+        if ((*dev)->type != PED_DEVICE_FILE)
+                disk_is_modified = 1;
+
         return 1;
 
 error_destroy_constraint:
@@ -1707,6 +1730,10 @@ do_rescue (PedDevice** dev)
                 goto error_destroy_disk;
 
         ped_disk_destroy (disk);
+
+        if ((*dev)->type != PED_DEVICE_FILE)
+                disk_is_modified = 1;
+
         return 1;
 
 error_destroy_disk:
@@ -1781,6 +1808,10 @@ do_resize (PedDevice** dev)
                 ped_geometry_destroy (range_start);
         if (range_end != NULL)
                 ped_geometry_destroy (range_end);
+
+        if ((*dev)->type != PED_DEVICE_FILE)
+                disk_is_modified = 1;
+
         return 1;
 
 error_close_fs:
@@ -1815,6 +1846,10 @@ do_rm (PedDevice** dev)
         ped_disk_delete_partition (disk, part);
         ped_disk_commit (disk);
         ped_disk_destroy (disk);
+
+        if ((*dev)->type != PED_DEVICE_FILE)
+                disk_is_modified = 1;
+
         return 1;
 
 error_destroy_disk:
@@ -1867,6 +1902,10 @@ do_set (PedDevice** dev)
     	if (!ped_disk_commit (disk))
 	        	goto error_destroy_disk;
     	ped_disk_destroy (disk);
+
+        if ((*dev)->type != PED_DEVICE_FILE)
+                disk_is_modified = 1;
+
 	    return 1;
 
 error_destroy_disk:
@@ -2369,11 +2408,10 @@ if (dev->boot_dirty && dev->type != PED_DEVICE_FILE) {
           "rebooting.  Read section 4 of the Parted User "
           "documentation for more information."));
 }
-if (dev->type != PED_DEVICE_FILE && !opt_script_mode && !opt_machine_mode) {
+if (!opt_script_mode && !opt_machine_mode && disk_is_modified) {
         ped_exception_throw (
                 PED_EXCEPTION_INFORMATION, PED_EXCEPTION_OK,
-                _("Don't forget to update /etc/fstab, if "
-                  "necessary.\n"));
+                _("You may need to update /etc/fstab.\n"));
 }
 
 ped_device_close (dev);
