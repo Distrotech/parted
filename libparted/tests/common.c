@@ -59,5 +59,3 @@ int _implemented_disk_label (const char *label)
         
         return 1;
 }
-
- 
