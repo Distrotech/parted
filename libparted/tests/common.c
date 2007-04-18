@@ -4,6 +4,8 @@
 #include <sys/types.h>
 #include <string.h>
 
+#include <check.h>
+
 #include "common.h"
 
 char *_create_disk (const off_t size)
@@ -34,3 +36,28 @@ char *_create_disk (const off_t size)
 
         return filename;
 }
+
+PedDisk *_create_disk_label(PedDevice *dev, PedDiskType *type)
+{
+        PedDisk *disk = NULL;
+
+        /* Create the label */
+        disk = ped_disk_new_fresh(dev, type);
+        fail_if(!disk, "Failed to create a label of type: %s",
+                type->name);
+        fail_if(!ped_disk_commit(disk),
+                "Failed to commit label to device");
+
+        return disk;
+}
+
+int _implemented_disk_label (const char *label)
+{
+        /* Not implemented yet */
+        if (strncmp(label, "aix", 3) == 0)
+                return 0;
+        
+        return 1;
+}
+
+ 
