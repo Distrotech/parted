@@ -38,10 +38,20 @@ START_TEST (test_create_label)
                 if (strncmp(type->name, "aix", 3) == 0)
                         continue;
 
+                /* Create the label */
                 disk = ped_disk_new_fresh(dev, type);
                 fail_if(!disk, "Failed to create a label of type: %s",
                         type->name);
+                fail_if(!ped_disk_commit(disk),
+                        "Failed to commit label to device");
                 ped_disk_destroy (disk);
+
+                /* Try to read the label */
+                disk = ped_disk_new(dev);
+                fail_if(!disk,
+                        "Failed to read the just created label of type: %s",
+                        type->name);
+                ped_disk_destroy(disk);
         }
 }
 END_TEST
@@ -54,6 +64,7 @@ int main(void)
 
         tcase_add_checked_fixture(tcase_basic, create_disk, destroy_disk);
         tcase_add_test(tcase_basic, test_create_label);
+        tcase_set_timeout(tcase_basic, 0); /* disable timeout for this tests */
         suite_add_tcase(suite, tcase_basic);
 
         SRunner *srunner = srunner_create(suite);
