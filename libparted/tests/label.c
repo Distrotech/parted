@@ -33,17 +33,10 @@ START_TEST (test_create_label)
 
         for (type = ped_disk_type_get_next(NULL); type;
              type = ped_disk_type_get_next(type)) {
-
-                /* Not implemented yet */
-                if (strncmp(type->name, "aix", 3) == 0)
+                if (!_implemented_disk_label(type->name))
                         continue;
 
-                /* Create the label */
-                disk = ped_disk_new_fresh(dev, type);
-                fail_if(!disk, "Failed to create a label of type: %s",
-                        type->name);
-                fail_if(!ped_disk_commit(disk),
-                        "Failed to commit label to device");
+                disk = _create_disk_label (dev, type);
                 ped_disk_destroy (disk);
 
                 /* Try to read the label */
@@ -53,6 +46,7 @@ START_TEST (test_create_label)
                         type->name);
                 ped_disk_destroy(disk);
         }
+        ped_device_destroy (dev);
 }
 END_TEST
 
