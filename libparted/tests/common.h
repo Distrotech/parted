@@ -5,17 +5,17 @@
  * filename: file (with full path) where to write the disk image
  *     size: size of disk image (megabytes)
  */
-char *_create_disk(const off_t size);
+char* _create_disk (const off_t size);
 
 /* Create a disk label
  *
  *  dev: device to use when creating the label
  * type: label type
  */
-PedDisk *_create_disk_label(PedDevice *dev, PedDiskType *type);
+PedDisk* _create_disk_label (PedDevice* dev, PedDiskType* type);
 
 /* Return if a disk label is implemented
  *
  * label: disk label name
  */
-int _implemented_disk_label(const char *label);
+int _implemented_disk_label (const char* label);

@@ -8,9 +8,10 @@
 
 #include "common.h"
 
-char *_create_disk (const off_t size)
+char*
+_create_disk (const off_t size)
 {
-        char *filename = strdup ("parted-test-XXXXXX");
+        char* filename = strdup ("parted-test-XXXXXX");
 
         if (filename == NULL)
                 return NULL;
@@ -22,7 +23,7 @@ char *_create_disk (const off_t size)
                 return NULL;
         }
 
-        FILE *disk = fdopen (fd, "w");
+        FILE* disk = fdopen (fd, "w");
         if (disk == NULL)
                 goto free_filename;
 
@@ -37,24 +38,26 @@ char *_create_disk (const off_t size)
         return filename;
 }
 
-PedDisk *_create_disk_label(PedDevice *dev, PedDiskType *type)
+PedDisk*
+_create_disk_label (PedDevice *dev, PedDiskType *type)
 {
-        PedDisk *disk = NULL;
+        PedDisk* disk = NULL;
 
         /* Create the label */
-        disk = ped_disk_new_fresh(dev, type);
-        fail_if(!disk, "Failed to create a label of type: %s",
-                type->name);
-        fail_if(!ped_disk_commit(disk),
-                "Failed to commit label to device");
+        disk = ped_disk_new_fresh (dev, type);
+        fail_if (!disk, "Failed to create a label of type: %s",
+                 type->name);
+        fail_if (!ped_disk_commit(disk),
+		 "Failed to commit label to device");
 
         return disk;
 }
 
-int _implemented_disk_label (const char *label)
+int
+_implemented_disk_label (const char *label)
 {
         /* Not implemented yet */
-        if (strncmp(label, "aix", 3) == 0)
+        if (strncmp (label, "aix", 3) == 0)
                 return 0;
         
         return 1;
