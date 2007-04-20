@@ -44,7 +44,7 @@ START_TEST (test_create_label)
                 /* Try to read the label */
                 disk = ped_disk_new (dev);
                 fail_if (!disk,
-			 "Failed to read the just created label of type: %s",
+                         "Failed to read the just created label of type: %s",
                          type->name);
                 ped_disk_destroy (disk);
         }
