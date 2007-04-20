@@ -138,7 +138,7 @@ dvh_duplicate (const PedDisk* disk)
 
 	PED_ASSERT (old_dvh_disk_data != NULL, goto error);
 
-	new_disk = ped_disk_new_fresh (disk->dev, &dvh_disk_type);
+	new_disk = _ped_disk_alloc (disk->dev, &dvh_disk_type);
 	if (!new_disk)
 		goto error;
 
