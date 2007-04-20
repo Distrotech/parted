@@ -98,6 +98,9 @@ main (void)
         TCase* tcase_basic = tcase_create ("Create");
         TCase* tcase_clone = tcase_create ("Clone");
 
+        /* Fail when an exception is raised */
+        ped_exception_set_handler (_test_exception_handler);
+
         tcase_add_checked_fixture (tcase_basic, create_disk, destroy_disk);
         tcase_add_test (tcase_basic, test_create_label);
         /* Disable timeout for this test */
