@@ -69,13 +69,6 @@ START_TEST (test_clone_label)
                         continue;
 
                 disk = _create_disk_label (dev, type);
-                ped_disk_destroy (disk);
-
-                /* Try to read the disk label. */
-                disk = ped_disk_new (dev);
-                fail_if (!disk,
-                         "Failed to read the just created label of type: %s",
-                         type->name);
 
                 /* Try to clone the disk label. */
                 clone = ped_disk_duplicate (disk);
