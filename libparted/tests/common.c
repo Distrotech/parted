@@ -8,6 +8,16 @@
 
 #include "common.h"
 
+PedExceptionOption
+_test_exception_handler (PedException* e)
+{
+        fail ("Exception of type %s has been raised: %s",
+              ped_exception_get_type_string (e->type),
+              e->message);
+
+        return PED_EXCEPTION_UNHANDLED;
+}
+
 char*
 _create_disk (const off_t size)
 {
