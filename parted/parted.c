@@ -97,9 +97,6 @@ int     opt_machine_mode = 0;
 int     disk_is_modified = 0;
 int     is_toggle_mode = 0;
 
-static char* short_usage_msg =  N_(
-"Usage: parted [-hlmsv] [DEVICE [COMMAND [PARAMETERS]]...]\n");
-
 static char* number_msg = N_(
 "NUMBER is the partition number used by Linux.  On MS-DOS disk labels, the "
 "primary partitions number from 1 to 4, logical partitions from 5 onwards.\n");
@@ -2317,7 +2314,9 @@ while (1)
 }
 
 if (wrong == 1) {
-        printf (_(short_usage_msg));
+        fprintf (stderr,
+                 _("Usage: %s [-hlmsv] [DEVICE [COMMAND [PARAMETERS]]...]\n"),
+                 program_name);
         return 0;
 }
 
