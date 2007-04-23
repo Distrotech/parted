@@ -121,7 +121,7 @@ _generic_swap_probe (PedGeometry* geom, int kind)
 
 error_close_fs:
 	swap_close (fs);
-error:
+
 	return NULL;
 }
 
