@@ -1240,6 +1240,7 @@ partition_print (PedPartition* part)
 static int
 do_print (PedDevice** dev)
 {
+        PedUnit         default_unit;
         PedDisk*        disk;
         Table*          table;
         StrList*        row;
@@ -1326,11 +1327,13 @@ do_print (PedDevice** dev)
         }
 
         start = ped_unit_format (*dev, 0);
+        default_unit = ped_unit_get_default ();
         end = ped_unit_format_byte (*dev, (*dev)->length * (*dev)->sector_size
-                                          - 1 );
-        
+                                    - (default_unit == PED_UNIT_CHS ||
+                                       default_unit == PED_UNIT_CYLINDER));
+
         if (opt_machine_mode) {
-            switch (ped_unit_get_default ()) {
+            switch (default_unit) {
                 case PED_UNIT_CHS:      puts ("CHS;");
                                         break;
                 case PED_UNIT_CYLINDER: puts ("CYL;");
