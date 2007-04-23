@@ -1696,8 +1696,7 @@ _align_primary (PedPartition* part, const PedCHSGeometry* bios_geom,
 					 _primary_start_constraint (disk, part,
 						 bios_geom, min_geom)));
 
-	if (!solution)
-		solution = _best_solution (part, bios_geom, solution,
+	solution = _best_solution (part, bios_geom, solution,
 			_try_constraint (part, constraint,
 				_primary_constraint (disk, bios_geom,
 				min_geom)));
