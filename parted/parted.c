@@ -1454,8 +1454,7 @@ do_print (PedDevice** dev)
 
                     if (!(part->type & PED_PARTITION_FREESPACE)) {
                             if (has_extended) {
-                                name = 
-                                    _(ped_partition_type_get_name (part->type));
+                                name = ped_partition_type_get_name (part->type);
                                 str_list_append (row, name);
                             }
 
@@ -1463,7 +1462,7 @@ do_print (PedDevice** dev)
                                              part->fs_type->name : "");
 
                             if (has_name) {
-                                    name = _(ped_partition_get_name (part));
+                                    name = ped_partition_get_name (part);
                                     str_list_append (row, name);
                             }
 

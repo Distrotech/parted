@@ -184,14 +184,15 @@ static void table_render_row (Table* t, int rownum, int ncols, wchar_t** s)
 
         assert(t);
         assert(s != NULL);
-        
+
         for (i = 0; i < ncols; ++i)
                 len += t->widths[i] + wcslen(DELIMITER);
 
         len += wcslen(COLSUFFIX);
 
         newsize = (wcslen(*s) + len + 1) * sizeof(wchar_t);
-        *s = realloc (*s, newsize);
+        *s = (wchar_t *) realloc (*s, newsize);
+        assert(*s != NULL);
 
         for (i = 0; i < ncols; ++i)
         {
@@ -199,6 +200,7 @@ static void table_render_row (Table* t, int rownum, int ncols, wchar_t** s)
                 int nspaces = max(t->widths[i] - wcswidth(row[i], MAX_WIDTH),
                                   0);
                 wchar_t* pad = malloc ( (nspaces + 1) * sizeof(wchar_t) );
+                assert(pad != NULL);
 
                 for (j = 0; j < nspaces; ++j)
                        pad[j] = L' '; 
@@ -211,6 +213,7 @@ static void table_render_row (Table* t, int rownum, int ncols, wchar_t** s)
                         wcscat (*s, DELIMITER);
 
                 free (pad);
+                pad = NULL;
         }
 
         wcscat (*s, COLSUFFIX);
