@@ -639,8 +639,8 @@ _parse_header (PedDisk* disk, GuidPartitionTableHeader_t* gpt,
 	PED_ASSERT (_header_is_valid (disk->dev, gpt), return 0);
 
 #ifndef DISCOVER_ONLY
-	if (PED_CPU_TO_LE32 (gpt->Revision) > GPT_HEADER_REVISION_V1_02
-	    || PED_CPU_TO_LE32 (gpt->HeaderSize) != pth_get_size_static (
+	if (PED_LE32_TO_CPU (gpt->Revision) > GPT_HEADER_REVISION_V1_02
+	    || PED_LE32_TO_CPU (gpt->HeaderSize) != pth_get_size_static (
                                                         disk->dev)) {
 		if (ped_exception_throw (
 			PED_EXCEPTION_WARNING,
@@ -648,14 +648,14 @@ _parse_header (PedDisk* disk, GuidPartitionTableHeader_t* gpt,
 			_("The format of the GPT partition table is version "
 			  "%x, which is newer than what Parted can "
 			  "recognise.  Please tell us!  bug-parted@gnu.org"),
-			PED_CPU_TO_LE32 (gpt->Revision))
+			PED_LE32_TO_CPU (gpt->Revision))
 				!= PED_EXCEPTION_IGNORE)
 			return 0;
 	}
 #endif
 
-	first_usable = PED_CPU_TO_LE64 (gpt->FirstUsableLBA);
-	last_usable = PED_CPU_TO_LE64 (gpt->LastUsableLBA);
+	first_usable = PED_LE64_TO_CPU (gpt->FirstUsableLBA);
+	last_usable = PED_LE64_TO_CPU (gpt->LastUsableLBA);
 
 
 /*
@@ -670,8 +670,8 @@ _parse_header (PedDisk* disk, GuidPartitionTableHeader_t* gpt,
    
 	last_usable_if_grown 
 		= PED_CPU_TO_LE64 (disk->dev->length - 2 - 
-		((PedSector)(PED_CPU_TO_LE32(gpt->NumberOfPartitionEntries)) * 
-		(PedSector)(PED_CPU_TO_LE32(gpt->SizeOfPartitionEntry)) / 
+		((PedSector)(PED_LE32_TO_CPU(gpt->NumberOfPartitionEntries)) * 
+		(PedSector)(PED_LE32_TO_CPU(gpt->SizeOfPartitionEntry)) / 
 		disk->dev->sector_size));
 
 	last_usable_min_default = disk->dev->length - 2 - 
@@ -719,7 +719,7 @@ _parse_header (PedDisk* disk, GuidPartitionTableHeader_t* gpt,
 
 
 	gpt_disk_data->entry_count
-		= PED_CPU_TO_LE32 (gpt->NumberOfPartitionEntries);
+		= PED_LE32_TO_CPU (gpt->NumberOfPartitionEntries);
 	PED_ASSERT (gpt_disk_data->entry_count > 0, return 0);
 	PED_ASSERT (gpt_disk_data->entry_count <= 8192, return 0);
 
