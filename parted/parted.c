@@ -65,6 +65,13 @@ static int MEGABYTE_SECTORS (PedDevice* dev)
         return PED_MEGABYTE_SIZE / dev->sector_size;
 }
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  PRETEND_INPUT_TTY = CHAR_MAX + 1,
+};
+
 
 typedef struct {
         time_t  last_update;
@@ -78,6 +85,7 @@ static struct option    options[] = {
         {"machine",     0, NULL, 'm'},
         {"script",      0, NULL, 's'},
         {"version",     0, NULL, 'v'},
+        {"-pretend-input-tty", 0, NULL, PRETEND_INPUT_TTY},
         {NULL,          0, NULL, 0}
 };
 
@@ -93,6 +101,7 @@ static char*    options_help [][2] = {
 char *program_name;
 
 int     opt_script_mode = 0;
+int     pretend_input_tty = 0;
 int     opt_machine_mode = 0;
 int     disk_is_modified = 0;
 int     is_toggle_mode = 0;
@@ -592,11 +601,12 @@ do_mklabel (PedDevice** dev)
         ped_exception_leave_all ();
 
         if (disk) {
-                if (!_disk_warn_busy (disk))
-                        goto error_destroy_disk;
-
-                if (!_disk_warn_loss (disk))
-                        goto error_destroy_disk;
+                if (!opt_script_mode) {
+                        if (!_disk_warn_busy (disk))
+                                goto error_destroy_disk;
+                        if (!_disk_warn_loss (disk))
+                                goto error_destroy_disk;
+                }
 
                 ped_disk_destroy (disk);
         }
@@ -943,6 +953,7 @@ do_mkpartfs (PedDevice** dev)
                 }
         }
         ped_exception_catch();
+        ped_exception_leave_all();
 
         /* set LBA flag automatically if available */
         if (ped_partition_is_flag_available (part, PED_PARTITION_LBA))
@@ -2311,6 +2322,9 @@ while (1)
                 case 'm': opt_machine_mode = 1; break;
                 case 's': opt_script_mode = 1; break;
                 case 'v': version = 1; break;
+                case PRETEND_INPUT_TTY:
+                  pretend_input_tty = 1;
+                  break;
                 default:  wrong = 1; break;
         }
 }

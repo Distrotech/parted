@@ -624,14 +624,15 @@ exception_handler (PedException* ex)
                 return opt;
 
         /* script-mode: don't handle the exception */
-        if (opt_script_mode)
+        if (opt_script_mode || (!isatty (0) && !pretend_input_tty))
                 return PED_EXCEPTION_UNHANDLED;
 
         got_ctrl_c = 0;
 
         do {
                 opt = command_line_get_ex_opt ("", ex->options);
-        } while (opt == PED_EXCEPTION_UNHANDLED && isatty (0) && !got_ctrl_c);
+        } while (opt == PED_EXCEPTION_UNHANDLED
+                 && (isatty (0) || pretend_input_tty) && !got_ctrl_c);
 
         if (got_ctrl_c) {
                 got_ctrl_c = 0;
@@ -1365,8 +1366,6 @@ init_disk_type_str ()
 int
 init_ui ()
 {
-        opt_script_mode = !isatty (0);
-
         if (!init_ex_opt_str ()
             || !init_state_str ()
             || !init_fs_type_str ()
