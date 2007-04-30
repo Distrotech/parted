@@ -61,11 +61,11 @@ void ped_debug ( const int level, const char* file, int line,
 {
         va_list         arg_list;
         char*           msg_concat = ped_malloc(8192);
-        
+
         va_start ( arg_list, msg );
                 vsnprintf ( msg_concat, 8192, msg, arg_list );
         va_end ( arg_list );
-        
+
         debug_handler ( level, file, line, function, msg_concat );
 
         ped_free ( msg_concat );
@@ -83,38 +83,39 @@ void ped_debug_set_handler ( PedDebugHandler* handler )
  * Check an assertion.
  * Do not call this directly -- use PED_ASSERT() instead.
  */
-int ped_assert ( int cond, const char* cond_text,
-	    const char* file, int line, const char* function )
+int ped_assert (int cond, const char* cond_text,
+                const char* file, int line, const char* function)
 {
-	PedExceptionOption	opt;
+        PedExceptionOption opt;
 
-	if ( cond )
-		return 1;
+        if (cond)
+                return 1;
 
 #if HAVE_BACKTRACE
-	/* Print backtrace stack */
-	void *stack[20];
-	char **strings, **string;
+        /* Print backtrace stack */
+        void *stack[20];
+        char **strings, **string;
         int size = backtrace(stack, 20);
-	strings = backtrace_symbols(stack, size);
+        strings = backtrace_symbols(stack, size);
 
-	if (strings) {
-		printf(_("Backtrace has %d calls on stack:\n"), size);
-		for (string = strings; size > 0; size--, string++)
-			printf("  %d: %s\n", size, *string);
+        if (strings) {
+                printf(_("Backtrace has %d calls on stack:\n"), size);
 
-		free(strings);
-	}
+                for (string = strings; size > 0; size--, string++)
+                        printf("  %d: %s\n", size, *string);
+
+                free(strings);
+        }
 #endif
 
-	/* Throw the exception */
-	opt = ped_exception_throw (
-		PED_EXCEPTION_BUG,
-		PED_EXCEPTION_IGNORE_CANCEL,
-		_("Assertion (%s) at %s:%d in function %s() failed."),
-		cond_text, file, line, function );
+        /* Throw the exception */
+        opt = ped_exception_throw (
+                PED_EXCEPTION_BUG,
+                PED_EXCEPTION_IGNORE_CANCEL,
+                _("Assertion (%s) at %s:%d in function %s() failed."),
+                cond_text, file, line, function);
 
-	return ( opt == PED_EXCEPTION_IGNORE );
+        return (opt == PED_EXCEPTION_IGNORE);
 }
 
 #endif /* DEBUG */
