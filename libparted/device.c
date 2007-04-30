@@ -338,14 +338,14 @@ ped_device_end_external_access (PedDevice* dev)
  */
 int
 ped_device_read (const PedDevice* dev, void* buffer, PedSector start,
-		 PedSector count)
+                 PedSector count)
 {
-	PED_ASSERT (dev != NULL, return 0);
-	PED_ASSERT (buffer != NULL, return 0);
-	PED_ASSERT (!dev->external_mode, return 0);
-	PED_ASSERT (dev->open_count > 0, return 0);
+        PED_ASSERT (dev != NULL, return 0);
+        PED_ASSERT (buffer != NULL, return 0);
+        PED_ASSERT (!dev->external_mode, return 0);
+        PED_ASSERT (dev->open_count > 0, return 0);
 
-	return (ped_architecture->dev_ops->read) (dev, buffer, start, count);
+        return (ped_architecture->dev_ops->read) (dev, buffer, start, count);
 }
 
 /**
