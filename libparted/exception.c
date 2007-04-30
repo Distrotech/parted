@@ -187,13 +187,12 @@ ped_exception_get_handler (void)
 void
 ped_exception_catch ()
 {
-	if (ped_exception) {
-		ped_exception = 0;
-
-		ped_free (ex->message);
-		ped_free (ex);
-		ex = NULL;
-	}
+        if (ped_exception) {
+                ped_exception = 0;
+                if (ex->message) ped_free (ex->message);
+                if (ex) ped_free (ex);
+                ex = NULL;
+        }
 }
 
 static PedExceptionOption
