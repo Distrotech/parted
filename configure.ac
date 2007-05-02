@@ -5,7 +5,7 @@ dnl
 dnl This file may be modified and/or distributed without restriction.
 
 AC_PREREQ(2.61)
-AC_INIT([GNU parted],[1.8.3],[bug-parted@gnu.org])
+AC_INIT([GNU parted],[1.9.0],[bug-parted@gnu.org])
 
 AC_CONFIG_SRCDIR(include/parted/parted.h)
 
@@ -23,8 +23,8 @@ dnl if backwards compatibility has been broken (eg. functions removed,
 dnl function signatures changed),
 dnl set PED_BINARY_AGE _and_ PED_INTERFACE_AGE to 0.
 PED_MAJOR_VERSION=1
-PED_MINOR_VERSION=8
-PED_MICRO_VERSION=3
+PED_MINOR_VERSION=9
+PED_MICRO_VERSION=0
 PED_INTERFACE_AGE=0
 PED_BINARY_AGE=0
 PED_VERSION_SUFFIX=
