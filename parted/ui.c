@@ -213,7 +213,7 @@ screen_width ()
 {
         int    width = 0;
 
-        if (opt_script_mode)
+        if (opt_script_mode || pretend_input_tty)
                 return 32768;    /* no wrapping ;) */
 
 /* HACK: don't specify termcap separately - it'll annoy the users. */
