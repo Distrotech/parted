@@ -1,11 +1,9 @@
 TESTS = \
-  label-01 \
-  label-02 \
-  part-01 \
-  part-02
+  t0000-basic.sh \
+  t1000-mkpartfs.sh
 
 TESTS_ENVIRONMENT = \
   PATH="`pwd`/../parted$(PATH_SEPARATOR)$$PATH"
 
 EXTRA_DIST = \
-  $(TESTS) lang-default priv-check
+  $(TESTS) test-lib.sh
