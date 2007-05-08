@@ -3,14 +3,18 @@
 #
 # This file may be modified and/or distributed without restriction.
 
+if COMPILE_FOR_S390
+S390_SRCS = dasd.c fdasd.c vtoc.c
+else
+S390_SRCS =
+endif
+
 partedincludedir      =	-I$(top_srcdir)/include
 noinst_LTLIBRARIES    =	liblabels.la
 
 liblabels_la_SOURCES  = rdb.c		\
 			bsd.c  		\
-			dasd.c		\
-			fdasd.c		\
-			vtoc.c		\
+			$(S390_SRCS)	\
 			efi_crc32.c	\
 			dos.c  		\
 			dvh.h		\
