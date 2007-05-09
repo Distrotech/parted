@@ -646,7 +646,7 @@ do_mkfs (PedDevice** dev)
         if (!disk)
                 goto error;
 
-        if  (!_partition_warn_loss())
+        if  (!opt_script_mode && !_partition_warn_loss())
                 goto error_destroy_disk;
 
         if (!command_line_get_partition (_("Partition number?"), disk, &part))
