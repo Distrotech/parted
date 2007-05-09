@@ -1,2 +1,21 @@
 1.8.7
 =====
+
+libparted:
+- Prevent compilation of DASD code on GNU Hurd systems.
+- Integrate new unit testing framework for parted and libparted.
+- Fix primary partition cylinder alignment error for DOS disk labels.
+- Use PED_PARTITION_NORMAL in place of PED_PARTITION_PRIMARY.
+- Avoid segfault due to a double free on reiserfs support.
+
+parted:
+- Fix script mode (-s) for mkfs command in parted.
+- Suppress "you are not superuser..." warning in script mode.
+- Fix off-by-one bug in parted when displaying information about the disk.
+- Do not translate partition names in the 'parted print' command.  This
+  causes problems for non-Latin-based character sets.
+- Send errors to stderr rather than stdout.
+- Handle command line options independent of the order.
+- Abort on any invalid option and handle -v and -h first.
+- Only display the update /etc/fstab message when there has been a change
+  to the disk (a shorter and more direct message too).
