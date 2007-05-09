@@ -154,25 +154,26 @@ ped_disk_type_get (const char* name)
 PedDiskType*
 ped_disk_probe (PedDevice* dev)
 {
-	PedDiskType*	walk = NULL;
+        PedDiskType *walk = NULL;
 
-	PED_ASSERT (dev != NULL, return NULL);
+        PED_ASSERT (dev != NULL, return NULL);
 
-	if (!ped_device_open (dev))
-		return NULL;
+        if (!ped_device_open (dev))
+                return NULL;
 
-	ped_exception_fetch_all ();
-	for (walk = ped_disk_type_get_next (NULL); walk;
-	     walk = ped_disk_type_get_next (walk))
-			if (walk->ops->probe (dev))
-					break;
+        ped_exception_fetch_all ();
+        for (walk = ped_disk_type_get_next (NULL); walk;
+             walk = ped_disk_type_get_next (walk)) {
+                if (walk->ops->probe (dev))
+                        break;
+        }
 
-	if (ped_exception)
-		ped_exception_catch ();
-	ped_exception_leave_all ();
+        if (ped_exception)
+                ped_exception_catch ();
+        ped_exception_leave_all ();
 
-	ped_device_close (dev);
-	return walk;
+        ped_device_close (dev);
+        return walk;
 }
 
 /**
