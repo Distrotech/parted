@@ -8,3 +8,9 @@ TESTS_ENVIRONMENT = \
 
 EXTRA_DIST = \
   $(TESTS) test-lib.sh
+
+CLEANFILES = init.sh
+all: init.sh
+init.sh: Makefile.in
+	( echo 'srcdir=$(srcdir)'; echo '. $$srcdir/test-lib.sh' ) > $@-t
+	mv $@-t $@
