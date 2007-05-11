@@ -29,6 +29,8 @@ say () {
 	echo "* $*"
 }
 
+this_test_() { expr "./$0" : '.*/\(t[0-9]*\)-[^/]*$'; }
+
 test "${test_description}" != "" ||
 error "Test script did not set test_description."
 
@@ -88,7 +90,7 @@ test_run_ () {
 }
 
 test_skip () {
-	this_test=$(expr "./$0" : '.*/\(t[0-9]*\)-[^/]*$')
+	this_test=$(this_test_)
 	this_test="$this_test.$(expr "$test_count" + 1)"
 	to_skip=
 	for skp in $SKIP_TESTS
@@ -183,24 +185,73 @@ test_done () {
 	esac
 }
 
+this_test=$(this_test_)
+
+skip_=0
+# If $privileges_required_ is nonempty, non-root skips this test.
+if test "$privileges_required_" != ''; then
+    uid=`id -u` || error 'failed to run "id -u"'
+    if test "$uid" != 0; then
+	SKIP_TESTS="$SKIP_TESTS $this_test"
+	say "you have insufficient privileges for test $this_test"
+	skip_=1
+    fi
+fi
+
 pwd_=`pwd`
 
-# Test the binaries we have just built.  The tests are kept in
-# t/ subdirectory and are run in trash subdirectory.
+# Test the binaries we have just built.
 PATH=$pwd_/../parted:$PATH
 export PATH
 
-t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp_=$t0/$$
-trap 'st=$?; cd "$pwd_" && chmod -R u+rwx $t0 && rm -rf $t0 && exit $st' 0
-trap '(exit $?); exit $?' 1 2 13 15
+fail=
+# Some tests require an actual hardware device, e.g., a real disk with a
+# spindle, a USB key, or a CD-RW.  If this variable is nonempty, the user
+# has properly set the $DEVICE_TO_ERASE and $DEVICE_TO_ERASE_SIZE envvars,
+# then the test will proceed.  Otherwise, it is skipped.
+if test $skip_ = 0 && test "$erasable_device_required_" != ''; then
+  # Since testing a drive with parted destroys all data on that drive,
+  # we have rather draconian safety requirements that should help avoid
+  # accidents.  If $dev_ is the name of the device,
+  # - running "parted -s $dev_ print" must succeed, and
+  # - its output must include a line matching /^Disk $dev_: $DEV_SIZE$/
+  # - Neither $dev_ nor any $dev_[0-9]* may be mounted.
+  if test "$DEVICE_TO_ERASE" != '' && test "$DEVICE_TO_ERASE_SIZE" != ''; then
+    dev_=$DEVICE_TO_ERASE
+    sz=$DEVICE_TO_ERASE_SIZE
+    parted_output=$(parted -s $dev_ print) || fail="no such device: $dev_"
+    parted -s $dev_ print|grep "^Disk $dev_: $sz$" \
+	> /dev/null || fail="actual device size is not $sz"
+    # Try to see if $dev_ or any of its partitions is mounted.
+    # This is not reliable.  FIXME: find a better way.
+    # Maybe expose parted's own test for whether a disk is in use.
+    # The following assume that $dev_ is canonicalized, e.g., that $dev_
+    # contains no "//" or "/./" components.
 
-framework_failure=0
-mkdir -p $tmp_ || framework_failure=1
-cd $tmp_ || framework_failure=1
-test $framework_failure = 0 \
-     || error 'failed to create temporary directory'
+    # Prefer df --local, if it works, so we don't waste time
+    # enumerating with lots of automounted file systems.
+    ( df --local / > /dev/null 2>&1 ) && df='df --local' || df=df
+    $df | grep "^$dev_" && fail="$dev_ is already mounted"
+    $df | grep "^$dev_[0-9]" && fail="a partition of $dev_ is already mounted"
 
-this_test=$(expr "./$0" : '.*/\(t[0-9]*\)-[^/]*$')
+    # Skip this test and complain if anything failed.
+    if test "$fail" != ''; then
+      SKIP_TESTS="$SKIP_TESTS $this_test"
+      say "invalid setup: $fail"
+    fi
+  else
+    # Skip quietly if both envvars are not specified.
+    SKIP_TESTS="$SKIP_TESTS $this_test"
+    say 'This test requires an erasable device and you have not properly'
+    say 'set the $DEVICE_TO_ERASE and $DEVICE_TO_ERASE_SIZE envvars.'
+  fi
+fi
+
+# This is a stub function that is run upon trap (upon regular exit and
+# interrupt).  Override it with a per-test function, e.g., to unmount
+# a partition, or to undo any other global state changes.
+cleanup_() { :; }
+
 for skp in $SKIP_TESTS
 do
 	to_skip=
@@ -215,9 +266,22 @@ do
 	t)
 		say >&3 "skipping test $this_test altogether"
 		say "skip all tests in $this_test"
+		trap - exit
 		test_done
 	esac
 done
+
+# Run each test from within a temporary sub-directory named after the
+# test itself, and arrange to remove it upon exception and upon normal exit.
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp_=$t0/$$
+trap 'st=$?; cleanup_; cd "$pwd_" && chmod -R u+rwx $t0 && rm -rf $t0 && exit $st' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp_ || framework_failure=1
+cd $tmp_ || framework_failure=1
+test $framework_failure = 0 \
+     || error 'failed to create temporary directory'
 
 if ( diff --version < /dev/null 2>&1 | grep GNU ) 2>&1 > /dev/null; then
   compare='diff -u'

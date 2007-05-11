@@ -206,7 +206,9 @@ _disk_warn_busy (PedDisk* disk)
 {
         if (ped_device_is_busy (disk->dev))
                 return ped_exception_throw (
-                        PED_EXCEPTION_WARNING,
+                        (opt_script_mode
+                         ? PED_EXCEPTION_ERROR
+                         : PED_EXCEPTION_WARNING),
                         PED_EXCEPTION_IGNORE_CANCEL,
                         _("Partition(s) on %s are being used."),
                         disk->dev->path) == PED_EXCEPTION_IGNORE;
@@ -602,12 +604,10 @@ do_mklabel (PedDevice** dev)
         ped_exception_leave_all ();
 
         if (disk) {
-                if (!opt_script_mode) {
-                        if (!_disk_warn_busy (disk))
-                                goto error_destroy_disk;
-                        if (!_disk_warn_loss (disk))
-                                goto error_destroy_disk;
-                }
+                if (!_disk_warn_busy (disk))
+                        goto error_destroy_disk;
+                if (!opt_script_mode && !_disk_warn_loss (disk))
+                        goto error_destroy_disk;
 
                 ped_disk_destroy (disk);
         }
