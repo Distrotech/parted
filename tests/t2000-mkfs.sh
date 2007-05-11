@@ -19,7 +19,7 @@
 
 test_description='Create some file systems using mkfs.'
 
-. $srcdir/test-lib.sh
+. ./test-lib.sh
 
 N=40M
 dev=loop-file

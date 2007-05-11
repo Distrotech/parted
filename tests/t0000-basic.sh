@@ -26,7 +26,7 @@ fi
 
 test_description='Test the very basics part #1.'
 
-. $srcdir/test-lib.sh
+. ./init.sh
 
 # FIXME: is id -u portable enough?
 uid=`id -u` || uid=1

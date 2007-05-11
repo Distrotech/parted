@@ -31,3 +31,4 @@ parted-*.xdelta.sig
 parted.spec
 partprobe/partprobe
 stamp-h1
+tests/init.sh

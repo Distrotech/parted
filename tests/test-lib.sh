@@ -32,16 +32,6 @@ say () {
 test "${test_description}" != "" ||
 error "Test script did not set test_description."
 
-# If $srcdir is not set, set it, if it's ".".  Otherwise, fail.
-if test -a "$srcdir"; then
-    if test -f test-lib.sh; then
-	srcdir=.
-    else
-	error '$srcdir is not set; either set it, or run the test' \
-	    'from the source directory'
-    fi
-fi
-
 while test "$#" -ne 0
 do
 	case "$1" in
