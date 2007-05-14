@@ -784,6 +784,8 @@ do_mkpart (PedDevice** dev)
                 } else {
                         goto error_remove_part;
                 }
+        } else {
+                ped_exception_leave_all();
         }
         ped_exception_catch();
 
@@ -952,9 +954,10 @@ do_mkpartfs (PedDevice** dev)
                 } else {
                         goto error_remove_part;
                 }
+        } else {
+                ped_exception_leave_all();
         }
         ped_exception_catch();
-        ped_exception_leave_all();
 
         /* set LBA flag automatically if available */
         if (ped_partition_is_flag_available (part, PED_PARTITION_LBA))

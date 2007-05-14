@@ -42,4 +42,42 @@ test_expect_success \
 
 test_expect_success 'expect no output' '$compare out /dev/null'
 
+N=10M
+test_expect_success \
+    'create a file large enough to hold a fat32 file system' \
+    'dd if=/dev/zero of=$dev bs=$N count=1 2> /dev/null'
+
+test_expect_success \
+    'label the test disk' \
+    'parted -s $dev mklabel msdos > out 2>&1'
+test_expect_success 'expect no output' '$compare out /dev/null'
+
+# test if can create a partition and a filesystem in the same session.
+fail=0
+cat <<EOF >in || fail=1
+mkpart
+primary
+ext2
+0
+10
+mkfs
+No
+quit
+EOF
+test_expect_success 'create input file' 'test $fail = 0'
+
+test_expect_success \
+    'create a partition and a filesystem in the same session' \
+    'parted ---pretend-input-tty $dev < in > out 2>&1'
+
+test_expect_success \
+    'normalize the actual output' \
+    'sed -n "s/.*\(Warning: The existing.*\)$/\1/p" out > out2'
+
+test_expect_success \
+    'check for expected prompt' \
+    'echo "Warning: The existing file system will be destroyed and all" \
+       "data on the partition will be lost. Do you want to continue?" > exp &&
+     $compare out2 exp'
+
 test_done
