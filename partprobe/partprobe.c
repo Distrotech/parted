@@ -57,7 +57,10 @@
 
 static struct option const long_options[] =
   {
+    /* Note: the --no-update option is deprecated, and deliberately
+     * not documented.  FIXME: remove --no-update in 2009. */
     {"no-update", no_argument, NULL, 'd'},
+    {"dry-run", no_argument, NULL, 'd'},
     {"summary", no_argument, NULL, 's'},
     {"help", no_argument, NULL, 'h'},
     {"version", no_argument, NULL, 'v'},
@@ -68,7 +71,7 @@ static struct option const long_options[] =
 char *program_name;
 
 /* initialized to 0 according to the language lawyers */
-static int	opt_no_probe;
+static int	opt_no_inform;
 static int	opt_summary;
 
 static void
@@ -115,7 +118,7 @@ process_dev (PedDevice* dev)
 	disk = ped_disk_new (dev);
 	if (!disk)
 		goto error;
-	if (!opt_no_probe) {
+	if (!opt_no_inform) {
 		if (!ped_disk_commit_to_os (disk))
 			goto error_destroy_disk;
 	}
@@ -140,16 +143,16 @@ usage (int status)
     {
       printf (_("Usage: %s [OPTION] [DEVICE]...\n"), PROGRAM_NAME);
       fputs (_("\
-Inform the OS of partition table changes.\n\
+Inform the operating system about partition table changes.\n\
 \n\
-  -d, --no-update  don't update the kernel\n\
+  -d, --dry-run    do not actually inform the operating system\n\
   -s, --summary    print a summary of contents\n\
   -h, --help       display this help and exit\n\
   -v, --version    output version information and exit\n\
 "), stdout);
       fputs (_("\
 \n\
-With no DEVICE, probe all partitions.\n\
+When no DEVICE is given, probe all partitions.\n\
 "), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
@@ -168,7 +171,7 @@ main (int argc, char* argv[])
 	while ((c = getopt_long (argc, argv, "dhsv", long_options, NULL)) != -1)
 		switch (c) {
 			case 'd':
-				opt_no_probe = 1;
+				opt_no_inform = 1;
 				break;
 
 			case 's':
