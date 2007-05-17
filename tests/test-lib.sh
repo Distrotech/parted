@@ -12,6 +12,9 @@ export LANG LC_ALL TZ
 # CDPATH into the environment
 unset CDPATH
 
+# Avoid spurious test failures due to buggy ncurses-5.6.
+unset TERM
+
 # Each test should start with something like this, after copyright notices:
 #
 # test_description='Description of this test...
