@@ -480,6 +480,32 @@ static int ext2_mkfs_init_sb (struct ext2_super_block *sb, blk_t numblocks,
 	return 1;
 }
 
+/* Given these five inputs, compute the three outputs.  */
+static void
+compute_block_counts (blk_t numblocks, int numgroups, int log_block_size,
+                      int sparse_sb, blk_t blocks_per_group,
+                      int *last_group_blocks,
+                      int *last_group_admin,
+                      int *inodes_per_group)
+{
+        int first_block = (log_block_size == 10) ? 1 : 0;
+        size_t block_size = 1 << log_block_size;
+
+        *last_group_blocks = ((numblocks - first_block) % blocks_per_group);
+        if (!*last_group_blocks)
+                *last_group_blocks = blocks_per_group;
+        *inodes_per_group = ped_round_up_to (numblocks / numgroups / 2,
+                                             (block_size
+                                              / sizeof(struct ext2_inode)));
+        *last_group_admin = (2 + *inodes_per_group * sizeof(struct ext2_inode)
+                             / block_size);
+        if (is_group_sparse(sparse_sb, numgroups - 1)) {
+                *last_group_admin +=
+                  (ped_div_round_up (numgroups * sizeof(struct ext2_group_desc),
+                                     block_size));
+        }
+}
+
 struct ext2_fs *ext2_mkfs(struct ext2_dev_handle *handle,
 			  blk_t numblocks,
 			  int log_block_size,
@@ -494,8 +520,6 @@ struct ext2_fs *ext2_mkfs(struct ext2_dev_handle *handle,
 	struct ext2_group_desc *gd;
 	int numgroups;
 	int first_block;
-	int non_sparse_admin;
-	int sparse_admin;
 	int last_group_blocks;
 	int last_group_admin;
         
@@ -518,6 +542,7 @@ struct ext2_fs *ext2_mkfs(struct ext2_dev_handle *handle,
 
 	if (numblocks == 0)
 		numblocks = handle->ops->get_size(handle->cookie);
+        PED_ASSERT(numblocks != 0, return NULL);
 
 	if (blocks_per_group == (unsigned int) 0)
 		blocks_per_group = 8 << log_block_size;
@@ -527,11 +552,6 @@ struct ext2_fs *ext2_mkfs(struct ext2_dev_handle *handle,
 	numgroups = ped_div_round_up (numblocks
                         - first_block, blocks_per_group);
 
-	if (inodes_per_group == 0)
-		inodes_per_group = ped_round_up_to (
-			numblocks / numgroups / 2,
-			(1 << log_block_size) / sizeof(struct ext2_inode));
-
 	if (sparse_sb == -1)
 		sparse_sb = 1;
 
@@ -539,25 +559,36 @@ struct ext2_fs *ext2_mkfs(struct ext2_dev_handle *handle,
 	if (reserved_block_percentage == -1)
 		reserved_block_percentage = 5;
 
-	last_group_blocks = (numblocks - first_block) % blocks_per_group;
-	if (!last_group_blocks) last_group_blocks = blocks_per_group;
-	non_sparse_admin = 2
-			   + inodes_per_group * sizeof(struct ext2_inode)
-			   	/ (1 << log_block_size);
-	sparse_admin = non_sparse_admin
-		       + ped_div_round_up (numgroups
-                                       * sizeof(struct ext2_group_desc),
-				  1 << log_block_size);
-	last_group_admin = is_group_sparse(sparse_sb, numgroups - 1)
-			   ? sparse_admin : non_sparse_admin;
-	if (last_group_admin >= last_group_blocks) {
-		numgroups--;
+        compute_block_counts (numblocks, numgroups, log_block_size, sparse_sb,
+                              blocks_per_group, &last_group_blocks,
+                              &last_group_admin, &inodes_per_group);
+
+	int fs_too_small = 0;
+	if (last_group_admin >= last_group_blocks)
+          {
+            numgroups--;
+            if (numgroups == 0)
+              fs_too_small = 1;
+            else if (numgroups == 1)
+              {
 		numblocks -= last_group_blocks;
-	}
-	if (!numgroups
-	    || (numgroups == 1
-		    && (last_group_blocks - last_group_admin < 8
-	    		|| inodes_per_group < 16))) {
+                compute_block_counts (numblocks, numgroups, log_block_size,
+                                      sparse_sb, blocks_per_group,
+                                      &last_group_blocks, &last_group_admin,
+                                      &inodes_per_group);
+              }
+          }
+
+        if (numgroups == 1
+            && (last_group_blocks - last_group_admin < 8
+                || inodes_per_group < 16
+                /* This final term ensures that we detect
+                   mkpartfs primary ext2 10KB 27650B as invalid.  */
+                || (inodes_per_group == 16
+                    && last_group_blocks - last_group_admin < 14)))
+          fs_too_small = 1;
+
+	if (fs_too_small) {
 		ped_exception_throw (
 			PED_EXCEPTION_ERROR,
 			PED_EXCEPTION_CANCEL,
