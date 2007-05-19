@@ -14,5 +14,7 @@ EXTRA_DIST = \
 CLEANFILES = init.sh
 all: init.sh
 init.sh: Makefile.in
+	rm -f $@-t $@
 	( echo 'srcdir=$(srcdir)'; echo '. $$srcdir/test-lib.sh' ) > $@-t
+	chmod a-w $@-t
 	mv $@-t $@
