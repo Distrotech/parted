@@ -19,7 +19,7 @@
 
 test_description='Create some file systems using mkfs.'
 
-. ./test-lib.sh
+. ./init.sh
 
 N=40M
 dev=loop-file

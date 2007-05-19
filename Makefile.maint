@@ -179,6 +179,20 @@ sc_changelog:
 	  { echo '$(ME): found unexpected prefix in a ChangeLog' 1>&2;	\
 	    exit 1; } || :
 
+# Each test must source ./init.sh
+test_file_names = $(CVS_LIST_EXCEPT) | grep -E '/t[0-9].*\.sh$$'
+sc_test_init:
+	@if grep '^init\.sh:' tests/Makefile.am; then			\
+	  if $(test_file_names) > /dev/null; then			\
+	    grep -L '^\. \./init\.sh$$' $$($(test_file_names))		\
+	        | grep . &&						\
+	      { echo "$(ME): the above files lack '. ./init.sh'"	\
+		    1>&2; exit 1; } || :;				\
+	  else :;							\
+	  fi;								\
+	else :;								\
+	fi
+
 # Ensure that dd's definition of LONGEST_SYMBOL stays in sync
 # with the strings from the two affected variables.
 dd_c = $(srcdir)/src/dd.c
