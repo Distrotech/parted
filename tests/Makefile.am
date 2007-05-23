@@ -5,16 +5,17 @@ TESTS = \
   t1500-small-ext2.sh \
   t2000-mkfs.sh
 
-TESTS_ENVIRONMENT = \
-  PATH="`pwd`/../parted$(PATH_SEPARATOR)$$PATH"
-
 EXTRA_DIST = \
-  $(TESTS) test-lib.sh
+  $(TESTS) test-lib.sh mkdtemp
 
 CLEANFILES = init.sh
 all: init.sh
 init.sh: Makefile.in
 	rm -f $@-t $@
-	( echo 'srcdir=$(srcdir)'; echo '. $$srcdir/test-lib.sh' ) > $@-t
+	echo 'PARTED_USABLE_TEST_DIR=$(PARTED_USABLE_TEST_DIR)' > $@-t
+	echo 'abs_top_srcdir=$(abs_top_srcdir)' >> $@-t
+	echo '. $(abs_top_srcdir)/tests/test-lib.sh' >> $@-t
+	echo 'PATH=$(abs_top_builddir)/parted$(PATH_SEPARATOR)$$PATH' >> $@-t
+	echo 'export PATH' >> $@-t
 	chmod a-w $@-t
 	mv $@-t $@

@@ -201,11 +201,12 @@ if test "$privileges_required_" != ''; then
     fi
 fi
 
-pwd_=`pwd`
-
 # Test the binaries we have just built.
-PATH=$pwd_/../parted:$PATH
-export PATH
+pwd_=`pwd`
+parted_="$pwd_/../parted/parted"
+
+test_dir_=$PARTED_USABLE_TEST_DIR
+test $test_dir_ = . && test_dir_=$pwd_
 
 fail=
 # Some tests require an actual hardware device, e.g., a real disk with a
@@ -222,8 +223,8 @@ if test $skip_ = 0 && test "$erasable_device_required_" != ''; then
   if test "$DEVICE_TO_ERASE" != '' && test "$DEVICE_TO_ERASE_SIZE" != ''; then
     dev_=$DEVICE_TO_ERASE
     sz=$DEVICE_TO_ERASE_SIZE
-    parted_output=$(parted -s $dev_ print) || fail="no such device: $dev_"
-    parted -s $dev_ print|grep "^Disk $dev_: $sz$" \
+    parted_output=$($parted -s $dev_ print) || fail="no such device: $dev_"
+    $parted -s $dev_ print|grep "^Disk $dev_: $sz$" \
 	> /dev/null || fail="actual device size is not $sz"
     # Try to see if $dev_ or any of its partitions is mounted.
     # This is not reliable.  FIXME: find a better way.
@@ -232,7 +233,7 @@ if test $skip_ = 0 && test "$erasable_device_required_" != ''; then
     # contains no "//" or "/./" components.
 
     # Prefer df --local, if it works, so we don't waste time
-    # enumerating with lots of automounted file systems.
+    # enumerating lots of automounted file systems.
     ( df --local / > /dev/null 2>&1 ) && df='df --local' || df=df
     $df | grep "^$dev_" && fail="$dev_ is already mounted"
     $df | grep "^$dev_[0-9]" && fail="a partition of $dev_ is already mounted"
@@ -274,17 +275,16 @@ do
 	esac
 done
 
+t0=$($abs_top_srcdir/tests/mkdtemp $test_dir_ parted-$this_test.XXXXXXXXXX) \
+    || error "failed to create temporary directory in $test_dir_"
+
 # Run each test from within a temporary sub-directory named after the
-# test itself, and arrange to remove it upon exception and upon normal exit.
-t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp_=$t0/$$
-trap 'st=$?; cleanup_; cd "$pwd_" && chmod -R u+rwx $t0 && rm -rf $t0 && exit $st' 0
+# test itself, and arrange to remove it upon exception or normal exit.
+trap 'st=$?; cleanup_; d='"$t0"';
+    cd '"$test_dir_"' && chmod -R u+rwx "$d" && rm -rf "$d" && exit $st' 0
 trap '(exit $?); exit $?' 1 2 13 15
 
-framework_failure=0
-mkdir -p $tmp_ || framework_failure=1
-cd $tmp_ || framework_failure=1
-test $framework_failure = 0 \
-     || error 'failed to create temporary directory'
+cd $t0 || error "failed to cd to $t0"
 
 if ( diff --version < /dev/null 2>&1 | grep GNU ) 2>&1 > /dev/null; then
   compare='diff -u'
