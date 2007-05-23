@@ -171,6 +171,7 @@ AC_PROG_GCC_TRADITIONAL
 AM_PROG_CC_C_O
 
 gl_EARLY
+parted_FIND_USABLE_TEST_DIR
 
 dnl This test must come as early as possible after the compiler configuration
 dnl tests, because the choice of the file model can (in principle) affect
@@ -459,7 +460,6 @@ AC_C_BIGENDIAN
 AC_C_INLINE
 AC_C_CONST
 AC_C_RESTRICT
-
 
 dnl Checks for library functions.
 AC_CHECK_FUNCS(sigaction)

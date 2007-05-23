@@ -19,6 +19,7 @@ doc/C/po/parted.8.pot
 doc/pt_BR/parted.8.pt_BR.po
 gnulib/
 libparted.pc
+libparted/tests/init.sh
 libparted/tests/label
 libtool
 m4
