@@ -3,7 +3,8 @@ TESTS = \
   t1000-mkpartfs.sh \
   t1100-busy-label.sh \
   t1500-small-ext2.sh \
-  t2000-mkfs.sh
+  t2000-mkfs.sh \
+  t3000-constraints.sh
 
 EXTRA_DIST = \
   $(TESTS) test-lib.sh mkdtemp

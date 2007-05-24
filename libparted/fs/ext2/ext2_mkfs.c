@@ -542,7 +542,8 @@ struct ext2_fs *ext2_mkfs(struct ext2_dev_handle *handle,
 
 	if (numblocks == 0)
 		numblocks = handle->ops->get_size(handle->cookie);
-        PED_ASSERT(numblocks != 0, return NULL);
+        if (numblocks == 0)
+                goto diagnose_fs_too_small;
 
 	if (blocks_per_group == (unsigned int) 0)
 		blocks_per_group = 8 << log_block_size;
@@ -589,6 +590,7 @@ struct ext2_fs *ext2_mkfs(struct ext2_dev_handle *handle,
           fs_too_small = 1;
 
 	if (fs_too_small) {
+	diagnose_fs_too_small:
 		ped_exception_throw (
 			PED_EXCEPTION_ERROR,
 			PED_EXCEPTION_CANCEL,
