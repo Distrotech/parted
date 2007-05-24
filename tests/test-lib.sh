@@ -223,8 +223,8 @@ if test $skip_ = 0 && test "$erasable_device_required_" != ''; then
   if test "$DEVICE_TO_ERASE" != '' && test "$DEVICE_TO_ERASE_SIZE" != ''; then
     dev_=$DEVICE_TO_ERASE
     sz=$DEVICE_TO_ERASE_SIZE
-    parted_output=$($parted -s $dev_ print) || fail="no such device: $dev_"
-    $parted -s $dev_ print|grep "^Disk $dev_: $sz$" \
+    parted_output=$($parted_ -s $dev_ print) || fail="no such device: $dev_"
+    $parted_ -s $dev_ print|grep "^Disk $dev_: $sz$" \
 	> /dev/null || fail="actual device size is not $sz"
     # Try to see if $dev_ or any of its partitions is mounted.
     # This is not reliable.  FIXME: find a better way.
