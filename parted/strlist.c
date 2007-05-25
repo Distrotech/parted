@@ -1,6 +1,6 @@
 /*
     parted - a frontend to libparted
-    Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+    Copyright (C) 1999, 2000, 2001, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -390,20 +390,6 @@ str_list_print (const StrList* list)
 	}
 }
 
-static char*
-get_spaces (int space_count)
-{
-	char*	str;
-	int	i;
-
-	str = malloc (space_count + 1);
-	for (i = 0; i < space_count; i++)
-		str [i] = ' ';
-	str [i] = 0;
-
-	return str;
-}
-
 static int
 str_search (const wchar_t* str, int n, wchar_t c)
 {
@@ -459,13 +445,11 @@ str_list_print_wrap (const StrList* list, int line_length, int offset,
 	int		cut_right;
 	int		cut_left;
 	int		line_left;
-	char*		spaces;
 	int		search_result;
 	int		line_break;
 
 	PED_ASSERT (line_length - indent > 10, return);
 
-	spaces = get_spaces (indent);
 	line_left = line_length - offset;
 
 	for (walk=list; walk; walk=walk->next) {
@@ -511,7 +495,7 @@ str_list_print_wrap (const StrList* list, int line_length, int offset,
 			line_left = line_length - indent;
 
 			if (walk->next || *str)
-				printf ("\n%s", spaces);
+				printf ("\n%*s", indent, " ");
 			else if (line_break)
 				putchar ('\n');
 		}
@@ -519,8 +503,6 @@ str_list_print_wrap (const StrList* list, int line_length, int offset,
 		print_wchar (str, 0);
 		line_left -= wchar_strlen (str);
 	}
-
-	free (spaces);
 }
 
 static int
