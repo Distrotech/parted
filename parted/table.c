@@ -68,7 +68,7 @@ Table* table_new(int ncols)
 {
         assert ( ncols >= 0 );
         
-        Table *t = malloc(sizeof(Table));
+        Table *t = xmalloc (sizeof(*t));
 
         t->ncols = ncols;
         t->nrows = 0;
@@ -117,7 +117,7 @@ static void table_calc_column_widths (Table* t)
         assert(t->ncols > 0);
         
         if (!t->widths)
-                t->widths = (int*)malloc(t->ncols * sizeof(int));
+                t->widths = xmalloc (t->ncols * sizeof(t->widths[0]));
 
         for (c = 0; c < t->ncols; ++c)
                 t->widths[c] = 0;
@@ -147,8 +147,7 @@ void table_add_row (Table* t, wchar_t** row)
                 printf("[%s]", row[i]);
         putchar ('\n');*/
 
-        t->rows = (wchar_t***)realloc (t->rows, (t->nrows + 1)
-                                                * sizeof(wchar_t***));
+        t->rows = xrealloc (t->rows, (t->nrows + 1) * sizeof(wchar_t***));
          
         t->rows[t->nrows] = row;
 
@@ -160,8 +159,7 @@ void table_add_row (Table* t, wchar_t** row)
 
 void table_add_row_from_strlist (Table* t, StrList* list)
 {
-        wchar_t** row = (wchar_t**)malloc(str_list_length(list)
-                                          * sizeof(wchar_t**));
+        wchar_t** row = xmalloc (str_list_length(list) * sizeof(*row));
         int i = 0;
 
         while (list)
@@ -199,7 +197,7 @@ static void table_render_row (Table* t, int rownum, int ncols, wchar_t** s)
                 int j;
                 int nspaces = max(t->widths[i] - wcswidth(row[i], MAX_WIDTH),
                                   0);
-                wchar_t* pad = xmalloc ((nspaces + 1) * sizeof(wchar_t));
+                wchar_t* pad = xmalloc ((nspaces + 1) * sizeof(*pad));
 
                 for (j = 0; j < nspaces; ++j)
                        pad[j] = L' '; 
@@ -238,7 +236,7 @@ static void table_render_rows (Table* t, wchar_t** s)
  */
 wchar_t* table_render(Table* t)
 {
-        wchar_t* s = malloc(sizeof(wchar_t));
+        wchar_t* s = xmalloc (sizeof(*s));
 
         *s = L_('\0');
         table_render_rows (t, &s);
