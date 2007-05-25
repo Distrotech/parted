@@ -14,7 +14,7 @@ resizing, checking and copy partitions and file systems on them.
 @ifnottex @c texi2pdf don't understand copying and insertcopying ???
 @c modifications must also be done in the titlepage
 @copying
-Copyright @copyright{} 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006
+Copyright @copyright{} 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007
 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
@@ -335,7 +335,7 @@ of the latest GNU Parted version is available, which you can use thus:
 @item Create a file system. Example:
 
 @example
-$ @kbd{parted /dev/fd0 mklabel loop mkpartfs primary ext2 0 1.4}
+$ @kbd{parted /dev/fd0 mklabel loop mkpartfs ext2 0 1.4}
 @end example
 
 @item Mount the floppy disk, e.g.,
