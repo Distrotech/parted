@@ -495,7 +495,7 @@ str_list_print_wrap (const StrList* list, int line_length, int offset,
 			line_left = line_length - indent;
 
 			if (walk->next || *str)
-				printf ("\n%*s", indent, " ");
+				printf ("\n%*s", indent, "");
 			else if (line_break)
 				putchar ('\n');
 		}
