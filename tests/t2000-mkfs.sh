@@ -33,7 +33,7 @@ test_expect_success \
 test_expect_success 'expect no output' '$compare out /dev/null'
 
 test_expect_success \
-    'create an partition' \
+    'create a partition' \
     'parted -s $dev mkpart primary 1 40 > out 2>&1'
 
 test_expect_success \
@@ -79,5 +79,26 @@ test_expect_success \
     'echo "Warning: The existing file system will be destroyed and all" \
        "data on the partition will be lost. Do you want to continue?" > exp &&
      $compare out2 exp'
+
+#############################################################
+# Ensure that an invalid file system type elicits a diagnostic.
+# Before parted 1.8.8, this would fail silently.
+
+dev=loop-file
+
+test_expect_success \
+    "setup: create and label a device" \
+    'dd if=/dev/zero of=$dev bs=1M count=1 2>/dev/null &&
+     parted -s $dev mklabel msdos'
+
+test_expect_failure \
+    'try to create a file system with invalid type name' \
+    'parted -s $dev mkpartfs primary bogus 1 1 >out 2>&1'
+
+test_expect_success \
+    'check for expected diagnostic' \
+    '{ echo "parted: invalid token: bogus"
+       echo "Error: Expecting a file system type."; } > exp &&
+     $compare out exp'
 
 test_done

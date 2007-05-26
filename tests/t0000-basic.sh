@@ -85,6 +85,7 @@ fail=0
 cat <<EOF >> exp || fail=1
 Warning: The existing disk label on DEVICE will be destroyed and all\
  data on this disk will be lost. Do you want to continue?
+parted: invalid token: msdos
 Yes/No? y
 New disk label type?  [msdos]?
 EOF
