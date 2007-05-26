@@ -68,6 +68,7 @@ test_expect_failure \
 fail=0
 cat <<EOF > exp || fail=1
 Warning: Partition(s) on $dev are being used.
+parted: invalid token: msdos
 Ignore/Cancel? c
 EOF
 test_expect_success 'create expected output file' 'test $fail = 0'

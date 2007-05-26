@@ -32,6 +32,7 @@
 #include "command.h"
 #include "strlist.h"
 #include "ui.h"
+#include "error.h"
 
 #define N_(String) String
 #if ENABLE_NLS
@@ -866,11 +867,15 @@ command_line_get_word (const char* prompt, const char* def,
                                 return result;
 
                         result_node = str_list_match (possibilities, result);
+                        if (result_node == NULL)
+                                error (0, 0, _("invalid token: %s"), result);
                         free (result);
                         if (result_node)
                                 return str_list_convert_node (result_node);
 
                         command_line_flush ();
+                        if (opt_script_mode)
+                                return NULL;
                 }
 
                 command_line_prompt_words (prompt, def, possibilities,
