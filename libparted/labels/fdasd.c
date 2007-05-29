@@ -100,58 +100,59 @@ fdasd_error (fdasd_anchor_t *anc, enum fdasd_failure why, char * str)
 
 	switch (why) {
 		case unable_to_open_disk:
-			sprintf(error, _("%s open error\n%s\n"), 
-			FDASD_ERROR, str);
+			sprintf(error, "fdasd: %s -- %s\n", _("open error"), str);
 			break;
 		case unable_to_seek_disk:
-			sprintf(error, _("%s seek error\n%s\n"), FDASD_ERROR, str);
+			sprintf(error, "fdasd: %s -- %s\n", _("seek error"), str);
 			break;
 		case unable_to_read_disk:
-			sprintf(error, _("%s read error\n%s\n"), FDASD_ERROR, str);
+			sprintf(error, "fdasd: %s -- %s\n", _("read error"), str);
 			break;
 		case read_only_disk:
-			sprintf(error, _("%s write error\n%s\n"), FDASD_ERROR, str);
+			sprintf(error, "fdasd: %s -- %s\n", _("write error"), str);
 			break;
 		case unable_to_ioctl:
-			sprintf(error, _("%s IOCTL error\n%s\n"), FDASD_ERROR, str);
+			sprintf(error, "fdasd: %s -- %s\n", _("ioctl() error"), str);
 			break;
 		case api_version_mismatch:
-			sprintf(error, _("%s API version mismatch\n%s\n"), FDASD_ERROR,str);
+			sprintf(error, "fdasd: %s -- %s\n",
+				_("API version mismatch"), str);
 			break;     
 		case wrong_disk_type:
-			sprintf(error, _("%s Unsupported disk type\n%s\n"),
-			        FDASD_ERROR, str);
+			sprintf(error, "fdasd: %s -- %s\n",
+				_("Unsupported disk type"), str);
 			break; 
 		case wrong_disk_format:
-			sprintf(error, _("%s Unsupported disk format\n%s\n"),
-			        FDASD_ERROR, str);
+			sprintf(error, "fdasd: %s -- %s\n",
+				_("Unsupported disk format"), str);
 			break;   
 		case disk_in_use:
-			sprintf(error, _("%s Disk in use\n%s\n"), FDASD_ERROR, str);
+			sprintf(error, "fdasd: %s -- %s\n",
+				_("Disk is in use"), str);
 			break;      
 		case config_syntax_error:
-			sprintf(error, _("%s Config file syntax error\n%s\n"),
-			        FDASD_ERROR, str);
+			sprintf(error, "fdasd: %s -- %s\n",
+				_("Syntax error in config file"), str);
 			break;       
 		case vlabel_corrupted:
-			sprintf(error, _("%s Volume label is corrupted.\n%s\n"), 
-			        FDASD_ERROR, str);
+			sprintf(error, "fdasd: %s -- %s\n",
+				_("Volume label is corrupted"), str);
 			break;
 		case dsname_corrupted:
-			sprintf(error, _("%s a data set name is corrupted.\n%s\n"), 
-			        FDASD_ERROR, str);
+			sprintf(error, "fdasd: %s -- %s\n",
+				_("A data set name is corrupted"), str);
 			break;
 		case malloc_failed:
-			sprintf(error, _("%s space allocation\n%s\n"),
-			        FDASD_ERROR, str);
+			sprintf(error, "fdasd: %s -- %s\n",
+				_("Memory allocation failed"), str);
 			break;
 		case device_verification_failed:
-			sprintf(error, _("%s device verification failed\n" \
-			        "The specified device is not a valid DASD device\n"),
-			        FDASD_ERROR);
+			sprintf(error, "fdasd: %s -- %s\n",
+				_("Device verification failed"),
+				_("The specified device is not a valid DASD device"));,
 			break;
 		default: 
-			sprintf(error, _("%s Fatal error\n%s\n"), FDASD_ERROR, str);
+			sprintf(error, "fdasd: %s: %s\n", _("Fatal error"), str);
 	}
 
 	ped_exception_throw(PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL, message);
@@ -210,18 +211,15 @@ fdasd_initialize_anchor (fdasd_anchor_t * anc)
 
 	anc->f4 = malloc(sizeof(format4_label_t));
 	if (anc->f4 == NULL) 
-		fdasd_error(anc, malloc_failed, 
-			    "FMT4 DSCB memory allocation failed.");
+		fdasd_error(anc, malloc_failed, "FMT4 DSCB.");
 
 	anc->f5 = malloc(sizeof(format5_label_t));
 	if (anc->f5 == NULL) 
-		fdasd_error(anc, malloc_failed,
-			    "FMT5 DSCB memory allocation failed.");
+		fdasd_error(anc, malloc_failed, "FMT5 DSCB.");
 
 	anc->f7 = malloc(sizeof(format7_label_t));
 	if (anc->f7 == NULL) 
-		fdasd_error(anc, malloc_failed,
-			    "FMT7 DSCB memory allocation failed.");
+		fdasd_error(anc, malloc_failed, "FMT7 DSCB.");
 
 	bzero(anc->f4, sizeof(format4_label_t));
 	bzero(anc->f5, sizeof(format5_label_t));
@@ -230,7 +228,7 @@ fdasd_initialize_anchor (fdasd_anchor_t * anc)
 	v = malloc(sizeof(volume_label_t));
 	if (v == NULL) 
 		fdasd_error(anc, malloc_failed,
-			    "Volume label memory allocation failed.");
+			    _("No room for volume label."));
 	bzero(v, sizeof(volume_label_t));
 	anc->vlabel = v;
 
@@ -238,7 +236,7 @@ fdasd_initialize_anchor (fdasd_anchor_t * anc)
         p = malloc(sizeof(partition_info_t));
 		if (p == NULL) 
 			fdasd_error(anc, malloc_failed,
-				   "Partition info memory allocation failed.");
+				    _("No room for partition info."));
 		p->used       = 0x00;
 		p->len_trk    = 0;
 		p->start_trk  = 0;
@@ -261,8 +259,7 @@ fdasd_initialize_anchor (fdasd_anchor_t * anc)
 
 		p->f1 = malloc(sizeof(format1_label_t));
 		if (p->f1 == NULL) 
-			fdasd_error(anc, malloc_failed,
-			    "FMT1 DSCB memory allocation failed.");
+			fdasd_error(anc, malloc_failed, "FMT1 DSCB.");
 		bzero(p->f1, sizeof(format1_label_t));
 		
 		q = p;
@@ -709,7 +706,7 @@ fdasd_valid_vtoc_pointer(fdasd_anchor_t *anc, unsigned long b, int fd)
 	if (anc->f4->DS4IDFMT != 0xf4) {
 		if (strncmp(anc->vlabel->volkey,vtoc_ebcdic_enc("LNX1",str,4),4) == 0)
 			return 0;
-		fdasd_error(anc, wrong_disk_format, "Invalid VTOC");
+		fdasd_error(anc, wrong_disk_format, _("Invalid VTOC."));
 	} else {
 		fdasd_process_valid_vtoc (anc, b, fd);
 	}
@@ -763,12 +760,13 @@ fdasd_check_api_version (fdasd_anchor_t *anc, int f)
 	char s[LINE_LENGTH];
  
 	if (ioctl(f, DASDAPIVER, &api) != 0)
-		fdasd_error(anc, unable_to_ioctl, "Could not retrieve API version.");
+		fdasd_error(anc, unable_to_ioctl,
+			    _("Could not retrieve API version."));
  
 	if (api != DASD_MIN_API_VERSION) {
-		sprintf(s, "The current API version '%d' doesn't " \
+		sprintf(s, _("The current API version '%d' doesn't " \
 				"match dasd driver API version " \
-				"'%d'!", api, DASD_MIN_API_VERSION);
+				"'%d'!"), api, DASD_MIN_API_VERSION);
 		fdasd_error(anc, api_version_mismatch, s);
 	}
 }                                      
@@ -786,22 +784,21 @@ fdasd_get_geometry (fdasd_anchor_t *anc, int f)
 
 	if (ioctl(f, HDIO_GETGEO, &anc->geo) != 0) 
 		fdasd_error(anc, unable_to_ioctl,
-					"Could not retrieve disk geometry information.");
+			    _("Could not retrieve disk geometry information."));
 
 	if (ioctl(f, BLKSSZGET, &blksize) != 0)
 		fdasd_error(anc, unable_to_ioctl,
-					"Could not retrieve blocksize information.");
+			    _("Could not retrieve blocksize information."));
 
 	/* get disk type */
 	if (ioctl(f, BIODASDINFO, &dasd_info) != 0) 
 		fdasd_error(anc, unable_to_ioctl, 
-					"Could not retrieve disk information.");
+			    _("Could not retrieve disk information."));
 
-	if (strncmp(dasd_info.type, "ECKD", 4) != 0) {
-		sprintf(s, "This is not an ECKD disk! This disk type " \
-				"is not supported!");
-		fdasd_error(anc,wrong_disk_type, s);
-	}
+	if (strncmp(dasd_info.type, "ECKD", 4) != 0)
+		fdasd_error(anc, wrong_disk_type,
+			    _("This is not an ECKD disk!  " \
+			      "This disk type is not supported!"));
 
 	anc->dev_type   = dasd_info.dev_type;
 	anc->blksize    = blksize;

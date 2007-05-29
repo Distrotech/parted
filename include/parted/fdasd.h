@@ -143,7 +143,6 @@ struct fdasd_hd_geometry {
 #define USABLE_PARTITIONS ((1 << DASD_PARTN_BITS) - 1)
 
 #define FDASD_VERSION "1.05"
-#define FDASD_ERROR "fdasd error: "
 #define DEVICE "device"
 #define DISC   "disc"
 #define PART   "part"
