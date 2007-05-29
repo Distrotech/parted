@@ -43,7 +43,6 @@
 #define VOLSER_LENGTH 6
 #define BIG_DISK_SIZE 0x10000
 
-#define VTOC_ERROR "VTOC error:"
 
 typedef struct ttr              ttr_t;
 typedef struct cchhb            cchhb_t;
