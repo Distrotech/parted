@@ -160,23 +160,23 @@ vtoc_error (enum failure why, char *s1, char *s2)
 
 	switch (why) {
 		case unable_to_open:
-			sprintf(error, _("%s opening device '%s' failed.\n%s\n"),
-					VTOC_ERROR, s1, s2);
+			sprintf(error, "VTOC: %s -- %s\n%s\n",
+				_("opening of device failed"), s1, s2);
 			break;
 		case unable_to_seek:
-			sprintf(error, _("%s seeking device '%s' failed.\n%s\n"),
-					VTOC_ERROR, s1, s2);
+			sprintf(error, "VTOC: %s -- %s\n%s\n",
+				_("seeking on device failed"), s1, s2);
 			break;
 		case unable_to_write:
-			sprintf(error, _("%s writing to device '%s' failed,\n%s\n"),
-					VTOC_ERROR, s1, s2);
+			sprintf(error, "VTOC: %s -- %s\n%s\n",
+				_("writing to device failed"), s1, s2);
 			break;
 		case unable_to_read:
-			sprintf(error, _("%s reading from device '%s' failed.\n%s\n"),
-					VTOC_ERROR, s1, s2);
+			sprintf(error, "VTOC: %s -- %s\n%s\n",
+				_("reading from device failed"), s1, s2);
 			break;
 		default:
-			sprintf(error, _("Fatal error\n"));
+			sprintf(error, "VTOC: %s\n", _("Fatal error"));
 	}
 
 	ped_exception_throw(PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL, error);
@@ -278,14 +278,14 @@ vtoc_read_volume_label (int f, unsigned long vlabel_start,
 
 	if (lseek(f, vlabel_start, SEEK_SET) == -1) {
 		vtoc_error(unable_to_seek, "vtoc_read_volume_label",
-				   "Could not read volume label.");
+			   _("Could not read volume label."));
 		return 1;
 	}
 
 	rc = read(f, vlabel, sizeof(volume_label_t));
 	if (rc != sizeof(volume_label_t)) {
 		vtoc_error(unable_to_read, "vtoc_read_volume_label",
-				   "Could not read volume label.");
+			   _("Could not read volume label."));
 		return 1;
 	}
 
@@ -304,12 +304,12 @@ vtoc_write_volume_label (int f, unsigned long vlabel_start,
 
 	if (lseek(f, vlabel_start, SEEK_SET) == -1)
 		vtoc_error(unable_to_seek, "vtoc_write_volume_label",
-				   "Could not write volume label.");
+			   _("Could not write volume label."));
 
 	rc = write(f, vlabel, sizeof(volume_label_t)); 
 	if (rc != sizeof(volume_label_t)) 
 		vtoc_error(unable_to_write, "vtoc_write_volume_label",
-				   "Could not write volume label.");
+			   _("Could not write volume label."));
 
 	return 0;
 }
@@ -415,34 +415,34 @@ vtoc_read_label (int f, unsigned long position, format1_label_t *f1,
 
 	if (lseek(f, position, SEEK_SET) == -1) 
 		vtoc_error(unable_to_seek, "vtoc_read_label",
-				   _("Could not read VTOC labels."));
+			   _("Could not read VTOC labels."));
 
 	if (f1 != NULL) {
 		t = sizeof(format1_label_t);
 		if (read(f, f1, t) != t) 
 			vtoc_error(unable_to_read, "vtoc_read_label",
-					   _("Could not read VTOC FMT1 DSCB."));
+				   _("Could not read VTOC FMT1 DSCB."));
 	}
 
 	if (f4 != NULL) {
 		t = sizeof(format4_label_t);
 		if (read(f, f4, t) != t) 
 			vtoc_error(unable_to_read, "vtoc_read_label",
-					   _("Could not read VTOC FMT4 DSCB."));
+				   _("Could not read VTOC FMT4 DSCB."));
 	}
 
 	if (f5 != NULL) {
 		t = sizeof(format5_label_t);
 		if (read(f, f5, t) != t)
 			vtoc_error(unable_to_read, "vtoc_read_label",
-					   _("Could not read VTOC FMT5 DSCB."));
+				   _("Could not read VTOC FMT5 DSCB."));
 	}
 
 	if (f7 != NULL) {
 		t = sizeof(format7_label_t);
 		if (read(f, f7, t) != t) 
 			vtoc_error(unable_to_read, "vtoc_read_label",
-					   _("Could not read VTOC FMT7 DSCB."));
+				   _("Could not read VTOC FMT7 DSCB."));
 	}
 }
 
@@ -459,34 +459,34 @@ vtoc_write_label (int f, unsigned long position, format1_label_t *f1,
 
 	if (lseek(f, position, SEEK_SET) == -1) 
 		vtoc_error(unable_to_seek, "vtoc_write_label",
-				   _("Could not write VTOC labels."));
+			   _("Could not write VTOC labels."));
 
 	if (f1 != NULL) {
 		t = sizeof(format1_label_t);
 		if (write(f, f1, t) != t) 
 			vtoc_error(unable_to_write, "vtoc_write_label",
-					   _("Could not write VTOC FMT1 DSCB."));
+				   _("Could not write VTOC FMT1 DSCB."));
 	}
 
 	if (f4 != NULL) {
 		t = sizeof(format4_label_t);
 		if (write(f, f4, t) != t) 
 			vtoc_error(unable_to_write, "vtoc_write_label",
-					   _("Could not write VTOC FMT4 DSCB."));
+				   _("Could not write VTOC FMT4 DSCB."));
 	}
 
 	if (f5 != NULL) {
 		t = sizeof(format5_label_t);
 		if (write(f, f5, t) != t) 
 			vtoc_error(unable_to_write, "vtoc_write_label",
-					   _("Could not write VTOC FMT5 DSCB."));
+				   _("Could not write VTOC FMT5 DSCB."));
 	}
 
 	if (f7 != NULL) {
 		t = sizeof(format7_label_t);
 		if (write(f, f7, t) != t) 
 			vtoc_error(unable_to_write, "vtoc_write_label",
-					   _("Could not write VTOC FMT7 DSCB."));
+				   _("Could not write VTOC FMT7 DSCB."));
 	}
 }
 
