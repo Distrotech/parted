@@ -164,7 +164,10 @@ void table_add_row_from_strlist (Table* t, StrList* list)
 
         while (list)
         {
-                row[i] = (wchar_t*)list->str;
+                row[i] = wcsdup (list->str);
+                if (row[i] == NULL)
+                        xalloc_die ();
+
 
                 list = list->next;
                 ++i;
