@@ -201,6 +201,13 @@ if test "$privileges_required_" != ''; then
     fi
 fi
 
+emit_superuser_warning()
+{
+  uid=`id -u` || uid=1
+  test "$uid" != 0 &&
+    echo 'WARNING: You are not superuser.  Watch out for permissions.'
+}
+
 # Test the binaries we have just built.
 pwd_=`pwd`
 parted_="$pwd_/../parted/parted"
