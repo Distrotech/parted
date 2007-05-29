@@ -1,5 +1,6 @@
 TESTS = \
   t0000-basic.sh \
+  t0100-print.sh \
   t1000-mkpartfs.sh \
   t1100-busy-label.sh \
   t1500-small-ext2.sh \
