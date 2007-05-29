@@ -71,13 +71,14 @@ test_expect_success 'create interactive input' 'printf "y\n\n" > in'
 # Now that there's a label, rerunning the same command is interactive.
 test_expect_success \
     'rerun that same command, but now with a preexisting label' \
-    'parted ---pretend-input-tty $dev mklabel msdos < in > o2 2>&1'
+    'parted ---pretend-input-tty $dev mklabel msdos < in > out 2>&1'
 
 # Transform the actual output, to avoid spurious differences when
 # $PWD contains a symlink-to-dir.  Also, remove the ^M      ...^M bogosity.
 test_expect_success \
     'normalize the actual output' \
-    'sed "s,on /.*/$dev,on DEVICE,;s,   *,,;s, $,," o2 > out'
+    'mv out o2 && sed -e "s,on /.*/$dev,on DEVICE,;s,   *,,;s, $,," \
+                      -e "s,^.*/lt-parted: ,parted: ," o2 > out'
 
 # Create expected output file.
 fail=0
