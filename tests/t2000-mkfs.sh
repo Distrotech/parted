@@ -96,6 +96,11 @@ test_expect_failure \
     'parted -s $dev mkpartfs primary bogus 1 1 >out 2>&1'
 
 test_expect_success \
+    'normalize the actual output' \
+    'mv out o2 && sed -e "s,   *,,;s, $,," \
+                      -e "s,^.*/lt-parted: ,parted: ," o2 > out'
+
+test_expect_success \
     'check for expected diagnostic' \
     '{ echo "parted: invalid token: bogus"
        echo "Error: Expecting a file system type."; } > exp &&
