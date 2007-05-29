@@ -57,10 +57,9 @@ test_expect_success \
     'run parted mklabel (without -s) on a blank disk' \
     'parted $dev mklabel msdos > out 2>&1'
 
-warning_msg='WARNING: You are not superuser.  Watch out for permissions.'
 test_expect_success \
     'create expected output file' \
-    'test "$uid" = 0 && : > exp || echo "$warning_msg" > exp'
+    'emit_superuser_warning > exp'
 
 test_expect_success \
     'check its "interactive" output' \
@@ -82,7 +81,7 @@ test_expect_success \
 
 # Create expected output file.
 fail=0
-{ test "$uid" = 0 && : > exp || echo "$warning_msg" > exp; } || fail=1
+{ emit_superuser_warning > exp; } || fail=1
 cat <<EOF >> exp || fail=1
 Warning: The existing disk label on DEVICE will be destroyed and all\
  data on this disk will be lost. Do you want to continue?

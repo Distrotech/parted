@@ -21,14 +21,6 @@ test_description="exercise Parted's constraint-management code"
 
 . ./init.sh
 
-# FIXME: move this to test-lib.sh, and use it in t0000*.sh
-emit_superuser_warning()
-{
-  uid=`id -u` || uid=1
-  test "$uid" != 0 &&
-    echo 'WARNING: You are not superuser.  Watch out for permissions.'
-}
-
 dev=loop-file
 N=2
 t=ext2
