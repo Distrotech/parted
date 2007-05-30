@@ -32,6 +32,7 @@
 #ifdef ENABLE_NLS
 #       include <wchar.h>
         int wcswidth (const wchar_t *s, size_t n);
+        wchar_t *wcsdup(const wchar_t *s);
 #	define L_(str) L##str
 #else
 #	define L_(str) str
