@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 # Find a directory in which a disk-simulating file is usable by parted.
 # The problem is that on systems supporting O_DIRECT, open with O_DIRECT
 # fails for some file system types (e.g., tmpfs on linux-2.6.21).
@@ -14,6 +14,12 @@
 # from the list below.  If none is usable, set it to the empty string.
 # Consider $TMPDIR only if it specifies an absolute name, and that
 # name contains no shell meta-character.  Likewise for $HOME.
+
+# This code is pretty picky.  The chosen partition must support aligned reads
+# and writes in blocks of size 512B and 4KB to a file descriptor opened with
+# O_RDWR|O_DIRECT.  Reiserfs doesn't support 512-byte reads.  On tmpfs,
+# the open fails.
+
 # The candidate directories:
 #   . $HOME $TMPDIR /tmp /var/tmp /dev/shm
 AC_DEFUN([parted_FIND_USABLE_TEST_DIR],
@@ -47,6 +53,11 @@ frobnozzle
 	      esac
 	  done
 
+	  case $PARTED_TMPDIR in
+	      *[^/a-zA-Z0-9_.-]*) ;;
+	      *) pe_cand_dirs="$PARTED_TMPDIR $pe_cand_dirs";;
+	  esac
+
 	  # This is the list of candidate directories.
 	  pe_cand_dirs="$pe_cand_dirs /tmp /var/tmp /dev/shm"
 
@@ -63,8 +74,8 @@ frobnozzle
 #include <stdlib.h>
 #include <string.h>
 
-#define LOGICAL_BLOCK_SIZE 4096
-static char g_buf[2 * LOGICAL_BLOCK_SIZE];
+#define MAX_LOGICAL_BLOCK_SIZE 4096
+static char g_buf[2 * MAX_LOGICAL_BLOCK_SIZE];
 
 static inline void *
 ptr_align (void const *ptr, size_t alignment)
@@ -89,19 +100,25 @@ create_input_file (char const *file, char const *buf, size_t n_bytes)
 }
 
 static int
-try_o_direct (char const *file)
+try_o_direct (char const *file, size_t block_size)
 {
-  char const *p = ptr_align (g_buf, LOGICAL_BLOCK_SIZE);
+  char *p = ptr_align (g_buf, MAX_LOGICAL_BLOCK_SIZE);
   int fd;
 
-  if (!(p + LOGICAL_BLOCK_SIZE < g_buf + sizeof g_buf))
+  if (!(p + block_size < g_buf + sizeof g_buf))
     return 4;
 
-  fd = open (file, O_WRONLY | O_DIRECT);
+  fd = open (file, O_RDWR | O_DIRECT);
   if (fd < 0)
     return 1;
 
-  if (write (fd, p, LOGICAL_BLOCK_SIZE) != LOGICAL_BLOCK_SIZE)
+  if (write (fd, p, block_size) != block_size)
+    return 1;
+
+  if (lseek (fd, 0, SEEK_SET) != 0)
+    return 1;
+
+  if (read (fd, p, block_size) != block_size)
     return 1;
 
   return !! close (fd);
@@ -180,7 +197,8 @@ main ()
 	      stpcpy (stpcpy (endp, "/"), BASENAME);
 
 	      if (create_input_file (tmp, g_buf, sizeof g_buf) == 0
-		  && try_o_direct (tmp) == 0)
+		  && try_o_direct (tmp, 512) == 0
+		  && try_o_direct (tmp, MAX_LOGICAL_BLOCK_SIZE) == 0)
 		found = 1;
 
 	      unlink (tmp); /* ignore failure */
