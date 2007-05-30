@@ -21,6 +21,7 @@
 #include <config.h>
 
 #include <sys/time.h>
+#include <stdbool.h>
 #include <parted/parted.h>
 #include <parted/debug.h>
 #include <parted/endian.h>
@@ -150,46 +151,67 @@ typedef struct {
 
 static PedDiskType msdos_disk_type;
 
+/* FIXME: factor out this function: copied from aix.c, with changes to
+   the description, and an added sector number argument.
+   Read sector, SECTOR_NUM (which has length DEV->sector_size) into malloc'd
+   storage.  If the read fails, free the memory and return zero without
+   modifying *BUF.  Otherwise, set *BUF to the new buffer and return 1.  */
+static int
+read_sector (const PedDevice *dev, PedSector sector_num, char **buf)
+{
+	char *b = ped_malloc (dev->sector_size);
+	PED_ASSERT (b != NULL, return 0);
+	if (!ped_device_read (dev, b, sector_num, 1)) {
+		ped_free (b);
+		return 0;
+	}
+	*buf = b;
+	return 1;
+}
+
 static int
 msdos_probe (const PedDevice *dev)
 {
 	PedDiskType*	disk_type;
-	DosRawTable	part_table;
+	DosRawTable*	part_table;
 	int		i;
 
 	PED_ASSERT (dev != NULL, return 0);
 
-        if (dev->sector_size != 512)
+        if (dev->sector_size < sizeof *part_table)
                 return 0;
 
-	if (!ped_device_read (dev, &part_table, 0, 1))
+	char *label;
+	if (!read_sector (dev, 0, &label))
 		return 0;
 
+	part_table = (DosRawTable *) label;
+
 	/* check magic */
-	if (PED_LE16_TO_CPU (part_table.magic) != MSDOS_MAGIC)
-		return 0;
+	if (PED_LE16_TO_CPU (part_table->magic) != MSDOS_MAGIC)
+		goto probe_fail;
 
 	/* if this is a FAT fs, fail here.  Note that the Smart Boot Manager
 	 * Loader (SBML) signature indicates a partition table, not a file
 	 * system.
 	 */
-	if ((!strncmp (part_table.boot_code + 0x36, "FAT", 3)
-	    && strncmp (part_table.boot_code + 0x40, "SBML", 4) != 0)
-	    || !strncmp (part_table.boot_code + 0x52, "FAT", 3))
-		return 0;
+	if ((!strncmp (part_table->boot_code + 0x36, "FAT", 3)
+	    && strncmp (part_table->boot_code + 0x40, "SBML", 4) != 0)
+	    || !strncmp (part_table->boot_code + 0x52, "FAT", 3))
+		goto probe_fail;
 
 	/* If this is a GPT disk, fail here */
 	for (i = 0; i < 4; i++) {
-		if (part_table.partitions[i].type == PARTITION_GPT)
-			return 0;
+		if (part_table->partitions[i].type == PARTITION_GPT)
+			goto probe_fail;
 	}
 
 	/* If this is an AIX Physical Volume, fail here.  IBMA in EBCDIC */
-	if (part_table.boot_code[0] == (char) 0xc9 && 
-	    part_table.boot_code[1] == (char) 0xc2 &&
-	    part_table.boot_code[2] == (char) 0xd4 && 
-	    part_table.boot_code[3] == (char) 0xc1)
-		return 0;
+	if (part_table->boot_code[0] == (char) 0xc9 &&
+	    part_table->boot_code[1] == (char) 0xc2 &&
+	    part_table->boot_code[2] == (char) 0xd4 &&
+	    part_table->boot_code[3] == (char) 0xc1)
+		goto probe_fail;
 
 #ifdef ENABLE_PC98
 	/* HACK: it's impossible to tell PC98 and msdos disk labels apart.
@@ -198,10 +220,15 @@ msdos_probe (const PedDevice *dev)
 	 * is more reliable */
 	disk_type = ped_disk_type_get ("pc98");
 	if (disk_type && disk_type->ops->probe (dev))
-		return 0;
+		goto probe_fail;
 #endif /* ENABLE_PC98 */
 
+	free (label);
 	return 1;
+
+ probe_fail:
+	free (label);
+	return 0;
 }
 
 static PedDisk*
@@ -802,7 +829,7 @@ static int
 read_table (PedDisk* disk, PedSector sector, int is_extended_table)
 {
 	int			i;
-	DosRawTable		table;
+	DosRawTable*		table;
 	DosRawPartition*	raw_part;
 	PedPartition*		part;
 	PedPartitionType	type;
@@ -812,31 +839,34 @@ read_table (PedDisk* disk, PedSector sector, int is_extended_table)
 	PED_ASSERT (disk != NULL, return 0);
 	PED_ASSERT (disk->dev != NULL, return 0);
 
-	if (!ped_device_read (disk->dev, (void*) &table, sector, 1))
+	char *label = NULL;
+	if (!read_sector (disk->dev, sector, &label))
 		goto error;
+
+        table = (DosRawTable *) label;
 
 	/* weird: empty extended partitions are filled with 0xf6 by PM */
 	if (is_extended_table
-	    && PED_LE16_TO_CPU (table.magic) == PARTITION_MAGIC_MAGIC)
-		return 1;
+	    && PED_LE16_TO_CPU (table->magic) == PARTITION_MAGIC_MAGIC)
+		goto read_ok;
 
 #ifndef DISCOVER_ONLY
-	if (PED_LE16_TO_CPU (table.magic) != MSDOS_MAGIC) {
+	if (PED_LE16_TO_CPU (table->magic) != MSDOS_MAGIC) {
 		if (ped_exception_throw (
 			PED_EXCEPTION_ERROR, PED_EXCEPTION_IGNORE_CANCEL,
 			_("Invalid partition table on %s "
 			  "-- wrong signature %x."),
 			disk->dev->path,
-			PED_LE16_TO_CPU (table.magic))
+			PED_LE16_TO_CPU (table->magic))
 				!= PED_EXCEPTION_IGNORE)
 			goto error;
-		return 1;
+		goto read_ok;
 	}
 #endif
 
 	/* parse the partitions from this table */
 	for (i = 0; i < 4; i++) {
-		raw_part = &table.partitions [i];
+		raw_part = &table->partitions [i];
 		if (raw_part->type == PARTITION_EMPTY || !raw_part->length)
 			continue;
 
@@ -892,7 +922,7 @@ read_table (PedDisk* disk, PedSector sector, int is_extended_table)
 		for (i = 0; i < 4; i++) {
 			PedSector part_start;
 
-			raw_part = &table.partitions [i];
+			raw_part = &table->partitions [i];
 			if (!raw_part_is_extended (raw_part))
 				continue;
 
@@ -910,9 +940,12 @@ read_table (PedDisk* disk, PedSector sector, int is_extended_table)
 		}
 	}
 
+read_ok:
+	free (label);
 	return 1;
 
 error:
+	free (label);
 	ped_disk_delete_all (disk);
 	return 0;
 }
