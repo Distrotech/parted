@@ -562,6 +562,7 @@ amiga_read (PedDisk* disk)
 		}
 		ped_constraint_destroy (constraint_exact);
 	}
+	ped_free(partition);
 	return 1;
 }
 
