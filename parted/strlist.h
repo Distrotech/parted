@@ -1,6 +1,6 @@
 /*
     parted - a frontend to libparted
-    Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+    Copyright (C) 1999, 2000, 2001, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,7 +20,17 @@
 #ifndef STRLIST_H_INCLUDED
 #define STRLIST_H_INCLUDED
 
+#include <config.h>
+
 #include <wchar.h>
+
+#ifndef ENABLE_NLS
+#	define L_(str) str
+#       ifdef wchar_t
+#               undef wchar_t
+#       endif
+#       define wchar_t char
+#endif
 
 typedef struct _StrList StrList;
 struct _StrList {
