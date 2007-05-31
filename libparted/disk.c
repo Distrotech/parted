@@ -200,7 +200,7 @@ ped_disk_new (PedDevice* dev)
 	type = ped_disk_probe (dev);
 	if (!type) {
 		ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
-			_("Unable to open %s - unrecognised disk label."),
+			_("%s: unrecognised disk label"),
 			dev->path);
 		goto error_close_dev;
 	}
