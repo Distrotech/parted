@@ -27,28 +27,25 @@
 #include <stdlib.h>
 
 #include <assert.h>
+#include <wchar.h>
+#include <string.h>
 
+#include "xalloc.h"
+#include "strlist.h"
 
 #ifdef ENABLE_NLS
-#       include <wchar.h>
-        int wcswidth (const wchar_t *s, size_t n);
 #	define L_(str) L##str
 #else
 #	define L_(str) str
 #       ifdef wchar_t
 #               undef wchar_t
 #       endif
-#       include <string.h>
 #       define wchar_t char
 #       define wcslen strlen
 #       define wcswidth strnlen
 #       define wcscat strcat
 #       define wcsdup strdup
-        size_t strnlen (const char *, size_t);
 #endif
-
-#include "xalloc.h"
-#include "strlist.h"
 
 
 static const unsigned int       MAX_WIDTH = 512;
