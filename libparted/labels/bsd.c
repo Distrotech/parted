@@ -21,6 +21,7 @@
 
 #include <config.h>
 
+#include <stdbool.h>
 #include <parted/parted.h>
 #include <parted/debug.h>
 #include <parted/endian.h>
@@ -146,30 +147,45 @@ alpha_bootblock_checksum (char *boot) {
 	dp[63] = sum;
 }
 
+/* FIXME: factor out this function: copied from dos.c
+   Read sector, SECTOR_NUM (which has length DEV->sector_size) into malloc'd
+   storage.  If the read fails, free the memory and return zero without
+   modifying *BUF.  Otherwise, set *BUF to the new buffer and return 1.  */
+static int
+read_sector (const PedDevice *dev, PedSector sector_num, char **buf)
+{
+	char *b = ped_malloc (dev->sector_size);
+	PED_ASSERT (b != NULL, return 0);
+	if (!ped_device_read (dev, b, sector_num, 1)) {
+		free (b);
+		return 0;
+	}
+	*buf = b;
+	return 1;
+}
 
 static int
 bsd_probe (const PedDevice *dev)
 {
-	char		boot[512];
-	BSDRawLabel	*label;
+	BSDRawLabel	*partition;
 
 	PED_ASSERT (dev != NULL, return 0);
 
-        if (dev->sector_size != 512)
+        if (dev->sector_size < 512)
                 return 0;
 
-	if (!ped_device_read (dev, boot, 0, 1))
+	char *label;
+	if (!read_sector (dev, 0, &label))
 		return 0;
 
-	label = (BSDRawLabel *) (boot + BSD_LABEL_OFFSET);
+	partition = (BSDRawLabel *) (label + BSD_LABEL_OFFSET);
 
-	alpha_bootblock_checksum(boot);
+	alpha_bootblock_checksum(label);
 
 	/* check magic */
-	if (PED_LE32_TO_CPU (label->d_magic) != BSD_DISKMAGIC)
-		return 0;
-
-	return 1;
+        bool found = PED_LE32_TO_CPU (partition->d_magic) == BSD_DISKMAGIC;
+	free (label);
+	return found;
 }
 
 static PedDisk*
@@ -258,13 +274,12 @@ bsd_free (PedDisk* disk)
 static int
 bsd_clobber (PedDevice* dev)
 {
-	char		boot [512];
-	BSDRawLabel*	label = (BSDRawLabel *) (boot + BSD_LABEL_OFFSET);
-
-	if (!ped_device_read (dev, boot, 0, 1))
+	char *label;
+	if (!read_sector (dev, 0, &label))
 		return 0;
-	label->d_magic = 0;
-	return ped_device_write (dev, (void*) boot, 0, 1);
+	BSDRawLabel *rawlabel = (BSDRawLabel *) (label + BSD_LABEL_OFFSET);
+	rawlabel->d_magic = 0;
+	return ped_device_write (dev, label, 0, 1);
 }
 #endif /* !DISCOVER_ONLY */
 
@@ -277,8 +292,13 @@ bsd_read (PedDisk* disk)
 
 	ped_disk_delete_all (disk);
 
-	if (!ped_device_read (disk->dev, bsd_specific->boot_code, 0, 1))
-		goto error;
+	char *s0;
+	if (!read_sector (disk->dev, 0, &s0))
+		return 0;
+
+	memcpy (bsd_specific->boot_code, s0, sizeof (bsd_specific->boot_code));
+	free (s0);
+
 	label = (BSDRawLabel *) (bsd_specific->boot_code + BSD_LABEL_OFFSET);
 
 	for (i = 1; i <= BSD_MAXPARTITIONS; i++) {

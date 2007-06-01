@@ -354,7 +354,7 @@ amiga_alloc (const PedDevice* dev)
 	if (!(disk = _ped_disk_alloc (dev, &amiga_disk_type)))
 		return NULL;
 
-	if (!(disk->disk_specific = ped_malloc (PED_SECTOR_SIZE_DEFAULT))) {
+	if (!(disk->disk_specific = ped_malloc (disk->dev->sector_size))) {
 		free (disk);
 		return NULL;
 	}
@@ -365,7 +365,7 @@ amiga_alloc (const PedDevice* dev)
 	rdb->rdb_ID = PED_CPU_TO_BE32 (IDNAME_RIGIDDISK);
 	rdb->rdb_SummedLongs = PED_CPU_TO_BE32 (64);
 	rdb->rdb_HostID = PED_CPU_TO_BE32 (0);
-	rdb->rdb_BlockBytes = PED_CPU_TO_BE32 (PED_SECTOR_SIZE_DEFAULT);
+	rdb->rdb_BlockBytes = PED_CPU_TO_BE32 (disk->dev->sector_size);
 	rdb->rdb_Flags = PED_CPU_TO_BE32 (0);
 
 	/* Block lists */
@@ -451,7 +451,7 @@ amiga_clobber (PedDevice* dev)
 	int result = 0;
 	PED_ASSERT(dev != NULL, return 0);
 
-	if ((rdb=RDSK(ped_malloc(PED_SECTOR_SIZE_DEFAULT)))==NULL)
+	if ((rdb=RDSK(ped_malloc(dev->sector_size)))==NULL)
 		return 0;
 
 	while ((i = _amiga_find_rdb (dev, rdb)) != AMIGA_RDB_NOT_FOUND) {
@@ -656,7 +656,7 @@ amiga_write (const PedDisk* disk)
 	PED_ASSERT (disk->dev != NULL, return 0);
 	PED_ASSERT (disk->disk_specific != NULL, return 0);
 
-	if (!(rdb = ped_malloc (PED_SECTOR_SIZE_DEFAULT)))
+	if (!(rdb = ped_malloc (disk->dev->sector_size)))
 		return 0;
 
 	/* Let's read the rdb */
@@ -668,7 +668,7 @@ amiga_write (const PedDisk* disk)
 		memset ((char *)(RDSK(disk->disk_specific)) + pb_size,
 			0, PED_SECTOR_SIZE_DEFAULT - pb_size);
 	} else {
-		memcpy (RDSK(disk->disk_specific), rdb, PED_SECTOR_SIZE_DEFAULT);
+		memcpy (RDSK(disk->disk_specific), rdb, disk->dev->sector_size);
 	}
 	free (rdb);
 	rdb = RDSK(disk->disk_specific);
@@ -693,7 +693,7 @@ amiga_write (const PedDisk* disk)
 		table[i] = LINK_END;
 
 	/* Let's allocate a partition block */
-	if (!(block = ped_malloc (PED_SECTOR_SIZE_DEFAULT))) {
+	if (!(block = ped_malloc (disk->dev->sector_size))) {
 		free (table);
 		return 0;
 	}
@@ -807,7 +807,7 @@ amiga_partition_new (const PedDisk* disk, PedPartitionType part_type,
 		return NULL;
 
 	if (ped_partition_is_active (part)) {
-		if (!(part->disk_specific = ped_malloc (PED_SECTOR_SIZE_DEFAULT))) {
+		if (!(part->disk_specific = ped_malloc (disk->dev->sector_size))) {
 			free (part);
 			return NULL;
 		}

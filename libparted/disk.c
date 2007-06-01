@@ -148,8 +148,15 @@ ped_disk_probe (PedDevice* dev)
         ped_exception_fetch_all ();
         for (walk = ped_disk_type_get_next (NULL); walk;
              walk = ped_disk_type_get_next (walk))
+          {
+                if (getenv ("PARTED_DEBUG")) {
+                        fprintf (stderr, "probe label: %s\n",
+                                 walk->name);
+                        fflush (stderr);
+                }
                 if (walk->ops->probe (dev))
                         break;
+          }
 
         if (ped_exception)
                 ped_exception_catch ();

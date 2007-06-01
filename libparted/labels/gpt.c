@@ -259,6 +259,23 @@ typedef struct _GPTPartitionData {
 static PedDiskType gpt_disk_type;
 
 
+/* FIXME: factor out this function: copied from dos.c
+   Read sector, SECTOR_NUM (which has length DEV->sector_size) into malloc'd
+   storage.  If the read fails, free the memory and return zero without
+   modifying *BUF.  Otherwise, set *BUF to the new buffer and return 1.  */
+static int
+read_sector (const PedDevice *dev, PedSector sector_num, char **buf)
+{
+	char *b = ped_malloc (dev->sector_size);
+	PED_ASSERT (b != NULL, return 0);
+	if (!ped_device_read (dev, b, sector_num, 1)) {
+		free (b);
+		return 0;
+	}
+	*buf = b;
+	return 1;
+}
+
 static inline uint32_t
 pth_get_size (const PedDevice* dev)
 {
@@ -430,7 +447,6 @@ gpt_probe (const PedDevice * dev)
 {
 	GuidPartitionTableHeader_t* gpt = NULL;
         uint8_t* pth_raw = ped_malloc (pth_get_size (dev));
-	LegacyMBR_t legacy_mbr;
 	int gpt_sig_found = 0;
 
 	PED_ASSERT (dev != NULL, return 0);
@@ -451,26 +467,31 @@ gpt_probe (const PedDevice * dev)
 	if (!gpt_sig_found)
 		return 0;
 
-	if (ped_device_read(dev, &legacy_mbr, 0, GPT_HEADER_SECTORS)) {
-		if (!_pmbr_is_valid (&legacy_mbr)) {
-			int ex_status = ped_exception_throw (
-				PED_EXCEPTION_WARNING,
-				PED_EXCEPTION_YES_NO,
-			_("%s contains GPT signatures, indicating that it has "
-			  "a GPT table.  However, it does not have a valid "
-			  "fake msdos partition table, as it should.  Perhaps "
-			  "it was corrupted -- possibly by a program that "
-			  "doesn't understand GPT partition tables.  Or "
-			  "perhaps you deleted the GPT table, and are now "
-			  "using an msdos partition table.  Is this a GPT "
-			  "partition table?"),
-				dev->path);
-			if (ex_status == PED_EXCEPTION_NO)
-				return 0;
-		}
+
+	char *label;
+	if (!read_sector (dev, 0, &label))
+		return 0;
+
+        int ok = 1;
+	if (!_pmbr_is_valid ( (const LegacyMBR_t *) label)) {
+		int ex_status = ped_exception_throw (
+			PED_EXCEPTION_WARNING,
+			PED_EXCEPTION_YES_NO,
+		_("%s contains GPT signatures, indicating that it has "
+		  "a GPT table.  However, it does not have a valid "
+		  "fake msdos partition table, as it should.  Perhaps "
+		  "it was corrupted -- possibly by a program that "
+		  "doesn't understand GPT partition tables.  Or "
+		  "perhaps you deleted the GPT table, and are now "
+		  "using an msdos partition table.  Is this a GPT "
+		  "partition table?"),
+			dev->path);
+		if (ex_status == PED_EXCEPTION_NO)
+			ok = 0;
 	}
 
-	return 1;
+        free (label);
+	return ok;
 }
 
 #ifndef DISCOVER_ONLY
@@ -973,8 +994,10 @@ error:
 static int
 _write_pmbr (PedDevice * dev)
 {
-	LegacyMBR_t pmbr;
+	size_t buf_len = pth_get_size (dev);
+	LegacyMBR_t *pmbr = ped_malloc (buf_len);
 
+#if 0
 	/* The UEFI spec is not clear about what to do with the following
 	   elements of the Protective MBR (pmbr): BootCode (0-440B),
 	   UniqueMBRSignature (440B-444B) and Unknown (444B-446B).
@@ -985,20 +1008,25 @@ _write_pmbr (PedDevice * dev)
 	/* Zero out all the legacy partitions.
 	   There are 4 PartitionRecords.  */
 	memset (pmbr.PartitionRecord, 0, sizeof pmbr.PartitionRecord);
+#endif
 
-	pmbr.Signature = PED_CPU_TO_LE16(MSDOS_MBR_SIGNATURE);
-	pmbr.PartitionRecord[0].OSType      = EFI_PMBR_OSTYPE_EFI;
-	pmbr.PartitionRecord[0].StartSector = 1;
-	pmbr.PartitionRecord[0].EndHead     = 0xFE;
-	pmbr.PartitionRecord[0].EndSector   = 0xFF;
-	pmbr.PartitionRecord[0].EndTrack    = 0xFF;
-	pmbr.PartitionRecord[0].StartingLBA = PED_CPU_TO_LE32(1);
+	memset(pmbr, 0, buf_len);
+	pmbr->Signature = PED_CPU_TO_LE16(MSDOS_MBR_SIGNATURE);
+	pmbr->PartitionRecord[0].OSType      = EFI_PMBR_OSTYPE_EFI;
+	pmbr->PartitionRecord[0].StartSector = 1;
+	pmbr->PartitionRecord[0].EndHead     = 0xFE;
+	pmbr->PartitionRecord[0].EndSector   = 0xFF;
+	pmbr->PartitionRecord[0].EndTrack    = 0xFF;
+	pmbr->PartitionRecord[0].StartingLBA = PED_CPU_TO_LE32(1);
 	if ((dev->length - 1ULL) > 0xFFFFFFFFULL)
-		pmbr.PartitionRecord[0].SizeInLBA = PED_CPU_TO_LE32(0xFFFFFFFF);
+		pmbr->PartitionRecord[0].SizeInLBA = PED_CPU_TO_LE32(0xFFFFFFFF);
 	else
-		pmbr.PartitionRecord[0].SizeInLBA = PED_CPU_TO_LE32(dev->length - 1UL);
+		pmbr->PartitionRecord[0].SizeInLBA = PED_CPU_TO_LE32(dev->length - 1UL);
 
-	return ped_device_write (dev, &pmbr, GPT_PMBR_LBA, GPT_PMBR_SECTORS);
+        int write_ok = ped_device_write (dev, pmbr, GPT_PMBR_LBA,
+                                         GPT_PMBR_SECTORS);
+        free (pmbr);
+	return write_ok;
 }
 
 static void
@@ -1132,6 +1160,7 @@ gpt_write(const PedDisk * disk)
 	free (ptes);
 	return ped_device_sync (disk->dev);
 
+	free (pth_raw);
 error_free_ptes:
 	free (ptes);
 error:

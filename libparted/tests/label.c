@@ -36,6 +36,7 @@ START_TEST (test_create_label)
 
         for (type = ped_disk_type_get_next (NULL); type;
              type = ped_disk_type_get_next (type)) {
+          fprintf (stderr, "create label: %s\n", type->name); fflush (stderr);
                 if (!_implemented_disk_label (type->name))
                         continue;
 
@@ -90,6 +91,7 @@ START_TEST (test_read_label)
 
         for (type = ped_disk_type_get_next (NULL); type;
              type = ped_disk_type_get_next (type)) {
+          fprintf (stderr, "read label: %s\n", type->name); fflush (stderr);
                 if (!_implemented_disk_label (type->name))
                         continue;
 
@@ -124,6 +126,7 @@ START_TEST (test_clone_label)
 
         for (type = ped_disk_type_get_next (NULL); type;
              type = ped_disk_type_get_next (type)) {
+          fprintf (stderr, "read label: %s\n", type->name); fflush (stderr);
                 if (!_implemented_disk_label (type->name))
                         continue;
 
