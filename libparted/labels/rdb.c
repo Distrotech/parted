@@ -27,6 +27,10 @@
 #include <parted/debug.h>
 #include <parted/endian.h>
 
+#ifndef MAX
+# define MAX(a,b) ((a) < (b) ? (b) : (a))
+#endif
+
 #if ENABLE_NLS
 #  include <libintl.h>
 #  define _(String) dgettext (PACKAGE, String)
@@ -656,6 +660,11 @@ amiga_write (const PedDisk* disk)
 	/* Let's read the rdb */
 	if ((rdb_num = _amiga_find_rdb (disk->dev, rdb)) == AMIGA_RDB_NOT_FOUND) {
 		rdb_num = 2;
+		size_t pb_size = sizeof (struct PartitionBlock);
+                /* Initialize only the part that won't be copied over
+                   with a partition block in amiga_read.  */
+		memset ((char *)(RDSK(disk->disk_specific)) + pb_size,
+			0, PED_SECTOR_SIZE_DEFAULT - pb_size);
 	} else {
 		memcpy (RDSK(disk->disk_specific), rdb, PED_SECTOR_SIZE_DEFAULT);
 	}
@@ -668,13 +677,19 @@ amiga_write (const PedDisk* disk)
 	last_hb = (PedSector) PED_BE32_TO_CPU (rdb->rdb_RDBBlocksHi);
 	last_used_hb = (PedSector) PED_BE32_TO_CPU (rdb->rdb_HighRDSKBlock);
 
-	/* let's allocate a free block table and initialize it */
-	if (!(table = ped_malloc ((last_hb - first_hb + 1) * sizeof(uint32_t))))
+	/* Allocate a free block table and initialize it.
+	   There must be room for at least RDB_NUM + 2 entries, since
+	   the first RDB_NUM+1 entries get IDNAME_RIGIDDISK, and the
+	   following one must have LINK_END to serve as sentinel.  */
+	size_t tab_size = 2 + MAX (last_hb - first_hb, rdb_num);
+	if (!(table = ped_malloc (tab_size * sizeof *table)))
 		return 0;
 
-	memset(table, 0xff, (last_hb - first_hb + 1) * sizeof(uint32_t));
-	for (i = 0; i<=rdb_num; i++) table[i] = IDNAME_RIGIDDISK;
-	
+	for (i = 0; i <= rdb_num; i++)
+		table[i] = IDNAME_RIGIDDISK;
+	for (     ; i < tab_size; i++)
+		table[i] = LINK_END;
+
 	/* Let's allocate a partition block */
 	if (!(block = ped_malloc (PED_SECTOR_SIZE_DEFAULT))) {
 		ped_free (table);
