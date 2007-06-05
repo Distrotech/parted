@@ -182,9 +182,14 @@ bsd_alloc (const PedDevice* dev)
 	disk->disk_specific = bsd_specific = ped_malloc (sizeof (BSDDiskData));
 	if (!bsd_specific)
 		goto error_free_disk;
+        /* Initialize the first byte to zero, so that the code in bsd_write
+           knows to call _probe_and_add_boot_code.  Initializing all of the
+           remaining buffer is a little wasteful, but the alternative is to
+           figure out why a block at offset 340 would otherwise be used
+           uninitialized.  */
+	memset(bsd_specific->boot_code, 0, sizeof (bsd_specific->boot_code));
 
 	label = (BSDRawLabel*) (bsd_specific->boot_code + BSD_LABEL_OFFSET);
-	memset(label, 0, sizeof(BSDRawLabel));
 
 	label->d_magic = PED_CPU_TO_LE32 (BSD_DISKMAGIC);
 	label->d_type = PED_CPU_TO_LE16 (BSD_DTYPE_SCSI);
