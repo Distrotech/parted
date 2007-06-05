@@ -52,6 +52,10 @@ typedef struct
     size_t	size;
 } pointer_size_type;
 
+/* IMHO, none of the DEBUG-related code below is useful, and the
+   ped_malloc memset code is actually quite harmful: it masked at
+   least two nasty bugs that were fixed in June of 2007.  */
+#undef DEBUG
 #ifdef DEBUG
 static pointer_size_type dodgy_malloc_list[] = {
  {0,		0},
@@ -340,4 +344,3 @@ ped_free (void* ptr)
 
 	free (ptr);
 }
-
