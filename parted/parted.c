@@ -653,7 +653,7 @@ do_mkfs (PedDevice** dev)
                 goto error_destroy_disk;
         if (!_partition_warn_busy (part))
                 goto error_destroy_disk;
-        if (!command_line_get_fs_type (_("File system?"), &type))
+        if (!command_line_get_fs_type (_("File system type?"), &type))
                 goto error_destroy_disk;
 
         fs = ped_file_system_create (&part->geom, type, g_timer);
