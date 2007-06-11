@@ -25,7 +25,7 @@ N=1M
 dev=loop-file
 test_expect_success \
     'create a file too small to hold a fat32 file system' \
-    'dd if=/dev/zero of=$dev bs=$N count=1 2> /dev/null'
+    'dd if=/dev/null of=$dev bs=1 seek=$N 2> /dev/null'
 
 test_expect_success \
     'label the test disk' \
@@ -53,7 +53,7 @@ N=40M
 
 test_expect_success \
     'create a file large enough to hold a fat32 file system' \
-    'dd if=/dev/zero of=$dev bs=$N count=1 2> /dev/null'
+    'dd if=/dev/null of=$dev bs=1 seek=$N 2> /dev/null'
 
 test_expect_success \
     'label the test disk' \

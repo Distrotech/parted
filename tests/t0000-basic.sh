@@ -37,7 +37,7 @@ dev=loop-file
 
 test_expect_success \
     'create the test file' \
-    'dd if=/dev/zero of=$dev bs=$N count=1 2> /dev/null'
+    'dd if=/dev/null of=$dev bs=1 seek=$N 2> /dev/null'
 
 test_expect_success \
     'run parted -s FILE mklabel msdos' \
@@ -50,7 +50,7 @@ test_expect_success 'expect no output' '$compare out /dev/null'
 
 test_expect_success \
     'erase the left-over label' \
-    'dd if=/dev/zero of=$dev bs=$N count=1 2> /dev/null'
+    'dd if=/dev/zero of=$dev bs=1K count=1 2> /dev/null'
 
 # First iteration works with no prompting, since there is no preexisting label.
 test_expect_success \
