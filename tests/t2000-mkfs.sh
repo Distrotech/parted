@@ -106,4 +106,23 @@ test_expect_success \
        echo "Error: Expecting a file system type."; } > exp &&
      $compare out exp'
 
+#############################################################
+# Demonstrate 3-block-group failure for 16+MB EXT2 file system.
+# This test fails with at least parted-1.8.8.
+
+dev=loop-file
+
+test_expect_success \
+    "setup: create and label a device" \
+    'dd if=/dev/null of=$dev bs=1 seek=20M 2>/dev/null &&
+     parted -s $dev mklabel gpt'
+
+# FIXME: this test currently fails with the diagnostic "Error: Attempt
+# to write sectors 32772-32773 outside of partition on .../loop-file."
+# Eventually, when this bug is fixed, change to "test_expect_success"
+# and ensure that the output file is empty.
+test_expect_failure \
+    'try to create a file system with the offending size' \
+    'parted -s $dev mkpartfs primary ext2 0 16796160B >out 2>&1'
+
 test_done
