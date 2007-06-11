@@ -25,7 +25,7 @@ N=40M
 dev=loop-file
 test_expect_success \
     'create a file large enough to hold a fat32 file system' \
-    'dd if=/dev/zero of=$dev bs=$N count=1 2> /dev/null'
+    'dd if=/dev/null of=$dev bs=1 seek=$N 2> /dev/null'
 
 test_expect_success \
     'label the test disk' \
@@ -45,7 +45,7 @@ test_expect_success 'expect no output' '$compare out /dev/null'
 N=10M
 test_expect_success \
     'create a file large enough to hold a fat32 file system' \
-    'dd if=/dev/zero of=$dev bs=$N count=1 2> /dev/null'
+    'dd if=/dev/null of=$dev bs=1 seek=$N 2> /dev/null'
 
 test_expect_success \
     'label the test disk' \
@@ -88,7 +88,7 @@ dev=loop-file
 
 test_expect_success \
     "setup: create and label a device" \
-    'dd if=/dev/zero of=$dev bs=1M count=1 2>/dev/null &&
+    'dd if=/dev/null of=$dev bs=1 seek=1M 2>/dev/null &&
      parted -s $dev mklabel msdos'
 
 test_expect_failure \

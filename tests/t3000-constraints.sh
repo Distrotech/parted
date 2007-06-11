@@ -27,7 +27,7 @@ t=ext2
 
 test_expect_success \
     "setup: label and create a small $t partition" \
-    'dd if=/dev/zero of=$dev bs=${N}M count=1 2>/dev/null &&
+    'dd if=/dev/null of=$dev bs=1 seek=${N}M 2>/dev/null &&
      { echo y; echo c; } > in &&
      { emit_superuser_warning
        echo "Warning: You requested a partition from 1000kB to 2000kB."

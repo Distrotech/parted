@@ -24,7 +24,7 @@ test_description='Create very small ext2 file systems.'
 dev=loop-file
 test_expect_success \
     'setup' '
-    dd if=/dev/zero of=$dev bs=10M count=1 2> /dev/null &&
+    dd if=/dev/null of=$dev bs=1 seek=10M 2> /dev/null &&
     parted -s $dev mklabel msdos'
 
 test_expect_failure \
