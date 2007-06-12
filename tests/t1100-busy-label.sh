@@ -76,7 +76,7 @@ test_expect_success 'create expected output file' 'test $fail = 0'
 # Transform the actual output, removing ^M   ...^M.
 test_expect_success \
     'normalize the actual output' \
-    'mv out o2 && sed -e "s,   *,,;s, $,," o2 \
+    'mv out o2 && sed -e "s,   *,,;s, $,," \
                       -e "s,^.*/lt-parted: ,parted: ," o2 > out'
 
 test_expect_success \

@@ -205,7 +205,7 @@ emit_superuser_warning()
 {
   uid=`id -u` || uid=1
   test "$uid" != 0 &&
-    echo 'WARNING: You are not superuser.  Watch out for permissions.'
+    echo 'WARNING: You are not superuser.  Watch out for permissions.' || :
 }
 
 # Test the binaries we have just built.
