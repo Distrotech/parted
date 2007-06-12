@@ -64,7 +64,7 @@ int ext2_metadata_push(struct ext2_fs *fs, blk_t newsize)
 		if (fs->opt_debug)
 		{
 			for (j=0;j<diff;j++)
-				if (ext2_get_block_state(fs, fromblock+j))
+				if (!ext2_get_block_state(fs, fromblock+j))
 				{
 					fprintf(stderr,
 						"error: block relocator "
