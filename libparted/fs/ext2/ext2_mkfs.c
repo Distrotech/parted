@@ -565,12 +565,12 @@ struct ext2_fs *ext2_mkfs(struct ext2_dev_handle *handle,
                               &last_group_admin, &inodes_per_group);
 
 	int fs_too_small = 0;
-	if (last_group_admin >= last_group_blocks)
+	if (last_group_admin + 1 >= last_group_blocks)
           {
             numgroups--;
             if (numgroups == 0)
               fs_too_small = 1;
-            else if (numgroups == 1)
+            else
               {
 		numblocks -= last_group_blocks;
                 compute_block_counts (numblocks, numgroups, log_block_size,
