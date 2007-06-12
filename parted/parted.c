@@ -51,6 +51,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
+#include "xalloc.h"
 
 #ifdef ENABLE_MTRACE
 #include <mcheck.h>
@@ -1314,7 +1315,7 @@ do_print (PedDevice** dev)
                         ped_free (end);
                 }    
 
-                dev_name = strdup ((*dev)->path);
+                dev_name = xstrdup ((*dev)->path);
                 ped_device_free_all ();
 
                 *dev = ped_device_get (dev_name);

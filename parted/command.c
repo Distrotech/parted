@@ -25,6 +25,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include "xalloc.h"
 
 Command*
 command_create (const StrList* names,
@@ -35,7 +36,7 @@ command_create (const StrList* names,
 {
 	Command*	cmd;
 
-	cmd = malloc (sizeof (Command));
+	cmd = xmalloc (sizeof (Command));
         
         if (non_interactive)
                 cmd->non_interactive = 1;

@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
+#include "xalloc.h"
 
 #ifdef ENABLE_NLS
 
@@ -97,7 +98,7 @@ wchar_strdup (const wchar_t* str)
 #ifdef ENABLE_NLS
 	return wcsdup (str);
 #else
-	return strdup (str);
+	return xstrdup (str);
 #endif
 }
 
@@ -136,7 +137,7 @@ error:
 static wchar_t*
 gettext_to_wchar (const char* str)
 {
-	return strdup (str);
+	return xstrdup (str);
 }
 
 #endif /* !ENABLE_NLS */
@@ -187,7 +188,7 @@ wchar_to_str (const wchar_t* str, size_t count)
 {
 	char*		result;
 
-	result = strdup (str);
+	result = xstrdup (str);
 	if (count && count < strlen (result))
 		result [count] = 0;
 	return result;
@@ -208,7 +209,7 @@ str_list_alloc ()
 {
 	StrList*	list;
 
-	list = (StrList*) malloc (sizeof (StrList));
+	list = (StrList*) xmalloc (sizeof (StrList));
 	list->next = NULL;
 
 	return list;
@@ -360,7 +361,7 @@ str_list_convert (const StrList* list)
 	const StrList*	walk;
 	int		pos = 0;
 	int		length = 1;
-	char*		str = strdup ("");
+	char*		str = xstrdup ("");
 
 	for (walk = list; walk; walk = walk->next) {
 		if (walk->str) {
