@@ -44,7 +44,7 @@
 #       define wcslen strlen
 #       define wcswidth strnlen
 #       define wcscat strcat
-#       define wcsdup strdup
+#       define wcsdup xstrdup
 #endif
 
 
