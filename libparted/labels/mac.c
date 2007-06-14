@@ -170,8 +170,25 @@ struct _MacDiskData {
 
 static PedDiskType mac_disk_type;
 
+/* FIXME: factor out this function: copied from dos.c
+   Read sector, SECTOR_NUM (which has length DEV->sector_size) into malloc'd
+   storage.  If the read fails, free the memory and return zero without
+   modifying *BUF.  Otherwise, set *BUF to the new buffer and return 1.  */
 static int
-_check_signature (MacRawDisk* raw_disk)
+read_sector (const PedDevice *dev, PedSector sector_num, char **buf)
+{
+	char *b = ped_malloc (dev->sector_size);
+	PED_ASSERT (b != NULL, return 0);
+	if (!ped_device_read (dev, b, sector_num, 1)) {
+		free (b);
+		return 0;
+	}
+	*buf = b;
+	return 1;
+}
+
+static int
+_check_signature (MacRawDisk const *raw_disk)
 {
 	if (PED_BE16_TO_CPU (raw_disk->signature) != MAC_DISK_MAGIC) {
 #ifdef DISCOVER_ONLY
@@ -199,17 +216,19 @@ _rawpart_check_signature (MacRawPartition* raw_part)
 static int
 mac_probe (const PedDevice * dev)
 {
-	MacRawDisk	buf;
-
 	PED_ASSERT (dev != NULL, return 0);
 
-        if (dev->sector_size != 512)
+        if (dev->sector_size < sizeof (MacRawDisk))
                 return 0;
 
-	if (!ped_device_read (dev, &buf, 0, 1))
+	char *label;
+	if (!read_sector (dev, 0, &label))
 		return 0;
 
-	return _check_signature (&buf);
+	int valid = _check_signature ((MacRawDisk *) &label);
+
+	free (label);
+	return valid;
 }
 
 static int
@@ -745,7 +764,6 @@ _disk_analyse_ghost_size (PedDisk* disk)
 static int
 mac_read (PedDisk* disk)
 {
-	MacRawDisk		raw_disk;
 	MacRawPartition		raw_part;
 	MacDiskData*		mac_disk_data;
 	PedPartition*		part;
@@ -759,12 +777,16 @@ mac_read (PedDisk* disk)
 	mac_disk_data = disk->disk_specific;
 	mac_disk_data->part_map_entry_num = 0;		/* 0 == none */
 
-	if (!ped_device_read (disk->dev, &raw_disk, 0, 1))
-		goto error;
-	if (!_check_signature (&raw_disk))
+	char *s0;
+	if (!read_sector (disk->dev, 0, &s0))
+		return 0;
+
+	MacRawDisk *raw_disk = (MacRawDisk *) s0;
+
+	if (!_check_signature (raw_disk))
 		goto error;
 
-	if (!_disk_analyse_block_size (disk, &raw_disk))
+	if (!_disk_analyse_block_size (disk, raw_disk))
 		goto error;
 	if (!_disk_analyse_ghost_size (disk))
 		goto error;
@@ -773,11 +795,11 @@ mac_read (PedDisk* disk)
 	if (!ped_disk_delete_all (disk))
 		goto error;
 
-	if (raw_disk.driver_count && raw_disk.driver_count < 62) {
-		memcpy(&mac_disk_data->driverlist[0], &raw_disk.driverlist[0],
+	if (raw_disk->driver_count && raw_disk->driver_count < 62) {
+		memcpy(&mac_disk_data->driverlist[0], &raw_disk->driverlist[0],
 				sizeof(mac_disk_data->driverlist));
-		mac_disk_data->driver_count = raw_disk.driver_count;
-		mac_disk_data->block_size = raw_disk.block_size;
+		mac_disk_data->driver_count = raw_disk->driver_count;
+		mac_disk_data->block_size = raw_disk->block_size;
 	}
 
 	for (num=1; num==1 || num <= last_part_entry_num; num++) {
@@ -839,11 +861,13 @@ mac_read (PedDisk* disk)
 			goto error_delete_all;
 		ped_disk_commit_to_dev (disk);
 	}
+	free (s0);
 	return 1;
 
 error_delete_all:
 	ped_disk_delete_all (disk);
 error:
+	free (s0);
 	return 0;
 }
 
@@ -1031,21 +1055,21 @@ static int
 write_block_zero (PedDisk* disk, MacDiskData* mac_driverdata)
 {
 	PedDevice*	dev = disk->dev;
-	MacRawDisk	raw_disk;
-
-	if (!ped_device_read (dev, &raw_disk, 0, 1))
+	char *s0;
+	if (!read_sector (dev, 0, &s0))
 		return 0;
+	MacRawDisk *raw_disk = (MacRawDisk *) s0;
 
-	raw_disk.signature = PED_CPU_TO_BE16 (MAC_DISK_MAGIC);
-	raw_disk.block_size = PED_CPU_TO_BE16 (dev->sector_size);
-	raw_disk.block_count
+	raw_disk->signature = PED_CPU_TO_BE16 (MAC_DISK_MAGIC);
+	raw_disk->block_size = PED_CPU_TO_BE16 (dev->sector_size);
+	raw_disk->block_count
 		= PED_CPU_TO_BE32 (dev->length / (dev->sector_size / 512));
 
-	raw_disk.driver_count = mac_driverdata->driver_count;
-	memcpy(&raw_disk.driverlist[0], &mac_driverdata->driverlist[0],
-			sizeof(raw_disk.driverlist));
+	raw_disk->driver_count = mac_driverdata->driver_count;
+	memcpy(&raw_disk->driverlist[0], &mac_driverdata->driverlist[0],
+			sizeof(raw_disk->driverlist));
 
-	return ped_device_write (dev, &raw_disk, 0, 1);
+	return ped_device_write (dev, raw_disk, 0, 1);
 }
 
 static int
@@ -1630,4 +1654,3 @@ ped_disk_mac_done ()
 {
 	ped_disk_type_unregister (&mac_disk_type);
 }
-
