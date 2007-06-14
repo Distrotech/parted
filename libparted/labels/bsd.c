@@ -340,7 +340,7 @@ _probe_and_add_boot_code (const PedDisk* disk)
 {
 	BSDDiskData*		bsd_specific;
 	BSDRawLabel*		old_label;
-	char			old_boot_code [512];
+	char			old_boot_code [512]; // FIXME!
 
 	bsd_specific = (BSDDiskData*) disk->disk_specific;
 	old_label = (BSDRawLabel*) (old_boot_code + BSD_LABEL_OFFSET);
