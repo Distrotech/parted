@@ -1,7 +1,7 @@
 /* -*- Mode: c; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 8 -*-
 
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000, 2001, 2007, 2009 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2001, 2007-2009 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -338,18 +338,20 @@ error:
 static void
 _probe_and_add_boot_code (const PedDisk* disk)
 {
-	BSDDiskData*		bsd_specific;
-	BSDRawLabel*		old_label;
-	char			old_boot_code [512]; // FIXME!
-
-	bsd_specific = (BSDDiskData*) disk->disk_specific;
-	old_label = (BSDRawLabel*) (old_boot_code + BSD_LABEL_OFFSET);
-
-	if (!ped_device_read (disk->dev, old_boot_code, 0, 1))
+	char *s0;
+	if (!read_sector (disk->dev, 0, &s0))
 		return;
+	char *old_boot_code = s0;
+	BSDRawLabel *old_label
+                = (BSDRawLabel*) (old_boot_code + BSD_LABEL_OFFSET);
+
 	if (old_boot_code [0]
-	    && old_label->d_magic == PED_CPU_TO_LE32 (BSD_DISKMAGIC))
-		memcpy (bsd_specific->boot_code, old_boot_code, 512);
+	    && old_label->d_magic == PED_CPU_TO_LE32 (BSD_DISKMAGIC)) {
+		BSDDiskData *bsd_specific = (BSDDiskData*) disk->disk_specific;
+		memcpy (bsd_specific->boot_code, old_boot_code,
+                        sizeof (BSDDiskData));
+        }
+	free (s0);
 }
 
 #ifndef DISCOVER_ONLY
@@ -393,8 +395,20 @@ bsd_write (const PedDisk* disk)
 
 	alpha_bootblock_checksum (bsd_specific->boot_code);
 
-	if (!ped_device_write (disk->dev, (void*) bsd_specific->boot_code,
-			       0, 1))
+	/* Allocate a big enough buffer for ped_device_write.
+	   Must be sector_size bytes long, and when sector_size > 512,
+	   bsd_specific->boot_code is too short.  */
+	char *s0 = ped_malloc (disk->dev->sector_size);
+	if (s0 == NULL)
+		goto error;
+	/* Copy boot_code into the first part.  */
+	memcpy (s0, bsd_specific->boot_code, sizeof (BSDDiskData));
+	char *p = s0 + sizeof (BSDDiskData);
+	/* Fill the rest with zeros.  */
+	memset (p, 0, disk->dev->sector_size - sizeof (BSDDiskData));
+	int write_ok = ped_device_write (disk->dev, s0, 0, 1);
+	free (s0);
+	if (!write_ok)
 		goto error;
 	return ped_device_sync (disk->dev);
 
