@@ -168,21 +168,30 @@ error:
 static int
 loop_write (const PedDisk* disk)
 {
-	char		buf [512];
+	size_t buflen = disk->dev->sector_size;
+	char *buf = ped_malloc (buflen);
+	if (buf == NULL)
+		return 0;
 
 	if (ped_disk_get_partition (disk, 1)) {
-		if (!ped_device_read (disk->dev, buf, 0, 1))
+		if (!ped_device_read (disk->dev, buf, 0, 1)) {
+			free (buf);
 			return 0;
-		if (strncmp (buf, LOOP_SIGNATURE, strlen (LOOP_SIGNATURE)) != 0)
-	       		return 1;
+		}
+		if (strncmp (buf, LOOP_SIGNATURE, strlen (LOOP_SIGNATURE)) != 0) {
+			free (buf);
+			return 1;
+                }
 		memset (buf, 0, strlen (LOOP_SIGNATURE));
 		return ped_device_write (disk->dev, buf, 0, 1);
 	}
 
-	memset (buf, 0, 512);
+	memset (buf, 0, buflen);
 	strcpy (buf, LOOP_SIGNATURE);
 
-	return ped_device_write (disk->dev, buf, 0, 1);
+        int write_ok = ped_device_write (disk->dev, buf, 0, 1);
+        free (buf);
+	return write_ok;
 }
 #endif /* !DISCOVER_ONLY */
 
