@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1999, 2000, 2001, 2004, 2005, 2007, 2009
+    Copyright (C) 1999-2001, 2004-2005, 2007-2009
     Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
@@ -280,7 +280,9 @@ msdos_clobber (PedDevice* dev)
 
 	DosRawTable *table = (DosRawTable *) label;
 	table->magic = 0;
-	return ped_device_write (dev, (void*) table, 0, 1);
+        int write_ok = ped_device_write (dev, (void*) table, 0, 1);
+        free (label);
+	return write_ok;
 }
 #endif /* !DISCOVER_ONLY */
 
