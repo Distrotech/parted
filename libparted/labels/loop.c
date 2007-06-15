@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1999, 2000, 2007, 2009 Free Software Foundation, Inc.
+    Copyright (C) 1999-2000, 2007-2009 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -37,23 +37,38 @@ static PedDiskType loop_disk_type;
 static PedDisk* loop_alloc (const PedDevice* dev);
 static void loop_free (PedDisk* disk);
 
+/* FIXME: factor out this function: copied from dos.c
+   Read sector, SECTOR_NUM (which has length DEV->sector_size) into malloc'd
+   storage.  If the read fails, free the memory and return zero without
+   modifying *BUF.  Otherwise, set *BUF to the new buffer and return 1.  */
+static int
+read_sector (const PedDevice *dev, PedSector sector_num, char **buf)
+{
+	char *b = ped_malloc (dev->sector_size);
+	PED_ASSERT (b != NULL, return 0);
+	if (!ped_device_read (dev, b, sector_num, 1)) {
+		free (b);
+		return 0;
+	}
+	*buf = b;
+	return 1;
+}
+
 static int
 loop_probe (const PedDevice* dev)
 {
-	PedDisk*	disk;
-	char		buf [512];
-	int		result;
-
-        if (dev->sector_size != 512)
-                return 0;
-
-	disk = loop_alloc (dev);
+	PedDisk *disk = loop_alloc (dev);
 	if (!disk)
 		goto error;
 
-	if (!ped_device_read (dev, buf, 0, 1))
+	char *buf;
+	if (!read_sector (dev, 0, &buf))
 		goto error_destroy_disk;
-	if (strncmp (buf, LOOP_SIGNATURE, strlen (LOOP_SIGNATURE)) == 0) {
+        int found_sig = !strncmp (buf, LOOP_SIGNATURE, strlen (LOOP_SIGNATURE));
+        free (buf);
+
+	int result;
+	if (found_sig) {
 		result = 1;
 	} else {
 		PedGeometry*	geom;
@@ -77,14 +92,14 @@ error:
 static int
 loop_clobber (PedDevice* dev)
 {
-	char		buf [512];
-	PedSector	i = 0;
-
 	PED_ASSERT (dev != NULL, return 0);
+	char *buf = ped_malloc (dev->sector_size);
+	PED_ASSERT (buf != NULL, return 0);
 
-	memset (buf, 0, 512);
+	memset (buf, 0, dev->sector_size);
 
 	while (loop_probe (dev)) {
+		PedSector i = 0;
 		if (!ped_device_write (dev, buf, i++, 1))
 			return 0;
 	}
@@ -116,23 +131,6 @@ loop_free (PedDisk* disk)
 	_ped_disk_free (disk);
 }
 
-/* FIXME: factor out this function: copied from dos.c
-   Read sector, SECTOR_NUM (which has length DEV->sector_size) into malloc'd
-   storage.  If the read fails, free the memory and return zero without
-   modifying *BUF.  Otherwise, set *BUF to the new buffer and return 1.  */
-static int
-read_sector (const PedDevice *dev, PedSector sector_num, char **buf)
-{
-	char *b = ped_malloc (dev->sector_size);
-	PED_ASSERT (b != NULL, return 0);
-	if (!ped_device_read (dev, b, sector_num, 1)) {
-		free (b);
-		return 0;
-	}
-	*buf = b;
-	return 1;
-}
-
 static int
 loop_read (PedDisk* disk)
 {
@@ -155,8 +153,10 @@ loop_read (PedDisk* disk)
         int found_sig = !strncmp (buf, LOOP_SIGNATURE, strlen (LOOP_SIGNATURE));
         free (buf);
 
-        if (found_sig)
+        if (found_sig) {
+		ped_constraint_destroy (constraint_any);
 		return 1;
+        }
 
 	geom = ped_geometry_new (dev, 0, dev->length);
 	if (!geom)
