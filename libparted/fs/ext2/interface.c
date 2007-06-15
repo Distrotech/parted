@@ -34,9 +34,9 @@ struct ext2_dev_handle* ext2_make_dev_handle_from_parted_geometry(PedGeometry* g
 static PedGeometry*
 _ext2_generic_probe (PedGeometry* geom, int expect_ext_ver)
 {
-	struct ext2_super_block sb;
+	struct ext2_super_block *sb;
 
-	if (!ped_geometry_read(geom, &sb, 2, 2))
+	if (!ped_geometry_read_alloc(geom, &sb, 2, 2))
 		return NULL;
 
 	if (EXT2_SUPER_MAGIC(sb) == EXT2_SUPER_MAGIC_CONST) {
@@ -63,6 +63,7 @@ _ext2_generic_probe (PedGeometry* geom, int expect_ext_ver)
 			if (is_ext4)
 				is_ext3 = 0;
 		}
+		free (sb);
 
 		if (expect_ext_ver == 2 && (is_ext3 || is_ext4))
 			return NULL;
@@ -80,7 +81,7 @@ _ext2_generic_probe (PedGeometry* geom, int expect_ext_ver)
 					- first_data_block;
 
 			if (start < 0)
-				return NULL;
+				goto no_match;
 			ped_geometry_init (&probe_geom, geom->dev,
 					   start, block_count * block_size);
 			return _ext2_generic_probe (&probe_geom,
@@ -90,6 +91,10 @@ _ext2_generic_probe (PedGeometry* geom, int expect_ext_ver)
 						 block_count * block_size);
 		}
 	}
+        else {
+		free (sb);
+        }
+
 	return NULL;
 }
 
@@ -115,15 +120,20 @@ _ext4_probe (PedGeometry* geom)
 static int
 _ext2_clobber (PedGeometry* geom)
 {
-	struct ext2_super_block sb;
+	struct ext2_super_block *sb;
+        int ok = 0;
 
-	if (!ped_geometry_read(geom, &sb, 2, 2))
-		return 0;
-	if (EXT2_SUPER_MAGIC(sb) != EXT2_SUPER_MAGIC_CONST)
-		return 1;
-
-	sb.s_magic = 0;
-	return ped_geometry_write(geom, &sb, 2, 2);
+	if (ped_geometry_read_alloc(geom, &sb, 2, 2)) {
+		/* Clobber only if there's a matching magic number. */
+		if (EXT2_SUPER_MAGIC(*sb) != EXT2_SUPER_MAGIC_CONST) {
+			ok = 1;
+                } else {
+			sb->s_magic = 0;
+			ok = ped_geometry_write(geom, sb, 2, 2);
+                }
+		free (sb);
+        }
+        return ok;
 }
 
 static PedFileSystem*

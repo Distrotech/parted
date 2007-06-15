@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1999, 2000, 2005, 2007 Free Software Foundation, Inc.
+    Copyright (C) 1999-2000, 2005, 2007-2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -304,6 +304,24 @@ ped_geometry_read (const PedGeometry* geom, void* buffer, PedSector offset,
 	return 1;
 }
 
+/* Like ped_device_read, but read into malloc'd storage.  */
+int
+ped_geometry_read_alloc (const PedGeometry* geom, void** buffer,
+                         PedSector offset, PedSector count)
+{
+	char *buf = ped_malloc (count * geom->dev->sector_size);
+	if (buf == NULL)
+		return 0;
+	int ok = ped_geometry_read (geom, buf, offset, count);
+	if (!ok) {
+		free (buf);
+		buf = NULL;
+	}
+
+	*buffer = buf;
+	return ok;
+}
+
 /**
  * Flushes the cache on \p geom.
  *
@@ -471,4 +489,3 @@ ped_geometry_map (const PedGeometry* dst, const PedGeometry* src,
 }
 
 /** @} */
-
