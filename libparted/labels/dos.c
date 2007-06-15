@@ -271,15 +271,16 @@ msdos_free (PedDisk* disk)
 static int
 msdos_clobber (PedDevice* dev)
 {
-	DosRawTable		table;
-
 	PED_ASSERT (dev != NULL, return 0);
 	PED_ASSERT (msdos_probe (dev), return 0);
 
-	if (!ped_device_read (dev, &table, 0, 1))
+	char *label;
+	if (!read_sector (dev, 0, &label))
 		return 0;
-	table.magic = 0;
-	return ped_device_write (dev, (void*) &table, 0, 1);
+
+	DosRawTable *table = (DosRawTable *) label;
+	table->magic = 0;
+	return ped_device_write (dev, (void*) table, 0, 1);
 }
 #endif /* !DISCOVER_ONLY */
 

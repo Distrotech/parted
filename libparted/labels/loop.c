@@ -116,11 +116,27 @@ loop_free (PedDisk* disk)
 	_ped_disk_free (disk);
 }
 
+/* FIXME: factor out this function: copied from dos.c
+   Read sector, SECTOR_NUM (which has length DEV->sector_size) into malloc'd
+   storage.  If the read fails, free the memory and return zero without
+   modifying *BUF.  Otherwise, set *BUF to the new buffer and return 1.  */
+static int
+read_sector (const PedDevice *dev, PedSector sector_num, char **buf)
+{
+	char *b = ped_malloc (dev->sector_size);
+	PED_ASSERT (b != NULL, return 0);
+	if (!ped_device_read (dev, b, sector_num, 1)) {
+		free (b);
+		return 0;
+	}
+	*buf = b;
+	return 1;
+}
+
 static int
 loop_read (PedDisk* disk)
 {
 	PedDevice*		dev = NULL;
-	char			buf [512];
 	PedGeometry*		geom;
 	PedFileSystemType*	fs_type;
 	PedPartition*		part;
@@ -132,9 +148,14 @@ loop_read (PedDisk* disk)
 
 	ped_disk_delete_all (disk);
 
-	if (!ped_device_read (dev, buf, 0, 1))
+	char *buf;
+	if (!read_sector (dev, 0, &buf))
 		goto error;
-	if (!strncmp (buf, LOOP_SIGNATURE, strlen (LOOP_SIGNATURE)))
+
+        int found_sig = !strncmp (buf, LOOP_SIGNATURE, strlen (LOOP_SIGNATURE));
+        free (buf);
+
+        if (found_sig)
 		return 1;
 
 	geom = ped_geometry_new (dev, 0, dev->length);
