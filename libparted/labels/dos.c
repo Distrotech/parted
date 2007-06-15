@@ -1133,44 +1133,53 @@ static inline uint32_t generate_random_id (void)
 static int
 msdos_write (const PedDisk* disk)
 {
-	DosRawTable		table;
 	PedPartition*		part;
 	int			i;
 
 	PED_ASSERT (disk != NULL, return 0);
 	PED_ASSERT (disk->dev != NULL, return 0);
 
-	ped_device_read (disk->dev, &table, 0, 1);
+	char *s0 = NULL;
+	if (!read_sector (disk->dev, 0, &s0))
+		return 0;
+	DosRawTable *table = (DosRawTable *) s0;
 
-	if (!table.boot_code[0]) {
-		memset (table.boot_code, 0, 512);
-		memcpy (table.boot_code, MBR_BOOT_CODE, sizeof (MBR_BOOT_CODE));
+	if (!table->boot_code[0]) {
+		memset (table->boot_code, 0, 512);
+		memcpy (table->boot_code, MBR_BOOT_CODE, sizeof (MBR_BOOT_CODE));
 	}
 
 	/* If there is no unique identifier, generate a random one */
-	if (!table.mbr_signature)
-		table.mbr_signature = generate_random_id();
+	if (!table->mbr_signature)
+		table->mbr_signature = generate_random_id();
 
-	memset (table.partitions, 0, sizeof (DosRawPartition) * 4);
-	table.magic = PED_CPU_TO_LE16 (MSDOS_MAGIC);
+	memset (table->partitions, 0, sizeof (DosRawPartition) * 4);
+	table->magic = PED_CPU_TO_LE16 (MSDOS_MAGIC);
 
 	for (i=1; i<=4; i++) {
 		part = ped_disk_get_partition (disk, i);
 		if (!part)
 			continue;
 
-		if (!fill_raw_part (&table.partitions [i - 1], part, 0))
-			return 0;
+		if (!fill_raw_part (&table->partitions [i - 1], part, 0))
+			goto write_fail;
 
 		if (part->type == PED_PARTITION_EXTENDED) {
 			if (!write_extended_partitions (disk))
-				return 0;
+				goto write_fail;
 		}
 	}
 
-	if (!ped_device_write (disk->dev, (void*) &table, 0, 1))
+        int write_ok = ped_device_write (disk->dev, (void*) table, 0, 1);
+        free (s0);
+	if (!write_ok)
 		return 0;
 	return ped_device_sync (disk->dev);
+
+ write_fail:
+        free (s0);
+        return 0;
+
 }
 #endif /* !DISCOVER_ONLY */
 
