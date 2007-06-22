@@ -563,9 +563,15 @@ _readline (const char* prompt, const StrList* possibilities)
                 fputs (prompt, stdout);
                 fflush (stdout);
                 line = (char*) malloc (256);
-                if (fgets (line, 256, stdin) && strcmp (line, "") != 0)
+                if (fgets (line, 256, stdin) && strcmp (line, "") != 0) {
+#ifndef HAVE_LIBREADLINE
+                        /* Echo the input line, to be consistent with
+                           how readline-5.2 works.  */
+                        fputs (line, stdout);
+                        fflush (stdout);
+#endif
                         line [strlen (line) - 1] = 0;    /* kill trailing CR */
-                else {
+                } else {
                         free (line);
                         line = NULL;
                 }
