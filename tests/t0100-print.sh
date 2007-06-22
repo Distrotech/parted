@@ -25,9 +25,15 @@ dev=loop-file
 
 msdos_magic='\x55\xaa'
 
+# The extra 3KB+ zero bytes at the end are to avoid triggering a failure
+# on linux-2.6.8 that's probably related to opening with O_DIRECT.
+# Note that the minimum number of appended zero bytes required to avoid
+# the failure was 3465.  Here, we append a little more to make the resulting
+# file have a total size of exactly 4kB.
 test_expect_success \
     "setup: create the most basic partition table, manually" \
-    '{ dd if=/dev/zero bs=510 count=1; printf "$msdos_magic"; } > $dev'
+    '{ dd if=/dev/zero  bs=510 count=1; printf "$msdos_magic"
+       dd if=/dev/zero bs=3584 count=1; } > $dev'
 
 test_expect_success \
     'print the empty table' \
@@ -39,7 +45,7 @@ fail=0
 {
   cat <<EOF
 Model:  (file)
-Disk .../$dev: 512B
+Disk .../$dev: 4096B
 Sector size (logical/physical): 512B/512B
 Partition Table: msdos
 
