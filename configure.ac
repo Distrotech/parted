@@ -307,13 +307,13 @@ fi
 dnl Check for readline
 dnl NOTE: We need to remove the gl_cv_ignore_unused_libraries flag if we
 dnl detected one earlier.  libreadline on some platforms (e.g., RHEL and
-dnl Fedora) is left with 
+dnl Fedora) is left with
 if test "$with_readline" = yes; then
 	OLD_LIBS="$LIBS"
 	LIBS="$LIBS $PARTED_LIBS"
+	found_working_libreadline=no
 	AC_CHECK_LIB(readline, readline,
-		PARTED_LIBS="-lreadline $PARTED_LIBS"
-		AC_DEFINE(HAVE_LIBREADLINE, 1, [have readline]),
+		found_working_libreadline=yes,
 		AC_MSG_ERROR(
 GNU Readline could not be found which is required for the
 --with-readline (which is enabled by default).  Either disable readline support with
@@ -326,6 +326,39 @@ package as well (which may be called readline-devel or something similar).
 		$PARTED_LIBS
 	)
  	LIBS="$OLD_LIBS"
+
+	# See if libreadline is too old to be used.
+	# The readline function in Debian's libreadline5 5.0-10 fails to
+	# print to stdout the response (from stdin) to a prompt, when stdout
+	# is redirected, while 5.2-3 works fine.  That failure would cause
+	# several of parted's tests to failure.
+	# The purist approach would be to write a run-test, but that's
+	# not friendly to cross-compilers, so here's a compromise:
+	#
+	# See if libreadline defines one of these symbols:
+	# [this is the list of public symbols that are in 5.2, but not 5.0]
+	#
+	# $ diff -u /tmp/readline-5.[02]|grep '+T.[^_]'
+	# +T rl_vi_rubout
+	# +T rl_variable_value
+	# +T rl_reset_screen_size
+	# +T alloc_history_entry
+	# +T copy_history_entry
+	# +T replace_history_data
+	#
+	# If not, then reject this readline lib.
+	AC_CHECK_LIB([readline], [rl_variable_value],
+		     ,
+		     AC_MSG_ERROR(
+Your version of libreadline is too old to be used.
+Consider upgrading to version 5.2 or newer.)
+		     found_working_libreadline=no,
+		     $PARTED_LIBS)
+
+	if test $found_working_libreadline = yes; then
+		PARTED_LIBS="-lreadline $PARTED_LIBS"
+		AC_DEFINE(HAVE_LIBREADLINE, 1, [have readline]),
+	fi
 fi
 
 AC_SUBST(PARTED_LIBS)
