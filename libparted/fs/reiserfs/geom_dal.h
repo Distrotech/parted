@@ -1,6 +1,6 @@
 /*
     geom_dal.h -- parted device abstraction layer
-    Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+    Copyright (C) 2001, 2002, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,8 +19,6 @@
 
 #ifndef GEOM_DAL_H
 #define GEOM_DAL_H
-
-#include <config.h>
 
 #include <parted/parted.h>
 

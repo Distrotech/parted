@@ -26,8 +26,6 @@
 
 #include "strlist.h"
 
-#include <config.h>
-
 #ifdef ENABLE_NLS
 #       include <wchar.h>
 #else

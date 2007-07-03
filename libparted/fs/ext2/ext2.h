@@ -1,6 +1,6 @@
 /*
     ext2.h -- ext2 header
-    Copyright (C) 1998-2000 Free Software Foundation, Inc.
+    Copyright (C) 1998-2000, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,8 +19,6 @@
 
 #ifndef _EXT2_H
 #define _EXT2_H
-
-#include <config.h>
 
 #include <parted/parted.h>
 #include <parted/debug.h>

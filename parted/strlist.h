@@ -20,8 +20,6 @@
 #ifndef STRLIST_H_INCLUDED
 #define STRLIST_H_INCLUDED
 
-#include <config.h>
-
 #include <wchar.h>
 
 #ifndef ENABLE_NLS
