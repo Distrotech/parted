@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+    Copyright (C) 1998-2002, 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@
 #ifndef PED_ENDIAN_H_INCLUDED
 #define PED_ENDIAN_H_INCLUDED
 
-#include <config.h>
 #include <stdint.h>
 
 /* returns the n'th least significant byte */
