@@ -114,7 +114,7 @@ fat_set_frag_sectors (PedFileSystem* fs, PedSector frag_sectors)
    storage.  If the read fails, free the memory and return zero without
    modifying *BUF.  Otherwise, set *BUF to the new buffer and return 1.  */
 static int
-read_sector (const PedDevice *dev, PedSector sector_num, char **buf)
+read_sector (const PedDevice *dev, PedSector sector_num, void **buf)
 {
 	char *b = ped_malloc (dev->sector_size);
 	PED_ASSERT (b != NULL, return 0);
@@ -134,7 +134,7 @@ static int
 fat_boot_sector_read_2 (FatBootSector* fbs, char **sector_buf,
                         const PedGeometry *geom)
 {
-	char *buf;
+	void *buf;
 	*sector_buf = NULL;
 	if (!read_sector (geom->dev, 0, &buf))
 		return 0;
