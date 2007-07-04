@@ -1,6 +1,6 @@
 /*
     interface.c -- parted binding glue to libext2resize
-    Copyright (C) 1998-2000, 2007, 2009 Free Software Foundation, Inc.
+    Copyright (C) 1998-2000, 2007-2009 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -34,31 +34,31 @@ struct ext2_dev_handle* ext2_make_dev_handle_from_parted_geometry(PedGeometry* g
 static PedGeometry*
 _ext2_generic_probe (PedGeometry* geom, int expect_ext_ver)
 {
-	struct ext2_super_block *sb;
-
-	if (!ped_geometry_read_alloc(geom, &sb, 2, 2))
+	void *sb_v;
+	if (!ped_geometry_read_alloc(geom, &sb_v, 2, 2))
 		return NULL;
+	struct ext2_super_block *sb = sb_v;
 
-	if (EXT2_SUPER_MAGIC(sb) == EXT2_SUPER_MAGIC_CONST) {
-		PedSector block_size = 1 << (EXT2_SUPER_LOG_BLOCK_SIZE(sb) + 1);
-		PedSector block_count = EXT2_SUPER_BLOCKS_COUNT(sb);
-		PedSector group_blocks = EXT2_SUPER_BLOCKS_PER_GROUP(sb);
-		PedSector group_nr = EXT2_SUPER_BLOCK_GROUP_NR(sb);
-		PedSector first_data_block = EXT2_SUPER_FIRST_DATA_BLOCK(sb);
-		int version = EXT2_SUPER_REV_LEVEL(sb);
+	if (EXT2_SUPER_MAGIC(*sb) == EXT2_SUPER_MAGIC_CONST) {
+		PedSector block_size = 1 << (EXT2_SUPER_LOG_BLOCK_SIZE(*sb) + 1);
+		PedSector block_count = EXT2_SUPER_BLOCKS_COUNT(*sb);
+		PedSector group_blocks = EXT2_SUPER_BLOCKS_PER_GROUP(*sb);
+		PedSector group_nr = EXT2_SUPER_BLOCK_GROUP_NR(*sb);
+		PedSector first_data_block = EXT2_SUPER_FIRST_DATA_BLOCK(*sb);
+		int version = EXT2_SUPER_REV_LEVEL(*sb);
 		int is_ext3 = 0;
 		int is_ext4 = 0;
 
-		is_ext3 = (EXT2_SUPER_FEATURE_COMPAT (sb)
+		is_ext3 = (EXT2_SUPER_FEATURE_COMPAT (*sb)
 			   & EXT3_FEATURE_COMPAT_HAS_JOURNAL) != 0;
 		if (is_ext3) {
-			is_ext4 = ((EXT2_SUPER_FEATURE_RO_COMPAT (sb)
+			is_ext4 = ((EXT2_SUPER_FEATURE_RO_COMPAT (*sb)
 				    & EXT4_FEATURE_RO_COMPAT_HUGE_FILE)
-				   || (EXT2_SUPER_FEATURE_RO_COMPAT (sb)
+				   || (EXT2_SUPER_FEATURE_RO_COMPAT (*sb)
 				       & EXT4_FEATURE_RO_COMPAT_DIR_NLINK)
-				   || (EXT2_SUPER_FEATURE_INCOMPAT (sb)
+				   || (EXT2_SUPER_FEATURE_INCOMPAT (*sb)
 				       & EXT4_FEATURE_INCOMPAT_EXTENTS)
-				   || (EXT2_SUPER_FEATURE_INCOMPAT (sb)
+				   || (EXT2_SUPER_FEATURE_INCOMPAT (*sb)
 				       & EXT4_FEATURE_INCOMPAT_64BIT));
 			if (is_ext4)
 				is_ext3 = 0;
@@ -81,7 +81,7 @@ _ext2_generic_probe (PedGeometry* geom, int expect_ext_ver)
 					- first_data_block;
 
 			if (start < 0)
-				goto no_match;
+				return NULL;
 			ped_geometry_init (&probe_geom, geom->dev,
 					   start, block_count * block_size);
 			return _ext2_generic_probe (&probe_geom,
@@ -120,10 +120,11 @@ _ext4_probe (PedGeometry* geom)
 static int
 _ext2_clobber (PedGeometry* geom)
 {
-	struct ext2_super_block *sb;
+	void *sb_v;
         int ok = 0;
 
-	if (ped_geometry_read_alloc(geom, &sb, 2, 2)) {
+	if (ped_geometry_read_alloc(geom, &sb_v, 2, 2)) {
+		struct ext2_super_block *sb = sb_v;
 		/* Clobber only if there's a matching magic number. */
 		if (EXT2_SUPER_MAGIC(*sb) != EXT2_SUPER_MAGIC_CONST) {
 			ok = 1;
