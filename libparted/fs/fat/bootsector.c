@@ -27,21 +27,10 @@
 #include <fcntl.h>
 #include <errno.h>
 
-/* Reads in the boot sector (superblock), and does a minimum of sanity
- * checking.  The goals are:
- *	- to detect fat file systems, even if they are damaged [i.e. not
- * return an error / throw an exception]
- *	- to fail detection if there's not enough information for
- * fat_boot_sector_probe_type() to work (or possibly crash on a divide-by-zero)
- */
 int
-fat_boot_sector_read (FatBootSector* bs, const PedGeometry *geom)
+fat_boot_sector_is_sane (const FatBootSector* bs)
 {
 	PED_ASSERT (bs != NULL, return 0);
-	PED_ASSERT (geom != NULL, return 0);
-
-	if (!ped_geometry_read (geom, bs, 0, 1))
-		return 0;
 
 	if (PED_LE16_TO_CPU (bs->boot_sign) != 0xAA55) {
 		ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
@@ -86,6 +75,25 @@ fat_boot_sector_read (FatBootSector* bs, const PedGeometry *geom)
 	}
 
 	return 1;
+}
+
+/* Reads in the boot sector (superblock), and does a minimum of sanity
+ * checking.  The goals are:
+ *	- to detect fat file systems, even if they are damaged [i.e. not
+ * return an error / throw an exception]
+ *	- to fail detection if there's not enough information for
+ * fat_boot_sector_probe_type() to work (or possibly crash on a divide-by-zero)
+ */
+int
+fat_boot_sector_read (FatBootSector* bs, const PedGeometry *geom)
+{
+	PED_ASSERT (bs != NULL, return 0);
+	PED_ASSERT (geom != NULL, return 0);
+
+	if (!ped_geometry_read (geom, bs, 0, 1))
+		return 0;
+
+	return fat_boot_sector_is_sane (bs);
 }
 
 /*
@@ -383,14 +391,22 @@ fat_boot_sector_write (const FatBootSector* bs, PedFileSystem* fs)
 
 	PED_ASSERT (bs != NULL, return 0);
 
-	if (!ped_geometry_write (fs->geom, bs, 0, 1))
-		return 0;
-	if (fs_info->fat_type == FAT_TYPE_FAT32) {
-		if (!ped_geometry_write (fs->geom, bs,
-					 fs_info->boot_sector_backup_offset, 1))
-			return 0;
-	}
-	return ped_geometry_sync (fs->geom);
+	/* Allocate a sector-sized buffer and copy bs into it
+	   at the beginning.  Fill any remainder with zeros.  */
+	size_t buf_len = fs->geom->dev->sector_size;
+	char *buf = ped_malloc (buf_len);
+	memcpy (buf, bs, sizeof *bs);
+	memset (buf + sizeof *bs, 0, buf_len - sizeof *bs);
+
+	int write_ok
+	  = (ped_geometry_write (fs->geom, buf, 0, 1)
+	     && (fs_info->fat_type != FAT_TYPE_FAT32
+		 || ped_geometry_write (fs->geom, buf,
+					fs_info->boot_sector_backup_offset, 1)));
+	free (buf);
+	if (write_ok)
+		ped_geometry_sync (fs->geom);
+	return write_ok;
 }
 
 int

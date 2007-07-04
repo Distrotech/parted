@@ -109,6 +109,45 @@ fat_set_frag_sectors (PedFileSystem* fs, PedSector frag_sectors)
 	return 1;
 }
 
+/* FIXME: factor out this function: copied from dos.c
+   Read sector, SECTOR_NUM (which has length DEV->sector_size) into malloc'd
+   storage.  If the read fails, free the memory and return zero without
+   modifying *BUF.  Otherwise, set *BUF to the new buffer and return 1.  */
+static int
+read_sector (const PedDevice *dev, PedSector sector_num, char **buf)
+{
+	char *b = ped_malloc (dev->sector_size);
+	PED_ASSERT (b != NULL, return 0);
+	if (!ped_device_read (dev, b, sector_num, 1)) {
+		free (b);
+		return 0;
+	}
+	*buf = b;
+	return 1;
+}
+
+/* Just like fat_boot_sector_read, but works with sector_size > 512.
+   Upon success, set *SECTOR_BUF to the malloc'd sector_size-byte buffer,
+   and copy the first bytes of that buffer into FBS.  Upon success,
+   the caller must free *SECTOR_BUF.  */
+static int
+fat_boot_sector_read_2 (FatBootSector* fbs, char **sector_buf,
+                        const PedGeometry *geom)
+{
+	char *buf;
+	*sector_buf = NULL;
+	if (!read_sector (geom->dev, 0, &buf))
+		return 0;
+	if (!fat_boot_sector_is_sane (buf)) {
+		free (buf);
+		return 0;
+	}
+	*sector_buf = buf;
+	if (fbs)
+		memcpy (fbs, buf, sizeof *fbs);
+	return 1;
+}
+
 PedGeometry*
 fat_probe (PedGeometry* geom, FatType* fat_type)
 {
@@ -121,7 +160,8 @@ fat_probe (PedGeometry* geom, FatType* fat_type)
 		goto error;
 	fs_info = (FatSpecific*) fs->type_specific;
 
-	if (!fat_boot_sector_read (&fs_info->boot_sector, geom))
+	char *s0;
+	if (!fat_boot_sector_read_2 (&fs_info->boot_sector, &s0, geom))
 		goto error_free_fs;
 	if (!fat_boot_sector_analyse (&fs_info->boot_sector, fs))
 		goto error_free_fs;
@@ -131,10 +171,12 @@ fat_probe (PedGeometry* geom, FatType* fat_type)
 				   fs_info->sector_count);
 
 	fat_free (fs);
+	free (s0);
 	return result;
 
 error_free_fs:
 	fat_free (fs);
+	free (s0);
 error:
 	return NULL;
 }
@@ -173,7 +215,9 @@ fat_clobber (PedGeometry* geom)
 {
 	FatBootSector		boot_sector;
 
-	if (!fat_boot_sector_read (&boot_sector, geom))
+	// FIXME: remove this comment: ARGH: clobbers stack when sector_size > 512
+	char *s0;
+	if (!fat_boot_sector_read_2 (&boot_sector, &s0, geom))
 		return 1;
 
 	boot_sector.system_id[0] = 0;
@@ -183,7 +227,9 @@ fat_clobber (PedGeometry* geom)
 	if (boot_sector.u.fat32.fat_name[0] == 'F')
 		boot_sector.u.fat32.fat_name[0] = 0;
 
-        return ped_geometry_write (geom, &boot_sector, 0, 1);
+	int write_ok = ped_geometry_write (geom, s0, 0, 1);
+	free (s0);
+	return write_ok;
 }
 
 static int
@@ -220,7 +266,8 @@ fat_open (PedGeometry* geom)
 		goto error;
 	fs_info = (FatSpecific*) fs->type_specific;
 
-	if (!fat_boot_sector_read (&fs_info->boot_sector, geom))
+	char *s0;
+	if (!fat_boot_sector_read_2 (&fs_info->boot_sector, &s0, geom))
 		goto error_free_fs;
 	if (!fat_boot_sector_analyse (&fs_info->boot_sector, fs))
 		goto error_free_fs;
@@ -239,6 +286,7 @@ fat_open (PedGeometry* geom)
 	if (!fat_collect_cluster_info (fs))
 		goto error_free_buffers;
 
+	free (s0);
 	return fs;
 
 error_free_buffers:
@@ -246,6 +294,7 @@ error_free_buffers:
 error_free_fat_table:
 	fat_table_destroy (fs_info->fat);
 error_free_fs:
+	free (s0);
 	fat_free (fs);
 error:
 	return NULL;
@@ -887,4 +936,3 @@ ped_file_system_fat_done ()
 	ped_file_system_type_unregister (&fat16_type);
 	ped_file_system_type_unregister (&fat32_type);
 }
-
