@@ -209,7 +209,7 @@ str_list_alloc ()
 {
 	StrList*	list;
 
-	list = (StrList*) xmalloc (sizeof (StrList));
+	list = xmalloc (sizeof (StrList));
 	list->next = NULL;
 
 	return list;
@@ -585,4 +585,3 @@ str_list_length (const StrList* list)
 
 	return length;
 }
-
