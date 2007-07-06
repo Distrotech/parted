@@ -1405,7 +1405,6 @@ linux_read (const PedDevice* dev, void* buffer, PedSector start,
             PedSector count)
 {
         LinuxSpecific*          arch_specific = LINUX_SPECIFIC (dev);
-        int                     status;
         PedExceptionOption      ex_status;
         void*                   diobuf;
 
@@ -1453,10 +1452,11 @@ linux_read (const PedDevice* dev, void* buffer, PedSector start,
                 return 0;
 
         while (1) {
-                status = read (arch_specific->fd, diobuf, read_length);
+                ssize_t status = read (arch_specific->fd, diobuf, read_length);
                 if (status > 0)
                         memcpy(buffer, diobuf, status);
-                if (status == count * dev->sector_size) break;
+                if (status == (ssize_t) read_length)
+                        break;
                 if (status > 0) {
                         read_length -= status;
                         buffer = (char *) buffer + status;
