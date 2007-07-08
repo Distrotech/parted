@@ -390,7 +390,7 @@ pth_crc32(const PedDevice* dev, const GuidPartitionTableHeader_t* pth)
         PED_ASSERT (dev != NULL, return 0);
         PED_ASSERT (pth != NULL, return 0);
        
-        crc32 = efi_crc32 (pth_raw, pth_get_size_static (dev));
+        crc32 = efi_crc32 (pth_raw, PED_LE32_TO_CPU (pth->HeaderSize));
 
         ped_free (pth_raw);
       
@@ -590,8 +590,13 @@ _header_is_valid (const PedDevice* dev, GuidPartitionTableHeader_t* gpt)
 
 	if (PED_LE64_TO_CPU (gpt->Signature) != GPT_HEADER_SIGNATURE)
 		return 0;
-	if (PED_LE32_TO_CPU (gpt->HeaderSize)
-			> pth_get_size_static (dev))
+	/*
+	 * "While the GUID Partition Table Header's size may increase
+	 * in the future it cannot span more than one block on the
+	 * device."  EFI Specification, version 1.10, 11.2.2.1
+	 */
+	if (PED_LE32_TO_CPU (gpt->HeaderSize) < pth_get_size_static (dev)
+	    || PED_LE32_TO_CPU (gpt->HeaderSize) > dev->sector_size)
 		return 0;
 
 	origcrc = gpt->HeaderCRC32;
@@ -639,9 +644,7 @@ _parse_header (PedDisk* disk, GuidPartitionTableHeader_t* gpt,
 	PED_ASSERT (_header_is_valid (disk->dev, gpt), return 0);
 
 #ifndef DISCOVER_ONLY
-	if (PED_LE32_TO_CPU (gpt->Revision) > GPT_HEADER_REVISION_V1_02
-	    || PED_LE32_TO_CPU (gpt->HeaderSize) != pth_get_size_static (
-                                                        disk->dev)) {
+	if (PED_LE32_TO_CPU (gpt->Revision) > GPT_HEADER_REVISION_V1_02) {
 		if (ped_exception_throw (
 			PED_EXCEPTION_WARNING,
 			PED_EXCEPTION_IGNORE_CANCEL,
