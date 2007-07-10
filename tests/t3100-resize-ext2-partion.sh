@@ -46,13 +46,9 @@ test_expect_success \
     'parted -s $dev mkpartfs primary ext2 0 $ORIG_SIZE > out 2>&1'
 test_expect_success 'check for empty output' '$compare out /dev/null'
 
-# FIXME: this test currently fails with the diagnostic "error: block
-# relocator should have relocated 64".
-# Eventually, when this bug is fixed, change each of the following
-# expected failures to "test_expect_success".
-test_expect_failure \
+test_expect_success \
     'resize ext2 primary partition' \
     'parted -s $dev resize 1 0 $NEW_SIZE > out 2>&1'
-test_expect_failure 'check for empty output' '$compare out /dev/null'
+test_expect_success 'check for empty output' '$compare out /dev/null'
 
 test_done
