@@ -325,7 +325,7 @@ package as well (which may be called readline-devel or something similar).
 		exit,
 		$PARTED_LIBS
 	)
- 	LIBS="$OLD_LIBS"
+	LIBS="$OLD_LIBS $PARTED_LIBS"
 
 	# See if libreadline is too old to be used.
 	# The readline function in Debian's libreadline5 5.0-10 fails to
@@ -357,8 +357,9 @@ Consider upgrading to version 5.2 or newer.)
 
 	if test $found_working_libreadline = yes; then
 		PARTED_LIBS="-lreadline $PARTED_LIBS"
-		AC_DEFINE(HAVE_LIBREADLINE, 1, [have readline]),
+		AC_DEFINE(HAVE_LIBREADLINE, 1, [have readline])
 	fi
+	LIBS="$OLD_LIBS"
 fi
 
 AC_SUBST(PARTED_LIBS)
