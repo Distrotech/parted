@@ -2,7 +2,7 @@
  * Copyright (c) 2000 Silicon Graphics, Inc.  All Rights Reserved.
  * 
  * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
+ * under the terms of version 3 of the GNU General Public License as
  * published by the Free Software Foundation.
  * 
  * This program is distributed in the hope that it would be useful, but
@@ -17,8 +17,7 @@
  * other software, or any other product whatsoever.
  * 
  * You should have received a copy of the GNU General Public License along
- * with this program; if not, write the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston MA 02110-1301, USA.
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contact information: Silicon Graphics, Inc., 1600 Amphitheatre Pkwy,
  * Mountain View, CA  94043, or:
