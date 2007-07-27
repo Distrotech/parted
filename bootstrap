@@ -67,8 +67,8 @@ gnulib_files=
 
 # Translation Project URL, for the registry of all projects
 # and for the translation-team master directory.
-TP_URL='http://www.iro.umontreal.ca/translation/registry.cgi?domain='
-TP_PO_URL='http://www.iro.umontreal.ca/translation/teams/PO/'
+TP_URL='http://translationproject.org/domain/'
+TP_PO_URL='http://translationproject.org/PO-files'
 
 extract_package_name='
   /^AC_INIT(/{
@@ -211,12 +211,12 @@ get_translations() {
     echo "$0: getting translations into $subdir for $domain..." &&
 
     (cd $subdir && rm -f dummy `ls | sed -n '/\.gmo$/p; /\.po/p'`) &&
-    $DL_COMMAND -o "$subdir/$domain.html" "$TP_URL$domain"
+    $DL_COMMAND -o "$subdir/$domain.html" "$TP_URL$domain.html"
     if [ $? -eq 1 ]; then
       exit 1
     fi
 
-    sed -n 's|.*"http://[^"]*/translation/teams/PO/\([^/"]*\)/'"$domain"'-\([^/"]*\)\.[^."]*\.po".*|\1.\2|p' <"$subdir/$domain.html" |
+    sed -n 's|.*"../PO-files/\([^/"]*\)/'"$domain"'-\([^/"]*\)\.[^."]*\.po".*|\1.\2|p' <"$subdir/$domain.html" |
     sort -k 1,1 -k 2,2n -k2,2 -k3,3n -k3,3 -k4,4n -k4,4 -k5,5n -k5.5 |
     awk -F. '
       { if (lang && $1 != lang) print lang, ver }
