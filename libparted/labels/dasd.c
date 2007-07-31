@@ -216,8 +216,9 @@ dasd_probe (const PedDevice *dev)
 	struct fdasd_anchor anchor;
 
 	PED_ASSERT(dev != NULL, return 0);
-	PED_ASSERT((dev->type == PED_DEVICE_DASD
-			   || dev->type == PED_DEVICE_VIODASD), return 0);
+
+	if (!(dev->type == PED_DEVICE_DASD || dev->type == PED_DEVICE_VIODASD))
+		return 0;
 
 	arch_specific = LINUX_SPECIFIC(dev);
 
@@ -268,6 +269,7 @@ dasd_read (PedDisk* disk)
 	char str[20];
 	PedDevice* dev;
 	PedPartition* part;
+	PedFileSystemType *fs;
 	PedSector start, end;
 	PedConstraint* constraint_exact;
 	partition_info_t *p;
@@ -378,19 +380,24 @@ dasd_read (PedDisk* disk)
 
 		dasd_data = part->disk_specific;
 
-		if (strncmp(PART_TYPE_RAID, str, 6) == 0)
+		if ((strncmp(PART_TYPE_RAID, str, 6) == 0) &&
+		    (ped_file_system_probe(&part->geom) == NULL))
 			ped_partition_set_flag(part, PED_PARTITION_RAID, 1);
 		else
 			ped_partition_set_flag(part, PED_PARTITION_RAID, 0);
 
-		if (strncmp(PART_TYPE_LVM, str, 6) == 0)
+		if ((strncmp(PART_TYPE_LVM, str, 6) == 0) &&
+		    (ped_file_system_probe(&part->geom) == NULL))
 			ped_partition_set_flag(part, PED_PARTITION_LVM, 1);
 		else
 			ped_partition_set_flag(part, PED_PARTITION_LVM, 0);
 
 		if (strncmp(PART_TYPE_SWAP, str, 6) == 0) {
-			dasd_data->system = PARTITION_LINUX_SWAP;
-			PDEBUG;
+			fs = ped_file_system_probe(&part->geom);
+			if (strncmp(fs->name, "linux-swap", 10) == 0) {
+				dasd_data->system = PARTITION_LINUX_SWAP;
+				PDEBUG;
+			}
 		}
 
 		vtoc_ebcdic_enc(p->f1->DS1DSNAM, p->f1->DS1DSNAM, 44);
