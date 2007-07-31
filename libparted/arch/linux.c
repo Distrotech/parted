@@ -253,6 +253,7 @@ struct blkdev_ioctl_param {
 #define VIODASD_MAJOR           112
 #define SX8_MAJOR1              160
 #define SX8_MAJOR2              161
+#define XVD_MAJOR               202
 
 #define SCSI_BLK_MAJOR(M) (                                             \
                 (M) == SCSI_DISK0_MAJOR                                 \
@@ -455,6 +456,8 @@ _device_probe_type (PedDevice* dev)
         } else if (_is_dm_major(dev_major)) {
                 dev->type = PED_DEVICE_DM;
 #endif
+        } else if (dev_major == XVD_MAJOR && (dev_minor % 0x10 == 0)) {
+                dev->type = PED_DEVICE_XVD;
         } else {
                 dev->type = PED_DEVICE_UNKNOWN;
         }
@@ -1156,6 +1159,11 @@ linux_new (const char* path)
                         goto error_free_arch_specific;
                 break;
 #endif
+
+        case PED_DEVICE_XVD:
+                if (!init_generic (dev, _("Xen Virtual Block Device")))
+                        goto error_free_arch_specific;
+                break;
 
         case PED_DEVICE_UNKNOWN:
                 if (!init_generic (dev, _("Unknown")))
