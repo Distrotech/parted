@@ -390,6 +390,39 @@ next:
         close(fd);
         return 0;
 }
+
+static int
+_probe_dm_devices ()
+{
+       DIR*            mapper_dir;
+       struct dirent*  dent;
+       char            buf [512];      /* readdir(3) claims d_name[256] */
+       struct stat     st;
+
+       mapper_dir = opendir ("/dev/mapper");
+       if (!mapper_dir)
+               return 0;
+
+       /* Search the /dev/mapper directory for devices w/ the same major
+        * number that was returned from _probe_lvm_major().
+        */
+       while ((dent = readdir (mapper_dir))) {
+               if (strcmp (dent->d_name, ".")  == 0 ||
+                   strcmp (dent->d_name, "..") == 0)
+                       continue;
+
+               snprintf (buf, sizeof (buf), "/dev/mapper/%s", dent->d_name);
+
+               if (stat (buf, &st) != 0)
+                       continue;
+
+               if (_is_dm_major(major(st.st_rdev)))
+                       _ped_device_probe (buf);
+       }
+       closedir (mapper_dir);
+
+       return 1;
+}
 #endif
 
 static int
@@ -1901,11 +1934,19 @@ linux_probe_all ()
          */
         _probe_standard_devices ();
 
- 	/* /sys/block is more reliable and consistent; fall back to using
- 	 * /proc/partitions if the former is unavailable, however.
- 	 */
- 	if (!_probe_sys_block ())
- 		_probe_proc_partitions ();
+#ifdef ENABLE_DEVICE_MAPPER
+        /* device-mapper devices aren't listed in /proc/partitions; or, if
+         * they are, they're listed as dm-X.  So, instead of relying on that,
+         * we do our own checks.
+         */
+        _probe_dm_devices ();
+#endif
+
+        /* /sys/block is more reliable and consistent; fall back to using
+         * /proc/partitions if the former is unavailable, however.
+         */
+        if (!_probe_sys_block ())
+                _probe_proc_partitions ();
 }
 
 static char*
