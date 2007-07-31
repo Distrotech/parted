@@ -122,7 +122,7 @@ swap_clobber (PedGeometry* geom)
 
 error_close_fs:
 	swap_close (fs);
-error:
+
 	return 0;
 }
 #endif /* !DISCOVER_ONLY */
