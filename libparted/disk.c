@@ -508,6 +508,17 @@ ped_disk_commit (PedDisk* disk)
 	return ped_disk_commit_to_os (disk);
 }
 
+/** 
+ * This adds the disk changes to history.  
+ * These changes can further be undone or redone
+ * until the choses to save them to the partition table.
+ */
+void
+ped_disk_commit_to_history (const PedDisk *disk)
+{
+    ped_history_add_disk (disk);
+}
+
 /**
  * \addtogroup PedPartition
  *

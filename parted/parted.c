@@ -43,6 +43,7 @@
 
 #include <parted/parted.h>
 #include <parted/debug.h>
+#include <parted/history.h>
 
 #include <ctype.h>
 #include <stdarg.h>
@@ -493,9 +494,10 @@ do_cp (PedDevice** dev)
         PedFileSystem*          dst_fs;
         PedFileSystemType*      dst_fs_type;
 
-        dst_disk = ped_disk_new (*dev);
-        if (!dst_disk)
-                goto error;
+        /* Use the most recent disk from history if available */
+        if (!(dst_disk = ped_history_disk ()))
+                if (!(dst_disk = ped_disk_new (*dev)))
+                        goto error;
 
         src_disk = dst_disk;
         if (!command_line_is_integer ()) {
@@ -534,8 +536,7 @@ do_cp (PedDevice** dev)
 /* update the partition table, close disks */
         if (!ped_partition_set_system (dst, dst_fs_type))
                 goto error_destroy_disk;
-        if (!ped_disk_commit (dst_disk))
-                goto error_destroy_disk;
+        ped_disk_commit_to_history (dst_disk);
         if (src_disk != dst_disk)
                 ped_disk_destroy (src_disk);
         ped_disk_destroy (dst_disk);
@@ -599,8 +600,12 @@ do_mklabel (PedDevice** dev)
         const PedDiskType*      type = ped_disk_probe (*dev);
 
         ped_exception_fetch_all ();
-        disk = ped_disk_new (*dev);
-        if (!disk) ped_exception_catch ();
+
+        /* Use the most recent disk from history if available */
+        if (!(disk = ped_history_disk ()))
+                if (!(disk = ped_disk_new (*dev)))
+                        ped_exception_catch ();
+
         ped_exception_leave_all ();
 
         if (disk) {
@@ -619,8 +624,7 @@ do_mklabel (PedDevice** dev)
         if (!disk)
                 goto error;
 
-        if (!ped_disk_commit (disk))
-                goto error_destroy_disk;
+        ped_disk_commit_to_history (disk);
         ped_disk_destroy (disk);
 
         if ((*dev)->type != PED_DEVICE_FILE)
@@ -642,9 +646,10 @@ do_mkfs (PedDevice** dev)
         const PedFileSystemType* type = ped_file_system_type_get ("ext2");
         PedFileSystem*          fs;
 
-        disk = ped_disk_new (*dev);
-        if (!disk)
-                goto error;
+        /* Use the most recent disk from history if available */
+        if (!(disk = ped_history_disk ()))
+                if (!(disk = ped_disk_new (*dev)))
+                        goto error;
 
         if  (!opt_script_mode && !_partition_warn_loss())
                 goto error_destroy_disk;
@@ -665,8 +670,7 @@ do_mkfs (PedDevice** dev)
                 goto error_destroy_disk;
         if (ped_partition_is_flag_available (part, PED_PARTITION_LBA))
                 ped_partition_set_flag (part, PED_PARTITION_LBA, 1);
-        if (!ped_disk_commit (disk))
-                goto error_destroy_disk;
+        ped_disk_commit_to_history (disk);
         ped_disk_destroy (disk);
 
         if ((*dev)->type != PED_DEVICE_FILE)
@@ -696,10 +700,11 @@ do_mkpart (PedDevice** dev)
         char*                    part_name = NULL;
         char                     *start_usr = NULL, *end_usr = NULL;
         char                     *start_sol = NULL, *end_sol = NULL;
-        
-        disk = ped_disk_new (*dev);
-        if (!disk)
-                goto error;
+ 
+        /* Use the most recent disk from history if available */
+        if (!(disk = ped_history_disk ()))
+                if (!(disk = ped_disk_new (*dev)))
+                        goto error;
 
         if (!ped_disk_type_check_feature (disk->type, PED_DISK_TYPE_EXTENDED)) {
                 part_type = PED_PARTITION_NORMAL;
@@ -797,8 +802,7 @@ do_mkpart (PedDevice** dev)
         if (ped_partition_is_flag_available (part, PED_PARTITION_LBA))
                 ped_partition_set_flag (part, PED_PARTITION_LBA, 1);
         
-        if (!ped_disk_commit (disk))
-                goto error_destroy_disk;
+        ped_disk_commit_to_history (disk);
         
         /* clean up */
         ped_constraint_destroy (final_constraint);
@@ -870,9 +874,10 @@ do_mkpartfs (PedDevice** dev)
         char                *start_usr = NULL, *end_usr = NULL;
         char                *start_sol = NULL, *end_sol = NULL;
 
-        disk = ped_disk_new (*dev);
-        if (!disk)
-                goto error;
+        /* Use the most recent disk from history if available */
+        if (!(disk = ped_history_disk ()))
+                if (!(disk = ped_disk_new (*dev)))
+                        goto error;
 
         if (!ped_disk_type_check_feature (disk->type, PED_DISK_TYPE_EXTENDED)) {
                 part_type = PED_PARTITION_NORMAL;
@@ -972,8 +977,7 @@ do_mkpartfs (PedDevice** dev)
         if (!ped_partition_set_system (part, fs_type))
                 goto error_destroy_disk;
 
-        if (!ped_disk_commit (disk))
-                goto error_destroy_disk;
+        ped_disk_commit_to_history (disk);
 
         /* clean up */
         ped_constraint_destroy (final_constraint);
@@ -1040,9 +1044,10 @@ do_move (PedDevice** dev)
         PedGeometry     *range_start = NULL, *range_end = NULL;
         PedGeometry     old_geom, new_geom;
 
-        disk = ped_disk_new (*dev);
-        if (!disk)
-                goto error;
+        /* Use the most recent disk from history if available */
+        if (!(disk = ped_history_disk ()))
+                if (!(disk = ped_disk_new (*dev)))
+                        goto error;
 
         if (!command_line_get_partition (_("Partition number?"), disk, &part))
                 goto error_destroy_disk;
@@ -1090,8 +1095,7 @@ do_move (PedDevice** dev)
                 goto error_close_fs;
         ped_file_system_close (fs_copy);
         ped_file_system_close (fs);
-        if (!ped_disk_commit (disk))
-                goto error_destroy_disk;
+        ped_disk_commit_to_history (disk);
         ped_disk_destroy (disk);
         if (range_start != NULL)
                 ped_geometry_destroy (range_start);
@@ -1124,9 +1128,10 @@ do_name (PedDevice** dev)
         PedPartition*   part = NULL;
         char*           name;
 
-        disk = ped_disk_new (*dev);
-        if (!disk)
-                goto error;
+        /* Use the most recent disk from history if available */
+        if (!(disk = ped_history_disk ()))
+                if (!(disk = ped_disk_new (*dev)))
+                        goto error;
 
         if (!command_line_get_partition (_("Partition number?"), disk, &part))
                 goto error_destroy_disk;
@@ -1139,7 +1144,7 @@ do_name (PedDevice** dev)
                 goto error_free_name;
         free (name);
 
-        if (!ped_disk_commit (disk))
+        ped_disk_commit_to_history (disk);
                 goto error_destroy_disk;
         ped_disk_destroy (disk);
         return 1;
@@ -1275,9 +1280,10 @@ do_print (PedDevice** dev)
         char*           tmp;
         wchar_t*        table_rendered;
 
-        disk = ped_disk_new (*dev);
-        if (!disk)
-                goto error;
+        /* Use the most recent disk from history if available */
+        if (!(disk = ped_history_disk ()))
+                if (!(disk = ped_disk_new (*dev)))
+                        goto error;
 
         peek_word = command_line_peek_word ();
         if (peek_word) {
@@ -1640,7 +1646,7 @@ _rescue_add_partition (PedPartition* part)
         }
 
         ped_partition_set_system (part, fs_type);
-        ped_disk_commit (part->disk);
+        ped_disk_commit_to_history (part->disk);
         return 1;
 }
 
@@ -1768,9 +1774,10 @@ do_resize (PedDevice** dev)
         PedGeometry             *range_start = NULL, *range_end = NULL;
         PedGeometry             new_geom;
 
-        disk = ped_disk_new (*dev);
-        if (!disk)
-                goto error;
+        /* Use the most recent disk from history if available */
+        if (!(disk = ped_history_disk ()))
+                if (!(disk = ped_disk_new (*dev)))
+                        goto error;
 
         if (!command_line_get_partition (_("Partition number?"), disk, &part))
                 goto error_destroy_disk;
@@ -1816,7 +1823,7 @@ do_resize (PedDevice** dev)
                 ped_file_system_close (fs);
         }
 
-        ped_disk_commit (disk);
+        ped_disk_commit_to_history (disk);
         ped_constraint_destroy (constraint);
         ped_disk_destroy (disk);
         if (range_start != NULL)
@@ -1849,9 +1856,10 @@ do_rm (PedDevice** dev)
         PedDisk*                disk;
         PedPartition*           part = NULL;
 
-        disk = ped_disk_new (*dev);
-        if (!disk)
-                goto error;
+        /* Use the most recent disk from history if available */
+        if (!(disk = ped_history_disk ()))
+                if (!(disk = ped_disk_new (*dev)))
+                        goto error;
 
         if (!command_line_get_partition (_("Partition number?"), disk, &part))
                 goto error_destroy_disk;
@@ -1859,7 +1867,7 @@ do_rm (PedDevice** dev)
                 goto error_destroy_disk;
 
         ped_disk_delete_partition (disk, part);
-        ped_disk_commit (disk);
+        ped_disk_commit_to_history (disk);
         ped_disk_destroy (disk);
 
         if ((*dev)->type != PED_DEVICE_FILE)
@@ -1897,9 +1905,10 @@ do_set (PedDevice** dev)
         PedPartitionFlag        flag;
         int                     state;
         
-        disk = ped_disk_new (*dev);
-        if (!disk)
-                goto error;
+        /* Use the most recent disk from history if available */
+        if (!(disk = ped_history_disk ()))
+                if (!(disk = ped_disk_new (*dev)))
+                        goto error;
         
         if (!command_line_get_partition (_("Partition number?"), disk, &part))
                 goto error_destroy_disk;
@@ -1914,8 +1923,7 @@ do_set (PedDevice** dev)
     
         if (!ped_partition_set_flag (part, flag, state))
 	        	goto error_destroy_disk;
-    	if (!ped_disk_commit (disk))
-	        	goto error_destroy_disk;
+    	ped_disk_commit_to_history (disk);
     	ped_disk_destroy (disk);
 
         if ((*dev)->type != PED_DEVICE_FILE)
@@ -1960,6 +1968,76 @@ do_version ()
     return 1;
 }
 
+    static int
+do_undo ()
+{
+    PedHistRet err;
+
+    if ((err = ped_history_undo ()))
+            printf(PED_HISTORY_TAG "%s\n", ped_history_print_ret (err));
+
+    return 1;
+}
+    
+static int
+do_redo ()
+{
+    PedHistRet err;
+
+    if ((err = ped_history_redo ()))
+            printf(PED_HISTORY_TAG "%s\n", ped_history_print_ret (err));
+
+    return 1;
+}
+
+/* Called back each time a disk modification is 
+ * made from history.
+ */
+static void
+print_handler (PedHistRet val, PedHistObj *obj)
+{
+    switch (val)
+    {
+        case PED_HISTORY_RET_SUCCESS:
+            printf("Applying change %s (Success)\n", obj->name);
+            break;
+
+        case PED_HISTORY_RET_ERROR:
+            printf(PED_HISTORY_TAG "Applying change %s (Failed)\n", obj->name);
+            break;
+
+        default: break;
+    }
+}
+
+static int
+do_history ()
+{
+    const PedHistObj *ii;
+        
+    /* Only print changes that are undone or modify the disk */
+    for (ii = ped_history_begin (); ii; ii = ii->next)
+           if (PED_HISTORY_IS_UNDONE (ii))
+                   printf(PED_HISTORY_TAG "%s (Undone)\n", ii->name);
+            else if (ii->disk)
+                    printf(PED_HISTORY_TAG "%s\n", ii->name);
+
+    return 1;
+}
+    
+static int
+do_save ()
+{
+    PedHistRet err;
+
+    if ((err = ped_history_commit_to_disk (print_handler)))
+            printf(PED_HISTORY_TAG "%s\n", ped_history_print_ret (err));
+    else
+            printf(PED_HISTORY_TAG "Successfully modified the disk\n");
+
+    return 1;
+}
+ 
 static void
 _init_messages ()
 {
@@ -2276,6 +2354,47 @@ NULL),
         str_list_create (
 _("'version' displays copyright and version information corresponding to this "
 "copy of GNU Parted\n"),
+NULL), 1));
+
+command_register (commands, command_create (
+        str_list_create_unique ("undo", _("undo"), NULL),
+        do_undo,
+        str_list_create (
+_("undo                                     Undo change to partition table"), 
+  NULL),
+        str_list_create (
+_("'undo' undoes the previous partition table modifcation "), NULL), 1));
+
+command_register (commands, command_create (
+        str_list_create_unique ("redo", _("redo"), NULL),
+        do_redo,
+        str_list_create (
+_("redo                                     Redo change to partition table"), 
+  NULL),
+        str_list_create (
+_("'redo' redoes the previous change to the parititon table"),
+NULL), 1));
+
+
+
+command_register (commands, command_create (
+        str_list_create_unique ("history", _("history"), NULL),
+        do_history,
+        str_list_create (
+_("history                                  display command history"), NULL),
+        str_list_create (
+_("'history' displays list of commands that have are to be executed\n"),
+NULL), 1));
+
+command_register (commands, command_create (
+        str_list_create_unique ("save", _("save"), NULL),
+        do_save,
+        str_list_create (
+_("save                                     Write changes to partition table"), 
+  NULL),
+        str_list_create (
+_("'save' commits the changes that were created during the current parted "
+   "session.  This writes the changes to disk."),
 NULL), 1));
 
 }

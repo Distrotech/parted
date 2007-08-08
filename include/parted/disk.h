@@ -260,6 +260,7 @@ extern PedDisk* ped_disk_new_fresh (PedDevice* dev,
 extern PedDisk* ped_disk_duplicate (const PedDisk* old_disk);
 extern void ped_disk_destroy (PedDisk* disk);
 extern int ped_disk_commit (PedDisk* disk);
+extern void ped_disk_commit_to_history (const PedDisk *disk);
 extern int ped_disk_commit_to_dev (PedDisk* disk);
 extern int ped_disk_commit_to_os (PedDisk* disk);
 extern int ped_disk_check (const PedDisk* disk);

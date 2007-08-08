@@ -21,6 +21,7 @@
 #include "ui.h"
 
 #include <parted/debug.h>
+#include <parted/history.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -136,6 +137,7 @@ command_print_help (Command* cmd)
 int
 command_run (Command* cmd, PedDevice** dev)
 {
+	ped_history_add(str_list_convert(cmd->names));
 	return cmd->method (dev);
 }
 
