@@ -190,9 +190,6 @@ ped_device_get (const char* path)
 	if (!walk)
 		return NULL;
 
-	if (!ped_disk_new (walk))
-		return NULL;
-
 	_device_register (walk);
 	return walk;
 }
