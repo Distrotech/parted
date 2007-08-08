@@ -1446,8 +1446,9 @@ linux_read (const PedDevice* dev, void* buffer, PedSector start,
 {
         LinuxSpecific*          arch_specific = LINUX_SPECIFIC (dev);
         PedExceptionOption      ex_status;
-        void*                   diobuf;
+        void*                   diobuf = NULL;
 
+        PED_ASSERT (dev != NULL, return 0);
         PED_ASSERT (dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0, return 0);
 
         if (_get_linux_version() < KERNEL_VERSION (2,6,0)) {
@@ -1528,7 +1529,9 @@ linux_read (const PedDevice* dev, void* buffer, PedSector start,
                                 break;
                 }
         }
-        free(diobuf);
+
+        if (diobuf)
+                free(diobuf);
 
         return 1;
 }
