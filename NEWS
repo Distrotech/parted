@@ -5,14 +5,44 @@ GNU parted is now licensed under the GNU General Public License version 3
 or higher.  See the COPYING file for more details.
 
 libparted:
--
--
--
+- Add compute_block_counts() to improve ext2fs support.
+- Properly detect 'ext2 fs too small' cases.
+- Move formatting commands out of translatable strings.
+- Read an msdos partition table from a device with 2K sectors.
+- Remove always-false "Unable to open" diagnostic in ped_disk_new(), leave
+  the "unrecognized disk label" diagnostic.
+- Don't leak partition table buffer in amiga_read().
+- Don't read/write initialized memory with DEBUG turned on off for 'mklabel
+  bsd' and 'mklabel amiga' command calls.
+- Turn off DEBUG in libparted.c to avoid initializing all allocated memory
+  to '1' bits.
+- Correct handling of HeaderSize field in GPT labels.
+- Fix block number used when checking for ext2 fs state.
+- Add detection support for Xen virtual block devices (/dev/xvd*).
+- When reading DASD labels, check the filesystem type as well as partition
+  flags to determine what's on the partition.
+- Add _dm_probe_all() from Debian to probe for all device-mapper devices.
 
 parted:
--
--
--
+- Fixed exception handling in mkpart and mkpartfs commands.
+- Add the --dry-run option to the partprobe command.
+- Update docs: cannot specify 'primary' for a partition on a loop device.
+- Remove unused functions (get_spaces).
+- Fix off-by-one error in str_list_print_wrap().
+- Use xmalloc() and xrealloc() to check return values.
+- Fix invalid command line argument handling.
+- Close memory leaks in parted.c and table.c.
+- Fix warnings when compiling with translation support enabled.
+- Use a consistent prompt when asking for a file system type.
+- Update docs: don't reference old versions of gzip.
+
+misc:
+- Improve the testing framework in the tests/ subdirectory.  Build out more
+  of the testing scripts so we can start using that to ensure we don't
+  introduce regressions in releases.
+- Support testing with tmpfs filesystems on Linux.
+- Work around inadequate libreadline in the configure script.
+- Don't include config.h from internal headers.
 
 
 1.8.7
