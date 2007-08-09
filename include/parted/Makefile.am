@@ -18,7 +18,6 @@ partedinclude_HEADERS = gnu.h		\
 			natmath.h	\
 			timer.h		\
 			unit.h		\
-			history.h	\
 			parted.h        \
 			$(S390_HDRS)
 

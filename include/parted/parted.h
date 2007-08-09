@@ -30,7 +30,6 @@ typedef struct _PedArchitecture PedArchitecture;
 #include <parted/disk.h>
 #include <parted/exception.h>
 #include <parted/filesys.h>
-#include <parted/history.h>
 #include <parted/natmath.h>
 #include <parted/unit.h>
 

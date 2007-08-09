@@ -24,7 +24,6 @@ libparted_la_SOURCES  = debug.c			\
 			timer.c			\
 			unit.c			\
 			disk.c			\
-			history.c		\
 			cs/geom.c		\
 			cs/constraint.c		\
 			cs/natmath.c		\
