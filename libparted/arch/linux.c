@@ -1530,8 +1530,7 @@ linux_read (const PedDevice* dev, void* buffer, PedSector start,
                 }
         }
 
-        if (diobuf)
-                free(diobuf);
+        free (diobuf);
 
         return 1;
 }
