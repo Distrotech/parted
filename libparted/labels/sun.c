@@ -32,6 +32,8 @@
 #  define _(String) (String)
 #endif /* ENABLE_NLS */
 
+#include "misc.h"
+
 /* Most of this came from util-linux's sun support, which was mostly done
    by Jakub Jelinek.  */
 
@@ -547,7 +549,7 @@ sun_partition_set_system (PedPartition* part, const PedFileSystemType* fs_type)
 
 	sun_data->type = 0x83;
 	if (fs_type) {
-		if (!strcmp (fs_type->name, "linux-swap"))
+		if (is_linux_swap (fs_type->name))
 			sun_data->type = 0x82;
 		else if (!strcmp (fs_type->name, "ufs"))
 			sun_data->type = 0x6;

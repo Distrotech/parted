@@ -37,6 +37,8 @@
 #  define _(String) (String)
 #endif /* ENABLE_NLS */
 
+#include "misc.h"
+
 /* String manipulation */
 static void _amiga_set_bstr (const char *cstr, char *bstr, int maxsize) {
 	int size = strlen (cstr);
@@ -901,7 +903,7 @@ amiga_partition_set_system (PedPartition* part,
 		partition->de_DosType = PED_CPU_TO_BE32(0x4c4e5800); /* 'LNX\0' */
 	else if (!strcmp (fs_type->name, "ext3"))
 		partition->de_DosType = PED_CPU_TO_BE32(0x45585403); /* 'EXT\3' */
-	else if (!strcmp (fs_type->name, "linux-swap"))
+	else if (is_linux_swap (fs_type->name))
 		partition->de_DosType = PED_CPU_TO_BE32(0x53575000); /* 'SWP\0' */
 	else if (!strcmp (fs_type->name, "fat16"))
 		partition->de_DosType = PED_CPU_TO_BE32(0x46415400); /* 'FAT\0' */

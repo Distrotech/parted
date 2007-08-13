@@ -32,6 +32,8 @@
 #  define _(String) (String)
 #endif /* ENABLE_NLS */
 
+#include "misc.h"
+
 /* struct's & #define's stolen from libfdisk, which probably came from
  * Linux...
  */
@@ -445,7 +447,7 @@ bsd_partition_set_system (PedPartition* part, const PedFileSystemType* fs_type)
 
 	if (!fs_type)
 		bsd_data->type = 0x8;
-	else if (!strcmp (fs_type->name, "linux-swap"))
+	else if (is_linux_swap (fs_type->name))
 		bsd_data->type = 0x1;
 	else
 		bsd_data->type = 0x8;

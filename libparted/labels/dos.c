@@ -32,6 +32,8 @@
 #  define _(String) (String)
 #endif /* ENABLE_NLS */
 
+#include "misc.h"
+
 /* this MBR boot code is loaded into 0000:7c00 by the BIOS.  See mbr.s for
  * the source, and how to build it
  */
@@ -1318,7 +1320,7 @@ msdos_partition_set_system (PedPartition* part,
 		dos_data->system |= dos_data->hidden ? PART_FLAG_HIDDEN : 0;
 	} else if (!strcmp (fs_type->name, "sun-ufs"))
 		dos_data->system = PARTITION_SUN_UFS;
-	else if (!strcmp (fs_type->name, "linux-swap"))
+	else if (is_linux_swap (fs_type->name))
 		dos_data->system = PARTITION_LINUX_SWAP;
 	else
 		dos_data->system = PARTITION_LINUX;

@@ -12,19 +12,21 @@ endif
 partedincludedir      =	-I$(top_srcdir)/include
 noinst_LTLIBRARIES    =	liblabels.la
 
-liblabels_la_SOURCES  = rdb.c		\
-			bsd.c  		\
-			$(S390_SRCS)	\
-			efi_crc32.c	\
-			dos.c  		\
-			dvh.h		\
-			dvh.c  		\
-			gpt.c  		\
-			loop.c 		\
-			mac.c  		\
-			pc98.c 		\
-			sun.c		\
-			aix.c
+liblabels_la_SOURCES = \
+  $(S390_SRCS)	\
+  aix.c		\
+  bsd.c		\
+  dos.c		\
+  dvh.c		\
+  dvh.h		\
+  efi_crc32.c	\
+  gpt.c		\
+  loop.c	\
+  mac.c		\
+  misc.h	\
+  pc98.c	\
+  rdb.c		\
+  sun.c
 
 liblabels_la_LIBADD = $(OS_LIBS) $(INTLLIBS)
 

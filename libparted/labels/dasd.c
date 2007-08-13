@@ -46,6 +46,8 @@
 #  define _(String) (String)
 #endif /* ENABLE_NLS */
 
+#include "misc.h"
+
 #define PARTITION_LINUX_SWAP 0x82
 #define PARTITION_LINUX 0x83
 #define PARTITION_LINUX_EXT 0x85
@@ -394,7 +396,7 @@ dasd_read (PedDisk* disk)
 
 		if (strncmp(PART_TYPE_SWAP, str, 6) == 0) {
 			fs = ped_file_system_probe(&part->geom);
-			if (strncmp(fs->name, "linux-swap", 10) == 0) {
+			if (is_linux_swap(fs->name)) {
 				dasd_data->system = PARTITION_LINUX_SWAP;
 				PDEBUG;
 			}
@@ -815,7 +817,7 @@ dasd_partition_set_system (PedPartition* part,
 	if (!fs_type) {
 		dasd_data->system = PARTITION_LINUX;
         PDEBUG;
-	} else if (!strcmp (fs_type->name, "linux-swap")) {
+	} else if (is_linux_swap (fs_type->name)) {
 		dasd_data->system = PARTITION_LINUX_SWAP;
         PDEBUG;
 	} else {

@@ -29,6 +29,8 @@
 #  define _(String) (String)
 #endif /* ENABLE_NLS */
 
+#include "misc.h"
+
 /* struct's hacked from Linux source:  fs/partitions/mac.h
  * I believe it was originally written by Paul Mackerras (from comments in
  * Quik source)
@@ -1187,7 +1189,7 @@ mac_partition_set_system (PedPartition* part, const PedFileSystemType* fs_type)
 
 	part->fs_type = fs_type;
 
-	if (fs_type && !strcmp (fs_type->name, "linux-swap"))
+	if (fs_type && is_linux_swap (fs_type->name))
 		ped_partition_set_flag (part, PED_PARTITION_SWAP, 1);
 
 	if (mac_data->is_boot) {
