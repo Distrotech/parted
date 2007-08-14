@@ -21,7 +21,9 @@ test_description="the most basic 'print' test"
 
 dev=loop-file
 
-msdos_magic='\x55\xaa'
+# Using msdos_magic='\x55\xaa' looks nicer, but isn't portable.
+# dash's builtin printf doesn't recognize such \xHH hexadecimal escapes.
+msdos_magic='\125\252'
 
 # The extra 3KB+ zero bytes at the end are to avoid triggering a failure
 # on linux-2.6.8 that's probably related to opening with O_DIRECT.
