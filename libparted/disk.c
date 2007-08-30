@@ -223,23 +223,24 @@ static int
 _add_duplicate_part (PedDisk* disk, PedPartition* old_part)
 {
 	PedPartition*	new_part;
-	PedConstraint*	constraint_exact;
+	int ret;
 
 	new_part = disk->type->ops->partition_duplicate (old_part);
 	if (!new_part)
 		goto error;
 	new_part->disk = disk;
 
-	constraint_exact = ped_constraint_exact (&new_part->geom);
-	if (!constraint_exact)
+	_disk_push_update_mode (disk);
+	ret = _disk_raw_add (disk, new_part);
+	_disk_pop_update_mode (disk);
+	if (!ret)
 		goto error_destroy_new_part;
-	if (!ped_disk_add_partition (disk, new_part, constraint_exact))
-       		goto error_destroy_constraint_exact;
-	ped_constraint_destroy (constraint_exact);
+#ifdef DEBUG
+	if (!_disk_check_sanity (disk))
+		goto error_destroy_new_part;
+#endif
 	return 1;
 
-error_destroy_constraint_exact:
-	ped_constraint_destroy (constraint_exact);
 error_destroy_new_part:
 	ped_partition_destroy (new_part);
 error:

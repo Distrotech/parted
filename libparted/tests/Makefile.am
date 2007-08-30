@@ -3,12 +3,16 @@
 #
 # This file may be modified and/or distributed without restriction.
 
-TESTS = t1000-label.sh
+TESTS = t1000-label.sh t2000-disk.sh
 EXTRA_DIST = $(TESTS)
-bin_PROGRAMS     = label
+bin_PROGRAMS     = label disk
 label_CFLAGS    = $(CHECK_CFLAGS) -I$(top_srcdir)/include
 label_LDADD     = $(CHECK_LIBS) $(top_builddir)/libparted/libparted.la
 label_SOURCES   = common.h common.c label.c
+
+disk_CFLAGS    = $(CHECK_CFLAGS) -I$(top_srcdir)/include
+disk_LDADD     = $(CHECK_LIBS) $(top_builddir)/libparted/libparted.la
+disk_SOURCES   = common.h common.c disk.c
 
 MAINTAINERCLEANFILES = Makefile.in
 
