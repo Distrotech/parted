@@ -727,7 +727,10 @@ struct ext2_fs *ext2_open(struct ext2_dev_handle *handle, int state)
 			    EXT2_FEATURE_RO_COMPAT_LARGE_FILE)))
 	{
 		ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
-		     _("File system has an incompatible feature enabled."));
+		     _("File system has an incompatible feature enabled.  "
+		       "Compatible features are has_journal, dir_index, "
+		       "filetype, sparse_super and large_file.  "
+		       "Use tune2fs or debugfs to remove features."));
 		goto error_free_fs;
 	}
 
