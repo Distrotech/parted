@@ -26,9 +26,6 @@
 #ifndef PED_GEOM_H_INCLUDED
 #define PED_GEOM_H_INCLUDED
 
-#include <parted/device.h>
-#include <parted/timer.h>
-
 typedef struct _PedGeometry	PedGeometry;
 
 /**
@@ -40,6 +37,9 @@ struct _PedGeometry {
 	PedSector		length;
 	PedSector		end;
 };
+
+#include <parted/device.h>
+#include <parted/timer.h>
 
 extern int ped_geometry_init (PedGeometry* geom, const PedDevice* dev,
 			      PedSector start, PedSector length);
