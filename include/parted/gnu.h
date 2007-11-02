@@ -32,8 +32,6 @@ struct _GNUSpecific {
 	int consume;
 };
 
-extern PedArchitecture ped_gnu_arch;
-
 /* Initialize a PedDevice using SOURCE.  The SOURCE will NOT be destroyed;
    the caller created it, it is the caller's responsilbility to free it
    after it calls ped_device_destory.  SOURCE is not registered in Parted's

@@ -30,7 +30,5 @@ struct _BEOSSpecific {
 	int	fd;
 };
 
-extern PedArchitecture ped_beos_arch;
-
 #endif /* PED_LINUX_H_INCLUDED */
 

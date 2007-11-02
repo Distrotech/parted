@@ -44,6 +44,8 @@
 #include <unistd.h>
 #include <errno.h>
 
+#include "architecture.h"
+
 static PedDevice*	devices; /* legal advice says: initialized to NULL,
 				    under section 6.7.8 part 10
 				    of ISO/EIC 9899:1999 */

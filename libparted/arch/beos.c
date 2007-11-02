@@ -45,6 +45,8 @@
 #  define _(String) (String)
 #endif /* ENABLE_NLS */
 
+#include "../architecture.h"
+
 static void
 _scan_for_disks(const char* path)
 {

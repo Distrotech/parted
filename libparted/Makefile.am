@@ -17,6 +17,7 @@ lib_LTLIBRARIES	      =	libparted.la
 libparted_la_LDFLAGS  = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
 						-release $(LT_RELEASE)
 libparted_la_SOURCES  = debug.c			\
+			architecture.c	\
 			device.c		\
 			exception.c		\
 			filesys.c		\

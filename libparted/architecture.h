@@ -1,6 +1,6 @@
-/*
+ /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1999, 2000, 2001, 2007 Free Software Foundation, Inc.
+    Copyright (C) 2007 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,34 +16,23 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PARTED_H_INCLUDED
-#define PARTED_H_INCLUDED
+/*
+ * WARNING: This shouldn't be exported to the API
+ */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef _LIBPARTED_ARCH_H_INCLUDED
+#define _LIBPARTED_ARCH_H_INCLUDED
 
-#include <parted/constraint.h>
-#include <parted/device.h>
 #include <parted/disk.h>
-#include <parted/exception.h>
-#include <parted/filesys.h>
-#include <parted/natmath.h>
-#include <parted/unit.h>
 
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
+struct _PedArchitecture {
+	PedDiskArchOps*		disk_ops;
+	PedDeviceArchOps*	dev_ops;
+};
+typedef struct _PedArchitecture PedArchitecture;
 
-extern const char* ped_get_version ();
+extern const PedArchitecture*	ped_architecture;
 
-extern void* ped_malloc (size_t size);
-extern void* ped_calloc (size_t size);
-extern int ped_realloc (void** ptr, size_t size);
-extern void ped_free (void* ptr);
+extern void ped_set_architecture ();
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* PARTED_H_INCLUDED */
+#endif /* _LIBPARTED_ARCH_H_INCLUDED */

@@ -37,6 +37,8 @@
 #include <parted/parted.h>
 #include <parted/debug.h>
 
+#include "architecture.h"
+
 #if ENABLE_NLS
 #  include <libintl.h>
 #  define _(String) dgettext (PACKAGE, String)

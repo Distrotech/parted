@@ -22,13 +22,7 @@
 #include <parted/parted.h>
 #include <parted/debug.h>
 
-#ifdef linux
-#  include <parted/linux.h>
-#elif defined(__BEOS__)
-#  include <parted/beos.h>
-#else
-#  include <parted/gnu.h>
-#endif
+#include "architecture.h"
 
 #if ENABLE_NLS
 #  include <locale.h>
@@ -37,8 +31,6 @@
 #else
 #  define _(String) (String)
 #endif /* ENABLE_NLS */
-
-const PedArchitecture* ped_architecture;
 
 /* ped_malloc() debugging.  Stick the address and size of memory blocks that
  * weren't ped_free()d in here, and an exception will be thrown when it is
@@ -71,15 +63,6 @@ static pointer_size_type dodgy_malloc_list[] = {
 
 static int	dodgy_memory_active[100];
 #endif /* DEBUG */
-
-int
-ped_set_architecture (const PedArchitecture* arch)
-{
-	PED_ASSERT (ped_device_get_next (NULL) == NULL, return 0);
-
-	ped_architecture = arch;
-	return 1;
-}
 
 extern void ped_disk_aix_init ();
 extern void ped_disk_bsd_init ();
@@ -189,16 +172,7 @@ _init()
 #ifdef ENABLE_FS
 	init_file_system_types ();
 #endif
-
-	/* FIXME: a better way of doing this? */
-#ifdef linux
-	ped_set_architecture (&ped_linux_arch);
-#elif defined(__BEOS__)
-	ped_set_architecture (&ped_beos_arch);
-#else
-	ped_set_architecture (&ped_gnu_arch);
-#endif
-
+	ped_set_architecture ();
 #ifdef DEBUG
 	memset (dodgy_memory_active, 0, sizeof (dodgy_memory_active));
 #endif

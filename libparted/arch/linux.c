@@ -42,6 +42,7 @@
 #endif
 
 #include "blkpg.h"
+#include "../architecture.h"
 
 #if ENABLE_NLS
 #  include <libintl.h>

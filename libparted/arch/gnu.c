@@ -37,6 +37,8 @@
 #  define _(String) (String)
 #endif /* ENABLE_NLS */
 
+#include "../architecture.h"
+
 static int
 _device_get_sector_size (PedDevice* dev)
 {

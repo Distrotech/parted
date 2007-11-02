@@ -39,7 +39,5 @@ struct _LinuxSpecific {
 #endif
 };
 
-extern PedArchitecture ped_linux_arch;
-
 #endif /* PED_LINUX_H_INCLUDED */
 
