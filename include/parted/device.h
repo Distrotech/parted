@@ -26,9 +26,6 @@
 #ifndef PED_DEVICE_H_INCLUDED
 #define PED_DEVICE_H_INCLUDED
 
-#include <parted/constraint.h>
-#include <parted/timer.h>
-
 /** We can address 2^63 sectors */
 typedef long long PedSector;
 
@@ -116,6 +113,9 @@ struct _PedDeviceArchOps {
                             PedSector start, PedSector count);
         void (*probe_all) ();
 };
+
+#include <parted/constraint.h>
+#include <parted/timer.h>
 
 extern void ped_device_probe_all ();
 extern void ped_device_free_all ();
