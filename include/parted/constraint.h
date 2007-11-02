@@ -22,6 +22,7 @@
 typedef struct _PedConstraint	PedConstraint;
 
 #include <parted/device.h>
+#include <parted/geom.h>
 #include <parted/natmath.h>
 
 struct _PedConstraint {
