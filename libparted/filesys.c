@@ -49,9 +49,8 @@ ped_file_system_type_register (PedFileSystemType* fs_type)
 	PED_ASSERT (fs_type->ops != NULL, return);
 	PED_ASSERT (fs_type->name != NULL, return);
 	
-	/* pretend that "next" isn't part of the struct :-) */
-	((struct _PedFileSystemType*) fs_type)->next = fs_types;
-	fs_types = (struct _PedFileSystemType*) fs_type;
+        fs_type->next = fs_types;
+        fs_types = fs_type;
 }
 
 void

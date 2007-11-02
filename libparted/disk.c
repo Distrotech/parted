@@ -68,9 +68,8 @@ ped_disk_type_register (PedDiskType* disk_type)
 	PED_ASSERT (disk_type->ops != NULL, return);
 	PED_ASSERT (disk_type->name != NULL, return);
 	
-	/* pretend that "next" isn't part of the struct :-) */
-	((struct _PedDiskType*) disk_type)->next = disk_types;
-	disk_types = (struct _PedDiskType*) disk_type;
+        disk_type->next = disk_types;
+        disk_types =  disk_type;
 }
 
 void
