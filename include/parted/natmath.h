@@ -30,6 +30,7 @@
 typedef struct _PedAlignment	PedAlignment;
 
 #include <parted/disk.h>
+#include <parted/device.h>
 
 #define PED_MIN(a, b)	( ((a)<(b)) ? (a) : (b) )
 #define PED_MAX(a, b)	( ((a)>(b)) ? (a) : (b) )
