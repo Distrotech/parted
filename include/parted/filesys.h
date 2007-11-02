@@ -31,11 +31,8 @@ typedef struct _PedFileSystemType	PedFileSystemType;
 typedef const struct _PedFileSystemOps	PedFileSystemOps;
 
 #include <parted/geom.h>
-#include <parted/disk.h>
-#include <parted/exception.h>
 #include <parted/constraint.h>
 #include <parted/timer.h>
-#include <stdio.h>
 
 struct _PedFileSystemOps {
 	PedGeometry* (*probe) (PedGeometry* geom);
