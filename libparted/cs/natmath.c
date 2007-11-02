@@ -74,16 +74,16 @@ ped_round_down_to (PedSector sector, PedSector grain_size)
 	return sector - abs_mod (sector, grain_size);
 }
 
-inline PedSector
+PedSector
 ped_div_round_up (PedSector numerator, PedSector divisor)
 {
-                return (numerator + divisor - 1) / divisor;
+	return (numerator + divisor - 1) / divisor;
 }
 
-inline PedSector
+PedSector
 ped_div_round_to_nearest (PedSector numerator, PedSector divisor)
 {
-                return (numerator + divisor/2) / divisor;
+	return (numerator + divisor/2) / divisor;
 }
 
 /* Rounds a number up to the closest number that is a multiple of
