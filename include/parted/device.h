@@ -26,6 +26,7 @@
 #ifndef PED_DEVICE_H_INCLUDED
 #define PED_DEVICE_H_INCLUDED
 
+#include <parted/constraint.h>
 #include <parted/timer.h>
 
 /** We can address 2^63 sectors */
