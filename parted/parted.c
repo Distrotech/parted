@@ -1226,7 +1226,7 @@ partition_print (PedPartition* part)
         putchar ('\n');
 
         flags = partition_print_flags (part);
-     
+
         printf (_("Minor: %d\n"), part->num);
         printf (_("Flags: %s\n"), flags);
         printf (_("File System: %s\n"), fs->type->name);
@@ -1264,9 +1264,10 @@ do_print (PedDevice** dev)
         int             has_free_arg = 0;
         int             has_list_arg = 0;
         int             has_num_arg = 0;
-        char*           transport[13] = {"unknown", "scsi", "ide", "dac960",
+        char*           transport[14] = {"unknown", "scsi", "ide", "dac960",
                                          "cpqarray", "file", "ataraid", "i2o",
-                                         "ubd", "dasd", "viodasd", "sx8", "dm"};
+                                         "ubd", "dasd", "viodasd", "sx8", "dm",
+                                         "xvd"};
         char*           peek_word;
         char*           start;
         char*           end;
