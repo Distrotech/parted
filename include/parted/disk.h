@@ -234,18 +234,6 @@ struct _PedDiskArchOps {
 extern void ped_disk_type_register (PedDiskType* type);
 extern void ped_disk_type_unregister (PedDiskType* type);
 
-/**
- * Deprecated: use ped_disk_type_register.
- */
-__attribute__ ((deprecated))
-extern void ped_register_disk_type (PedDiskType* type);
-
-/**
- * Deprecated: use ped_disk_type_unregister.
- */
-__attribute__ ((deprecated))
-extern void ped_unregister_disk_type (PedDiskType* type);
-
 extern PedDiskType* ped_disk_type_get_next (PedDiskType* type);
 extern PedDiskType* ped_disk_type_get (const char* name);
 extern int ped_disk_type_check_feature (const PedDiskType* disk_type,

@@ -95,24 +95,6 @@ ped_disk_type_unregister (PedDiskType* disk_type)
 }
 
 /**
- * Deprecated: use ped_disk_type_regiser.
- */
-void
-ped_register_disk_type (PedDiskType* disk_type)
-{
-        ped_disk_type_register (disk_type);
-}
-
-/**
- * Deprecated: use ped_disk_type_unregiser.
- */
-void
-ped_unregister_disk_type (PedDiskType* disk_type)
-{
-        ped_disk_type_unregister (disk_type);
-}
-
-/**
  * Return the next disk type registers, after "type".  If "type" is
  * NULL, returns the first disk type.
  *
