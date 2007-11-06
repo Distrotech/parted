@@ -6,9 +6,7 @@ endif
 
 partedincludedir      =	$(includedir)/parted
 
-partedinclude_HEADERS = gnu.h		\
-			linux.h		\
-			constraint.h	\
+partedinclude_HEADERS = constraint.h	\
 			debug.h		\
 			device.h	\
 			disk.h		\

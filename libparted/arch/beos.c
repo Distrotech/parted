@@ -20,7 +20,6 @@
 
 #include <parted/parted.h>
 #include <parted/debug.h>
-#include <parted/beos.h>
 
 /* POSIX headers */
 #include <sys/stat.h>
@@ -46,6 +45,14 @@
 #endif /* ENABLE_NLS */
 
 #include "../architecture.h"
+
+#define BEOS_SPECIFIC(dev)	((BEOSSpecific*) (dev)->arch_specific)
+
+typedef	struct _BEOSSpecific	BEOSSpecific;
+
+struct _BEOSSpecific {
+	int	fd;
+};
 
 static void
 _scan_for_disks(const char* path)

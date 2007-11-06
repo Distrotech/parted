@@ -20,7 +20,6 @@
 
 #include <parted/parted.h>
 #include <parted/debug.h>
-#include <parted/gnu.h>
 
 #include <errno.h>
 #include <hurd.h>
@@ -38,6 +37,21 @@
 #endif /* ENABLE_NLS */
 
 #include "../architecture.h"
+
+#define GNU_SPECIFIC(dev)	((GNUSpecific*) (dev)->arch_specific)
+
+typedef	struct _GNUSpecific	GNUSpecific;
+
+struct _GNUSpecific {
+	struct store*	store;
+	int consume;
+};
+
+/* Initialize a PedDevice using SOURCE.  The SOURCE will NOT be destroyed;
+   the caller created it, it is the caller's responsilbility to free it
+   after it calls ped_device_destory.  SOURCE is not registered in Parted's
+   list of devices.  */
+PedDevice* ped_device_new_from_store (struct store *source);
 
 static int
 _device_get_sector_size (PedDevice* dev)

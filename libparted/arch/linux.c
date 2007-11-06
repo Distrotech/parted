@@ -21,7 +21,6 @@
 
 #include <parted/parted.h>
 #include <parted/debug.h>
-#include <parted/linux.h>
 
 #include <ctype.h>
 #include <errno.h>
@@ -74,6 +73,24 @@
 #define WR_MODE (O_WRONLY)
 #define RW_MODE (O_RDWR)
 #endif
+
+#if defined(__s390__) || defined(__s390x__)
+#  include <parted/fdasd.h>
+#endif
+
+#define LINUX_SPECIFIC(dev)	((LinuxSpecific*) (dev)->arch_specific)
+
+typedef	struct _LinuxSpecific	LinuxSpecific;
+
+struct _LinuxSpecific {
+	int	fd;
+	char*	dmtype;         /**< device map target type */
+#if defined(__s390__) || defined(__s390x__)
+	unsigned int real_sector_size;
+	/* IBM internal dasd structure (i guess ;), required. */
+	struct fdasd_anchor *anchor;
+#endif
+};
 
 struct hd_geometry {
         unsigned char heads;
