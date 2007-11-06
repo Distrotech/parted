@@ -124,6 +124,18 @@ and a human-friendly form for output).
 .B version
 Display version information and a copyright message.
 .RE
+.SH KNOWN ISSUES
+ext3 filesystem resizing does not currently work, please use
+.BR resize2fs (8)
+instead.
+
+Resizing partitions with an ext3 filesystem will not generally work because
+of the above issue.  Use
+.BR resize2fs (8)
+to resize the filesystem and resize the partition manually using
+.BR fdisk (8)
+or a similar tool.  For LVM situations, you will need to use the LVM commands
+to resize the LVM elements.
 .SH REPORTING BUGS
 Report bugs to <bug-parted@gnu.org>
 .SH SEE ALSO
