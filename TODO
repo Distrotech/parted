@@ -96,3 +96,25 @@ journal, and add support in e2fsck / mount / linux (?) for it.
 * generic resizing/converting with the inplace copy via sparse loopback idea
   from Serguei Tzukanov
 
+* We should be able to compile with -fno-common.
+  However, that leads to this link failure:
+
+    fs/.libs/libfs.a(fat.o):(.bss+0x0): multiple definition of `fat16'
+    fs/.libs/libfs.a(count.o):(.bss+0x0): first defined here
+    fs/.libs/libfs.a(clstdup.o):(.bss+0x0): multiple definition of `fat16'
+    fs/.libs/libfs.a(count.o):(.bss+0x0): first defined here
+    fs/.libs/libfs.a(table.o):(.bss+0x0): multiple definition of `fat16'
+    fs/.libs/libfs.a(count.o):(.bss+0x0): first defined here
+    fs/.libs/libfs.a(resize.o):(.bss+0x0): multiple definition of `fat16'
+    fs/.libs/libfs.a(count.o):(.bss+0x0): first defined here
+    fs/.libs/libfs.a(calc.o):(.bss+0x0): multiple definition of `fat16'
+    fs/.libs/libfs.a(count.o):(.bss+0x0): first defined here
+    fs/.libs/libfs.a(bootsector.o):(.bss+0x0): multiple definition of `fat16'
+    fs/.libs/libfs.a(count.o):(.bss+0x0): first defined here
+    fs/.libs/libfs.a(traverse.o):(.bss+0x0): multiple definition of `fat16'
+    fs/.libs/libfs.a(count.o):(.bss+0x0): first defined here
+    fs/.libs/libfs.a(fatio.o):(.bss+0x0): multiple definition of `fat16'
+    fs/.libs/libfs.a(count.o):(.bss+0x0): first defined here
+    fs/.libs/libfs.a(context.o):(.bss+0x0): multiple definition of `fat16'
+    fs/.libs/libfs.a(count.o):(.bss+0x0): first defined here
+    collect2: ld returned 1 exit status
