@@ -30,7 +30,6 @@ START_TEST (test_duplicate)
         if (dev == NULL)
                 return;
 
-        PedDiskType* type;
         PedDisk* disk;
         PedDisk* disk_dup;
         PedPartition *part;
