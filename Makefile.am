@@ -72,3 +72,8 @@ MAINTAINERCLEANFILES += \
   INSTALL       \
   aclocal.m4    \
   configure
+
+# Arrange so that .version appears only in distribution tarballs,
+# never in a checked-out repository.
+dist-hook:
+	echo $(VERSION) > $(distdir)/.version

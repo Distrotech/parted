@@ -5,7 +5,11 @@ dnl
 dnl This file may be modified and/or distributed without restriction.
 
 AC_PREREQ(2.61)
-AC_INIT([GNU parted],[1.9.0],[bug-parted@gnu.org])
+AC_INIT([GNU parted], m4_esyscmd([build-aux/git-version-gen .version]),
+        [bug-parted@gnu.org])
+
+# When the most recent signed tag is v1.8.8.1,
+# the above might set e.g., PACKAGE_VERSION='1.8.8.1.1-0bfc'
 
 AC_CONFIG_SRCDIR(include/parted/parted.h)
 
@@ -22,9 +26,19 @@ dnl if any functions have been added, set PED_INTERFACE_AGE to 0.
 dnl if backwards compatibility has been broken (eg. functions removed,
 dnl function signatures changed),
 dnl set PED_BINARY_AGE _and_ PED_INTERFACE_AGE to 0.
-PED_MAJOR_VERSION=1
-PED_MINOR_VERSION=9
-PED_MICRO_VERSION=0
+
+# Derive these numbers from $PACKAGE_VERSION, which is set
+# when autoconf creates configure (see AC_INIT, above).
+PED_MAJOR_VERSION=`echo "$PACKAGE_VERSION"|sed 's/\..*//'`
+PED_MINOR_VERSION=`echo "$PACKAGE_VERSION"|sed 's/^[0-9][0-9]*\.//;s/\..*//'`
+case $PACKAGE_VERSION in
+  *.*.*.*.*)
+    PED_MICRO_VERSION=`echo "$PACKAGE_VERSION" \
+      | sed 's/^[^.]*\.[^.]*\.//;s/\..*//'`
+    ;;
+  *) PED_MICRO_VERSION=0;;
+esac
+
 PED_INTERFACE_AGE=0
 PED_BINARY_AGE=0
 PED_VERSION_SUFFIX=
@@ -38,11 +52,6 @@ AC_SUBST(LT_RELEASE)
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
 AC_SUBST(LT_AGE)
-
-# Ensure that the PED_*-specified version is the same as the literal
-# in the AC_INIT line, above.
-test $PACKAGE_VERSION = $PED_VERSION ||
-  AC_MSG_ERROR(configure.ac: version mismatch: $PACKAGE_VERSION != $PED_VERSION)
 
 AM_INIT_AUTOMAKE([1.10 dist-bzip2])
 
@@ -501,7 +510,7 @@ AC_CHECK_FUNCS(getuid)
 
 dnl NOTE: We need to remove the gl_cv_ignore_unused_libraries flag if we
 dnl detected one earlier.  libreadline on some platforms (e.g., RHEL and
-dnl Fedora) is left with 
+dnl Fedora) is left with
 if test "$with_readline" = yes; then
 	OLD_LIBS="$LIBS"
 	LIBS="$LIBS $PARTED_LIBS -lreadline"
