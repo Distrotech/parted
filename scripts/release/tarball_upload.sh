@@ -68,7 +68,13 @@ else
 fi
 
 message "* generating ChangeLog"
-git log --pretty=medium | fold -s > ChangeLog
+( GIT_DIR=.git git-log > .changelog.tmp && \
+  mv .changelog.tmp ChangeLog ; \
+  rm -f .changelog.tmp \
+) || \
+( touch ChangeLog ; \
+  echo 'git directory not found: installing possibly empty changelog.' \
+)
 
 VERSION=$(grep ' VERSION' lib/config.h | awk '{print $3}' | tr -d '"')
 
