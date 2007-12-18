@@ -44,6 +44,10 @@ jfs_probe (PedGeometry* geom)
 		char			bytes[512];
 	} buf;
 
+        /* FIXME: for now, don't even try to deal with larger sector size.  */
+	if (geom->dev->sector_size != PED_SECTOR_SIZE_DEFAULT)
+		return NULL;
+
 	if (geom->length < JFS_SUPER_SECTOR + 1)
 		return NULL;
 	if (!ped_geometry_read (geom, &buf, JFS_SUPER_SECTOR, 1))

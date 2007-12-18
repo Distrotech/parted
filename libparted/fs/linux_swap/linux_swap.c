@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1999, 2000, 2002, 2007 Free Software Foundation, Inc.
+    Copyright (C) 1999, 2000, 2002, 2007-2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -85,6 +85,11 @@ _generic_swap_probe (PedGeometry* geom, int kind)
 	SwapSpecific*	fs_info;
 	PedGeometry*	probed_geom;
 	PedSector	length;
+
+        /* Fail the swap-file-system-recognizing test when sector size
+           is not the default.  */
+	if (geom->dev->sector_size != PED_SECTOR_SIZE_DEFAULT)
+		return NULL;
 
         switch (kind) {
         /* Check for old style swap partitions. */

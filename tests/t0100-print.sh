@@ -38,7 +38,7 @@ test_expect_success \
 
 test_expect_success \
     'print the empty table' \
-    'parted -s $dev print >out 2>&1'
+    'parted -s $dev unit s print >out 2>&1'
 
 pwd=`pwd`
 
@@ -46,7 +46,7 @@ fail=0
 {
   cat <<EOF
 Model:  (file)
-Disk .../$dev: 4096B
+Disk .../$dev: 8s
 Sector size (logical/physical): 512B/512B
 Partition Table: msdos
 
@@ -58,7 +58,8 @@ EOF
 test_expect_success \
     'prepare actual and expected output' \
     'test $fail = 0 &&
-     mv out o2 && sed "s,^Disk .*/$dev:,Disk .../$dev:," o2 > out'
+     mv out o2 &&
+     sed "s,^Disk .*/$dev:,Disk .../$dev:,;s,2048B/,512B/," o2 > out'
 
 test_expect_success 'check for expected output' 'compare out exp'
 

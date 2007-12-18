@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1999, 2000, 2001, 2007, 2009 Free Software Foundation, Inc.
+    Copyright (C) 1999-2001, 2007-2009 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -196,6 +196,11 @@ ped_file_system_probe_specific (
 	PED_ASSERT (fs_type != NULL, return NULL);
 	PED_ASSERT (fs_type->ops->probe != NULL, return NULL);
 	PED_ASSERT (geom != NULL, return NULL);
+
+        /* Fail all fs-specific probe-related tests when sector size
+           is not the default.  */
+	if (geom->dev->sector_size != PED_SECTOR_SIZE_DEFAULT)
+		return 0;
 
 	if (!ped_device_open (geom->dev))
 		return 0;

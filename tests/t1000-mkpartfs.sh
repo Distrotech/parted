@@ -20,7 +20,7 @@ test_description='Create some file systems using mkpartfs.'
 : ${srcdir=.}
 . $srcdir/test-lib.sh
 
-N=1M
+N=500k
 dev=loop-file
 test_expect_success \
     'create a file too small to hold a fat32 file system' \
