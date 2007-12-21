@@ -360,7 +360,11 @@ amiga_alloc (const PedDevice* dev)
 	}
 	rdb = disk->disk_specific;
 
-	memset(rdb, 0, sizeof(struct RigidDiskBlock));
+        /* Upon failed assertion this does leak.  That's fine, because
+           if the assertion fails, you have bigger problems than this leak. */
+        PED_ASSERT(sizeof(*rdb) <= disk->dev->sector_size, return NULL);
+
+	memset(rdb, 0, disk->dev->sector_size);
 
 	rdb->rdb_ID = PED_CPU_TO_BE32 (IDNAME_RIGIDDISK);
 	rdb->rdb_SummedLongs = PED_CPU_TO_BE32 (64);
