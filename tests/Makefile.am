@@ -7,7 +7,9 @@ TESTS = \
   t2000-mkfs.sh \
   t2100-mkswap.sh \
   t3000-constraints.sh \
-  t3100-resize-ext2-partion.sh
+  t3100-resize-ext2-partion.sh \
+  t4100-msdos-partition-limits.sh \
+  t4100-dvh-partition-limits.sh
 
 EXTRA_DIST = \
   $(TESTS) test-lib.sh mkdtemp
