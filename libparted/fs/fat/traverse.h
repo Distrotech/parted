@@ -1,6 +1,6 @@
 /*
     libparted
-    Copyright (C) 1998, 1999, 2000, 2007 Free Software Foundation, Inc.
+    Copyright (C) 1998, 1999, 2000, 2007-2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -65,7 +65,7 @@ extern int fat_dir_entry_is_null_term (const FatDirEntry* dir_entry);
 extern int fat_dir_entry_is_file (FatDirEntry* dir_entry);
 extern int fat_dir_entry_is_system_file (FatDirEntry* dir_entry);
 extern int fat_dir_entry_is_directory (FatDirEntry* dir_entry);
-extern void fat_dir_entry_get_name (FatDirEntry* dir_entry, char* result);
+extern void fat_dir_entry_get_name (const FatDirEntry* dir_entry, char* result);
 extern int fat_dir_entry_is_active (FatDirEntry* dir_entry);
 extern int fat_dir_entry_has_first_cluster (FatDirEntry* dir_entry,
 					    PedFileSystem* fs);

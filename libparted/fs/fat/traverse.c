@@ -1,6 +1,6 @@
 /*
     libparted
-    Copyright (C) 1998, 1999, 2000, 2005, 2007 Free Software Foundation, Inc.
+    Copyright (C) 1998-2000, 2005, 2007-2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -340,22 +340,24 @@ fat_dir_entry_has_first_cluster (FatDirEntry* dir_entry, PedFileSystem* fs)
     decrypts silly DOS names to FILENAME.EXT
 */
 void
-fat_dir_entry_get_name (FatDirEntry*dir_entry, char *result) {
+fat_dir_entry_get_name (const FatDirEntry *dir_entry, char *result) {
 	int     i;
-	char   *src;
+	const char *src;
+	const char *ext;
 
 	src = dir_entry->name;
 
-	for (i=0; i<8; i++) {
+	for (i=0; i < sizeof dir_entry->name; i++) {
 		if (src[i] == ' ' || src[i] == 0) break;
 		*result++ = src[i];
 	}
 
-	if (src[8] != ' ' && src[8] != 0) {
+	ext = (const char *) dir_entry->extension;
+	if (ext[0] != ' ' && ext[0] != 0) {
 		*result++ = '.';
-		for (i=8; i<11; i++) {
-			if (src[i] == ' ' || src[i] == 0) break;
-			*result++ = src[i];
+		for (i=0; i < sizeof dir_entry->extension; i++) {
+			if (ext[i] == ' ' || ext[i] == 0) break;
+			*result++ = ext[i];
 		}
 	}
 
