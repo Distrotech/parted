@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000, 2007 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2007, 2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -87,15 +87,21 @@ ped_alignment_is_aligned (const PedAlignment* align, const PedGeometry* geom,
 extern const PedAlignment* ped_alignment_any;
 extern const PedAlignment* ped_alignment_none;
 
-extern inline PedSector
-ped_div_round_up (PedSector numerator, PedSector divisor);
+static inline PedSector
+ped_div_round_up (PedSector numerator, PedSector divisor)
+{
+	return (numerator + divisor - 1) / divisor;
+}
 
-extern inline PedSector
-ped_div_round_to_nearest (PedSector numerator, PedSector divisor);
+
+static inline PedSector
+ped_div_round_to_nearest (PedSector numerator, PedSector divisor)
+{
+	return (numerator + divisor/2) / divisor;
+}
 
 #endif /* PED_NATMATH_H_INCLUDED */
 
 /**
  * @}
  */
-

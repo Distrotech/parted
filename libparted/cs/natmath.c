@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000, 2007 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2007, 2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -72,18 +72,6 @@ PedSector
 ped_round_down_to (PedSector sector, PedSector grain_size)
 {
 	return sector - abs_mod (sector, grain_size);
-}
-
-PedSector
-ped_div_round_up (PedSector numerator, PedSector divisor)
-{
-	return (numerator + divisor - 1) / divisor;
-}
-
-PedSector
-ped_div_round_to_nearest (PedSector numerator, PedSector divisor)
-{
-	return (numerator + divisor/2) / divisor;
 }
 
 /* Rounds a number up to the closest number that is a multiple of
