@@ -1,6 +1,6 @@
 /*
     parted - a frontend to libparted
-    Copyright (C) 1999, 2000, 2001, 2002, 2006, 2007
+    Copyright (C) 1999, 2000, 2001, 2002, 2006, 2007, 2008
     Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
@@ -297,16 +297,6 @@ _dump_history (void)
 
 #endif /* HAVE_LIBREADLINE */
 
-static void
-mask_signal()
-{
-        sigset_t    curr;
-        sigset_t    prev;
-  
-        sigfillset(&curr);
-        sigprocmask(SIG_SETMASK, &curr, &prev);
-}
-
 /* Resets the environment by jumping to the initial state
  * saved during ui intitialisation.
  * Pass 1 as the parameter if you want to quit parted, 
@@ -337,15 +327,6 @@ sa_sigint_handler (int signum, siginfo_t* info, void *ucontext)
 
         got_ctrl_c = 1;
         reset_env (0);
-}
-
-/* Signal handler for SIGINT using 'signal'. */
-static void
-s_sigint_handler (int signum)
-{
-        signal (SIGINT, &s_sigint_handler);
-        mask_signal ();
-        sa_sigint_handler (signum, NULL, NULL);
 }
 
 /* Signal handler for SIGSEGV using 'sigaction'. */
@@ -381,15 +362,6 @@ sa_sigsegv_handler (int signum, siginfo_t* info, void* ucontext)
         }
 
         abort ();
-}
-
-/* Signal handler for SIGSEGV using 'signal'. */
-static void
-s_sigsegv_handler (int signum)
-{
-        signal (SIGSEGV, &s_sigsegv_handler);
-        mask_signal ();
-        sa_sigsegv_handler (signum, NULL, NULL);
 }
 
 /* Signal handler for SIGFPE using 'sigaction'. */
@@ -456,15 +428,6 @@ sa_sigfpe_handler (int signum, siginfo_t* info, void* ucontext)
         abort ();
 }
 
-/* Signal handler for SIGFPE using 'signal'. */
-static void
-s_sigfpe_handler (int signum)
-{
-        signal (SIGFPE, &s_sigfpe_handler);
-        mask_signal ();
-        sa_sigfpe_handler (signum, NULL, NULL);
-}
-
 /* Signal handler for SIGILL using 'sigaction'. */
 static void
 sa_sigill_handler (int signum, siginfo_t* info, void* ucontext)
@@ -528,6 +491,27 @@ sa_sigill_handler (int signum, siginfo_t* info, void* ucontext)
         abort ();
 }
 
+#ifndef SA_SIGINFO
+
+static void
+mask_signal()
+{
+        sigset_t    curr;
+        sigset_t    prev;
+
+        sigfillset(&curr);
+        sigprocmask(SIG_SETMASK, &curr, &prev);
+}
+
+/* Signal handler for SIGINT using 'signal'. */
+static void
+s_sigint_handler (int signum)
+{
+        signal (SIGINT, &s_sigint_handler);
+        mask_signal ();
+        sa_sigint_handler (signum, NULL, NULL);
+}
+
 /* Signal handler for SIGILL using 'signal'. */
 static void
 s_sigill_handler (int signum)
@@ -536,6 +520,25 @@ s_sigill_handler (int signum)
         mask_signal ();
         sa_sigill_handler (signum, NULL, NULL);
 }
+
+/* Signal handler for SIGSEGV using 'signal'. */
+static void
+s_sigsegv_handler (int signum)
+{
+        signal (SIGSEGV, &s_sigsegv_handler);
+        mask_signal ();
+        sa_sigsegv_handler (signum, NULL, NULL);
+}
+
+/* Signal handler for SIGFPE using 'signal'. */
+static void
+s_sigfpe_handler (int signum)
+{
+        signal (SIGFPE, &s_sigfpe_handler);
+        mask_signal ();
+        sa_sigfpe_handler (signum, NULL, NULL);
+}
+#endif
 
 static char*
 _readline (const char* prompt, const StrList* possibilities)
