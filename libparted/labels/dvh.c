@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2001, 2002, 2005, 2007 Free Software Foundation, Inc.
+    Copyright (C) 2001, 2002, 2005, 2007-2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -717,7 +717,9 @@ dvh_partition_set_name (PedPartition* part, const char* name)
 		ped_exception_throw (
 			PED_EXCEPTION_ERROR,
 			PED_EXCEPTION_CANCEL,
-			_("Only logical partitions (boot files) have a name."));
+			_("failed to set dvh partition name to %s:\n"
+                          "Only logical partitions (boot files) have a name."),
+                        name);
 #endif
 	}
 }

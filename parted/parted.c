@@ -708,9 +708,9 @@ do_mkpart (PedDevice** dev)
                         goto error_destroy_disk;
         }
 
-#if 1
-        /* This undocumented _feature_, is next to useless, at least with
-           a dvh partition table, since it makes the "mkpart" command
+        /* The undocumented feature that mkpart sometimes takes a
+           partition name is next to useless, at least with a dvh
+           partition table, since it makes the "mkpart" command
            fail unconditionally for a primary partition.  E.g.,
            mkpart primary any-name xfs 4096s 5000s
            requires the name, yet always fails, saying that only
@@ -723,7 +723,6 @@ do_mkpart (PedDevice** dev)
                   && part_type != PED_PARTITION_LOGICAL))
                 part_name = command_line_get_word (_("Partition name?"),
                                                    "", NULL, 1);
-#endif
 
         peek_word = command_line_peek_word ();
         if (part_type == PED_PARTITION_EXTENDED
