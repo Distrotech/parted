@@ -1,7 +1,6 @@
 /*
     parted - a frontend to libparted
-    Copyright (C) 1999, 2000, 2001, 2002, 2003, 2005, 2006, 2007
-    Free Software Foundation, Inc.
+    Copyright (C) 1999-2003, 2005-2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -709,11 +708,23 @@ do_mkpart (PedDevice** dev)
                         goto error_destroy_disk;
         }
 
+#if 1
+        /* This undocumented _feature_, is next to useless, at least with
+           a dvh partition table, since it makes the "mkpart" command
+           fail unconditionally for a primary partition.  E.g.,
+           mkpart primary any-name xfs 4096s 5000s
+           requires the name, yet always fails, saying that only
+           logical partitions may have names.
+           If you want a name, use parted's separate "name" command.  */
+
         if (ped_disk_type_check_feature (disk->type,
-                                         PED_DISK_TYPE_PARTITION_NAME)) 
+                                         PED_DISK_TYPE_PARTITION_NAME)
+            && ! (strcmp (disk->type->name, "dvh") == 0
+                  && part_type != PED_PARTITION_LOGICAL))
                 part_name = command_line_get_word (_("Partition name?"),
-                                                   "", NULL, 1); 
-                
+                                                   "", NULL, 1);
+#endif
+
         peek_word = command_line_peek_word ();
         if (part_type == PED_PARTITION_EXTENDED
             || (peek_word && isdigit (peek_word[0]))) {
