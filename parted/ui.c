@@ -572,7 +572,9 @@ _readline (const char* prompt, const StrList* possibilities)
                         fputs (line, stdout);
                         fflush (stdout);
 #endif
-                        line [strlen (line) - 1] = 0;    /* kill trailing CR */
+                        /* kill trailing NL */
+                        if (strlen (line))
+                                line [strlen (line) - 1] = 0;
                 } else {
                         free (line);
                         line = NULL;
