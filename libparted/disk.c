@@ -2227,6 +2227,8 @@ ped_partition_flag_get_name (PedPartitionFlag flag)
 	switch (flag) {
 	case PED_PARTITION_BOOT:
 		return N_("boot");
+	case PED_PARTITION_BIOS_GRUB:
+		return N_("bios_grub");
 	case PED_PARTITION_ROOT:
 		return N_("root");
 	case PED_PARTITION_SWAP:

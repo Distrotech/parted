@@ -4,7 +4,7 @@
     original version by Matt Domsch <Matt_Domsch@dell.com>
     Disclaimed into the Public Domain
 
-    Portions Copyright (C) 2001, 2002, 2003, 2005, 2006, 2007
+    Portions Copyright (C) 2001, 2002, 2003, 2005, 2006, 2007, 2008
         Free Software Foundation, Inc.
 
     EFI GUID Partition Table handling
@@ -86,6 +86,10 @@ typedef struct {
     ((efi_guid_t) { PED_CPU_TO_LE32 (0xC12A7328), PED_CPU_TO_LE16 (0xF81F), \
     		    PED_CPU_TO_LE16 (0x11d2), 0xBA, 0x4B, \
 		    { 0x00, 0xA0, 0xC9, 0x3E, 0xC9, 0x3B }})
+#define PARTITION_BIOS_GRUB_GUID \
+    ((efi_guid_t) { PED_CPU_TO_LE32 (0x21686148), PED_CPU_TO_LE16 (0x6449), \
+    		    PED_CPU_TO_LE16 (0x6E6f), 0x74, 0x4E, \
+		    { 0x65, 0x65, 0x64, 0x45, 0x46, 0x49 }})
 #define LEGACY_MBR_PARTITION_GUID \
     ((efi_guid_t) { PED_CPU_TO_LE32 (0x024DEE41), PED_CPU_TO_LE16 (0x33E7), \
 		    PED_CPU_TO_LE16 (0x11d3, 0x9D, 0x69, \
@@ -245,6 +249,7 @@ typedef struct _GPTPartitionData {
 	int		lvm;
 	int		raid;
 	int		boot;
+	int		bios_grub;
 	int		hp_service;
         int             hidden;
         int             msftres;
@@ -753,13 +758,16 @@ _parse_part_entry (PedDisk* disk, GuidPartitionEntry_t* pte)
         
         gpt_part_data->lvm = gpt_part_data->raid 
                 = gpt_part_data->boot = gpt_part_data->hp_service
-                = gpt_part_data->hidden = gpt_part_data->msftres = 0;
+                = gpt_part_data->hidden = gpt_part_data->msftres
+                = gpt_part_data->bios_grub = 0;
 
         if (pte->Attributes.RequiredToFunction & 0x1)
                 gpt_part_data->hidden = 1;
        
 	if (!guid_cmp (gpt_part_data->type, PARTITION_SYSTEM_GUID))
 		gpt_part_data->boot = 1;
+	else if (!guid_cmp (gpt_part_data->type, PARTITION_BIOS_GRUB_GUID))
+		gpt_part_data->bios_grub = 1;
 	else if (!guid_cmp (gpt_part_data->type, PARTITION_RAID_GUID))
 		gpt_part_data->raid = 1;
 	else if (!guid_cmp (gpt_part_data->type, PARTITION_LVM_GUID))
@@ -1130,6 +1138,7 @@ gpt_partition_new (const PedDisk* disk,
 	gpt_part_data->lvm = 0;
 	gpt_part_data->raid = 0;
 	gpt_part_data->boot = 0;
+	gpt_part_data->bios_grub = 0;
 	gpt_part_data->hp_service = 0;
         gpt_part_data->hidden = 0;
         gpt_part_data->msftres = 0;
@@ -1206,6 +1215,10 @@ gpt_partition_set_system (PedPartition* part, const PedFileSystemType* fs_type)
 	}
 	if (gpt_part_data->boot) {
 		gpt_part_data->type = PARTITION_SYSTEM_GUID;
+		return 1;
+	}
+	if (gpt_part_data->bios_grub) {
+		gpt_part_data->type = PARTITION_BIOS_GRUB_GUID;
 		return 1;
 	}
 	if (gpt_part_data->hp_service) {
@@ -1306,6 +1319,16 @@ gpt_partition_set_flag(PedPartition *part,
 		if (state)
                         gpt_part_data->raid 
                                 = gpt_part_data->lvm
+                                = gpt_part_data->bios_grub
+                                = gpt_part_data->hp_service
+                                = gpt_part_data->msftres = 0;
+		return gpt_partition_set_system (part, part->fs_type);
+	case PED_PARTITION_BIOS_GRUB:
+		gpt_part_data->bios_grub = state;
+		if (state)
+                        gpt_part_data->raid 
+                                = gpt_part_data->lvm
+                                = gpt_part_data->boot
                                 = gpt_part_data->hp_service
                                 = gpt_part_data->msftres = 0;
 		return gpt_partition_set_system (part, part->fs_type);
@@ -1314,6 +1337,7 @@ gpt_partition_set_flag(PedPartition *part,
 		if (state)
                         gpt_part_data->boot
                                 = gpt_part_data->lvm
+                                = gpt_part_data->bios_grub
                                 = gpt_part_data->hp_service
                                 = gpt_part_data->msftres = 0;
 		return gpt_partition_set_system (part, part->fs_type);
@@ -1322,6 +1346,7 @@ gpt_partition_set_flag(PedPartition *part,
 		if (state)
                         gpt_part_data->boot
                                 = gpt_part_data->raid
+                                = gpt_part_data->bios_grub
                                 = gpt_part_data->hp_service
                                 = gpt_part_data->msftres = 0;
 		return gpt_partition_set_system (part, part->fs_type);
@@ -1331,6 +1356,7 @@ gpt_partition_set_flag(PedPartition *part,
                         gpt_part_data->boot
                                 = gpt_part_data->raid
                                 = gpt_part_data->lvm
+                                = gpt_part_data->bios_grub
                                 = gpt_part_data->msftres = 0;
 		return gpt_partition_set_system (part, part->fs_type);
         case PED_PARTITION_MSFT_RESERVED:
@@ -1339,6 +1365,7 @@ gpt_partition_set_flag(PedPartition *part,
                         gpt_part_data->boot
                                 = gpt_part_data->raid
                                 = gpt_part_data->lvm
+                                = gpt_part_data->bios_grub
                                 = gpt_part_data->hp_service = 0;
                 return gpt_partition_set_system (part, part->fs_type);
         case PED_PARTITION_HIDDEN:
@@ -1367,6 +1394,8 @@ gpt_partition_get_flag(const PedPartition *part, PedPartitionFlag flag)
 		return gpt_part_data->lvm;
 	case PED_PARTITION_BOOT:
 		return gpt_part_data->boot;
+	case PED_PARTITION_BIOS_GRUB:
+		return gpt_part_data->bios_grub;
 	case PED_PARTITION_HPSERVICE:
 		return gpt_part_data->hp_service;
         case PED_PARTITION_MSFT_RESERVED:
@@ -1390,6 +1419,7 @@ gpt_partition_is_flag_available(const PedPartition * part,
 	case PED_PARTITION_RAID:
 	case PED_PARTITION_LVM:
 	case PED_PARTITION_BOOT:
+	case PED_PARTITION_BIOS_GRUB:
 	case PED_PARTITION_HPSERVICE:
         case PED_PARTITION_MSFT_RESERVED:
         case PED_PARTITION_HIDDEN:        

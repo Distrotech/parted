@@ -9,7 +9,8 @@ TESTS = \
   t3000-constraints.sh \
   t3100-resize-ext2-partion.sh \
   t4100-msdos-partition-limits.sh \
-  t4100-dvh-partition-limits.sh
+  t4100-dvh-partition-limits.sh \
+  t5000-tags.sh
 
 EXTRA_DIST = \
   $(TESTS) test-lib.sh mkdtemp
