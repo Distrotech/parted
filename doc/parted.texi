@@ -14,7 +14,7 @@ resizing, checking and copy partitions and file systems on them.
 @ifnottex @c texi2pdf don't understand copying and insertcopying ???
 @c modifications must also be done in the titlepage
 @copying
-Copyright @copyright{} 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007
+Copyright @copyright{} 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
@@ -63,7 +63,7 @@ Free Documentation License''.
 
 @c WTF doesn't texi2html include the titlepage?
 @ifhtml
-@insertcopying 
+@insertcopying
 @end ifhtml
 
 This document describes the use of GNU Parted, a program for creating,
@@ -257,7 +257,7 @@ $ @kbd{make}
 However, there are a few options for @command{configure}:
 
 @table @code
-@item --without-readline		
+@item --without-readline
 turns off use of readline.  This is useful for making rescue disks,
 etc., where few libraries are available.
 
@@ -275,12 +275,12 @@ you don't need the flexibility.
 @item --disable-fs
 disable all file system support
 
-@item --disable-nls			
+@item --disable-nls
 turns off native language support.  This is useful for use with old
 versions of glibc, or a trimmed down version of glibc suitable for
 rescue disks.
 
-@item --disable-shared		
+@item --disable-shared
 turns off shared libraries.  This may be necessary for use with old
 versions of GNU libc, if you get a compile error about a ``spilled
 register''.  Also useful for boot/rescue disks.
@@ -301,7 +301,7 @@ disable writing (for debugging)
 
 @node Static binaries
 @section Using static binaries of GNU Parted
-@cindex static binary 
+@cindex static binary
 @cindex unsupported platforms
 @cindex resizing root device
 
@@ -320,7 +320,7 @@ of the latest GNU Parted version is available, which you can use thus:
 
 @subsection Creating the Parted disk
 @enumerate
-@item Boot your system 
+@item Boot your system
 
 @item Download @file{parted-static-VERSION.tgz} from @uref{ftp://ftp.gnu.org/gnu/parted/static}
 @item Unpack the tarball, resulting in a file called ``parted.static".
@@ -329,7 +329,7 @@ of the latest GNU Parted version is available, which you can use thus:
 
 @item Do a low-level format on it (on GNU/Linux this can be achieved with
       the tool ``fdformat" from the ``util-linux" package.
-      This is basically a sanity check because floppy disks often 
+      This is basically a sanity check because floppy disks often
       contain bad blocks.
 
 @item Create a file system. Example:
@@ -359,7 +359,7 @@ $ @kbd{umount /mnt/floppy}
 
 @subsection Using the Parted disk
 @enumerate
-@item Choose a rescue disk that suits you. 
+@item Choose a rescue disk that suits you.
 
 @item Boot off your rescue disk.  Mount the disk you copied Parted onto.
 
@@ -383,7 +383,7 @@ $ @kbd{umount /mnt/floppy}
 @end menu
 
 @node Partitioning
-@section Introduction to Partitioning 
+@section Introduction to Partitioning
 @cindex partitioning overview
 
 Unfortunately, partitioning your disk is rather complicated.  This is
@@ -566,7 +566,7 @@ Supported file systems:
 (provided the destination partition is larger than the source partition)
 
 @item fat16, fat32
-@item linux-swap	
+@item linux-swap
 (equivalent to mkswap on destination partition)
 @item reiserfs (if libreiserfs is installed)
 
@@ -918,7 +918,7 @@ partitions can be resized only so long as the new extended partition
 completely contains all logical partitions.
 
 Note that Parted can manipulate partitions whether or not they have been
-defragmented, so you do not need to defragmenting the disk before
+defragmented, so you do not need to defragment the disk before
 using Parted.
 
 Supported file systems:
@@ -1031,7 +1031,7 @@ Microsoft operating systems.
 
 @item raid
 (MS-DOS) - this flag can be enabled to tell linux the partition is a
-software RAID partition. 
+software RAID partition.
 
 @item LVM
 (MS-DOS) - this flag can be enabled to tell linux the partition is a
@@ -1109,59 +1109,59 @@ specified after an input number.  Input numbers can be followed by
 an unit (without any space or other character between them), in
 which case this unit apply instead of the default unit for this
 particular number, but CHS and cylinder units are not supported as
-a suffix.  If no suffix is given, then the default unit is assumed. 
+a suffix.  If no suffix is given, then the default unit is assumed.
 Parted will compute sensible ranges for the locations you specify
 (e.g. a range of +/- 500 MB when you specify the location in ``G'')
 and will select the nearest location in this range from the one you
 wrote that satisfies constraints from both the operation, the
 filesystem being worked on, the disk label, other partitions and so
 on.  Use the sector unit ``s'' to specify exact locations (if they
-do not satisfy all onstraints, Parted will ask you for the nearest 
+do not satisfy all onstraints, Parted will ask you for the nearest
 solution).  Note that negative numbers count back from the end of
-the disk, with ``-1s'' pointing to the end of the disk.  
+the disk, with ``-1s'' pointing to the end of the disk.
 
 Example:
 
 @example
 @group
-(parted) unit compact                                                     
-(parted) print                                                            
+(parted) unit compact
+(parted) print
 Disk geometry for /dev/hda: 0kB - 123GB
 Disk label type: msdos
 Number  Start   End     Size    Type      File system  Flags
 1       32kB    1078MB  1077MB  primary   reiserfs     boot
-2       1078MB  2155MB  1078MB  primary   linux-swap   
-3       2155MB  123GB   121GB   extended               
-5       2155MB  7452MB  5297MB  logical   reiserfs     
+2       1078MB  2155MB  1078MB  primary   linux-swap
+3       2155MB  123GB   121GB   extended
+5       2155MB  7452MB  5297MB  logical   reiserfs
 @end group
 @group
-(parted) unit chs print                                                   
+(parted) unit chs print
 Disk geometry for /dev/hda: 0,0,0 - 14946,225,62
 BIOS cylinder,head,sector geometry: 14946,255,63.  Each cylinder
 is 8225kB.
 Disk label type: msdos
 Number  Start       End         Type      File system  Flags
 1       0,1,0       130,254,62  primary   reiserfs     boot
-2       131,0,0     261,254,62  primary   linux-swap   
-3       262,0,0     14945,254,62 extended               
-5       262,2,0     905,254,62  logical   reiserfs     
+2       131,0,0     261,254,62  primary   linux-swap
+3       262,0,0     14945,254,62 extended
+5       262,2,0     905,254,62  logical   reiserfs
 @end group
 @group
-(parted) unit mb print                                                    
+(parted) unit mb print
 Disk geometry for /dev/hda: 0MB - 122942MB
 Disk label type: msdos
 Number  Start   End     Size    Type      File system  Flags
 1       0MB     1078MB  1077MB  primary   reiserfs     boot
-2       1078MB  2155MB  1078MB  primary   linux-swap   
-3       2155MB  122935MB 120780MB extended               
-5       2155MB  7452MB  5297MB  logical   reiserfs     
+2       1078MB  2155MB  1078MB  primary   linux-swap
+3       2155MB  122935MB 120780MB extended
+5       2155MB  7452MB  5297MB  logical   reiserfs
 @end group
 @end example
 
 @end deffn
 
 @node Related information
-@chapter Related information 
+@chapter Related information
 @cindex further reading
 @cindex related documentation
 
