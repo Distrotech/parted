@@ -149,7 +149,7 @@ fdasd_error (fdasd_anchor_t *anc, enum fdasd_failure why, char * str)
 		case device_verification_failed:
 			sprintf(error, "fdasd: %s -- %s\n",
 				_("Device verification failed"),
-				_("The specified device is not a valid DASD device"));,
+				_("The specified device is not a valid DASD device"));
 			break;
 		default: 
 			sprintf(error, "fdasd: %s: %s\n", _("Fatal error"), str);
