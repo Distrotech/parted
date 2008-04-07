@@ -480,14 +480,7 @@ AC_CHECK_HEADER([execinfo.h], [
 	])
 ])
 
-dnl Checks for #defines.
-AC_COMPILE_IFELSE([
-	AC_LANG_PROGRAM([[
-	#if defined __s390__ || defined __s390x__
-	#  message s390 defined
-	#endif
-	]])], [compile_for_s390="no"], [compile_for_s390="yes"])
-AM_CONDITIONAL([COMPILE_FOR_S390], [test "$compile_for_s390" = "yes"])
+AM_CONDITIONAL([COMPILE_FOR_S390], [test "$host_cpu" = s390 || test "$host_cpu" = s390x])
 
 dnl check for "check", unit testing library/header
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.3], have_check=yes, have_check=no)
