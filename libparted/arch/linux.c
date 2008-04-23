@@ -302,6 +302,39 @@ _is_sx8_major (int major)
 
 #ifdef ENABLE_DEVICE_MAPPER
 static int
+_dm_maptype (PedDevice* dev)
+{
+        struct dm_task *dmt;
+        void *next = NULL;
+        uint64_t start, length;
+        char *target_type = NULL;
+        char *params;
+        int r = -1;
+
+        if (!(dmt = dm_task_create(DM_DEVICE_TABLE)))
+                return r;
+
+        if (!dm_task_set_name(dmt, dev->path))
+                goto bad;
+
+        dm_task_no_open_count(dmt);
+
+        if (!dm_task_run(dmt))
+                goto bad;
+
+        next = dm_get_next_target(dmt, next, &start, &length,
+                                  &target_type, &params);
+
+        dev->dmtype = strdup(target_type);
+        if(dev->dmtype == NULL)
+                goto bad;
+        r = 0;
+bad:
+        dm_task_destroy(dmt);
+        return r;
+}
+
+static int
 readFD (int fd, char **buf)
 {
         char* p;
@@ -489,6 +522,13 @@ _device_probe_type (PedDevice* dev)
 #ifdef ENABLE_DEVICE_MAPPER
         } else if (_is_dm_major(dev_major)) {
                 dev->type = PED_DEVICE_DM;
+                if (_dm_maptype(dev)) {
+                        ped_exception_throw (
+                                PED_EXCEPTION_BUG,
+                                PED_EXCEPTION_CANCEL,
+                                _("Unable to determine the dm type of %s."),
+                                dev->path);
+                }
 #endif
         } else if (dev_major == XVD_MAJOR && (dev_minor % 0x10 == 0)) {
                 dev->type = PED_DEVICE_XVD;
@@ -1106,6 +1146,7 @@ static PedDevice*
 linux_new (const char* path)
 {
         PedDevice*      dev;
+        char* type;
 
         PED_ASSERT (path != NULL, return NULL);
 
@@ -1189,7 +1230,9 @@ linux_new (const char* path)
 
 #ifdef ENABLE_DEVICE_MAPPER
         case PED_DEVICE_DM:
-                if (!init_generic (dev, _("Linux device-mapper")))
+                if (asprintf(&type, _("Linux device-mapper (%s)"), dev->dmtype) == -1)
+                        goto error_free_arch_specific;
+                if (!init_generic (dev, type))
                         goto error_free_arch_specific;
                 break;
 #endif
@@ -1228,6 +1271,9 @@ linux_destroy (PedDevice* dev)
         free (dev->arch_specific);
         free (dev->path);
         free (dev->model);
+#ifdef ENABLE_DEVICE_MAPPER
+        free (dev->dmtype);
+#endif
         free (dev);
 }
 

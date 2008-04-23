@@ -72,6 +72,9 @@ struct _PedDevice {
 
         PedDeviceType   type;           /**< SCSI, IDE, etc.
                                              \deprecated \sa PedDeviceType */
+#ifdef ENABLE_DEVICE_MAPPER
+        char*		dmtype;         /**< device map target type */
+#endif
         long long       sector_size;            /**< logical sector size */
         long long       phys_sector_size;       /**< physical sector size */
         PedSector       length;                 /**< device length (LBA) */
