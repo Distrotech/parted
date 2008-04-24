@@ -243,7 +243,7 @@ ped_exception_throw (PedExceptionType ex_type,
 	ex->options = ex_opts;
 
 	while (1) {
-			ex->message = (char*) malloc (size);
+			ex->message = (char*) malloc (size * sizeof (char));
 			if (!ex->message)
 					goto no_memory;
 
@@ -255,6 +255,7 @@ ped_exception_throw (PedExceptionType ex_type,
 					break;
 
 			size += 10;
+			ped_free (ex->message);
 	}
 
 	return do_throw ();
