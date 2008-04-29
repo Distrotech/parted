@@ -33,6 +33,7 @@ gpg_key_ID = B9AB9A16
 # at the top of the file for each `make distcheck' run.
 local-checks-to-skip = \
   sc_file_system \
+  sc_prohibit_strcmp \
   sc_changelog \
   sc_prohibit_atoi_atof \
   sc_system_h_headers \
