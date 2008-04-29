@@ -5,6 +5,7 @@
 .version
 ABOUT-NLS
 ChangeLog
+GNUmakefile
 INSTALL
 Makefile
 Makefile.in
