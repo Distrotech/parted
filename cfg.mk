@@ -1,10 +1,10 @@
-# Customize Makefile.maint.                           -*- makefile -*-
-# Copyright (C) 2003-2007 Free Software Foundation, Inc.
+# Customize maint.mk                           -*- makefile -*-
+# Copyright (C) 2003-2008 Free Software Foundation, Inc.
 
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,7 +25,7 @@ url_dir_list = \
   ftp://$(gnu_rel_host)/gnu/parted
 
 # The GnuPG ID of the key used to sign the tarballs.
-gpg_key_ID = D333CBA1
+gpg_key_ID = B9AB9A16
 
 # Tests not to run as part of "make distcheck".
 # Exclude changelog-check here so that there's less churn in ChangeLog
@@ -47,7 +47,11 @@ local-checks-to-skip = \
   sc_cast_of_argument_to_free \
   check-AUTHORS
 
-
-# The local directory containing the checked-out copy of gnulib used in
-# this release.  Used solely to get a date for the "announcement" target.
+# The local directory containing the checked-out copy of gnulib used in this
+# release.  Used solely to get gnulib's SHA1 for the "announcement" target.
 gnulib_dir = /gnulib
+
+# Now that we have better (check.mk) tests, make this the default.
+export VERBOSE = yes
+
+old_NEWS_hash = c58d611d93d218181ed77f81ff2395ff  -

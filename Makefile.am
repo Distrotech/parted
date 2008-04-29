@@ -2,6 +2,7 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = po lib libparted parted partprobe include doc debug tests
 
 EXTRA_DIST =				\
+  .version				\
   .prev-version				\
   BUGS					\
   libparted.pc.in			\
@@ -9,8 +10,8 @@ EXTRA_DIST =				\
   parted.spec				\
   scripts/data/abi/baseline_symbols.txt \
   scripts/extract_symvers		\
-  Makefile.cfg				\
-  Makefile.maint			\
+  cfg.mk				\
+  maint.mk				\
   GNUmakefile
 
 aclocaldir=$(datadir)/aclocal
@@ -73,7 +74,24 @@ MAINTAINERCLEANFILES += \
   aclocal.m4    \
   configure
 
-# Arrange so that .version appears only in distribution tarballs,
-# never in a checked-out repository.
-dist-hook:
-	echo $(VERSION) > $(distdir)/.version
+# Arrange so that .tarball-version appears only in the distribution
+# tarball, and never in a checked-out repository.
+# The perl substitution is to change some key uses of "rm" to "/bin/rm".
+# See the rm_subst comment for details.
+dist-hook: gen-ChangeLog
+	echo $(VERSION) > $(distdir)/.tarball-version
+	perl -pi -e '$(rm_subst)' $(distdir)/src/Makefile.in
+
+gen_start_date = 2000-01-01
+.PHONY: gen-ChangeLog
+gen-ChangeLog:
+	if test -d .git; then						\
+	  $(top_srcdir)/build-aux/gitlog-to-changelog			\
+	    --since=$(gen_start_date) > $(distdir)/cl-t;		\
+	  rm -f $(distdir)/ChangeLog;					\
+	  mv $(distdir)/cl-t $(distdir)/ChangeLog;			\
+	fi
+
+BUILT_SOURCES = .version
+.version:
+	echo $(VERSION) > $@-t && mv $@-t $@
