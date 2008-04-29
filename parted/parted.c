@@ -1500,6 +1500,9 @@ do_print (PedDevice** dev)
                     table_add_row_from_strlist (table, row);
                     str_list_destroy (row);
                     ped_free (tmp);
+                    ped_free (start);
+                    ped_free (end);
+                    ped_free (size);
             }
 
             table_rendered = table_render (table); 
