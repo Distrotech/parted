@@ -8,6 +8,7 @@ EXTRA_DIST =				\
   libparted.pc.in			\
   parted.spec.in			\
   parted.spec				\
+  .x-sc_GPL_version			\
   scripts/data/abi/baseline_symbols.txt \
   scripts/extract_symvers		\
   cfg.mk				\
