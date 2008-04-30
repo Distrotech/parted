@@ -3,7 +3,7 @@
  */
 /*
     parted - a frontend to libparted
-    Copyright (C) 2006, 2007 Free Software Foundation, Inc.
+    Copyright (C) 2006-2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -89,12 +89,8 @@ void table_destroy (Table* t)
                 free (t->rows[r]);
         }
 
-        if (t->rows)
-                free (t->rows);
-
-        if (t->widths)
-                free (t->widths);
-
+        free (t->rows);
+        free (t->widths);
         free (t);
 }
 

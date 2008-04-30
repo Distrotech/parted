@@ -67,17 +67,10 @@ fdasd_cleanup (fdasd_anchor_t *anchor)
 	if (anchor == NULL)
 		return;
 
-	if (anchor->f4 != NULL)
-		free(anchor->f4);
-
-	if (anchor->f5 != NULL)
-		free(anchor->f5);
-
-	if (anchor->f7 != NULL)
-		free(anchor->f7);
-
-	if (anchor->vlabel != NULL)
-		free(anchor->vlabel);
+        free(anchor->f4);
+        free(anchor->f5);
+        free(anchor->f7);
+        free(anchor->vlabel);
 
 	p = anchor->first;
 	if (p == NULL)
