@@ -775,8 +775,7 @@ gnu_sync (PedDevice* dev)
 
 		switch (ex_status) {
 			case PED_EXCEPTION_IGNORE:
-				if (last_failure)
-					free (last_failure);
+				free (last_failure);
 				last_failure = strdup (dev->path);
 				return 1;
 

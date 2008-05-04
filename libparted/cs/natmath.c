@@ -171,8 +171,7 @@ error:
 void
 ped_alignment_destroy (PedAlignment* align)
 {
-	if (align)
-		free (align);
+	free (align);
 }
 
 /**

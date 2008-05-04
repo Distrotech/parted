@@ -733,8 +733,7 @@ do_mkpart (PedDevice** dev)
                                                &fs_type))
                         goto error_destroy_disk;
         }
-        if (peek_word)
-                free (peek_word);
+        free (peek_word);
 
         if (!command_line_get_sector (_("Start?"), *dev, &start, &range_start))
                 goto error_destroy_disk;
@@ -822,14 +821,10 @@ do_mkpart (PedDevice** dev)
         if (range_end != NULL)
                 ped_geometry_destroy (range_end);
         
-        if (start_usr != NULL)
-                free (start_usr);
-        if (end_usr != NULL)
-                free (end_usr);
-        if (start_sol != NULL)
-                free (start_sol);
-        if (end_sol != NULL)
-                free (end_sol);
+        free (start_usr);
+        free (end_usr);
+        free (start_sol);
+        free (end_sol);
 
         if ((*dev)->type != PED_DEVICE_FILE)
                 disk_is_modified = 1;
@@ -851,14 +846,10 @@ error:
         if (range_end != NULL)
                 ped_geometry_destroy (range_end);
 
-        if (start_usr != NULL)
-                free (start_usr);
-        if (end_usr != NULL)
-                free (end_usr);
-        if (start_sol != NULL)
-                free (start_sol);
-        if (end_sol != NULL)
-                free (end_sol);
+        free (start_usr);
+        free (end_usr);
+        free (start_sol);
+        free (end_sol);
 
         return 0;
 }
@@ -997,14 +988,10 @@ do_mkpartfs (PedDevice** dev)
         if (range_end != NULL)
                 ped_geometry_destroy (range_end);
 
-        if (start_usr != NULL)
-                free (start_usr);
-        if (end_usr != NULL)
-                free (end_usr);
-        if (start_sol != NULL)
-                free (start_sol);
-        if (end_sol != NULL)
-                free (end_sol);
+        free (start_usr);
+        free (end_usr);
+        free (start_sol);
+        free (end_sol);
 
         if ((*dev)->type != PED_DEVICE_FILE)
                 disk_is_modified = 1;
@@ -1026,14 +1013,10 @@ error:
         if (range_end != NULL)
                 ped_geometry_destroy (range_end);
 
-        if (start_usr != NULL)
-                free (start_usr);
-        if (end_usr != NULL)
-                free (end_usr);
-        if (start_sol != NULL)
-                free (start_sol);
-        if (end_sol != NULL)
-                free (end_sol);
+        free (start_usr);
+        free (end_usr);
+        free (start_sol);
+        free (end_sol);
 
         return 0;
 }

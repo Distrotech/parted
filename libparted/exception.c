@@ -188,8 +188,8 @@ ped_exception_catch ()
 {
         if (ped_exception) {
                 ped_exception = 0;
-                if (ex->message) free (ex->message);
-                if (ex) free (ex);
+                free (ex->message);
+                free (ex);
                 ex = NULL;
         }
 }

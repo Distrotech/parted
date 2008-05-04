@@ -1256,8 +1256,7 @@ msdos_partition_destroy (PedPartition* part)
 	if (ped_partition_is_active (part)) {
 		DosPartitionData* dos_data;
 		dos_data = (DosPartitionData*) part->disk_specific;
-		if (dos_data->orig)
-			free (dos_data->orig);
+		free (dos_data->orig);
 		free (part->disk_specific);
 	}
 	free (part);

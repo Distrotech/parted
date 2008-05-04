@@ -620,7 +620,7 @@ _read_header (const PedDevice* dev, GuidPartitionTableHeader_t** gpt,
 	PED_ASSERT (dev != NULL, return 0);
 
 	if (!ped_device_read (dev, pth_raw, where, GPT_HEADER_SECTORS)) {
-                free (pth_raw); 
+		free (pth_raw);
 		return 0;
         }
  
