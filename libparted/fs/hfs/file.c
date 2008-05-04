@@ -60,7 +60,7 @@ hfs_file_open (PedFileSystem *fs, uint32_t CNID,
 void
 hfs_file_close (HfsPrivateFile* file)
 {
-	ped_free (file);
+	free (file);
 }
 
 /* warning : only works on data forks */

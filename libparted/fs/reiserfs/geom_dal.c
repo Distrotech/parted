@@ -132,7 +132,7 @@ int geom_dal_reopen(dal_t *dal, int flags) {
 
 void geom_dal_free(dal_t *dal) {
     PED_ASSERT(dal != NULL, return);
-    ped_free(dal);
+    free(dal);
 }
 
 #endif

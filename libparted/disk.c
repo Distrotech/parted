@@ -393,7 +393,7 @@ _ped_disk_alloc (const PedDevice* dev, const PedDiskType* disk_type)
 	disk->part_list = NULL;
 	return disk;
 
-	ped_free (disk);
+	free (disk);
 error:
 	return NULL;
 }
@@ -403,7 +403,7 @@ _ped_disk_free (PedDisk* disk)
 {
 	_disk_push_update_mode (disk);
 	ped_disk_delete_all (disk);
-	ped_free (disk);
+	free (disk);
 }
 
 /**
@@ -600,8 +600,8 @@ ped_disk_check (const PedDisk* disk)
 				  "%s."),
 				walk->num, part_size, fs_size);
 
-			ped_free (part_size);
-			ped_free (fs_size);
+			free (part_size);
+			free (fs_size);
 
 			if (choice != PED_EXCEPTION_IGNORE)
 				return 0;
@@ -1000,7 +1000,7 @@ _ped_partition_alloc (const PedDisk* disk, PedPartitionType type,
 	return part;
 
 error_free_part:
-	ped_free (part);
+	free (part);
 error:
 	return NULL;
 }
@@ -1008,7 +1008,7 @@ error:
 void
 _ped_partition_free (PedPartition* part)
 {
-	ped_free (part);
+	free (part);
 }
 
 int

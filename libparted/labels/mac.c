@@ -339,7 +339,7 @@ mac_free (PedDisk* disk)
 	MacDiskData*	mac_disk_data = disk->disk_specific;
 
 	_ped_disk_free (disk);
-	ped_free (mac_disk_data);
+	free (mac_disk_data);
 }
 
 #ifndef DISCOVER_ONLY
@@ -1106,13 +1106,13 @@ mac_write (PedDisk* disk)
 	if (!ped_device_write (disk->dev, part_map, 1,
 			       mac_disk_data->part_map_entry_count))
 		goto error_free_part_map;
-	ped_free (part_map);
+	free (part_map);
 	return write_block_zero (disk, mac_driverdata);
 
 error_free_part_map:
-	ped_free (part_map);
+	free (part_map);
 error_free_driverdata:
-	ped_free (mac_driverdata);
+	free (mac_driverdata);
 error:
 	return 0;
 }
@@ -1143,9 +1143,9 @@ mac_partition_new (
 	}
 	return part;
 
-	ped_free (mac_data);
+	free (mac_data);
 error_free_part:
-	ped_free (part);
+	free (part);
 error:
 	return 0;
 }
@@ -1178,8 +1178,8 @@ mac_partition_destroy (PedPartition* part)
 	PED_ASSERT (part != NULL, return);
 
 	if (ped_partition_is_active (part))
-		ped_free (part->disk_specific);
-	ped_free (part);
+		free (part->disk_specific);
+	free (part);
 }
 
 static int

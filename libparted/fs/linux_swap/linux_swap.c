@@ -218,13 +218,13 @@ swap_alloc (PedGeometry* geom)
 	return fs;
 
 error_free_buffer:
-	ped_free (fs_info->buffer);
+	free (fs_info->buffer);
 error_free_header:
-	ped_free (fs_info->header);
+	free (fs_info->header);
 error_free_type_specific:
-	ped_free (fs->type_specific);
+	free (fs->type_specific);
 error_free_fs:
-	ped_free (fs);
+	free (fs);
 error:
 	return NULL;
 }
@@ -234,12 +234,12 @@ swap_free (PedFileSystem* fs)
 {
 	SwapSpecific*	fs_info = SWAP_SPECIFIC (fs);
 
-	ped_free (fs_info->buffer);
-	ped_free (fs_info->header);
-	ped_free (fs->type_specific);
+	free (fs_info->buffer);
+	free (fs_info->header);
+	free (fs->type_specific);
 
 	ped_geometry_destroy (fs->geom);
-	ped_free (fs);
+	free (fs);
 }
 
 static PedFileSystem*

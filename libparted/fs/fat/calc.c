@@ -135,8 +135,8 @@ fat_check_resize_geometry (const PedFileSystem* fs,
 			  "partition to this size.  Currently, only %s is "
 			  "free."),
 			needed, have);
-		ped_free (needed);
-		ped_free (have);
+		free (needed);
+		free (have);
 		return 0;
 	}
 

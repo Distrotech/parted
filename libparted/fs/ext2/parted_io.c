@@ -121,7 +121,7 @@ struct ext2_dev_handle *ext2_make_dev_handle_from_parted_geometry(PedGeometry* g
 	return dh;
 
 error_free_dh:
-	ped_free(dh);
+	free(dh);
 error:
 	return NULL;
 }
@@ -129,7 +129,7 @@ error:
 void ext2_destroy_dev_handle(struct ext2_dev_handle *handle)
 {
 	ped_geometry_destroy(((struct my_cookie *)handle->cookie)->geom);
-	ped_free(handle->cookie);
-	ped_free(handle);
+	free(handle->cookie);
+	free(handle);
 }
 #endif /* !DISCOVER_ONLY */

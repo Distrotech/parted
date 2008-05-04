@@ -245,7 +245,7 @@ sun_duplicate (const PedDisk* disk)
 static void
 sun_free (PedDisk *disk)
 {
-	ped_free (disk->disk_specific);
+	free (disk->disk_specific);
 	_ped_disk_free (disk);
 }
 
@@ -487,9 +487,9 @@ sun_partition_new (const PedDisk* disk, PedPartitionType part_type,
 
 	return part;
 
-	ped_free (sun_data);
+	free (sun_data);
 error_free_part:
-	ped_free (part);
+	free (part);
 error:
 	return NULL;
 }
@@ -523,8 +523,8 @@ sun_partition_destroy (PedPartition* part)
 	PED_ASSERT (part != NULL, return);
 
 	if (ped_partition_is_active (part))
-		ped_free (part->disk_specific);
-	ped_free (part);
+		free (part->disk_specific);
+	free (part);
 }
 
 static int

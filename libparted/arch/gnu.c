@@ -180,11 +180,11 @@ _init_device (const char *path)
 	return dev;
 
 error_free_arch_specific:
-	ped_free (dev->arch_specific);
+	free (dev->arch_specific);
 error_free_path:
-	ped_free (dev->path);
+	free (dev->path);
 error_free_dev:
-	ped_free (dev);
+	free (dev);
 error:
 	return NULL;
 }
@@ -200,9 +200,9 @@ _kernel_reread_part_table (PedDevice* dev)
 static void
 _done_device (PedDevice *dev)
 {
-        ped_free (dev->arch_specific);
-	ped_free (dev->path);
-	ped_free (dev);
+        free (dev->arch_specific);
+	free (dev->path);
+	free (dev);
 }
 
 /* Release all resources that libparted owns in DEV.  */
@@ -776,7 +776,7 @@ gnu_sync (PedDevice* dev)
 		switch (ex_status) {
 			case PED_EXCEPTION_IGNORE:
 				if (last_failure)
-					ped_free (last_failure);
+					free (last_failure);
 				last_failure = strdup (dev->path);
 				return 1;
 

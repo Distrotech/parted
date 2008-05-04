@@ -128,7 +128,7 @@ _ext2_open (PedGeometry* geom)
 error_free_handle:
 	ext2_destroy_dev_handle(handle);
 error_free_fs:
-	ped_free(fs);
+	free(fs);
 error:
 	return NULL;
 }
@@ -160,7 +160,7 @@ _ext2_create (PedGeometry* geom, PedTimer* timer)
 error_free_handle:
 	ext2_destroy_dev_handle(handle);
 error_free_fs:
-	ped_free(fs);
+	free(fs);
 error:
 	return NULL;
 }
@@ -174,7 +174,7 @@ _ext2_close (PedFileSystem *fs)
 	ext2_close(fs->type_specific);
 	ext2_destroy_dev_handle(handle);
 
-	ped_free(fs);
+	free(fs);
 	return 1;
 }
 

@@ -559,9 +559,9 @@ pc98_partition_new (
 	}
 	return part;
 
-	ped_free (pc98_data);
+	free (pc98_data);
 error_free_part:
-	ped_free (part);
+	free (part);
 error:
 	return 0;
 }
@@ -594,8 +594,8 @@ pc98_partition_destroy (PedPartition* part)
 	PED_ASSERT (part != NULL, return);
 
 	if (ped_partition_is_active (part))
-		ped_free (part->disk_specific);
-	ped_free (part);
+		free (part->disk_specific);
+	free (part);
 }
 
 static int

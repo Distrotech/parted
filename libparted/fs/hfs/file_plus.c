@@ -62,7 +62,7 @@ hfsplus_file_open (PedFileSystem *fs, HfsPNodeID CNID,
 void
 hfsplus_file_close (HfsPPrivateFile* file)
 {
-	ped_free (file);
+	free (file);
 }
 
 /* warning : only works on data forks */

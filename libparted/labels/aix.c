@@ -57,7 +57,7 @@ read_sector (const PedDevice *dev, char **buf)
 	char *b = ped_malloc (dev->sector_size);
 	PED_ASSERT (b != NULL, return 0);
 	if (!ped_device_read (dev, b, 0, 1)) {
-		ped_free (b);
+		free (b);
 		return 0;
 	}
 	*buf = b;
@@ -73,7 +73,7 @@ aix_probe (const PedDevice *dev)
 	if (!read_sector (dev, &label))
 		return 0;
 	unsigned int magic = aix_label_magic_get (label);
-	ped_free (label);
+	free (label);
 	return magic == AIX_LABEL_MAGIC;
 }
 
@@ -92,7 +92,7 @@ aix_clobber (PedDevice* dev)
 
 	aix_label_magic_set (label, 0);
 	int result = ped_device_write (dev, label, 0, 1);
-	ped_free (label);
+	free (label);
 	return result;
 }
 #endif /* !DISCOVER_ONLY */

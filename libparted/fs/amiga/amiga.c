@@ -82,7 +82,7 @@ _amiga_free_ids (struct AmigaIds *ids) {
 
 	for (current = ids; current != NULL; current = next) {
 		next = current->next;
-		ped_free (current);
+		free (current);
 	}
 }
 int
@@ -290,7 +290,7 @@ amiga_find_part (PedGeometry *geom, struct PartitionBlock *part)
 			case PED_EXCEPTION_CANCEL :
 			case PED_EXCEPTION_UNHANDLED :
 			default : 
-				ped_free(rdb);
+				free(rdb);
 				return NULL;
 		}
 	}
@@ -307,7 +307,7 @@ amiga_find_part (PedGeometry *geom, struct PartitionBlock *part)
 
 		/* Let's look for loops in the partition table */
 		if (_amiga_loop_check(partblock, partlist, i)) {
-			ped_free (rdb);
+			free (rdb);
 			return NULL;
 		}
 		/* Let's read a partition block to get its geometry*/
@@ -320,14 +320,14 @@ amiga_find_part (PedGeometry *geom, struct PartitionBlock *part)
 				case PED_EXCEPTION_CANCEL :
 				case PED_EXCEPTION_UNHANDLED :
 				default : 
-					ped_free(rdb);
+					free(rdb);
 					return NULL;
 			}
 		}
 
 		/* Current block is not a Partition Block */
 		if (part->pb_ID != IDNAME_PARTITION) {
-			ped_free (rdb);
+			free (rdb);
 			return NULL;
 		}
 
@@ -339,11 +339,11 @@ amiga_find_part (PedGeometry *geom, struct PartitionBlock *part)
 
 		/* And check if it is the one we are searching for */
 		if (start == geom->start && end == geom->end) {
-			ped_free (rdb);
+			free (rdb);
 			return part;
 		}
 	}
 
-	ped_free (rdb);
+	free (rdb);
 	return NULL;
 }

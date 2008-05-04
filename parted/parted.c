@@ -194,7 +194,7 @@ _partition_warn_busy (PedPartition* part)
                         _("Partition %s is being used. You must unmount it "
                           "before you modify it with Parted."),
                         path);
-                ped_free (path);
+                free (path);
                 return 0;
         }
         return 1;
@@ -734,7 +734,7 @@ do_mkpart (PedDevice** dev)
                         goto error_destroy_disk;
         }
         if (peek_word)
-                ped_free (peek_word);
+                free (peek_word);
 
         if (!command_line_get_sector (_("Start?"), *dev, &start, &range_start))
                 goto error_destroy_disk;
@@ -823,13 +823,13 @@ do_mkpart (PedDevice** dev)
                 ped_geometry_destroy (range_end);
         
         if (start_usr != NULL)
-                ped_free (start_usr);
+                free (start_usr);
         if (end_usr != NULL)
-                ped_free (end_usr);
+                free (end_usr);
         if (start_sol != NULL)
-                ped_free (start_sol);
+                free (start_sol);
         if (end_sol != NULL)
-                ped_free (end_sol);
+                free (end_sol);
 
         if ((*dev)->type != PED_DEVICE_FILE)
                 disk_is_modified = 1;
@@ -852,13 +852,13 @@ error:
                 ped_geometry_destroy (range_end);
 
         if (start_usr != NULL)
-                ped_free (start_usr);
+                free (start_usr);
         if (end_usr != NULL)
-                ped_free (end_usr);
+                free (end_usr);
         if (start_sol != NULL)
-                ped_free (start_sol);
+                free (start_sol);
         if (end_sol != NULL)
-                ped_free (end_sol);
+                free (end_sol);
 
         return 0;
 }
@@ -998,13 +998,13 @@ do_mkpartfs (PedDevice** dev)
                 ped_geometry_destroy (range_end);
 
         if (start_usr != NULL)
-                ped_free (start_usr);
+                free (start_usr);
         if (end_usr != NULL)
-                ped_free (end_usr);
+                free (end_usr);
         if (start_sol != NULL)
-                ped_free (start_sol);
+                free (start_sol);
         if (end_sol != NULL)
-                ped_free (end_sol);
+                free (end_sol);
 
         if ((*dev)->type != PED_DEVICE_FILE)
                 disk_is_modified = 1;
@@ -1027,13 +1027,13 @@ error:
                 ped_geometry_destroy (range_end);
 
         if (start_usr != NULL)
-                ped_free (start_usr);
+                free (start_usr);
         if (end_usr != NULL)
-                ped_free (end_usr);
+                free (end_usr);
         if (start_sol != NULL)
-                ped_free (start_sol);
+                free (start_sol);
         if (end_sol != NULL)
-                ped_free (end_sol);
+                free (end_sol);
 
         return 0;
 }
@@ -1218,8 +1218,8 @@ print_sector_compact_and_percent (PedSector sector, PedDevice* dev)
 
         printf ("%s (%s)\n", compact, percent);
 
-        ped_free (compact);
-        ped_free (percent);
+        free (compact);
+        free (percent);
 }
 
 static int
@@ -1256,7 +1256,7 @@ partition_print (PedPartition* part)
 
         putchar ('\n');
 
-        ped_free (flags);
+        free (flags);
         ped_file_system_close (fs);
 
         return 1;
@@ -1309,7 +1309,7 @@ do_print (PedDevice** dev)
                 else
                         has_num_arg = isdigit(peek_word[0]);
 
-                ped_free (peek_word);
+                free (peek_word);
         }
 
         if (has_devices_arg) {
@@ -1323,7 +1323,7 @@ do_print (PedDevice** dev)
                                              current_dev->length
                                              * current_dev->sector_size);
                         printf ("%s (%s)\n", current_dev->path, end);
-                        ped_free (end);
+                        free (end);
                 }    
 
                 dev_name = xstrdup ((*dev)->path);
@@ -1335,7 +1335,7 @@ do_print (PedDevice** dev)
                 if (!ped_device_open (*dev))
                         return 0;
 
-                ped_free (dev_name);
+                free (dev_name);
 
                 return 1;
         }
@@ -1380,8 +1380,8 @@ do_print (PedDevice** dev)
                     (*dev)->sector_size, (*dev)->phys_sector_size);
         }
 
-        ped_free (start);
-        ped_free (end);
+        free (start);
+        free (end);
 
         if (ped_unit_get_default () == PED_UNIT_CHS
             || ped_unit_get_default () == PED_UNIT_CYLINDER) {
@@ -1399,7 +1399,7 @@ do_print (PedDevice** dev)
                             chs->cylinders, chs->heads, chs->sectors, cyl_size);
                 }
 
-                ped_free (cyl_size);
+                free (cyl_size);
         }
 
         if (!opt_machine_mode) {
@@ -1486,7 +1486,7 @@ do_print (PedDevice** dev)
 
                             flags = partition_print_flags (part);
                             str_list_append (row, flags);
-                            ped_free (flags);
+                            free (flags);
                     } else {
                             if (has_extended)
                                     str_list_append (row, "");
@@ -1499,10 +1499,10 @@ do_print (PedDevice** dev)
                     //PED_ASSERT (row.cols == caption.cols)
                     table_add_row_from_strlist (table, row);
                     str_list_destroy (row);
-                    ped_free (tmp);
-                    ped_free (start);
-                    ped_free (end);
-                    ped_free (size);
+                    free (tmp);
+                    free (start);
+                    free (end);
+                    free (size);
             }
 
             table_rendered = table_render (table); 
@@ -1511,7 +1511,7 @@ do_print (PedDevice** dev)
 #else
             printf("%s\n", table_rendered);
 #endif
-            ped_free (table_rendered);
+            free (table_rendered);
             table_destroy (table);
             str_list_destroy (row1);
 
@@ -1648,8 +1648,8 @@ _rescue_add_partition (PedPartition* part)
                 fs_type->name, ped_partition_type_get_name (part->type),
                 found_start, found_end);
         ped_geometry_destroy (probed);
-        ped_free (found_start);
-        ped_free (found_end);
+        free (found_start);
+        free (found_end);
 
         switch (ex_opt) {
                 case PED_EXCEPTION_CANCEL: return -1;

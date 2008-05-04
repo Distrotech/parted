@@ -84,7 +84,7 @@ ped_geometry_new (const PedDevice* dev, PedSector start, PedSector length)
 	return geom;
 
 error_free_geom:
-	ped_free (geom);
+	free (geom);
 error:
 	return NULL;
 }
@@ -140,7 +140,7 @@ ped_geometry_destroy (PedGeometry* geom)
 {
 	PED_ASSERT (geom != NULL, return);
 
-	ped_free (geom);
+	free (geom);
 }
 
 /**

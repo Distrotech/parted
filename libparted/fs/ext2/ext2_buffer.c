@@ -230,10 +230,10 @@ static int breadmisses = 0;
 void ext2_bcache_deinit(struct ext2_fs *fs)
 {
 	ext2_bcache_sync(fs);
-	ped_free(fs->bc->buffermem);
-	ped_free(fs->bc->hash);
-	ped_free(fs->bc->heads);
-	ped_free(fs->bc);
+	free(fs->bc->buffermem);
+	free(fs->bc->hash);
+	free(fs->bc->heads);
+	free(fs->bc);
 
 	if (fs->opt_verbose)
 		fprintf(stderr,
@@ -318,16 +318,16 @@ int ext2_bcache_init(struct ext2_fs *fs)
 
 	if ((bc->hash = (struct ext2_buffer_head **) ped_malloc(sizeof(struct ext2_buffer_head *) << ext2_hash_bits)) == NULL)
 	{
-		ped_free(bc->heads);
-		ped_free(bc);
+		free(bc->heads);
+		free(bc);
 		return 0;
 	}
 
 	if ((bc->buffermem = (unsigned char *) ped_malloc(ext2_buffer_cache_pool_size << 10)) == NULL)
 	{
-		ped_free(bc->hash);
-		ped_free(bc->heads);
-		ped_free(bc);
+		free(bc->hash);
+		free(bc->heads);
+		free(bc);
 		return 0;
 	}
 

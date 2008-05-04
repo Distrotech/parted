@@ -188,7 +188,7 @@ ped_strdup (const char *str)
  * device \p dev.
  * 
  * The string is described with the desired \p unit.
- * The returned string must be freed with ped_free().
+ * The returned string must be freed with free().
  */
 char*
 ped_unit_format_custom_byte (const PedDevice* dev, PedSector byte, PedUnit unit)
@@ -261,7 +261,7 @@ ped_unit_format_custom_byte (const PedDevice* dev, PedSector byte, PedUnit unit)
  * 
  * The string is described with the default unit, which is set
  * by ped_unit_set_default().
- * The returned string must be freed with ped_free().
+ * The returned string must be freed with free().
  */
 char*
 ped_unit_format_byte (const PedDevice* dev, PedSector byte)
@@ -274,7 +274,7 @@ ped_unit_format_byte (const PedDevice* dev, PedSector byte)
  * \brief Get a string that describes the location \p sector on device \p dev.
  * 
  * The string is described with the desired \p unit.
- * The returned string must be freed with ped_free().
+ * The returned string must be freed with free().
  */
 char*
 ped_unit_format_custom (const PedDevice* dev, PedSector sector, PedUnit unit)
@@ -288,7 +288,7 @@ ped_unit_format_custom (const PedDevice* dev, PedSector sector, PedUnit unit)
  * 
  * The string is described with the default unit, which is set
  * by ped_unit_set_default().
- * The returned string must be freed with ped_free().
+ * The returned string must be freed with free().
  */
 char*
 ped_unit_format (const PedDevice* dev, PedSector sector)
@@ -416,11 +416,11 @@ parse_chs (const char* str, const PedDevice* dev, PedSector* sector,
 	}
 	if (range)
 		*range = ped_geometry_new (dev, *sector, 1);
-	ped_free (copy);
+	free (copy);
 	return !range || *range != NULL;
 
 error_free_copy:
-	ped_free (copy);
+	free (copy);
 	*sector = 0;
 	if (range)
 		*range = NULL;
@@ -549,11 +549,11 @@ ped_unit_parse_custom (const char* str, const PedDevice* dev, PedUnit unit,
 	}
 	*sector = clip (dev, *sector);
 
-	ped_free (copy);
+	free (copy);
 	return 1;
 
 error_free_copy:
-	ped_free (copy);
+	free (copy);
 error:
 	*sector = 0;
 	if (range)

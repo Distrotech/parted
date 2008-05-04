@@ -142,9 +142,9 @@ hfs_open (PedGeometry* geom)
 /*--- clean error handling ---*/
 ho_cf:	hfs_file_close(priv_data->catalog_file);
 ho_ce:	hfs_file_close(priv_data->extent_file);
-ho_pd:	ped_free(priv_data);
-ho_mdb: ped_free(mdb);
-ho_fs:	ped_free(fs);
+ho_pd:	free(priv_data);
+ho_mdb: free(mdb);
+ho_fs:	free(fs);
 ho:	return NULL;
 }
 
@@ -157,10 +157,10 @@ hfs_close (PedFileSystem *fs)
 	hfs_file_close (priv_data->catalog_file);
 	if (priv_data->bad_blocks_loaded)
 		hfs_free_bad_blocks_list (priv_data->bad_blocks_xtent_list);
-	ped_free (priv_data->mdb);
-	ped_free (priv_data);
+	free (priv_data->mdb);
+	free (priv_data);
 	ped_geometry_destroy (fs->geom);
-	ped_free (fs);
+	free (fs);
 
 	return 1;
 }
@@ -382,8 +382,8 @@ hfsplus_close (PedFileSystem *fs)
 
 	if (priv_data->bad_blocks_loaded)
 		hfsplus_free_bad_blocks_list(priv_data->bad_blocks_xtent_list);
-	ped_free(priv_data->alloc_map);
-	ped_free(priv_data->dirty_alloc_map);
+	free(priv_data->alloc_map);
+	free(priv_data->dirty_alloc_map);
 	hfsplus_file_close (priv_data->allocation_file);
 	hfsplus_file_close (priv_data->attributes_file);
 	hfsplus_file_close (priv_data->catalog_file);
@@ -391,9 +391,9 @@ hfsplus_close (PedFileSystem *fs)
 	if (priv_data->free_geom) ped_geometry_destroy (priv_data->plus_geom);
 	if (priv_data->wrapper) hfs_close(priv_data->wrapper);
 	ped_geometry_destroy (fs->geom);
-	ped_free(priv_data->vh);
-	ped_free(priv_data);
-	ped_free(fs);
+	free(priv_data->vh);
+	free(priv_data);
+	free(fs);
 
 	return 1;
 }
@@ -554,17 +554,17 @@ hfsplus_open (PedGeometry* geom)
 	return fs;
 
 /*--- clean error handling ---*/
-hpo_am: ped_free(priv_data->alloc_map);
-hpo_dm: ped_free(priv_data->dirty_alloc_map);
+hpo_am: free(priv_data->alloc_map);
+hpo_dm: free(priv_data->dirty_alloc_map);
 hpo_cl: hfsplus_file_close (priv_data->attributes_file);
 hpo_cc:	hfsplus_file_close (priv_data->catalog_file);
 hpo_ce:	hfsplus_file_close (priv_data->extents_file);
 hpo_pg: if (priv_data->free_geom) ped_geometry_destroy (priv_data->plus_geom);
 hpo_wr: if (priv_data->wrapper) hfs_close(priv_data->wrapper);
 hpo_gm: ped_geometry_destroy (fs->geom);
-hpo_pd: ped_free(priv_data);
-hpo_vh: ped_free(vh);
-hpo_fs: ped_free(fs);
+hpo_pd: free(priv_data);
+hpo_vh: free(vh);
+hpo_fs: free(fs);
 hpo:	return NULL;
 }
 
@@ -1117,7 +1117,7 @@ hfs_extract (PedFileSystem* fs, PedTimer* timer)
 	hfs_extract_file(HFS_EXTENTS_FILENAME, priv_data->extent_file);
 	hfs_extract_bitmap(HFS_BITMAP_FILENAME, fs);
 
-	ped_free(extract_buffer); extract_buffer = NULL;
+	free(extract_buffer); extract_buffer = NULL;
 	return 0; /* nothing has been fixed by us ! */
 }
 
@@ -1213,7 +1213,7 @@ hfsplus_extract (PedFileSystem* fs, PedTimer* timer)
 		hfsplus_file_close(startup_file); startup_file = NULL;
 	}
 
-	ped_free(extract_buffer); extract_buffer = NULL;
+	free(extract_buffer); extract_buffer = NULL;
 	return 0; /* nothing has been fixed by us ! */
 }
 #endif /* HFS_EXTRACT_FS */

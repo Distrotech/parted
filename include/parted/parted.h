@@ -40,7 +40,7 @@ extern const char* ped_get_version ();
 extern void* ped_malloc (size_t size);
 extern void* ped_calloc (size_t size);
 extern int ped_realloc (void** ptr, size_t size);
-extern void ped_free (void* ptr);
+extern void free (void* ptr);
 
 #ifdef __cplusplus
 }

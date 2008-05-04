@@ -90,7 +90,7 @@ ped_timer_destroy (PedTimer* timer)
 	if (!timer)
 		return;
 
-	ped_free (timer);
+	free (timer);
 }
 
 /* This function is used by ped_timer_new_nested() as the timer->handler
@@ -151,7 +151,7 @@ ped_timer_destroy_nested (PedTimer* timer)
 	if (!timer)
 		return;
 
-	ped_free (timer->context);
+	free (timer->context);
 	ped_timer_destroy (timer);
 }
 

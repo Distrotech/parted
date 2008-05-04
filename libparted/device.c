@@ -182,13 +182,13 @@ ped_device_get (const char* path)
 
 	for (walk = devices; walk != NULL; walk = walk->next) {
 		if (!strcmp (walk->path, normal_path)) {
-			ped_free (normal_path);
+			free (normal_path);
 			return walk;
 		}
 	}
 
 	walk = ped_architecture->dev_ops->_new (normal_path);
-	ped_free (normal_path);
+	free (normal_path);
 	if (!walk)
 		return NULL;
 	_device_register (walk);

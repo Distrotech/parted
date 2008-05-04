@@ -163,7 +163,7 @@ read_sector (const PedDevice *dev, PedSector sector_num, char **buf)
 	char *b = ped_malloc (dev->sector_size);
 	PED_ASSERT (b != NULL, return 0);
 	if (!ped_device_read (dev, b, sector_num, 1)) {
-		ped_free (b);
+		free (b);
 		return 0;
 	}
 	*buf = b;
@@ -492,7 +492,7 @@ probe_filesystem_for_geom (const PedPartition* part, PedCHSGeometry* bios_geom)
 	bios_geom->cylinders = part->disk->dev->length / (sectors * heads);
 	res = 1;
 end:
-	ped_free(buf);
+	free(buf);
 	return res;
 }
 
@@ -1204,9 +1204,9 @@ msdos_partition_new (const PedDisk* disk, PedPartitionType part_type,
 	}
 	return part;
 
-	ped_free (dos_data);
+	free (dos_data);
 error_free_part:
-	ped_free (part);
+	free (part);
 error:
 	return 0;
 }
@@ -1257,10 +1257,10 @@ msdos_partition_destroy (PedPartition* part)
 		DosPartitionData* dos_data;
 		dos_data = (DosPartitionData*) part->disk_specific;
 		if (dos_data->orig)
-			ped_free (dos_data->orig);
-		ped_free (part->disk_specific);
+			free (dos_data->orig);
+		free (part->disk_specific);
 	}
-	ped_free (part);
+	free (part);
 }
 
 static int

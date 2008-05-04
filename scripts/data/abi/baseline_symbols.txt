@@ -345,7 +345,6 @@ FUNC:ped_file_system_ufs_done
 FUNC:ped_file_system_ufs_init
 FUNC:ped_file_system_xfs_done
 FUNC:ped_file_system_xfs_init
-FUNC:ped_free
 FUNC:ped_geometry_check
 FUNC:ped_geometry_destroy
 FUNC:ped_geometry_duplicate

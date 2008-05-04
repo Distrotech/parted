@@ -492,7 +492,7 @@ static int ext2_block_relocator_copy(struct ext2_fs *fs, struct ext2_block_reloc
 			}
 		}
 
-		ped_free(buf);
+		free(buf);
 
 		if (fs->opt_safe)
 			ext2_sync(fs);
@@ -520,7 +520,7 @@ static int ext2_block_relocator_copy(struct ext2_fs *fs, struct ext2_block_reloc
 	return 1;
 
 error_free_buf:
-	ped_free(buf);
+	free(buf);
 error:
 	return 0;
 }

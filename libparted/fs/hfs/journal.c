@@ -177,7 +177,7 @@ hfsj_replay_transaction(PedFileSystem* fs, HfsJJournalHeader* jh,
 						  size / PED_SECTOR_SIZE_DEFAULT,
 						  block);
 			if (!start) {
-				ped_free (block);
+				free (block);
 				goto err_replay;
 			}
 			/* the sector stored in the journal seems to be
@@ -188,7 +188,7 @@ hfsj_replay_transaction(PedFileSystem* fs, HfsJJournalHeader* jh,
 							size / PED_SECTOR_SIZE_DEFAULT);
 			else
 				r = 1;
-			ped_free (block);
+			free (block);
 			/* check if wrapper mdb or vh with no wrapper has
 			   changed */
 			if (   (sector != ~0LL)
@@ -212,11 +212,11 @@ hfsj_replay_transaction(PedFileSystem* fs, HfsJJournalHeader* jh,
 
 	jh->start = HFS_CPU_TO_64(start * PED_SECTOR_SIZE_DEFAULT, is_le);
 
-	ped_free (blhdr);
+	free (blhdr);
 	return (ped_geometry_sync (fs->geom));
 
 err_replay:
-	ped_free (blhdr);
+	free (blhdr);
 	return 0;
 }
 

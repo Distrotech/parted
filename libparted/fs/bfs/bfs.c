@@ -106,9 +106,9 @@ bfs_alloc (const PedGeometry* geom)
 	return fs;
 
 error_free_type_specific:
-	ped_free (fs->type_specific);
+	free (fs->type_specific);
 error_free_fs:
-	ped_free (fs);
+	free (fs);
 error:
 	return NULL;
 }
@@ -118,8 +118,8 @@ void
 bfs_free (PedFileSystem* fs)
 {
         ped_geometry_destroy (fs->geom);
-        ped_free (fs->type_specific);
-        ped_free (fs);
+        free (fs->type_specific);
+        free (fs);
 }
 
 

@@ -155,7 +155,7 @@ dasd_alloc (const PedDevice* dev)
 
 	disk->disk_specific = disk_specific = ped_malloc(sizeof(DasdDiskSpecific));
 	if (!disk->disk_specific) {
-		ped_free (disk);
+		free (disk);
 		return NULL;
 	}
 
@@ -166,8 +166,8 @@ dasd_alloc (const PedDevice* dev)
 		ped_exception_throw(PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
 							_("Unable to determine the block "
 							  "size of this dasd"));
-		ped_free(disk_specific);
-		ped_free(disk);
+		free(disk_specific);
+		free(disk);
 		return NULL;
 	}
 
@@ -635,8 +635,8 @@ dasd_partition_destroy (PedPartition* part)
 	PED_ASSERT(part != NULL, return);
 
 	if (ped_partition_is_active(part))
-		ped_free(part->disk_specific);
-	ped_free(part);
+		free(part->disk_specific);
+	free(part);
 }
 
 static int

@@ -121,9 +121,9 @@ error_destroy_constraint_any:
 	ped_constraint_destroy (constraint_any);
 	ped_partition_destroy (volume_part);
 error_free_disk_specific:
-	ped_free (disk->disk_specific);
+	free (disk->disk_specific);
 error_free_disk:
-	ped_free (disk);
+	free (disk);
 error:
 	return NULL;
 }
@@ -150,7 +150,7 @@ dvh_duplicate (const PedDisk* disk)
 	return new_disk;
 
 error_free_new_disk:
-	ped_free (new_disk);
+	free (new_disk);
 error:
 	return NULL;
 }
@@ -158,7 +158,7 @@ error:
 static void
 dvh_free (PedDisk* disk)
 {
-	ped_free (disk->disk_specific);
+	free (disk->disk_specific);
 	_ped_disk_free (disk);
 }
 
@@ -572,7 +572,7 @@ dvh_partition_destroy (PedPartition* part)
 {
 	if (ped_partition_is_active (part)) {
 		PED_ASSERT (part->disk_specific != NULL, return);
-		ped_free (part->disk_specific);
+		free (part->disk_specific);
 	}
 	_ped_partition_free (part);
 }

@@ -119,7 +119,7 @@ static int ext2_mkfs_write_main(struct ext2_dev_handle *handle,
 	sb_for_io->s_block_group_nr = 0;
 
 	if (freeit)
-		ped_free(sbbuf);
+		free(sbbuf);
 	return 1;
 }
 
@@ -247,16 +247,16 @@ static int ext2_mkfs_write_meta(struct ext2_dev_handle *handle,
 
 	ped_timer_update (timer, 1.0);
 
-	ped_free(zero);
-	ped_free(ib);
-	ped_free(bb);
+	free(zero);
+	free(ib);
+	free(bb);
 	return 1;
 
 error_free_zero:
-	ped_free(zero);
-	ped_free(ib);
+	free(zero);
+	free(ib);
 error_free_bb:
-	ped_free(bb);
+	free(bb);
 error:
 	return 0;
 }
@@ -619,13 +619,13 @@ struct ext2_fs *ext2_mkfs(struct ext2_dev_handle *handle,
 	if (!ext2_mkfs_create_lost_and_found_inode(fs))
 		goto error_close_fs;
 	if (!ext2_sync(fs)) goto error_close_fs;
-	ped_free(gd);
+	free(gd);
 	return fs;
 
 error_close_fs:
 	ext2_close(fs);
 error_free_gd:
-	ped_free (gd);
+	free (gd);
 error:
 	return NULL;
 }

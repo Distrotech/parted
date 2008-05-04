@@ -925,8 +925,8 @@ init_scsi (PedDevice* dev)
 
         if (scsi_get_product_info (dev, &vendor, &product)) {
                 sprintf (dev->model, "%.8s %.16s", vendor, product);
-                ped_free (vendor);
-                ped_free (product);
+                free (vendor);
+                free (product);
         } else {
                 strcpy (dev->model, "Generic SCSI");
         }
@@ -1213,11 +1213,11 @@ linux_new (const char* path)
         return dev;
 
 error_free_arch_specific:
-        ped_free (dev->arch_specific);
+        free (dev->arch_specific);
 error_free_path:
-        ped_free (dev->path);
+        free (dev->path);
 error_free_dev:
-        ped_free (dev);
+        free (dev);
 error:
         return NULL;
 }
@@ -1225,10 +1225,10 @@ error:
 static void
 linux_destroy (PedDevice* dev)
 {
-        ped_free (dev->arch_specific);
-        ped_free (dev->path);
-        ped_free (dev->model);
-        ped_free (dev);
+        free (dev->arch_specific);
+        free (dev->path);
+        free (dev->model);
+        free (dev);
 }
 
 static int
@@ -1247,7 +1247,7 @@ linux_is_busy (PedDevice* dev)
                 if (!part_name)
                         return 1;
                 status = _partition_is_mounted_by_path (part_name);
-                ped_free (part_name);
+                free (part_name);
 
                 if (status)
                         return 1;
@@ -1289,7 +1289,7 @@ _flush_cache (PedDevice* dev)
                                 close (fd);
                         }
                 }
-                ped_free (name);
+                free (name);
         }
 }
 
@@ -2122,7 +2122,7 @@ _blkpg_add_partition (PedDisk* disk, PedPartition* part)
         if (vol_name)
                 strncpy (linux_part.volname, vol_name, BLKPG_VOLNAMELTH);
 
-        ped_free (dev_name);
+        free (dev_name);
 
         if (!_blkpg_part_command (disk->dev, &linux_part,
                                   BLKPG_ADD_PARTITION)) {

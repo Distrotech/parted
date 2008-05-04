@@ -119,13 +119,13 @@ hfsplus_btree_search (HfsPPrivateFile* b_tree_file, HfsPPrivateGenericKey* key,
 					PED_EXCEPTION_ERROR,
 					PED_EXCEPTION_CANCEL,
 					_("The file system contains errors."));
-				ped_free (node);
+				free (node);
 				return 0;
 			}
 			if (hfsplus_extent_key_cmp(record_key, key) <= 0)
 				break;
 		}
-		if (!i) { ped_free (node); return 0; }
+		if (!i) { free (node); return 0; }
 		if (desc->type == HFS_IDX_NODE) {
 			unsigned int 	skip;
 
@@ -136,7 +136,7 @@ hfsplus_btree_search (HfsPPrivateFile* b_tree_file, HfsPPrivateGenericKey* key,
 			if (!hfsplus_file_read(b_tree_file, node,
 					       (PedSector) node_number * size,
 					       size)) {
-				ped_free (node);
+				free (node);
 				return 0;
 			}
 		} else 
@@ -156,7 +156,7 @@ hfsplus_btree_search (HfsPPrivateFile* b_tree_file, HfsPPrivateGenericKey* key,
 	}
 
 	/* success */
-	ped_free (node);
+	free (node);
 	return 1;
 }
 
@@ -168,7 +168,7 @@ hfsplus_free_bad_blocks_list(HfsPPrivateLinkExtent* first)
 
 	while (first) {
 		next = first->next;
-		ped_free (first);
+		free (first);
 		first = next;
 	}
 }

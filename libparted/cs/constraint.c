@@ -106,7 +106,7 @@ ped_constraint_new (
 	return constraint;
 
 error_free_constraint:
-	ped_free (constraint);
+	free (constraint);
 error:
 	return NULL;
 }
@@ -277,7 +277,7 @@ ped_constraint_destroy (PedConstraint* constraint)
 {
 	if (constraint) {
 		ped_constraint_done (constraint);
-		ped_free (constraint);
+		free (constraint);
 	}
 }
 

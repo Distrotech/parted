@@ -324,8 +324,8 @@ pth_free (GuidPartitionTableHeader_t* pth)
 	PED_ASSERT (pth != NULL, return);
 	PED_ASSERT (pth->Reserved2 != NULL, return);
 
-	ped_free (pth->Reserved2);
-	ped_free (pth);
+	free (pth->Reserved2);
+	free (pth);
 }
 
 static uint8_t*
@@ -396,7 +396,7 @@ pth_crc32(const PedDevice* dev, const GuidPartitionTableHeader_t* pth)
        
         crc32 = efi_crc32 (pth_raw, PED_LE32_TO_CPU (pth->HeaderSize));
 
-        ped_free (pth_raw);
+        free (pth_raw);
       
         return crc32;
 }
@@ -441,7 +441,7 @@ gpt_probe (const PedDevice * dev)
 			gpt_sig_found = 1;
 	}
 	
-        ped_free (pth_raw);
+        free (pth_raw);
 
         if (gpt)
 	        pth_free (gpt);
@@ -521,8 +521,8 @@ gpt_clobber(PedDevice * dev)
 error_free_with_gpt:
         pth_free (gpt);
 error_free:
-        ped_free (pth_raw);
-        ped_free (zeroed_pth_raw);
+        free (pth_raw);
+        free (zeroed_pth_raw);
 	return 0;
 }
 #endif /* !DISCOVER_ONLY */
@@ -552,7 +552,7 @@ gpt_alloc (const PedDevice * dev)
 	return disk;
 
 error_free_disk:
-	ped_free (disk);
+	free (disk);
 error:
 	return NULL;
 }
@@ -583,7 +583,7 @@ static void
 gpt_free(PedDisk * disk)
 {
 	ped_disk_delete_all (disk);
-	ped_free (disk->disk_specific);
+	free (disk->disk_specific);
 	_ped_disk_free (disk);
 }
 
@@ -620,13 +620,13 @@ _read_header (const PedDevice* dev, GuidPartitionTableHeader_t** gpt,
 	PED_ASSERT (dev != NULL, return 0);
 
 	if (!ped_device_read (dev, pth_raw, where, GPT_HEADER_SECTORS)) {
-                ped_free (pth_raw); 
+                free (pth_raw); 
 		return 0;
         }
  
         *gpt = pth_new_from_raw (dev, pth_raw);
         
-        ped_free (pth_raw);
+        free (pth_raw);
 
         if (_header_is_valid (dev, *gpt))
                 return 1;
@@ -917,7 +917,7 @@ gpt_read (PedDisk * disk)
 		}
 		ped_constraint_destroy (constraint_exact);
 	}
-	ped_free (ptes);
+	free (ptes);
 
 #ifndef DISCOVER_ONLY
 	if (write_back)
@@ -929,7 +929,7 @@ gpt_read (PedDisk * disk)
 error_delete_all:
 	ped_disk_delete_all (disk);
 error_free_ptes:
-	ped_free (ptes);
+	free (ptes);
 error_free_gpt:
         pth_free (gpt);
 error:
@@ -1079,11 +1079,11 @@ gpt_write(const PedDisk * disk)
 			       ptes_size / disk->dev->sector_size))
 		goto error_free_ptes;
 
-	ped_free (ptes);
+	free (ptes);
 	return ped_device_sync (disk->dev);
 
 error_free_ptes:
-	ped_free (ptes);
+	free (ptes);
 error:
 	return 0;
 }
@@ -1190,7 +1190,7 @@ gpt_partition_destroy (PedPartition *part)
 {
 	if (part->type == 0) {
 		PED_ASSERT (part->disk_specific != NULL, return);
-		ped_free (part->disk_specific);
+		free (part->disk_specific);
 	}
 
 	_ped_partition_free (part);

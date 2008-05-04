@@ -225,7 +225,7 @@ bsd_alloc (const PedDevice* dev)
 	return disk;
 
 error_free_disk:
-	ped_free (disk);
+	free (disk);
 error:
 	return NULL;
 }
@@ -249,7 +249,7 @@ bsd_duplicate (const PedDisk* disk)
 static void
 bsd_free (PedDisk* disk)
 {
-	ped_free (disk->disk_specific);
+	free (disk->disk_specific);
 	_ped_disk_free (disk);
 }
 
@@ -407,9 +407,9 @@ bsd_partition_new (const PedDisk* disk, PedPartitionType part_type,
 	}
 	return part;
 
-	ped_free (bsd_data);
+	free (bsd_data);
 error_free_part:
-	ped_free (part);
+	free (part);
 error:
 	return 0;
 }
@@ -443,7 +443,7 @@ bsd_partition_destroy (PedPartition* part)
 	PED_ASSERT (part != NULL, return);
 
 	if (ped_partition_is_active (part))
-		ped_free (part->disk_specific);
+		free (part->disk_specific);
 	_ped_partition_free (part);
 }
 

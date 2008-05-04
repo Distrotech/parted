@@ -188,8 +188,8 @@ ped_exception_catch ()
 {
         if (ped_exception) {
                 ped_exception = 0;
-                if (ex->message) ped_free (ex->message);
-                if (ex) ped_free (ex);
+                if (ex->message) free (ex->message);
+                if (ex) free (ex);
                 ex = NULL;
         }
 }
@@ -255,7 +255,7 @@ ped_exception_throw (PedExceptionType ex_type,
 					break;
 
 			size += 10;
-			ped_free (ex->message);
+			free (ex->message);
 	}
 
 	return do_throw ();

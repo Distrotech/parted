@@ -44,9 +44,9 @@ fat_alloc (const PedGeometry* geom)
 	return fs;
 
 error_free_type_specific:
-	ped_free (fs->type_specific);
+	free (fs->type_specific);
 error_free_fs:
-	ped_free (fs);
+	free (fs);
 error:
 	return NULL;
 }
@@ -69,7 +69,7 @@ fat_alloc_buffers (PedFileSystem* fs)
 	return 1;
 
 error_free_buffer:
-	ped_free (fs_info->buffer);
+	free (fs_info->buffer);
 error:
 	return 0;
 };
@@ -79,16 +79,16 @@ fat_free_buffers (PedFileSystem* fs)
 {
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 
-	ped_free (fs_info->cluster_info);
-	ped_free (fs_info->buffer);
+	free (fs_info->cluster_info);
+	free (fs_info->buffer);
 }
 
 void
 fat_free (PedFileSystem* fs)
 {
 	ped_geometry_destroy (fs->geom);
-	ped_free (fs->type_specific);
-	ped_free (fs);
+	free (fs->type_specific);
+	free (fs);
 }
 
 int

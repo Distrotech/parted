@@ -931,15 +931,15 @@ command_line_get_sector (const char* prompt, PedDevice* dev, PedSector* value,
         if (input && *value && !strcmp (input, def_str)) {
                 if (range) {
                         *range = ped_geometry_new (dev, *value, 1);
-                        ped_free (def_str);
+                        free (def_str);
                         return *range != NULL;
                 }
 
-                ped_free (def_str);
+                free (def_str);
                 return 1;
         }
 
-        ped_free (def_str);
+        free (def_str);
         if (!input) {
                 *value = 0;
                 if (range)
@@ -1125,7 +1125,7 @@ command_line_get_part_flag (const char* prompt, const PedPartition* part,
 
         if (flag_name) {
                 *flag = ped_partition_flag_get_by_name (flag_name);
-                ped_free (flag_name);
+                free (flag_name);
                 return 1;
         } else
                 return 0;

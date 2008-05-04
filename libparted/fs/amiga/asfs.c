@@ -77,7 +77,7 @@ _asfs_probe (PedGeometry* geom)
 		blocksize = PED_BE32_TO_CPU (part->de_SizeBlock)
 			* PED_BE32_TO_CPU (part->de_SectorPerBlock) / 128;
 	}
-	ped_free (part);
+	free (part);
 
 	/* Test boot block */
 	if (!(block = ped_malloc (PED_SECTOR_SIZE_DEFAULT*blocksize))) {
@@ -109,12 +109,12 @@ _asfs_probe (PedGeometry* geom)
 		found++;
 	}
 	if (found != 0) {
-		ped_free (block);
+		free (block);
 		return ped_geometry_duplicate (geom);
 	}
 
 error:
-	ped_free (block);
+	free (block);
 error_block:
 error_part:
 	return NULL;

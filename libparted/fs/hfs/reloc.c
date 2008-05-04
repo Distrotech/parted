@@ -656,12 +656,12 @@ hfs_pack_free_space_from_block (PedFileSystem *fs, unsigned int fblock,
 		ped_timer_update(timer, (float)(to_fblock - start)/divisor);
 	}
 
-	ped_free (hfs_block); hfs_block = NULL; hfs_block_count = 0;
+	free (hfs_block); hfs_block = NULL; hfs_block_count = 0;
 	hfsc_delete_cache (cache);
 	return 1;
 
 error_alloc:
-	ped_free (hfs_block); hfs_block = NULL; hfs_block_count = 0;
+	free (hfs_block); hfs_block = NULL; hfs_block_count = 0;
 error_cache:
 	hfsc_delete_cache (cache);
 	return 0;

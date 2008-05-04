@@ -160,7 +160,7 @@ ped_alignment_new (PedSector offset, PedSector grain_size)
 	return align;
 
 error_free_align:
-	ped_free (align);
+	free (align);
 error:
 	return NULL;
 }
@@ -172,7 +172,7 @@ void
 ped_alignment_destroy (PedAlignment* align)
 {
 	if (align)
-		ped_free (align);
+		free (align);
 }
 
 /**

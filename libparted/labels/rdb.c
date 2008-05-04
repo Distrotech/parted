@@ -108,7 +108,7 @@ _amiga_free_ids (struct AmigaIds *ids) {
 
 	for (current = ids; current != NULL; current = next) {
 		next = current->next;
-		ped_free (current);
+		free (current);
 	}
 }
 static int
@@ -335,7 +335,7 @@ amiga_probe (const PedDevice *dev)
 	if ((rdb=RDSK(ped_malloc(dev->sector_size)))==NULL)
 		return 0;
 	found = _amiga_find_rdb (dev, rdb);
-	ped_free (rdb);
+	free (rdb);
 
 	return (found == AMIGA_RDB_NOT_FOUND ? 0 : 1);
 }
@@ -355,7 +355,7 @@ amiga_alloc (const PedDevice* dev)
 		return NULL;
 
 	if (!(disk->disk_specific = ped_malloc (PED_SECTOR_SIZE_DEFAULT))) {
-		ped_free (disk);
+		free (disk);
 		return NULL;
 	}
 	rdb = disk->disk_specific;
@@ -438,7 +438,7 @@ amiga_free (PedDisk* disk)
 	PED_ASSERT(disk != NULL, return);
 	PED_ASSERT(disk->disk_specific != NULL, return);
 
-	ped_free (disk->disk_specific);
+	free (disk->disk_specific);
 	_ped_disk_free (disk);
 }
 
@@ -459,7 +459,7 @@ amiga_clobber (PedDevice* dev)
 		result = ped_device_write (dev, (void*) rdb, i, 1);
 	}
 
-	ped_free (rdb);
+	free (rdb);
 
 	return result;
 }
@@ -537,7 +537,7 @@ amiga_read (PedDisk* disk)
 		/* Let's allocate and read a partition block to get its geometry*/
 		if (!_amiga_read_block (disk->dev, AMIGA(partition),
 		                        (PedSector)partblock, NULL)) {
-			ped_free(partition);
+			free(partition);
 			return 0;
 		}
 
@@ -548,7 +548,7 @@ amiga_read (PedDisk* disk)
 
 		/* We can now construct a new partition */
 		if (!(part = ped_partition_new (disk, 0, NULL, start, end))) {
-			ped_free(partition);
+			free(partition);
 			return 0;
 		}
 		/* And copy over the partition block */
@@ -562,12 +562,12 @@ amiga_read (PedDisk* disk)
 		constraint_exact = ped_constraint_exact (&part->geom);
 		if (!ped_disk_add_partition (disk, part, constraint_exact)) {
 			ped_partition_destroy(part);
-			ped_free(partition);
+			free(partition);
 			return 0;
 		}
 		ped_constraint_destroy (constraint_exact);
 	}
-	ped_free(partition);
+	free(partition);
 	return 1;
 }
 
@@ -669,7 +669,7 @@ amiga_write (const PedDisk* disk)
 	} else {
 		memcpy (RDSK(disk->disk_specific), rdb, PED_SECTOR_SIZE_DEFAULT);
 	}
-	ped_free (rdb);
+	free (rdb);
 	rdb = RDSK(disk->disk_specific);
 
 	cylblocks = (PedSector) PED_BE32_TO_CPU (rdb->rdb_Heads) *
@@ -693,7 +693,7 @@ amiga_write (const PedDisk* disk)
 
 	/* Let's allocate a partition block */
 	if (!(block = ped_malloc (PED_SECTOR_SIZE_DEFAULT))) {
-		ped_free (table);
+		free (table);
 		return 0;
 	}
 
@@ -773,13 +773,13 @@ amiga_write (const PedDisk* disk)
 	if (!ped_device_write (disk->dev, (void*) disk->disk_specific, rdb_num, 1))
 		goto error_free_table;
 
-	ped_free (table);
-	ped_free (block);
+	free (table);
+	free (block);
 	return ped_device_sync (disk->dev);
 
 error_free_table:
-	ped_free (table);
-	ped_free (block);
+	free (table);
+	free (block);
 	return 0;
 }
 #endif /* !DISCOVER_ONLY */
@@ -807,7 +807,7 @@ amiga_partition_new (const PedDisk* disk, PedPartitionType part_type,
 
 	if (ped_partition_is_active (part)) {
 		if (!(part->disk_specific = ped_malloc (PED_SECTOR_SIZE_DEFAULT))) {
-			ped_free (part);
+			free (part);
 			return NULL;
 		}
 		partition = PART(part->disk_specific);
@@ -880,7 +880,7 @@ amiga_partition_destroy (PedPartition* part)
 
 	if (ped_partition_is_active (part)) {
 		PED_ASSERT (part->disk_specific != NULL, return);
-		ped_free (part->disk_specific);
+		free (part->disk_specific);
 	}
 	_ped_partition_free (part);
 }

@@ -165,11 +165,11 @@ fat_traverse_begin (PedFileSystem* fs, FatCluster start_cluster,
 	return trav_info;
 
 error_free_dir_entries:
-	ped_free (trav_info->dir_entries);
+	free (trav_info->dir_entries);
 error_free_dir_name:
-	ped_free (trav_info->dir_name);
+	free (trav_info->dir_name);
 error_free_trav_info:
-	ped_free (trav_info);
+	free (trav_info);
 error:
 	return NULL;
 }
@@ -181,9 +181,9 @@ fat_traverse_complete (FatTraverseInfo* trav_info)
 		if (!write_dir_buffer (trav_info))
 			return 0;
 	}
-	ped_free (trav_info->dir_entries);
-	ped_free (trav_info->dir_name);
-	ped_free (trav_info);
+	free (trav_info->dir_entries);
+	free (trav_info->dir_name);
+	free (trav_info);
 	return 1;
 }
 

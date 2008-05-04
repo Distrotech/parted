@@ -512,7 +512,7 @@ hfsplus_cache_from_catalog(HfsCPrivateCache* cache, PedFileSystem* fs,
 	for (; leaf_node; leaf_node = PED_BE32_TO_CPU (desc->next)) {
 		if (!hfsplus_file_read (priv_data->catalog_file, node,
 					(PedSector) leaf_node * size, size)) {
-			ped_free (node);
+			free (node);
 			return 0;
 		}
 		record_number = PED_BE16_TO_CPU (desc->rec_nb);
@@ -536,7 +536,7 @@ hfsplus_cache_from_catalog(HfsCPrivateCache* cache, PedFileSystem* fs,
 					PED_EXCEPTION_ERROR,
 					PED_EXCEPTION_CANCEL,
 					_("The file system contains errors."));
-				ped_free (node);
+				free (node);
 				return 0;
 			}
 
@@ -567,7 +567,7 @@ hfsplus_cache_from_catalog(HfsCPrivateCache* cache, PedFileSystem* fs,
 					where,
 					j )
 				   ) {
-					ped_free (node);
+					free (node);
 				 	return 0;
 				}
 			}
@@ -585,14 +585,14 @@ hfsplus_cache_from_catalog(HfsCPrivateCache* cache, PedFileSystem* fs,
 					CR_BTREE_CAT,
 					j )
 				   ) {
-					ped_free (node);
+					free (node);
 				 	return 0;
 				}
 			}
 		}
 	}
 
-	ped_free (node);
+	free (node);
 	return 1;
 }
 
@@ -635,7 +635,7 @@ hfsplus_cache_from_extent(HfsCPrivateCache* cache, PedFileSystem* fs,
 	for (; leaf_node; leaf_node = PED_BE32_TO_CPU (desc->next)) {
 		if (!hfsplus_file_read (priv_data->extents_file, node,
 					(PedSector) leaf_node * size, size)) {
-			ped_free (node);
+			free (node);
 			return 0;
 		}
 		record_number = PED_BE16_TO_CPU (desc->rec_nb);
@@ -655,7 +655,7 @@ hfsplus_cache_from_extent(HfsCPrivateCache* cache, PedFileSystem* fs,
 					PED_EXCEPTION_ERROR,
 					PED_EXCEPTION_CANCEL,
 					_("The file system contains errors."));
-				ped_free (node);
+				free (node);
 				return -1;
 			}
 			
@@ -700,14 +700,14 @@ hfsplus_cache_from_extent(HfsCPrivateCache* cache, PedFileSystem* fs,
 					where,
 					j )
 				   ) {
-					ped_free (node);
+					free (node);
 					return 0;
 				}
 			}
 		}
 	}
 	
-	ped_free (node);
+	free (node);
 	return 1;
 }
 
@@ -747,7 +747,7 @@ hfsplus_cache_from_attributes(HfsCPrivateCache* cache, PedFileSystem* fs,
 	for (; leaf_node; leaf_node = PED_BE32_TO_CPU (desc->next)) {
 		if (!hfsplus_file_read (priv_data->attributes_file, node,
 					(PedSector) leaf_node * size, size)) {
-			ped_free (node);
+			free (node);
 			return 0;
 		}
 		record_number = PED_BE16_TO_CPU (desc->rec_nb);
@@ -769,7 +769,7 @@ hfsplus_cache_from_attributes(HfsCPrivateCache* cache, PedFileSystem* fs,
 					PED_EXCEPTION_ERROR,
 					PED_EXCEPTION_CANCEL,
 					_("The file system contains errors."));
-				ped_free (node);
+				free (node);
 				return 0;
 			}
 
@@ -790,7 +790,7 @@ hfsplus_cache_from_attributes(HfsCPrivateCache* cache, PedFileSystem* fs,
 						CR_BTREE_ATTR,
 						j )
 					   ) {
-						ped_free(node);
+						free(node);
 						return 0;
 					}
 				}
@@ -811,7 +811,7 @@ hfsplus_cache_from_attributes(HfsCPrivateCache* cache, PedFileSystem* fs,
 						CR_BTREE_ATTR,
 						j )
 					   ) {
-						ped_free(node);
+						free(node);
 						return 0;
 					}
 				}
@@ -819,7 +819,7 @@ hfsplus_cache_from_attributes(HfsCPrivateCache* cache, PedFileSystem* fs,
 		}
 	}
 
-	ped_free (node);
+	free (node);
 	return 1;
 }
 
@@ -931,12 +931,12 @@ hfsplus_pack_free_space_from_block (PedFileSystem *fs, unsigned int fblock,
 		ped_timer_update(timer, (float)(to_fblock - start) / divisor);
 	}
 
-	ped_free (hfsp_block); hfsp_block = NULL; hfsp_block_count = 0;
+	free (hfsp_block); hfsp_block = NULL; hfsp_block_count = 0;
 	hfsc_delete_cache (cache);
 	return 1;
 
 error_alloc:
-	ped_free (hfsp_block); hfsp_block = NULL; hfsp_block_count = 0;
+	free (hfsp_block); hfsp_block = NULL; hfsp_block_count = 0;
 error_cache:
 	hfsc_delete_cache (cache);
 	return 0;

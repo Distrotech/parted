@@ -69,7 +69,7 @@ _generic_affs_probe (PedGeometry* geom, uint32_t kind)
 		blocksize = PED_BE32_TO_CPU (part->de_SizeBlock)
 			* PED_BE32_TO_CPU (part->de_SectorPerBlock) / 128;
 	}
-	ped_free (part);
+	free (part);
 
 	/* Test boot block */
 	if (!(block = ped_malloc (PED_SECTOR_SIZE_DEFAULT*blocksize))) {
@@ -99,12 +99,12 @@ _generic_affs_probe (PedGeometry* geom, uint32_t kind)
 		goto error;
 	}
 	if (_affs_probe_root(block, blocksize) == 1) {
-		ped_free (block);
+		free (block);
 		return ped_geometry_duplicate (geom);
 	}
 
 error:
-	ped_free (block);
+	free (block);
 error_block:
 error_part:
 	return NULL;

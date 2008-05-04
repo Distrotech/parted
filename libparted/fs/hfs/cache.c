@@ -49,7 +49,7 @@ hfsc_new_cachetable(unsigned int size)
 	ret->table_first_free = 0;
 
 	ret->table = ped_malloc(sizeof(*ret->table)*size);
-	if (!ret->table) { ped_free(ret); return NULL; }
+	if (!ret->table) { free(ret); return NULL; }
 	memset(ret->table, 0, sizeof(*ret->table)*size);
 
 	return ret;
@@ -73,15 +73,15 @@ hfsc_new_cache(unsigned int block_number, unsigned int file_number)
 	ret->linked_ref = (HfsCPrivateExtent**)
 			   ped_malloc( sizeof(*ret->linked_ref)
 			   		* ret->linked_ref_size );
-	if (!ret->linked_ref) { ped_free(ret); return NULL; }
+	if (!ret->linked_ref) { free(ret); return NULL; }
 
 	cachetable_size = file_number + file_number / CR_OVER_DIV + CR_ADD_CST;
 	if (cachetable_size < file_number) cachetable_size = (unsigned) -1;
 	ret->first_cachetable_size = cachetable_size;
 	ret->table_list = hfsc_new_cachetable(cachetable_size);
 	if (!ret->table_list) {
-		ped_free(ret->linked_ref);
-		ped_free(ret);
+		free(ret->linked_ref);
+		free(ret);
 		return NULL;
 	}
 	ret->last_table = ret->table_list;
@@ -100,9 +100,9 @@ hfsc_delete_cachetable(HfsCPrivateCacheTable* list)
 	HfsCPrivateCacheTable* next;
 
 	while (list) {
-		ped_free (list->table);
+		free (list->table);
 		next = list->next_cache;
-		ped_free (list);
+		free (list);
 		list = next;
 	}
 }
@@ -111,8 +111,8 @@ void
 hfsc_delete_cache(HfsCPrivateCache* cache)
 {
 	hfsc_delete_cachetable(cache->table_list);
-	ped_free(cache->linked_ref);
-	ped_free(cache);
+	free(cache->linked_ref);
+	free(cache);
 }
 
 HfsCPrivateExtent*

@@ -67,7 +67,7 @@ void ped_debug ( const int level, const char* file, int line,
 
         debug_handler ( level, file, line, function, msg_concat );
 
-        ped_free ( msg_concat );
+        free ( msg_concat );
 }
 
 /*

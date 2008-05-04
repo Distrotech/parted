@@ -294,13 +294,13 @@ beos_new (const char* path)
 	return dev;
 	
 error_free_arch_specific:
-	ped_free (dev->arch_specific);
+	free (dev->arch_specific);
 	
 error_free_path:
-	ped_free (dev->path);
+	free (dev->path);
 	
 error_free_dev:
-	ped_free (dev);
+	free (dev);
 	
 error:
 	return NULL;
@@ -309,10 +309,10 @@ error:
 static void
 beos_destroy (PedDevice* dev)
 {
-	ped_free (dev->arch_specific);
-	ped_free (dev->path);
-	ped_free (dev->model);
-	ped_free (dev);
+	free (dev->arch_specific);
+	free (dev->path);
+	free (dev->model);
+	free (dev);
 }
 
 static int

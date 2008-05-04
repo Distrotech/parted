@@ -108,9 +108,9 @@ fat_op_context_new (PedFileSystem* new_fs, PedFileSystem* old_fs)
 	return ctx;
 
 error_free_buffer_map:
-	ped_free (ctx->buffer_map);
+	free (ctx->buffer_map);
 error_free_ctx:
-	ped_free (ctx);
+	free (ctx);
 error:
 	return NULL;
 }
@@ -118,9 +118,9 @@ error:
 void
 fat_op_context_destroy (FatOpContext* ctx)
 {
-	ped_free (ctx->buffer_map);
-	ped_free (ctx->remap);
-	ped_free (ctx);
+	free (ctx->buffer_map);
+	free (ctx->remap);
+	free (ctx);
 }
 
 FatFragment

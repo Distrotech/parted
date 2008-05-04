@@ -545,7 +545,7 @@ _raw_copy (const PedGeometry* src, PedGeometry* dest, PedTimer* timer)
 
 	ped_device_close (src->dev);
 	ped_device_close (dest->dev);
-	ped_free (buf);
+	free (buf);
 	return 1;
 
 error_close_dest:
@@ -553,7 +553,7 @@ error_close_dest:
 error_close_src:
 	ped_device_close (src->dev);
 error_free_buf:
-	ped_free (buf);
+	free (buf);
 error:
 	return 0;
 }

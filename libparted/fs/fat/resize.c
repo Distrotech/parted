@@ -742,11 +742,11 @@ create_resize_context (PedFileSystem* fs, const PedGeometry* new_geom)
 error_free_fat:
 	fat_table_destroy (new_fs_info->fat);
 error_free_context:
-	ped_free (context);
+	free (context);
 error_free_new_fs_info:
-	ped_free (new_fs_info);
+	free (new_fs_info);
 error_free_new_fs:
-	ped_free (new_fs);
+	free (new_fs);
 error:
 	return NULL;
 }
@@ -759,7 +759,7 @@ resize_context_assimilate (FatOpContext* ctx)
 
 	fat_free_buffers (ctx->old_fs);
 	fat_table_destroy (old_fs_info->fat);
-	ped_free (old_fs_info);
+	free (old_fs_info);
 	ped_geometry_destroy (ctx->old_fs->geom);
 
 	ctx->old_fs->type_specific = ctx->new_fs->type_specific;
@@ -768,7 +768,7 @@ resize_context_assimilate (FatOpContext* ctx)
 				? &fat16_type
 			       	: &fat32_type;
 
-	ped_free (ctx->new_fs);
+	free (ctx->new_fs);
 
 	fat_op_context_destroy (ctx);
 
@@ -782,9 +782,9 @@ resize_context_abort (FatOpContext* ctx)
 
 	fat_free_buffers (ctx->new_fs);
 	fat_table_destroy (new_fs_info->fat);
-	ped_free (new_fs_info);
+	free (new_fs_info);
 	ped_geometry_destroy (ctx->new_fs->geom);
-	ped_free (ctx->new_fs);
+	free (ctx->new_fs);
 
 	fat_op_context_destroy (ctx);
 

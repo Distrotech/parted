@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1999, 2000, 2001, 2007 Free Software Foundation, Inc.
+    Copyright (C) 1999, 2000, 2001, 2007, 2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@
 #endif /* ENABLE_NLS */
 
 /* ped_malloc() debugging.  Stick the address and size of memory blocks that
- * weren't ped_free()d in here, and an exception will be thrown when it is
+ * weren't free()d in here, and an exception will be thrown when it is
  * allocated.  That way, you can find out what, exactly, the allocated thing
  * is, and where it is created.
  */
@@ -226,42 +226,6 @@ ped_get_version ()
 	return VERSION;
 }
 
-#ifdef DEBUG
-static void
-_check_dodgy_pointer (const void* ptr, size_t size, int is_malloc)
-{
-	int		i;
-
-	for (i=0; dodgy_malloc_list[i].pointer; i++) {
-		if (dodgy_malloc_list[i].pointer != ptr)
- 			continue;
-		if (is_malloc && dodgy_malloc_list[i].size != size)
-			continue;
-		if (!is_malloc && !dodgy_memory_active[i])
-			continue;
-
-
-		if (is_malloc) {
-			ped_exception_throw (
-				PED_EXCEPTION_INFORMATION,
-				PED_EXCEPTION_OK,
-				"Dodgy malloc(%x) == %p occurred (active==%d)",
-				size, ptr, dodgy_memory_active[i]);
-			dodgy_memory_active[i]++;
-		} else {
-			ped_exception_throw (
-				PED_EXCEPTION_INFORMATION,
-				PED_EXCEPTION_OK,
-				"Dodgy free(%p) occurred (active==%d)",
-				ptr, dodgy_memory_active[i]);
-			dodgy_memory_active[i]--;
-		}
-
-		return;
-	}
-}
-#endif /* DEBUG */
-
 void*
 ped_malloc (size_t size)
 {
@@ -273,11 +237,6 @@ ped_malloc (size_t size)
 				     _("Out of memory."));
 		return NULL;
 	}
-
-#ifdef DEBUG
-	memset (mem, 0xff, size);
-	_check_dodgy_pointer (mem, size, 1);
-#endif
 
 	return mem;
 }
@@ -305,15 +264,4 @@ void* ped_calloc (size_t size)
         memset (buf, 0, size);
 
         return buf;
-}
-
-
-void
-ped_free (void* ptr)
-{
-#ifdef DEBUG
-	_check_dodgy_pointer (ptr, 0, 0);
-#endif
-
-	free (ptr);
 }

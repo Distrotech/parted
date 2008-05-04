@@ -212,7 +212,7 @@ loop_partition_duplicate (const PedPartition* part)
 static void
 loop_partition_destroy (PedPartition* part)
 {
-	ped_free (part);
+	free (part);
 }
 
 static int

@@ -40,7 +40,7 @@ fat_table_new (FatType fat_type, FatCluster size)
 
 	ft->table = ped_malloc (ft->raw_size);
 	if (!ft->table) {
-		ped_free (ft);
+		free (ft);
 		return NULL;
 	}
 
@@ -51,8 +51,8 @@ fat_table_new (FatType fat_type, FatCluster size)
 void
 fat_table_destroy (FatTable* ft)
 {
-	ped_free (ft->table);
-	ped_free (ft);
+	free (ft->table);
+	free (ft);
 }
 
 FatTable*

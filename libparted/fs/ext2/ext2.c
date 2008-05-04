@@ -132,7 +132,7 @@ int ext2_move_blocks(struct ext2_fs *fs, blk_t src, blk_t num, blk_t dest)
 		if (!ext2_read_blocks(fs, buf, src, num)) return 0;
 		if (!ext2_write_blocks(fs, buf, dest, num)) return 0;
 
-		ped_free(buf);
+		free(buf);
 		return 1;
 	}
 	ped_exception_catch();
@@ -212,7 +212,7 @@ int ext2_zero_blocks(struct ext2_fs *fs, blk_t block, blk_t num)
 			goto error_free_buf;
 		if (!ext2_write_blocks(fs, buf, block, num))
 			goto error_free_buf;
-		ped_free(buf);
+		free(buf);
 		return 1;
 	}
 	ped_exception_catch();
@@ -232,7 +232,7 @@ int ext2_zero_blocks(struct ext2_fs *fs, blk_t block, blk_t num)
 				goto error_free_buf;
 		}
 
-		ped_free(buf);
+		free(buf);
 		return 1;
 	}
 	ped_exception_catch();
@@ -252,7 +252,7 @@ int ext2_zero_blocks(struct ext2_fs *fs, blk_t block, blk_t num)
 	return 1;
 
 error_free_buf:
-	ped_free(buf);
+	free(buf);
 error:
 	return 0;
 }
@@ -588,8 +588,8 @@ void ext2_close(struct ext2_fs *fs)
 
 	fs->devhandle->ops->close(fs->devhandle->cookie);
 
-	ped_free(fs->gd);
-	ped_free(fs);
+	free(fs->gd);
+	free(fs);
 }
 
 int ext2_commit_metadata(struct ext2_fs *fs, int copies)
@@ -783,11 +783,11 @@ struct ext2_fs *ext2_open(struct ext2_dev_handle *handle, int state)
 	fs->metadirty = 0;
 	return fs;
 
-	ped_free(fs->gd);
+	free(fs->gd);
 error_deinit_bcache:
 	ext2_bcache_deinit(fs);
 error_free_fs:
-	ped_free(fs);
+	free(fs);
 error:
 	return NULL;
 }

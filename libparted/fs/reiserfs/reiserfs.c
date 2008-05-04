@@ -282,7 +282,7 @@ static PedFileSystem *reiserfs_open(PedGeometry *geom)
 	return fs;
 
 error_free_fs:
-	ped_free(fs);
+	free(fs);
 error_free_dal:
 	geom_dal_free(dal);
 error_fs_geom_free:
@@ -342,7 +342,7 @@ static PedFileSystem *reiserfs_create(PedGeometry *geom, PedTimer *timer)
 	return fs;
 
 error_free_fs_info:
-	ped_free(fs_info);
+	free(fs_info);
 error_free_gauge:
 	if (gauge)
 		libreiserfs_gauge_free(gauge);
@@ -365,7 +365,7 @@ static int reiserfs_close(PedFileSystem *fs)
 	geom_dal_free(dal);
 	ped_geometry_sync(fs->geom);
 
-	ped_free(fs);
+	free(fs);
 	return 1;
 }
 
@@ -638,7 +638,7 @@ error_free_gauge:
 	if (gauge)
 		libreiserfs_gauge_free(gauge);
 error_free_new_fs:
-	ped_free(new_fs);
+	free(new_fs);
 error_free_dal:
 	geom_dal_free(dal);
 error_free_fs_geom:

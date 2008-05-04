@@ -161,7 +161,7 @@ hfs_free_bad_blocks_list(HfsPrivateLinkExtent* first)
 
 	while (first) {
 		next = first->next;
-		ped_free (first);
+		free (first);
 		first = next;
 	}
 }

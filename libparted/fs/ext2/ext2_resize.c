@@ -721,7 +721,7 @@ int ext2_resize_fs(struct ext2_fs *fs, blk_t newsize, PedTimer* timer)
 	else
 		status = ext2_grow_fs(fs, newsize, timer);
 
-	ped_free(fs->relocator_pool);
+	free(fs->relocator_pool);
 	fs->relocator_pool = NULL;
 	fs->relocator_pool_end = NULL;
 
