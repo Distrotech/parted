@@ -1,6 +1,6 @@
 /*
     libparted
-    Copyright (C) 1998, 1999, 2000, 2007 Free Software Foundation, Inc.
+    Copyright (C) 1998, 1999, 2000, 2007-2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -481,8 +481,8 @@ ask_type (PedFileSystem* fs, int fat16_ok, int fat32_ok, FatType* out_fat_type)
 {
 	FatSpecific*		fs_info = FAT_SPECIFIC (fs);
 	PedExceptionOption	status;
-	char*			fat16_msg;
-	char*			fat32_msg;
+	const char*		fat16_msg;
+	const char*		fat32_msg;
 
 	if (fs_info->fat_type == FAT_TYPE_FAT16)
 		fat16_msg = _("If you leave your file system as FAT16, "

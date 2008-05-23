@@ -1,6 +1,6 @@
 /*
     parted - a frontend to libparted
-    Copyright (C) 1999, 2000, 2001, 2007 Free Software Foundation, Inc.
+    Copyright (C) 1999, 2000, 2001, 2007-2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 #include "strlist.h"
 
-extern char*	prog_name;
+extern const char *prog_name;
 
 extern int init_ui ();
 extern int non_interactive_mode (PedDevice** dev, Command* cmd_list[],

@@ -691,10 +691,11 @@ static int ext2_block_relocator_flush(struct ext2_fs *fs, struct ext2_block_relo
 		{
 			/* FIXXXME gross hack */
 			fprintf(stderr, "relocating %s blocks",
-				((char *[4]){"direct",
-						     "singly indirect",
-						     "doubly indirect",
-						     "triply indirect"})[i]);
+				((const char *const [4])
+				 {"direct",
+				  "singly indirect",
+				  "doubly indirect",
+				  "triply indirect"})[i]);
 			fflush(stderr);
 		}
 

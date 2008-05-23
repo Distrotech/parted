@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1999, 2000, 2007 Free Software Foundation, Inc.
+    Copyright (C) 1999, 2000, 2007-2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -73,7 +73,7 @@ static PedExceptionHandler*	ex_handler = default_handler;
 static PedException*		ex = NULL;
 static int			ex_fetch_count = 0;
 
-static char*	type_strings [] = {
+static const char *const type_strings [] = {
 	N_("Information"),
 	N_("Warning"),
 	N_("Error"),
@@ -82,7 +82,7 @@ static char*	type_strings [] = {
 	N_("No Implementation")
 };
 
-static char*	option_strings [] = {
+static const char *const option_strings [] = {
 	N_("Fix"),
 	N_("Yes"),
 	N_("No"),
@@ -98,7 +98,7 @@ static char*	option_strings [] = {
 char*
 ped_exception_get_type_string (PedExceptionType ex_type)
 {
-	return type_strings [ex_type - 1];
+	return (char *) type_strings [ex_type - 1];
 }
 
 /* FIXME: move this out to the prospective math.c */
@@ -121,7 +121,7 @@ ped_log2 (int n)
 char*
 ped_exception_get_option_string (PedExceptionOption ex_opt)
 {
-	return option_strings [ped_log2 (ex_opt)];
+	return (char *) option_strings [ped_log2 (ex_opt)];
 }
 
 static PedExceptionOption

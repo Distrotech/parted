@@ -78,7 +78,7 @@ typedef struct {
         time_t  predicted_time_left;
 } TimerContext;
 
-static struct option    options[] = {
+static const struct option const options[] = {
         /* name, has-arg, string-return-val, char-return-val */
         {"help",        0, NULL, 'h'},
         {"list",        0, NULL, 'l'},
@@ -89,7 +89,7 @@ static struct option    options[] = {
         {NULL,          0, NULL, 0}
 };
 
-static char*    options_help [][2] = {
+static const char *const options_help [][2] = {
         {"help",        N_("displays this help message")},
         {"list",        N_("lists partition layout on all block devices")},
         {"machine",     N_("displays machine parseable output")},
@@ -106,26 +106,26 @@ int     opt_machine_mode = 0;
 int     disk_is_modified = 0;
 int     is_toggle_mode = 0;
 
-static char* number_msg = N_(
+static const char* number_msg = N_(
 "NUMBER is the partition number used by Linux.  On MS-DOS disk labels, the "
 "primary partitions number from 1 to 4, logical partitions from 5 onwards.\n");
 
-static char* label_type_msg_start = N_("LABEL-TYPE is one of: ");
-static char* flag_msg_start =   N_("FLAG is one of: ");
-static char* unit_msg_start =   N_("UNIT is one of: ");
-static char* part_type_msg =    N_("PART-TYPE is one of: primary, logical, "
+static const char* label_type_msg_start = N_("LABEL-TYPE is one of: ");
+static const char* flag_msg_start =   N_("FLAG is one of: ");
+static const char* unit_msg_start =   N_("UNIT is one of: ");
+static const char* part_type_msg =    N_("PART-TYPE is one of: primary, logical, "
                                    "extended\n");
-static char* fs_type_msg_start = N_("FS-TYPE is one of: ");
-static char* start_end_msg =    N_("START and END are disk locations, such as "
+static const char* fs_type_msg_start = N_("FS-TYPE is one of: ");
+static const char* start_end_msg =    N_("START and END are disk locations, such as "
                 "4GB or 10%.  Negative values count from the end of the disk.  "
                 "For example, -1s specifies exactly the last sector.\n");
-static char* state_msg =        N_("STATE is one of: on, off\n");
-static char* device_msg =       N_("DEVICE is usually /dev/hda or /dev/sda\n");
-static char* name_msg =         N_("NAME is any word you want\n");
-static char* resize_msg_start = N_("The partition must have one of the "
+static const char* state_msg =        N_("STATE is one of: on, off\n");
+static const char* device_msg =       N_("DEVICE is usually /dev/hda or /dev/sda\n");
+static const char* name_msg =         N_("NAME is any word you want\n");
+static const char* resize_msg_start = N_("The partition must have one of the "
                                    "following FS-TYPEs: ");
 
-static char* copyright_msg = N_(
+static const char* copyright_msg = N_(
 "Copyright (C) 1998 - 2006 Free Software Foundation, Inc.\n"
 "This program is free software, covered by the GNU General Public License.\n"
 "\n"
@@ -1274,10 +1274,10 @@ do_print (PedDevice** dev)
         int             has_free_arg = 0;
         int             has_list_arg = 0;
         int             has_num_arg = 0;
-        char*           transport[14] = {"unknown", "scsi", "ide", "dac960",
-                                         "cpqarray", "file", "ataraid", "i2o",
-                                         "ubd", "dasd", "viodasd", "sx8", "dm",
-                                         "xvd"};
+        const char *const transport[14] = {"unknown", "scsi", "ide", "dac960",
+					   "cpqarray", "file", "ataraid", "i2o",
+					   "ubd", "dasd", "viodasd", "sx8", "dm",
+					   "xvd"};
         char*           peek_word;
         char*           start;
         char*           end;

@@ -42,7 +42,8 @@ extern int fat_traverse_entries_per_buffer (FatTraverseInfo* trav_info);
 /* starts traversal at an arbitary cluster.  if start_cluster==0, then uses
    root directory */
 extern FatTraverseInfo* fat_traverse_begin (PedFileSystem* fs,
-				     FatCluster start_cluster, char* dir_name);
+					    FatCluster start_cluster,
+					    const char* dir_name);
 
 extern int fat_traverse_complete (FatTraverseInfo* trav_info);
 

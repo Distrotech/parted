@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000, 2002, 2004, 2007 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2002, 2004, 2007-2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -378,19 +378,19 @@ mac_clobber (PedDevice* dev)
 #endif /* !DISCOVER_ONLY */
 
 static int
-_rawpart_cmp_type (MacRawPartition* raw_part, char* type)
+_rawpart_cmp_type (const MacRawPartition* raw_part, const char* type)
 {
 	return strncasecmp (raw_part->type, type, 32) == 0;
 }
 
 static int
-_rawpart_cmp_name (MacRawPartition* raw_part, char* name)
+_rawpart_cmp_name (const MacRawPartition* raw_part, const char* name)
 {
 	return strncasecmp (raw_part->name, name, 32) == 0;
 }
 
 static int
-_rawpart_is_partition_map (MacRawPartition* raw_part)
+_rawpart_is_partition_map (const MacRawPartition* raw_part)
 {
 	return _rawpart_cmp_type (raw_part, "Apple_partition_map");
 }
@@ -410,7 +410,7 @@ strncasestr (const char* haystack, const char* needle, int n)
 }
 
 static int
-_rawpart_is_boot (MacRawPartition* raw_part)
+_rawpart_is_boot (const MacRawPartition* raw_part)
 {
 	if (!strcasecmp(raw_part->type, "Apple_Bootstrap"))
 		return 1;
@@ -422,7 +422,7 @@ _rawpart_is_boot (MacRawPartition* raw_part)
 }
 
 static int
-_rawpart_is_driver (MacRawPartition* raw_part)
+_rawpart_is_driver (const MacRawPartition* raw_part)
 {
 	if (strncmp (raw_part->type, "Apple_", 6) != 0)
 		return 0;
@@ -432,7 +432,7 @@ _rawpart_is_driver (MacRawPartition* raw_part)
 }
 
 static int
-_rawpart_has_driver (MacRawPartition* raw_part, MacDiskData* mac_disk_data)
+_rawpart_has_driver (const MacRawPartition* raw_part, MacDiskData* mac_disk_data)
 {
 	MacDeviceDriver *driverlist;
 	uint16_t i, bsz;

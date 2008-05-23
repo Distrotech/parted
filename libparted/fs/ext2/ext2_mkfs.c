@@ -1,6 +1,6 @@
 /*
     ext2_mkfs.c -- ext2 fs creator
-    Copyright (C) 1999, 2000, 2001, 2007 Free Software Foundation, Inc.
+    Copyright (C) 1999, 2000, 2001, 2007-2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -263,7 +263,7 @@ error:
 
 /* returns the offset into the buffer of the start of the next dir entry */
 static int _set_dirent(void* buf, int offset, int block_size, int is_last,
-		       uint32_t inode, char* name, int file_type)
+		       uint32_t inode, const char* name, int file_type)
 {
 	struct ext2_dir_entry_2 *dirent = (void*) (((char*)buf) + offset);
 	int name_len = strlen(name);

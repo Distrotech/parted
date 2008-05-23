@@ -154,17 +154,17 @@ struct siginfo_t {
 #  define ILL_BADSTK (INTMAX - 8)
 #endif
 
-char* prog_name = "GNU Parted " VERSION "\n";
+const char* prog_name = "GNU Parted " VERSION "\n";
 
-static char* banner_msg = N_(
+static const char* banner_msg = N_(
 "Welcome to GNU Parted! Type 'help' to view a list of commands.\n");
 
-static char* usage_msg = N_(
+static const char* usage_msg = N_(
 "Usage: parted [OPTION]... [DEVICE [COMMAND [PARAMETERS]...]...]\n"
 "Apply COMMANDs with PARAMETERS to DEVICE.  If no COMMAND(s) are given, "
 "run in\ninteractive mode.\n");
 
-static char* bug_msg = N_(
+static const char* bug_msg = N_(
 "\n\nYou found a bug in GNU Parted! Here's what you have to do:\n\n"
 "Don't panic! The bug has most likely not affected any of your data.\n"
 "Help us to fix this bug by doing the following:\n\n"
@@ -218,7 +218,7 @@ screen_width ()
 
 /* HACK: don't specify termcap separately - it'll annoy the users. */
 #ifdef HAVE_LIBREADLINE
-        width = tgetnum ("co");
+        width = tgetnum ((char *) "co");
 #endif
 
         if (width <= 0)

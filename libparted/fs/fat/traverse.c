@@ -120,7 +120,7 @@ fat_traverse_mark_dirty (FatTraverseInfo* trav_info)
 
 FatTraverseInfo*
 fat_traverse_begin (PedFileSystem* fs, FatCluster start_cluster,
-		    char* dir_name)
+		    const char* dir_name)
 {
 	FatSpecific*		fs_info = FAT_SPECIFIC (fs);
 	FatTraverseInfo*	trav_info;
