@@ -924,6 +924,7 @@ gpt_read (PedDisk * disk)
 		ped_disk_commit_to_dev (disk);
 #endif
 
+	pth_free (gpt);
 	return 1;
 
 error_delete_all:
