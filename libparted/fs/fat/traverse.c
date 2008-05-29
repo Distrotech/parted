@@ -341,7 +341,7 @@ fat_dir_entry_has_first_cluster (FatDirEntry* dir_entry, PedFileSystem* fs)
 */
 void
 fat_dir_entry_get_name (const FatDirEntry *dir_entry, char *result) {
-	int     i;
+	size_t i;
 	const char *src;
 	const char *ext;
 
