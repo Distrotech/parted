@@ -1033,7 +1033,7 @@ gpt_write(const PedDisk * disk)
 	GPTDiskData* gpt_disk_data;
 	GuidPartitionEntry_t* ptes;
 	uint32_t ptes_crc;
-        uint8_t* pth_raw = ped_malloc (pth_get_size (disk->dev));
+	uint8_t* pth_raw;
 	GuidPartitionTableHeader_t* gpt;
 	PedPartition* part;
 	int ptes_size;
