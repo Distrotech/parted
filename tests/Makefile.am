@@ -6,6 +6,7 @@ TESTS = \
   t1500-small-ext2.sh \
   t2000-mkfs.sh \
   t2100-mkswap.sh \
+  t2200-dos-label-recog.sh \
   t3000-constraints.sh \
   t3100-resize-ext2-partion.sh \
   t4100-msdos-partition-limits.sh \
