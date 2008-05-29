@@ -17,6 +17,7 @@
 */
 
 #include <config.h>
+#include <stdbool.h>
 
 #include "closeout.h"
 #include "configmake.h"
@@ -757,12 +758,16 @@ do_mkpart (PedDevice** dev)
 
         final_constraint = ped_constraint_intersect (user_constraint,
                         dev_constraint);
+        ped_constraint_destroy (user_constraint);
+        ped_constraint_destroy (dev_constraint);
         if (!final_constraint)
                 goto error_destroy_simple_constraints;
 
         /* subject to partition constraint */
         ped_exception_fetch_all();
-        if (!ped_disk_add_partition (disk, part, final_constraint)) {
+        bool added_ok = ped_disk_add_partition (disk, part, final_constraint);
+        ped_constraint_destroy (final_constraint);
+        if (!added_ok) {
                 ped_exception_leave_all();
                
                 if (ped_disk_add_partition (disk, part,
@@ -810,10 +815,6 @@ do_mkpart (PedDevice** dev)
                 goto error_destroy_disk;
         
         /* clean up */
-        ped_constraint_destroy (final_constraint);
-        ped_constraint_destroy (user_constraint);
-        ped_constraint_destroy (dev_constraint);
-
         ped_disk_destroy (disk);
         
         if (range_start != NULL)
@@ -833,10 +834,7 @@ do_mkpart (PedDevice** dev)
 
 error_remove_part:
         ped_disk_remove_partition (disk, part);
-        ped_constraint_destroy (final_constraint);
 error_destroy_simple_constraints:
-        ped_constraint_destroy (user_constraint);
-        ped_constraint_destroy (dev_constraint);
         ped_partition_destroy (part);
 error_destroy_disk:
         ped_disk_destroy (disk);
@@ -920,12 +918,16 @@ do_mkpartfs (PedDevice** dev)
 
         final_constraint = ped_constraint_intersect (user_constraint,
                                                      dev_constraint);
+        ped_constraint_destroy (user_constraint);
+        ped_constraint_destroy (dev_constraint);
         if (!final_constraint)
                 goto error_destroy_simple_constraints;
 
         /* subject to partition constraint */
         ped_exception_fetch_all();
-        if (!ped_disk_add_partition (disk, part, final_constraint)) {
+	bool added_ok = ped_disk_add_partition (disk, part, final_constraint);
+        ped_constraint_destroy (final_constraint);
+        if (!added_ok) {
                 ped_exception_leave_all();
                
                 if (ped_disk_add_partition (disk, part,
@@ -977,9 +979,6 @@ do_mkpartfs (PedDevice** dev)
                 goto error_destroy_disk;
 
         /* clean up */
-        ped_constraint_destroy (final_constraint);
-        ped_constraint_destroy (user_constraint);
-        ped_constraint_destroy (dev_constraint);
 
         ped_disk_destroy (disk);
 
@@ -1000,10 +999,7 @@ do_mkpartfs (PedDevice** dev)
 
 error_remove_part:
         ped_disk_remove_partition (disk, part);
-        ped_constraint_destroy (final_constraint);
 error_destroy_simple_constraints:
-        ped_constraint_destroy (user_constraint);
-        ped_constraint_destroy (dev_constraint);
         ped_partition_destroy (part);
 error_destroy_disk:
         ped_disk_destroy (disk);
