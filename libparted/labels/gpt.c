@@ -38,6 +38,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <uuid/uuid.h>
+#include <stdbool.h>
 
 #if ENABLE_NLS
 #  include <libintl.h>
@@ -1064,18 +1065,24 @@ gpt_write(const PedDisk * disk)
 
 	/* Write PTH and PTEs */
 	_generate_header (disk, 0, ptes_crc, &gpt);
-        pth_raw = pth_get_raw (disk->dev, gpt);
-        pth_free (gpt);
-	if (!ped_device_write (disk->dev, pth_raw, 1, 1))
+	pth_raw = pth_get_raw (disk->dev, gpt);
+	pth_free (gpt);
+	bool write_ok = ped_device_write (disk->dev, pth_raw, 1, 1);
+	free (pth_raw);
+	if (!write_ok)
 		goto error_free_ptes;
-	if (!ped_device_write (disk->dev, ptes, 2, ptes_size / disk->dev->sector_size))
+	if (!ped_device_write (disk->dev, ptes, 2,
+			       ptes_size / disk->dev->sector_size))
 		goto error_free_ptes;
 
 	/* Write Alternate PTH & PTEs */
 	_generate_header (disk, 1, ptes_crc, &gpt);
         pth_raw = pth_get_raw (disk->dev, gpt);
         pth_free (gpt);
-	if (!ped_device_write (disk->dev, pth_raw, disk->dev->length - 1, 1))
+	write_ok = ped_device_write (disk->dev, pth_raw,
+				     disk->dev->length - 1, 1);
+	free (pth_raw);
+	if (!write_ok)
 		goto error_free_ptes;
 	if (!ped_device_write (disk->dev, ptes,
 			       disk->dev->length - 1 - ptes_size / disk->dev->sector_size,
