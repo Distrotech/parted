@@ -431,12 +431,15 @@ ped_device_get_constraint (PedDevice* dev)
 
         PedAlignment* start_align = ped_alignment_new (multiplier, multiplier);
         
+        PedGeometry *s, *e;
         PedConstraint* c = ped_constraint_new (
                                 start_align, ped_alignment_any,
-                                ped_geometry_new (dev, 0, dev->length),
-                                ped_geometry_new (dev, 0, dev->length),
+                                s = ped_geometry_new (dev, 0, dev->length),
+                                e = ped_geometry_new (dev, 0, dev->length),
                                 1, dev->length);
 
+        free (s);
+        free (e);
         free (start_align);
         return c;
 }
