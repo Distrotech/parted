@@ -1065,6 +1065,7 @@ gpt_write(const PedDisk * disk)
 	/* Write PTH and PTEs */
 	_generate_header (disk, 0, ptes_crc, &gpt);
         pth_raw = pth_get_raw (disk->dev, gpt);
+        pth_free (gpt);
 	if (!ped_device_write (disk->dev, pth_raw, 1, 1))
 		goto error_free_ptes;
 	if (!ped_device_write (disk->dev, ptes, 2, ptes_size / disk->dev->sector_size))
@@ -1073,6 +1074,7 @@ gpt_write(const PedDisk * disk)
 	/* Write Alternate PTH & PTEs */
 	_generate_header (disk, 1, ptes_crc, &gpt);
         pth_raw = pth_get_raw (disk->dev, gpt);
+        pth_free (gpt);
 	if (!ped_device_write (disk->dev, pth_raw, disk->dev->length - 1, 1))
 		goto error_free_ptes;
 	if (!ped_device_write (disk->dev, ptes,
