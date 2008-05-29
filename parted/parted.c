@@ -1508,15 +1508,20 @@ do_print (PedDevice** dev)
                 else
                     fputs ("1:", stdout);
 
-                printf ("%s:", ped_unit_format (*dev, part->geom.start));
-                printf ("%s:", ped_unit_format_byte (
-                                *dev,
-                                (part->geom.end + 1) * 
-                                (*dev)->sector_size - 1));
+                char *s = ped_unit_format (*dev, part->geom.start);
+                printf ("%s:", s);
+                free (s);
+                s = ped_unit_format_byte (*dev,
+                                          (part->geom.end + 1) *
+                                          (*dev)->sector_size - 1);
+                printf ("%s:", s);
+                free (s);
 
-                if (ped_unit_get_default() != PED_UNIT_CHS)
-                    printf ("%s:", ped_unit_format (*dev,
-                                                    part->geom.length));
+                if (ped_unit_get_default() != PED_UNIT_CHS) {
+                    s = ped_unit_format (*dev, part->geom.length);
+                    printf ("%s:", s);
+                    free (s);
+                }
                     
                 if (!(part->type & PED_PARTITION_FREESPACE)) {
 
