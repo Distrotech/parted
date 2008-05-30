@@ -1154,7 +1154,7 @@ gpt_partition_new (const PedDisk* disk,
         gpt_part_data->msftres = 0;
 	uuid_generate ((unsigned char*) &gpt_part_data->uuid);
 	swap_uuid_and_efi_guid((unsigned char*)(&gpt_part_data->uuid));
-	strcpy (gpt_part_data->name, "");
+	memset (gpt_part_data->name, 0, sizeof gpt_part_data->name);
 	return part;
 
 error_free_part:
