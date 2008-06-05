@@ -341,6 +341,18 @@ sc_system_h_headers: .re-list
 		  1>&2;  exit 1; } || :;				\
 	fi
 
+# Ensure that each .c file containing a "main" function also
+# calls set_program_name.
+sc_program_name:
+	@if $(VC_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
+	  files=$$(grep -l '^main *(' $$($(VC_LIST_EXCEPT) | grep '\.c$$')); \
+	  grep -LE 'set_program_name *\(m?argv\[0\]\);' $$files		\
+	      | grep . &&						\
+	  { echo '$(ME): the above files do not call set_program_name'	\
+		1>&2; exit 1; } || :;					\
+	else :;								\
+	fi
+
 # Require that the final line of each test-lib.sh-using test be this one:
 # (exit $fail); exit $fail
 # Note: this test requires GNU grep's --label= option.
@@ -444,15 +456,18 @@ update-NEWS-hash: NEWS
 	perl -pi -e 's/^(old_NEWS_hash = ).*/$${1}'"$(NEWS_hash)/" \
 	  $(srcdir)/cfg.mk
 
+epoch_date = 1970-01-01 00:00:00.000000000 +0000
 # Ensure that the c99-to-c89 patch applies cleanly.
 patch-check:
 	rm -rf src-c89 $@.1 $@.2
 	cp -a src src-c89
 	(cd src-c89; patch -p1 -V never --fuzz=0) < src/c99-to-c89.diff \
 	  > $@.1 2>&1
-	if test "$$REGEN_PATCH" = yes; then \
+	if test "$(REGEN_PATCH)" = yes; then \
 	  diff -upr src src-c89 | sed 's,src-c89/,src/,' \
-	    | grep -v '^Only in' > new-diff || : ; fi
+	    | grep -vE '^(Only in|File )' \
+	    | perl -pe 's/^((?:\+\+\+|---) \S+\t).*/$${1}$(epoch_date)/' \
+	    > new-diff || : ; fi
 	grep -v '^patching file ' $@.1 > $@.2 || :
 	msg=ok; test -s $@.2 && msg='fuzzy patch' || : ;	\
 	rm -f src-c89/*.o || msg='rm failed';			\
@@ -768,6 +783,14 @@ emit_upload_commands:
 	@echo =====================================
 	@echo =====================================
 
+noteworthy = * Noteworthy changes in release ?.? (????-??-??) [?]
+define emit-commit-log
+  printf '%s\n' 'post-release administrivia' '' \
+    '* NEWS: Add header line for next release.' \
+    '* .prev-version: Record previous version.' \
+    '* cfg.mk (old_NEWS_hash): Auto-update.'
+endef
+
 .PHONY: alpha beta major
 alpha beta major: $(local-check) writable-files
 	test $@ = major						\
@@ -783,6 +806,7 @@ alpha beta major: $(local-check) writable-files
 	fi
 	$(MAKE) -s emit_upload_commands RELEASE_TYPE=$@
 	echo $(VERSION) > $(prev_version_file)
-	$(VC) commit -m \
-	  '$(prev_version_file): Record previous version: $(VERSION).' \
-	  $(prev_version_file)
+	$(MAKE) update-NEWS-hash
+	perl -pi -e '$$. == 3 and print "$(noteworthy)\n\n\n"' NEWS
+	$(emit-commit-log) > .ci-msg
+	$(VC) commit -F .ci-msg
