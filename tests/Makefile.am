@@ -11,7 +11,8 @@ TESTS = \
   t3100-resize-ext2-partion.sh \
   t4100-msdos-partition-limits.sh \
   t4100-dvh-partition-limits.sh \
-  t5000-tags.sh
+  t5000-tags.sh \
+  t6000-dm.sh
 
 EXTRA_DIST = \
   $(TESTS) test-lib.sh

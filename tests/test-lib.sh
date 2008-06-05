@@ -258,6 +258,10 @@ if test $skip_ = 0 && test "$erasable_device_required_" != ''; then
   fi
 fi
 
+if test $skip_ = 0 && test "$device_mapper_required_" != ''; then
+  . $abs_top_srcdir/tests/dm-utils.sh || exit 1
+fi
+
 # This is a stub function that is run upon trap (upon regular exit and
 # interrupt).  Override it with a per-test function, e.g., to unmount
 # a partition, or to undo any other global state changes.
