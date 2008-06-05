@@ -24,6 +24,7 @@
 #include "version-etc.h"
 #include "command.h"
 #include "ui.h"
+#include "progname.h"
 #include "table.h"
 
 #define AUTHORS \
@@ -98,8 +99,6 @@ static const char *const options_help [][2] = {
         {"version",     N_("displays the version")},
         {NULL,          NULL}
 };
-
-char *program_name;
 
 int     opt_script_mode = 0;
 int     pretend_input_tty = 0;
@@ -2470,7 +2469,7 @@ main (int argc, char** argv)
         PedDevice*      dev;
         int             status;
 
-        program_name = argv[0];
+        set_program_name (argv[0]);
         atexit (close_stdout);
 
         dev = _init (&argc, &argv);

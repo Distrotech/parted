@@ -1,6 +1,6 @@
 /*
     clear_fat - a tool to clear unused space (for testing purposes)
-    Copyright (C) 2000, 2007 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2007-2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
 #include "configmake.h"
 #include "error.h"
 #include "long-options.h"
+#include "progname.h"
 
 #include "../../libparted/fs/fat/fat.h"
 
@@ -51,9 +52,6 @@
 
 #define AUTHORS \
   "<http://parted.alioth.debian.org/cgi-bin/trac.cgi/browser/AUTHORS>"
-
-/* The name this program was run with. */
-char *program_name;
 
 void
 usage (int status)
@@ -267,7 +265,7 @@ main (int argc, char* argv[])
 	PedPartition*		part;
 	PedFileSystem*		fs;
 
-        program_name = argv[0];
+        set_program_name (argv[0]);
         setlocale (LC_ALL, "");
         bindtextdomain (PACKAGE, LOCALEDIR);
         textdomain (PACKAGE);

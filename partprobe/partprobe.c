@@ -1,6 +1,6 @@
 /*
     partprobe - informs the OS kernel of partition layout
-    Copyright (C) 2001, 2002, 2007 Free Software Foundation, Inc.
+    Copyright (C) 2001, 2002, 2007-2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@
 
 #include "closeout.h"
 #include "configmake.h"
+#include "progname.h"
 #include "version-etc.h"
 
 #include <locale.h>
@@ -65,9 +66,6 @@ static struct option const long_options[] =
     {"version", no_argument, NULL, 'v'},
     {NULL, 0, NULL, 0}
   };
-
-
-char *program_name;
 
 /* initialized to 0 according to the language lawyers */
 static int	opt_no_inform;
@@ -163,7 +161,7 @@ main (int argc, char* argv[])
 {
 	int		status = 0;
 
-	program_name = argv[0];
+	set_program_name (argv[0]);
 
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, LOCALEDIR);

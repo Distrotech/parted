@@ -6,6 +6,7 @@
 #include <parted/parted.h>
 
 #include "common.h"
+#include "progname.h"
 
 static char* temporary_disk;
 
@@ -87,6 +88,7 @@ END_TEST
 int
 main (void)
 {
+        set_program_name (argv[0]);
         int number_failed;
         Suite* suite = suite_create ("Disk");
         TCase* tcase_duplicate = tcase_create ("Duplicate");
