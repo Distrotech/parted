@@ -302,10 +302,10 @@ _is_sx8_major (int major)
 
 #ifdef ENABLE_DEVICE_MAPPER
 static int
-_dm_maptype (PedDevice* dev)
+_dm_maptype (PedDevice *dev)
 {
         struct dm_task *dmt;
-        void *next = NULL;
+        void *next;
         uint64_t start, length;
         char *target_type = NULL;
         char *params;
@@ -322,7 +322,7 @@ _dm_maptype (PedDevice* dev)
         if (!dm_task_run(dmt))
                 goto bad;
 
-        next = dm_get_next_target(dmt, next, &start, &length,
+        next = dm_get_next_target(dmt, NULL, &start, &length,
                                   &target_type, &params);
 
         dev->dmtype = strdup(target_type);
