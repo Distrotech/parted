@@ -310,6 +310,10 @@ _dm_maptype (PedDevice *dev)
         char *target_type = NULL;
         char *params;
         int r = -1;
+        const char* dev_dir = getenv ("DM_DEV_DIR");
+
+        if (dev_dir && *dev_dir && !dm_set_dev_dir(dev_dir))
+                return r;
 
         if (!(dmt = dm_task_create(DM_DEVICE_TABLE)))
                 return r;
