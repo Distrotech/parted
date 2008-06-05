@@ -282,7 +282,7 @@ do
 	esac
 done
 
-t0=$($abs_top_srcdir/tests/mkdtemp $test_dir_ parted-$this_test.XXXXXXXXXX) \
+t0=$($abs_top_srcdir/build-aux/mktempd $test_dir_ parted-$this_test.XXXXXXXXXX) \
     || error "failed to create temporary directory in $test_dir_"
 
 # Run each test from within a temporary sub-directory named after the

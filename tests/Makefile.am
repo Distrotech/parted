@@ -14,7 +14,7 @@ TESTS = \
   t5000-tags.sh
 
 EXTRA_DIST = \
-  $(TESTS) test-lib.sh mkdtemp
+  $(TESTS) test-lib.sh
 
 CLEANFILES = init.sh
 all: init.sh
