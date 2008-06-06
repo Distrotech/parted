@@ -62,12 +62,12 @@ dmsetup_has_dm_devdir_support_()
 # set up private /dev and /etc
 init_root_dir_()
 {
-  test -n "$test_dir_" \
+  test -n "$test_dir_rand_" \
     || error "Internal error: called init_root_dir_ before" \
-      " defining $test_dir_"
+      "defining \$test_dir_rand_"
 
   # Define these two globals.
-  G_root_=$test_dir_/root
+  G_root_=$test_dir_rand_/root
   G_dev_=$G_root_/dev
 
   export LVM_SYSTEM_DIR=$G_root_/etc
