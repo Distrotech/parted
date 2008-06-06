@@ -15,7 +15,7 @@ TESTS = \
   t6000-dm.sh
 
 EXTRA_DIST = \
-  $(TESTS) test-lib.sh
+  $(TESTS) test-lib.sh lvm-utils.sh
 
 CLEANFILES = init.sh
 all: init.sh
