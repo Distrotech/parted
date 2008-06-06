@@ -1158,6 +1158,7 @@ linux_new (const char* path)
         if (!dev)
                 goto error;
 
+        dev->dmtype = NULL;
         dev->path = strdup (path);
         if (!dev->path)
                 goto error_free_dev;
