@@ -287,7 +287,7 @@ done
 test_dir_rand_=$($abs_top_srcdir/build-aux/mktempd $test_dir_ parted-$this_test.XXXXXXXXXX) \
     || error "failed to create temporary directory in $test_dir_"
 
-if test $skip_ = 0 && test "$device_mapper_required_" != ''; then
+if test $skip_ = 0 && test "x$device_mapper_required_" != 'x'; then
   . $abs_top_srcdir/tests/dm-utils.sh || exit 1
 fi
 
