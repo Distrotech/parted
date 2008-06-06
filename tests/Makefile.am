@@ -29,4 +29,5 @@ init.sh: Makefile.in
 	mv $@-t $@
 
 TESTS_ENVIRONMENT =	\
-  srcdir='$(srcdir)'
+  srcdir='$(srcdir)'	\
+  ENABLE_DEVICE_MAPPER=$(ENABLE_DEVICE_MAPPER)

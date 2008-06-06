@@ -1,6 +1,5 @@
 dnl GNU Parted - a library and front end for manipulation hard disk partitions
-dnl Copyright (C) 1998, 1999, 2000, 2001, 2002, 2005, 2006, 2007
-dnl Free Software Foundation, Inc.
+dnl Copyright (C) 1998-2002, 2005-2008 Free Software Foundation, Inc.
 dnl
 dnl This file may be modified and/or distributed without restriction.
 
@@ -78,12 +77,14 @@ if test "$enable_mtrace" = yes; then
 	AC_DEFINE(ENABLE_MTRACE, 1, [Mtrace malloc() debugging])
 fi
 
-AC_ARG_ENABLE(device-mapper,
-	[  --enable-device-mapper  enable device mapper support [default=no]], ,
-	enable_device_mapper=no
-)
-if test "$enable_device_mapper" = yes; then
-	AC_DEFINE(ENABLE_DEVICE_MAPPER, 1, [device mapper (libdevmapper) support])
+AC_SUBST([ENABLE_DEVICE_MAPPER])
+ENABLE_DEVICE_MAPPER=no
+AC_ARG_ENABLE([device-mapper],
+	[  --enable-device-mapper  enable device mapper support [default=no]],
+	[ENABLE_DEVICE_MAPPER=yes])
+if test $ENABLE_DEVICE_MAPPER = yes; then
+	AC_DEFINE([ENABLE_DEVICE_MAPPER],
+                  1, [device mapper (libdevmapper) support])
 fi
 
 AC_ARG_ENABLE(selinux,
@@ -255,15 +256,12 @@ If you compile e2fsprogs yourself then you need to do 'make install' and
 AC_SUBST(UUID_LIBS)
 
 dnl Check for libdevmapper
-DM_LIBS=""
-if test "$enable_device_mapper" = yes; then
-	AC_CHECK_LIB(devmapper, dm_task_create,
-		DM_LIBS="-ldevmapper",
-		AC_MSG_ERROR(
-			[libdevmapper not found!  Try using --disable-device-mapper]
-		)
-		exit
-	)
+DM_LIBS=
+if test $ENABLE_DEVICE_MAPPER = yes; then
+  AC_CHECK_LIB([devmapper], [dm_task_create],
+    [DM_LIBS=-ldevmapper],
+    [AC_MSG_ERROR([libdevmapper not found!  Try using --disable-device-mapper])
+      ])
 fi
 AC_SUBST(DM_LIBS)
 

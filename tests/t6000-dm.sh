@@ -23,6 +23,13 @@ device_mapper_required_=1
 : ${srcdir=.}
 . $srcdir/test-lib.sh
 
+test "x$ENABLE_DEVICE_MAPPER" = xyes ||
+  {
+    say "skipping $0: no device-mapper support"
+    test_done
+    exit
+  }
+
 # Device maps names - should be random to not conflict with existing ones on
 # the system
 linear_=plinear
