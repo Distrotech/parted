@@ -50,6 +50,54 @@ loop_setup_()
   return 0;
 }
 
+compare_vg_field_()
+{
+if test "$verbose" = "t"
+then
+  echo "compare_vg_field_ VG1: `vgs --noheadings -o $3 $1` VG2: `vgs --noheadings -o $3 $2`"
+fi
+  return $(test $(vgs --noheadings -o $3 $1) == $(vgs --noheadings -o $3 $2) )
+}
+
+check_vg_field_()
+{
+if test "$verbose" = "t"
+then
+  echo "check_vg_field_ VG=$1, field=$2, actual=`vgs --noheadings -o $2 $1`, expected=$3"
+fi
+  return $(test $(vgs --noheadings -o $2 $1) == $3)
+}
+
+check_pv_field_()
+{
+if test "$verbose" = "t"
+then
+  echo "check_pv_field_ PV=$1, field=$2, actual=`pvs --noheadings -o $2 $1`, expected=$3"
+fi
+  return $(test $(pvs --noheadings -o $2 $1) == $3)
+}
+
+check_lv_field_()
+{
+if test "$verbose" = "t"
+then
+  echo "check_lv_field_ LV=$1, field=$2, actual=`lvs --noheadings -o $2 $1`, expected=$3"
+fi
+  return $(test $(lvs --noheadings -o $2 $1) == $3)
+}
+
+vg_validate_pvlv_counts_()
+{
+	local local_vg=$1
+	local num_pvs=$2
+	local num_lvs=$3
+	local num_snaps=$4
+
+	check_vg_field_ $local_vg pv_count $num_pvs &&
+	check_vg_field_ $local_vg lv_count $num_lvs &&
+	check_vg_field_ $local_vg snap_count $num_snaps
+}
+
 dmsetup_has_dm_devdir_support_()
 {
   # Detect support for the envvar.  If it's supported, the
@@ -89,6 +137,6 @@ init_root_dir_()
 EOF
 }
 
-if test $(this_test_) = t6000; then
+if test $(this_test_) != 000-basic; then
   init_root_dir_
 fi
