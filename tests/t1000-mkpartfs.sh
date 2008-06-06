@@ -17,7 +17,8 @@
 
 test_description='Create some file systems using mkpartfs.'
 
-. ./init.sh
+: ${srcdir=.}
+. $srcdir/test-lib.sh
 
 N=1M
 dev=loop-file

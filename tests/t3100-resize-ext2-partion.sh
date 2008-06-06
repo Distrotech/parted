@@ -18,7 +18,8 @@
 
 test_description='Exercise an EXT2-resize bug in at least 1.8.7'
 
-. ./init.sh
+: ${srcdir=.}
+. $srcdir/test-lib.sh
 
 dev=loop-file
 # The "device size", $N, must be larger than $NEW_SIZE.

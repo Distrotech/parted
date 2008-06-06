@@ -20,7 +20,8 @@ test_description='determine type of devicemaps.'
 privileges_required_=1
 device_mapper_required_=1
 
-. ./init.sh
+: ${srcdir=.}
+. $srcdir/test-lib.sh
 
 # Device maps names - should be random to not conflict with existing ones on
 # the system

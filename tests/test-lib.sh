@@ -8,6 +8,8 @@ LC_ALL=C
 TZ=UTC
 export LANG LC_ALL TZ
 
+. ./init.sh || { echo >&2 you must run make first; exit 1; }
+
 # Protect ourselves from common misconfiguration to export
 # CDPATH into the environment
 unset CDPATH
@@ -258,10 +260,6 @@ if test $skip_ = 0 && test "$erasable_device_required_" != ''; then
   fi
 fi
 
-if test $skip_ = 0 && test "$device_mapper_required_" != ''; then
-  . $abs_top_srcdir/tests/dm-utils.sh || exit 1
-fi
-
 # This is a stub function that is run upon trap (upon regular exit and
 # interrupt).  Override it with a per-test function, e.g., to unmount
 # a partition, or to undo any other global state changes.
@@ -286,16 +284,20 @@ do
 	esac
 done
 
-t0=$($abs_top_srcdir/build-aux/mktempd $test_dir_ parted-$this_test.XXXXXXXXXX) \
+test_dir_rand_=$($abs_top_srcdir/build-aux/mktempd $test_dir_ parted-$this_test.XXXXXXXXXX) \
     || error "failed to create temporary directory in $test_dir_"
+
+if test $skip_ = 0 && test "$device_mapper_required_" != ''; then
+  . $abs_top_srcdir/tests/dm-utils.sh || exit 1
+fi
 
 # Run each test from within a temporary sub-directory named after the
 # test itself, and arrange to remove it upon exception or normal exit.
-trap 'st=$?; cleanup_; d='"$t0"';
+trap 'st=$?; cleanup_; d='"$test_dir_rand_"';
     cd '"$test_dir_"' && chmod -R u+rwx "$d" && rm -rf "$d" && exit $st' 0
 trap '(exit $?); exit $?' 1 2 13 15
 
-cd $t0 || error "failed to cd to $t0"
+cd "$test_dir_rand_" || error "failed to cd to $test_dir_rand_"
 
 if ( diff --version < /dev/null 2>&1 | grep GNU ) 2>&1 > /dev/null; then
   compare='diff -u'

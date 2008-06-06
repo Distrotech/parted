@@ -17,7 +17,8 @@
 
 test_description='Create very small ext2 file systems.'
 
-. ./init.sh
+: ${srcdir=.}
+. $srcdir/test-lib.sh
 
 dev=loop-file
 test_expect_success \

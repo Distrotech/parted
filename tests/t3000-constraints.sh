@@ -17,7 +17,8 @@
 
 test_description="exercise Parted's constraint-management code"
 
-. ./init.sh
+: ${srcdir=.}
+. $srcdir/test-lib.sh
 
 dev=loop-file
 N=2

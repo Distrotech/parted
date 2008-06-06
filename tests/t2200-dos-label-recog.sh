@@ -17,7 +17,8 @@
 
 test_description='improved MSDOS partition-table recognition'
 
-. ./init.sh
+: ${srcdir=.}
+. $srcdir/test-lib.sh
 
 ######################################################################
 # With vestiges of a preceding FAT file system boot sector in the MBR,

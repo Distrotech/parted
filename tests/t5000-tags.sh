@@ -17,7 +17,8 @@
 
 test_description="test bios_grub flag in gpt labels"
 
-. ./init.sh
+: ${srcdir=.}
+. $srcdir/test-lib.sh
 
 dev=loop-file
 

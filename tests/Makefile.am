@@ -23,8 +23,10 @@ init.sh: Makefile.in
 	rm -f $@-t $@
 	echo 'PARTED_USABLE_TEST_DIR=$(PARTED_USABLE_TEST_DIR)' > $@-t
 	echo 'abs_top_srcdir=$(abs_top_srcdir)' >> $@-t
-	echo '. $(abs_top_srcdir)/tests/test-lib.sh' >> $@-t
 	echo 'PATH=$(abs_top_builddir)/parted$(PATH_SEPARATOR)$$PATH' >> $@-t
 	echo 'export PATH' >> $@-t
 	chmod a-w $@-t
 	mv $@-t $@
+
+TESTS_ENVIRONMENT =	\
+  srcdir='$(srcdir)'

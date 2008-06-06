@@ -20,7 +20,8 @@ test_description='partitioning (parted -s DEV mklabel) a busy disk must fail.'
 privileges_required_=1
 erasable_device_required_=1
 
-. ./init.sh
+: ${srcdir=.}
+. $srcdir/test-lib.sh
 dev=$DEVICE_TO_ERASE
 
 test_expect_success \

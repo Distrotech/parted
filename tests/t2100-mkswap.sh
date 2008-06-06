@@ -17,7 +17,8 @@
 
 test_description='create linux-swap partitions'
 
-. ./init.sh
+: ${srcdir=.}
+. $srcdir/test-lib.sh
 
 ######################################################################
 # When creating a partition of type linux-swap(new) in a DOS partition

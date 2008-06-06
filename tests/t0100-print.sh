@@ -17,7 +17,8 @@
 
 test_description="the most basic 'print' test"
 
-. ./init.sh
+: ${srcdir=.}
+. $srcdir/test-lib.sh
 
 dev=loop-file
 

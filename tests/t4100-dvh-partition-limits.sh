@@ -20,7 +20,8 @@ test_description='enforce limits on partition start sector and length'
 # Need root privileges to use mount.
 privileges_required_=1
 
-. ./init.sh
+: ${srcdir=.}
+. $srcdir/test-lib.sh
 
 ####################################################
 # Create and mount a file system capable of dealing with >=2TB files.

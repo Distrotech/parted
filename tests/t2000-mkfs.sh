@@ -17,7 +17,8 @@
 
 test_description='Create some file systems using mkfs.'
 
-. ./init.sh
+: ${srcdir=.}
+. $srcdir/test-lib.sh
 
 N=40M
 dev=loop-file
