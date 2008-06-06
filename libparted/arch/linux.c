@@ -304,6 +304,7 @@ _is_sx8_major (int major)
 static int
 _dm_maptype (PedDevice *dev)
 {
+        LinuxSpecific*  arch_specific = LINUX_SPECIFIC (dev);
         struct dm_task *dmt;
         void *next;
         uint64_t start, length;
@@ -329,8 +330,8 @@ _dm_maptype (PedDevice *dev)
         next = dm_get_next_target(dmt, NULL, &start, &length,
                                   &target_type, &params);
 
-        dev->dmtype = strdup(target_type);
-        if (dev->dmtype == NULL)
+        arch_specific->dmtype = strdup(target_type);
+        if (arch_specific->dmtype == NULL)
                 goto bad;
         r = 0;
 bad:
@@ -1150,6 +1151,7 @@ static PedDevice*
 linux_new (const char* path)
 {
         PedDevice*      dev;
+        LinuxSpecific*  arch_specific;
 
         PED_ASSERT (path != NULL, return NULL);
 
@@ -1157,7 +1159,6 @@ linux_new (const char* path)
         if (!dev)
                 goto error;
 
-        dev->dmtype = NULL;
         dev->path = strdup (path);
         if (!dev->path)
                 goto error_free_dev;
@@ -1166,6 +1167,8 @@ linux_new (const char* path)
                 = (LinuxSpecific*) ped_malloc (sizeof (LinuxSpecific));
         if (!dev->arch_specific)
                 goto error_free_path;
+        arch_specific = LINUX_SPECIFIC (dev);
+        arch_specific->dmtype = NULL;
 
         dev->open_count = 0;
         dev->read_only = 0;
@@ -1235,9 +1238,9 @@ linux_new (const char* path)
         case PED_DEVICE_DM:
                 {
                   char* type;
-                  if (dev->dmtype == NULL
+                  if (arch_specific->dmtype == NULL
                       || asprintf(&type, _("Linux device-mapper (%s)"),
-                                  dev->dmtype) == -1)
+                                  arch_specific->dmtype) == -1)
                         goto error_free_arch_specific;
                   bool ok = init_generic (dev, type);
                   free (type);
@@ -1277,10 +1280,10 @@ error:
 static void
 linux_destroy (PedDevice* dev)
 {
+        free (((LinuxSpecific*)dev->arch_specific)->dmtype);
         free (dev->arch_specific);
         free (dev->path);
         free (dev->model);
-        free (dev->dmtype);
         free (dev);
 }
 
