@@ -330,7 +330,7 @@ _dm_maptype (PedDevice *dev)
                                   &target_type, &params);
 
         dev->dmtype = strdup(target_type);
-        if(dev->dmtype == NULL)
+        if (dev->dmtype == NULL)
                 goto bad;
         r = 0;
 bad:
