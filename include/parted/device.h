@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1998 - 2001, 2005, 2007 Free Software Foundation, Inc.
+    Copyright (C) 1998 - 2001, 2005, 2007-2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -72,9 +72,7 @@ struct _PedDevice {
 
         PedDeviceType   type;           /**< SCSI, IDE, etc.
                                              \deprecated \sa PedDeviceType */
-#ifdef ENABLE_DEVICE_MAPPER
         char*		dmtype;         /**< device map target type */
-#endif
         long long       sector_size;            /**< logical sector size */
         long long       phys_sector_size;       /**< physical sector size */
         PedSector       length;                 /**< device length (LBA) */

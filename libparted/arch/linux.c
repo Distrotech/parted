@@ -1,5 +1,4 @@
-/*
-    libparted - a library for manipulating disk partitions
+/* libparted - a library for manipulating disk partitions
     Copyright (C) 1999 - 2005, 2007, 2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
@@ -31,6 +30,7 @@
 #include <stdio.h>
 #include <syscall.h>
 #include <unistd.h>
+#include <stdbool.h>
 #include <dirent.h>
 #include <sys/ioctl.h>
 #include <sys/stat.h>
@@ -1150,7 +1150,6 @@ static PedDevice*
 linux_new (const char* path)
 {
         PedDevice*      dev;
-        char* type;
 
         PED_ASSERT (path != NULL, return NULL);
 
@@ -1233,14 +1232,19 @@ linux_new (const char* path)
                         goto error_free_arch_specific;
                 break;
 
-#ifdef ENABLE_DEVICE_MAPPER
         case PED_DEVICE_DM:
-                if (asprintf(&type, _("Linux device-mapper (%s)"), dev->dmtype) == -1)
+                {
+                  char* type;
+                  if (dev->dmtype == NULL
+                      || asprintf(&type, _("Linux device-mapper (%s)"),
+                                  dev->dmtype) == -1)
                         goto error_free_arch_specific;
-                if (!init_generic (dev, type))
-                        goto error_free_arch_specific;
-                break;
-#endif
+                  bool ok = init_generic (dev, type);
+                  free (type);
+                  if (!ok)
+                    goto error_free_arch_specific;
+                  break;
+                }
 
         case PED_DEVICE_XVD:
                 if (!init_generic (dev, _("Xen Virtual Block Device")))
@@ -1276,9 +1280,7 @@ linux_destroy (PedDevice* dev)
         free (dev->arch_specific);
         free (dev->path);
         free (dev->model);
-#ifdef ENABLE_DEVICE_MAPPER
         free (dev->dmtype);
-#endif
         free (dev);
 }
 
@@ -2024,9 +2026,7 @@ _device_get_part_path (PedDevice* dev, int num)
         } else if (dev->type == PED_DEVICE_DAC960
                         || dev->type == PED_DEVICE_CPQARRAY
                         || dev->type == PED_DEVICE_ATARAID
-#ifdef ENABLE_DEVICE_MAPPER
                         || dev->type == PED_DEVICE_DM
-#endif
                         || isdigit (dev->path[path_len - 1]))
                 snprintf (result, result_len, "%sp%d", dev->path, num);
         else
