@@ -1,18 +1,24 @@
 # This file is part of GNU Parted
-# Copyright (C) 1999, 2000, 2001, 2007 Free Software Foundation, Inc.
+# Copyright (C) 1999-2001, 2007-2008 Free Software Foundation, Inc.
 #
 # This file may be modified and/or distributed without restriction.
 
 TESTS = t1000-label.sh t2000-disk.sh
 EXTRA_DIST = $(TESTS)
-bin_PROGRAMS     = label disk
-label_CFLAGS    = $(CHECK_CFLAGS) -I$(top_srcdir)/include
-label_LDADD     = $(CHECK_LIBS) $(top_builddir)/libparted/libparted.la
-label_SOURCES   = common.h common.c label.c
+bin_PROGRAMS = label disk
 
-disk_CFLAGS    = $(CHECK_CFLAGS) -I$(top_srcdir)/include
-disk_LDADD     = $(CHECK_LIBS) $(top_builddir)/libparted/libparted.la
-disk_SOURCES   = common.h common.c disk.c
+LDADD = \
+  $(top_builddir)/libparted/libparted.la \
+  $(top_builddir)/lib/libparted.la \
+  $(CHECK_LIBS)
+
+AM_CPPFLAGS = \
+  $(CHECK_CFLAGS) \
+  -I$(top_srcdir)/lib \
+  -I$(top_srcdir)/include
+
+label_SOURCES = common.h common.c label.c
+disk_SOURCES  = common.h common.c disk.c
 
 MAINTAINERCLEANFILES = Makefile.in
 
@@ -26,3 +32,6 @@ init.sh: Makefile.in
 	echo 'PATH=$(abs_builddir)$(PATH_SEPARATOR)$$PATH; export PATH' >> $@-t
 	chmod a-w $@-t
 	mv $@-t $@
+
+TESTS_ENVIRONMENT = \
+  top_srcdir='$(top_srcdir)'

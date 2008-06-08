@@ -148,7 +148,7 @@ START_TEST (test_clone_label)
 END_TEST
 
 int
-main (void)
+main (int argc, char **argv)
 {
         set_program_name (argv[0]);
         int number_failed;
