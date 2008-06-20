@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (C) 2007 Free Software Foundation, Inc.
+# Copyright (C) 2007-2008 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,8 +30,8 @@ test_expect_success \
      { echo y; echo c; } > in &&
      { emit_superuser_warning
        echo "Warning: You requested a partition from 1000kB to 2000kB."
-       echo "The closest location we can manage is 15.9kB to 15.9kB." \
-	    " Is this still acceptable to you?"
+       echo "The closest location we can manage is 15.9kB to 15.9kB."
+       echo "Is this still acceptable to you?"
        echo "Yes/No? y"
        echo "Error: File system too small for ext2."; } > exp &&
      parted -s $dev mklabel msdos &&
