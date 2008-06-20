@@ -30,74 +30,42 @@ EOF
   sed s/Error/Warning/ errS
   printf 'Is this still acceptable to you?\nYes/No?'; } >> errI || fail=1
 
-# Test for mkpart in scripting mode
-test_expect_success \
-    'Create the test file' \
-    'dd if=/dev/zero of=testfile bs=512 count=100 2> /dev/null'
+for mkpart in mkpart mkpartfs; do
 
-test_expect_failure \
-    'Test the scripting mode of mkpart' \
-    'parted -s testfile "mklabel gpt mkpart primary ext3 1s -1s" > outS'
+  # Test for mkpart/mkpartfs in scripting mode
+  test_expect_success \
+      'Create the test file' \
+      'dd if=/dev/zero of=testfile bs=512 count=100 2> /dev/null'
 
-test_expect_success \
-    'Compare the real error and the expected one' \
-    '$compare outS errS'
+  test_expect_failure \
+      "Test the scripting mode of $mkpart" \
+      'parted -s testfile -- mklabel gpt '$mkpart' primary ext3 1s -1s > out'
 
-# Test for mkpart in interactive mode.
-test_expect_success \
-    'Create the test file' \
-    '
-    rm testfile ;
-    dd if=/dev/zero of=testfile bs=512 count=100 2> /dev/null
-    '
-test_expect_failure \
-    'Test the interactive mode of mkpart' \
-    'echo n | \
-    parted ---pretend-input-tty testfile \
-    "mklabel gpt mkpart primary ext3 1s -1s" > out
-    '
-# We have to format the output before comparing.
-test_expect_success \
-    'normalize the actual output' \
-    'sed "s,   *,,;s, $,," out > o2 && mv -f o2 out'
+  test_expect_success \
+      'Compare the real error and the expected one' \
+      '$compare out errS'
 
-test_expect_success \
-    'Compare the real error and the expected one' \
-    '$compare out errI'
+  # Test mkpart/mkpartfsin interactive mode.
+  test_expect_success \
+      'Create the test file' \
+      '
+      rm testfile ;
+      dd if=/dev/zero of=testfile bs=512 count=100 2> /dev/null
+      '
+  test_expect_failure \
+      "Test the interactive mode of $mkpart" \
+      'echo n | \
+      parted ---pretend-input-tty testfile \
+      "mklabel gpt '$mkpart' primary ext3 1s -1s" > out
+      '
+  # We have to format the output before comparing.
+  test_expect_success \
+      'normalize the actual output' \
+      'sed "s,   *,,;s, $,," out > o2 && mv -f o2 out'
 
-# Test for mkpartfs in scripting mode
-test_expect_success \
-    'Create the test file' \
-    'dd if=/dev/zero of=testfile bs=512 count=100 2> /dev/null'
+  test_expect_success \
+      'Compare the real error and the expected one' \
+      '$compare out errI'
 
-test_expect_failure \
-    'Test the scripting mode of mkpartfs' \
-    'parted -s testfile "mklabel gpt mkpartfs primary ext3 1s -1s" > outS'
-
-test_expect_success \
-    'Compare the real error and the expected one' \
-    '$compare outS errS'
-
-# Test for mkpartfs in interactive mode.
-test_expect_success \
-    'Create the test file' \
-    '
-    rm testfile ;
-    dd if=/dev/zero of=testfile bs=512 count=100 2> /dev/null
-    '
-test_expect_failure \
-    'Test the interactive mode of mkpartfs' \
-    'echo n | \
-    parted ---pretend-input-tty testfile \
-    "mklabel gpt mkpartfs primary ext3 1s -1s" > out
-    '
-# We have to format the output before comparing.
-test_expect_success \
-    'normalize the actual output' \
-    'sed "s,   *,,;s, $,," out > o2 && mv -f o2 out'
-
-test_expect_success \
-    'Compare the real error and the expected one' \
-    '$compare out errI'
-
+done
 test_done
