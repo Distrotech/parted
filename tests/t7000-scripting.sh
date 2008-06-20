@@ -21,17 +21,14 @@ test_description='Make sure the scripting option works (-s) properly.'
 . $srcdir/test-lib.sh
 
 # The failure messages.
-cat << EOF >> errS || fail=1
+cat << EOF > errS || fail=1
 Error: You requested a partition from 512B to 50.7kB.
 The closest location we can manage is 17.4kB to 33.8kB.
 EOF
 
-cat << EOF >> errI || fail=1
-Warning: You requested a partition from 512B to 50.7kB.
-The closest location we can manage is 17.4kB to 33.8kB.
-Is this still acceptable to you?
-EOF
-echo -n "Yes/No? " >> errI
+{ emit_superuser_warning
+  sed s/Error/Warning/ errS
+  printf 'Is this still acceptable to you?\nYes/No? '; } >> errI || fail=1
 
 # Test for mkpart in scripting mode
 test_expect_success \
