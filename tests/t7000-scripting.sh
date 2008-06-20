@@ -28,7 +28,7 @@ EOF
 
 { emit_superuser_warning
   sed s/Error/Warning/ errS
-  printf 'Is this still acceptable to you?\nYes/No? '; } >> errI || fail=1
+  printf 'Is this still acceptable to you?\nYes/No?'; } >> errI || fail=1
 
 # Test for mkpart in scripting mode
 test_expect_success \
@@ -54,16 +54,16 @@ test_expect_failure \
     'Test the interactive mode of mkpart' \
     'echo n | \
     parted ---pretend-input-tty testfile \
-    "mklabel gpt mkpart primary ext3 1s -1s" > outI
+    "mklabel gpt mkpart primary ext3 1s -1s" > out
     '
 # We have to format the output before comparing.
 test_expect_success \
-    'normilize the output' \
-    'sed -e "s,^.*Warning,Warning," -e "s,^.*Yes/No,Yes/No," -i outI'
+    'normalize the actual output' \
+    'sed "s,   *,,;s, $,," out > o2 && mv -f o2 out'
 
 test_expect_success \
     'Compare the real error and the expected one' \
-    '$compare outI errI'
+    '$compare out errI'
 
 # Test for mkpartfs in scripting mode
 test_expect_success \
@@ -89,15 +89,15 @@ test_expect_failure \
     'Test the interactive mode of mkpartfs' \
     'echo n | \
     parted ---pretend-input-tty testfile \
-    "mklabel gpt mkpartfs primary ext3 1s -1s" > outI
+    "mklabel gpt mkpartfs primary ext3 1s -1s" > out
     '
 # We have to format the output before comparing.
 test_expect_success \
-    'normilize the output' \
-    'sed -e "s,^.*Warning,Warning," -e "s,^.*Yes/No,Yes/No," -i outI'
+    'normalize the actual output' \
+    'sed "s,   *,,;s, $,," out > o2 && mv -f o2 out'
 
 test_expect_success \
     'Compare the real error and the expected one' \
-    '$compare outI errI'
+    '$compare out errI'
 
 test_done
