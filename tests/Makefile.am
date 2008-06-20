@@ -12,7 +12,8 @@ TESTS = \
   t4100-msdos-partition-limits.sh \
   t4100-dvh-partition-limits.sh \
   t5000-tags.sh \
-  t6000-dm.sh
+  t6000-dm.sh \
+  t7000-scripting.sh
 
 EXTRA_DIST = \
   $(TESTS) test-lib.sh lvm-utils.sh

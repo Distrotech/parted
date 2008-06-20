@@ -776,14 +776,24 @@ do_mkpart (PedDevice** dev)
                         start_sol = ped_unit_format (*dev, part->geom.start);
                         end_sol   = ped_unit_format (*dev, part->geom.end);
 
+                        /* In script mode failure to use specified values is fatal.
+                         * However, in interactive mode, it merely elicits a warning
+                         * and a prompt for whether to proceed.  The same appies for
+                         * do_mkpartfs function.
+                         */
                         switch (ped_exception_throw (
-                                PED_EXCEPTION_WARNING,
-                                PED_EXCEPTION_YES_NO,
+                                (opt_script_mode
+                                 ? PED_EXCEPTION_ERROR
+                                 : PED_EXCEPTION_WARNING),
+                                (opt_script_mode
+                                 ? PED_EXCEPTION_CANCEL
+                                 : PED_EXCEPTION_YES_NO),
                                 _("You requested a partition from %s to %s.\n"
                                   "The closest location we can manage is "
-                                  "%s to %s.  "
-                                  "Is this still acceptable to you?"),
-                                start_usr, end_usr, start_sol, end_sol))
+                                  "%s to %s.%s"),
+                                start_usr, end_usr, start_sol, end_sol,
+                                (opt_script_mode ? ""
+                                 : _("\nIs this still acceptable to you?"))))
                         {
                                 case PED_EXCEPTION_YES:
                                         /* all is well in this state */
@@ -937,13 +947,19 @@ do_mkpartfs (PedDevice** dev)
                         end_sol   = ped_unit_format (*dev, part->geom.end);
 
                         switch (ped_exception_throw (
-                                PED_EXCEPTION_WARNING,
-                                PED_EXCEPTION_YES_NO,
+                                (opt_script_mode
+                                 ? PED_EXCEPTION_ERROR
+                                 : PED_EXCEPTION_WARNING),
+                                (opt_script_mode
+                                 ? PED_EXCEPTION_CANCEL
+                                 : PED_EXCEPTION_YES_NO),
                                 _("You requested a partition from %s to %s.\n"
                                   "The closest location we can manage is "
-                                  "%s to %s.  "
-                                  "Is this still acceptable to you?"),
-                                start_usr, end_usr, start_sol, end_sol)) {
+                                  "%s to %s.%s"),
+                                start_usr, end_usr, start_sol, end_sol,
+                                (opt_script_mode ? ""
+                                 : _("\nIs this still acceptable to you?"))))
+                        {
                                 case PED_EXCEPTION_YES:
                                         /* all is well in this state */
                                         break;
