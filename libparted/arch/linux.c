@@ -2144,7 +2144,7 @@ _blkpg_part_command (PedDevice* dev, struct blkpg_partition* part, int op)
 }
 
 static int
-_blkpg_add_partition (PedDisk* disk, PedPartition* part)
+_blkpg_add_partition (PedDisk* disk, const PedPartition *part)
 {
         struct blkpg_partition  linux_part;
         const char*             vol_name;
@@ -2223,7 +2223,7 @@ _disk_sync_part_table (PedDisk* disk)
         }
 
         for (i = 1; i <= last; i++) {
-                PedPartition*           part;
+                const PedPartition *part;
 
                 part = ped_disk_get_partition (disk, i);
                 if (part) {
