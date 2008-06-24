@@ -220,7 +220,6 @@ with:
 Or install gettext.  GNU gettext is available from
 	http://ftp.gnu.org/gnu/gettext
 )
-	exit
 fi
 
 dnl Check for libdl, if we are doing dynamic loading
@@ -233,7 +232,6 @@ if test "$enable_dynamic_loading" = yes; then
 		AC_MSG_ERROR(
 			[-ldl not found!  Try using --disable-dynamic-loading]
 		)
-		exit
 	)
 fi
 AC_SUBST(DL_LIBS)
@@ -251,7 +249,6 @@ package as well (which may be called e2fsprogs-devel or something similar).
 If you compile e2fsprogs yourself then you need to do 'make install' and
 'make install-libs'.
 	)
-	exit
 )
 AC_SUBST(UUID_LIBS)
 
@@ -306,7 +303,6 @@ Note: if you are using precompiled packages you will also need the development
 Note: (n)curses also seems to work as a substitute for termcap.  This was
   not found either - but you could try installing that as well.
 )
-	exit
 	)
 	LIBS="$OLD_LIBS"
 fi
@@ -329,7 +325,7 @@ GNU Readline could not be found which is required for the
 Note: if you are using precompiled packages you will also need the development
 package as well (which may be called readline-devel or something similar).
 )
-		exit,
+		,
 		$PARTED_LIBS
 	)
 	LIBS="$OLD_LIBS $PARTED_LIBS"
@@ -382,7 +378,6 @@ dnl libshouldbeinlibc
 GNU Parted requires libshouldbeinlibc when running on
 GNU/Hurd systems.  It is a standard part of a GNU/Hurd system.
 		)
-		exit
 	)
 
 dnl libstore may depend on libparted being present.
@@ -399,7 +394,7 @@ dnl libstore
 GNU Parted requires libstore when running on GNU/Hurd
 systems.  It is a standard part of a GNU/Hurd system.
 		)
-		exit,
+		,
 		$OS_LIBS $UUID_LIBS $DM_LIBS $LIBS
 	)
 	LIBS="$OLD_LIBS"
@@ -431,7 +426,6 @@ found in a corresponding development package (usually called e2fsprogs-devel).
 If you can't find one try:
         http://web.mit.edu/tytso/www/linux/e2fsprogs.html
 )
-	exit
 )
 
 AC_CHECK_HEADERS(getopt.h)
@@ -452,7 +446,6 @@ find one try:
         ftp.gnu.org/gnu/readline
 Alternatively you can disable readline support with --without-readline
 )
-	exit
 	)
 fi
 
@@ -467,7 +460,6 @@ version of GNU libc and its headers - which can be obtained from:
 	ftp.gnu.org/gnu/glibc
 Or disable native language support with the --disable-nls option
 )
-	exit
 	)
 fi
 
