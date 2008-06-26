@@ -291,7 +291,7 @@ fat_table_set (FatTable* ft, FatCluster cluster, FatCluster value)
 	return 1;
 }
 
-FatCluster 
+FatCluster
 fat_table_get (const FatTable* ft, FatCluster cluster)
 {
 	if (cluster >= ft->cluster_count + 2) {
@@ -420,7 +420,7 @@ fat_table_set_eof (FatTable* ft, FatCluster cluster)
 
 		case FAT_TYPE_FAT16:
 		return fat_table_set (ft, cluster, 0xfff8);
-        
+
 		case FAT_TYPE_FAT32:
 		return fat_table_set (ft, cluster, 0x0fffffff);
 	}
@@ -443,7 +443,7 @@ fat_table_set_bad (FatTable* ft, FatCluster cluster)
 
 		case FAT_TYPE_FAT16:
 		return fat_table_set (ft, cluster, 0xfff7);
-        
+
 		case FAT_TYPE_FAT32:
 		return fat_table_set (ft, cluster, 0x0ffffff7);
 	}
@@ -478,4 +478,3 @@ fat_table_entry_size (FatType fat_type)
 
 	return 0;
 }
-
