@@ -1,6 +1,6 @@
 /*
     libparted
-    Copyright (C) 1998, 1999, 2000, 2007 Free Software Foundation, Inc.
+    Copyright (C) 1998-2000, 2007-2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -58,19 +58,19 @@ fat_table_destroy (FatTable* ft)
 FatTable*
 fat_table_duplicate (const FatTable* ft)
 {
-	FatTable*	dup;
+	FatTable*	dup_ft;
 
-	dup = fat_table_new (ft->fat_type, ft->size);
-	if (!dup) return NULL;
+	dup_ft = fat_table_new (ft->fat_type, ft->size);
+	if (!dup_ft) return NULL;
 
-	dup->cluster_count	= ft->cluster_count;
-	dup->free_cluster_count	= ft->free_cluster_count;
-	dup->bad_cluster_count	= ft->bad_cluster_count;
-	dup->last_alloc		= ft->last_alloc;
+	dup_ft->cluster_count	= ft->cluster_count;
+	dup_ft->free_cluster_count	= ft->free_cluster_count;
+	dup_ft->bad_cluster_count	= ft->bad_cluster_count;
+	dup_ft->last_alloc		= ft->last_alloc;
 
-	memcpy (dup->table, ft->table, ft->raw_size);
+	memcpy (dup_ft->table, ft->table, ft->raw_size);
 
-	return dup;
+	return dup_ft;
 }
 
 void
