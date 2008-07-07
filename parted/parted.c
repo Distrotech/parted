@@ -80,7 +80,7 @@ typedef struct {
         time_t  predicted_time_left;
 } TimerContext;
 
-static const struct option const options[] = {
+static struct option const options[] = {
         /* name, has-arg, string-return-val, char-return-val */
         {"help",        0, NULL, 'h'},
         {"list",        0, NULL, 'l'},
