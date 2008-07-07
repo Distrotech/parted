@@ -1,6 +1,6 @@
 /*
     libparted
-    Copyright (C) 1999, 2000, 2007 Free Software Foundation, Inc.
+    Copyright (C) 1999, 2000, 2007, 2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ enum _FatClusterFlag {
 struct __attribute__ ((packed)) _FatClusterInfo {
 	unsigned int    units_used:6;   /* 1 unit = cluster_size / 64 */
 	FatClusterFlag  flag:2;
-} fat16;
+};
 
 extern int fat_collect_cluster_info (PedFileSystem *fs);
 extern FatClusterFlag fat_get_cluster_flag (PedFileSystem* fs,
