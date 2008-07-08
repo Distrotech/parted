@@ -2212,7 +2212,7 @@ static int
 _disk_sync_part_table (PedDisk* disk)
 {
         int     i;
-        int     last = PED_MAX (ped_disk_get_last_partition_num (disk), 16);
+        int     last = PED_MIN (ped_disk_get_last_partition_num (disk), 16);
         int*    rets = ped_malloc(sizeof(int) * last);
         int*    errnums = ped_malloc(sizeof(int) * last);
         int     ret = 1;
@@ -2433,7 +2433,7 @@ static int
 _dm_reread_part_table (PedDisk* disk)
 {
         int     rc = 1;
-        int     last = PED_MAX (ped_disk_get_last_partition_num (disk), 16);
+        int     last = PED_MIN (ped_disk_get_last_partition_num (disk), 16);
         int     i;
 
         sync();
