@@ -11,6 +11,7 @@ TESTS = \
   t3100-resize-ext2-partion.sh \
   t4100-msdos-partition-limits.sh \
   t4100-dvh-partition-limits.sh \
+  t4200-partprobe.sh \
   t5000-tags.sh \
   t6000-dm.sh \
   t7000-scripting.sh
@@ -18,13 +19,17 @@ TESTS = \
 EXTRA_DIST = \
   $(TESTS) test-lib.sh lvm-utils.sh
 
+parted_dir = $(abs_top_builddir)/parted
+pp_dir = $(abs_top_builddir)/partprobe
+sep = $(PATH_SEPARATOR)
+
 CLEANFILES = init.sh
 all: init.sh
 init.sh: Makefile.in
 	rm -f $@-t $@
 	echo 'PARTED_USABLE_TEST_DIR=$(PARTED_USABLE_TEST_DIR)' > $@-t
 	echo 'abs_top_srcdir=$(abs_top_srcdir)' >> $@-t
-	echo 'PATH=$(abs_top_builddir)/parted$(PATH_SEPARATOR)$$PATH' >> $@-t
+	echo 'PATH=$(parted_dir)$(sep)$(pp_dir)$(sep)$$PATH' >> $@-t
 	echo 'export PATH' >> $@-t
 	chmod a-w $@-t
 	mv $@-t $@

@@ -203,6 +203,16 @@ if test "$privileges_required_" != ''; then
     fi
 fi
 
+# If $dvhtool_required_ is nonempty, and you lack the dvhtool program,
+# then skip this test.
+if test "$dvhtool_required_" != ''; then
+    (dvhtool --help) > /dev/null 2>&1 || {
+	SKIP_TESTS="$SKIP_TESTS $this_test"
+	say "you lack dvhtool, which is required for test $this_test"
+	skip_=1
+    }
+fi
+
 emit_superuser_warning()
 {
   uid=`id -u` || uid=1
