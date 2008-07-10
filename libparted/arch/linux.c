@@ -1042,6 +1042,12 @@ init_file (PedDevice* dev)
         dev->bios_geom.sectors = 32;
         dev->hw_geom = dev->bios_geom;
         dev->sector_size = PED_SECTOR_SIZE_DEFAULT;
+        char *p = getenv ("PARTED_SECTOR_SIZE");
+        if (p) {
+                int s = atoi (p);
+                if (0 < s && s % 512 == 0)
+                        dev->sector_size = s;
+        }
         dev->phys_sector_size = PED_SECTOR_SIZE_DEFAULT;
         dev->model = strdup ("");
 
