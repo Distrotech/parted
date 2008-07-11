@@ -519,6 +519,7 @@ gpt_clobber(PedDevice * dev)
                 goto error_free;
 
         gpt = pth_new_from_raw (dev, pth_raw);
+        free (pth_raw);
 
 	if (!ped_device_write(dev, &pmbr, GPT_PMBR_LBA, GPT_PMBR_SECTORS))
                 goto error_free_with_gpt;
