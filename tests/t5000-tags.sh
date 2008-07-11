@@ -28,15 +28,35 @@ test_expect_success \
 
 test_expect_success \
     'create gpt label' \
-    'parted -s $dev mklabel gpt >out 2>&1'
+    'parted -s $dev mklabel gpt > empty 2>&1'
+
+test_expect_success 'ensure there was no output' \
+    'compare /dev/null empty'
+
+test_expect_success \
+    'print the table (before adding a partition)' \
+    '
+     parted -m -s $dev unit s print > t 2>&1 &&
+     sed 's,.*/$dev:,$dev:,' t > out
+    '
+
+test_expect_success \
+    'check for expected output' \
+    '
+     printf "BYT;\n$dev:128s:file:$sector_size_:512:gpt:;\n" > exp &&
+     compare exp out
+    '
 
 test_expect_success \
     'add a partition' \
-    'parted -s $dev mkpart primary 0 1 >>out 2>&1'
+    'parted -s $dev mkpart primary 0 1 >out 2>&1'
 
 test_expect_success \
     'print the table (before manual modification)' \
-    'parted -s $dev print >>out 2>&1'
+    '
+     parted -m -s $dev unit s print > t 2>&1 &&
+     sed 's,.*/$dev:,$dev:,' t >> out
+    '
 
 # Using bios_boot_magic='\x48\x61' looks nicer, but isn't portable.
 # dash's builtin printf doesn't recognize such \xHH hexadecimal escapes.
@@ -46,37 +66,27 @@ printf "$bios_boot_magic" | dd of=$dev bs=1024 seek=1 conv=notrunc
 
 test_expect_success \
     'print the table (after manual modification)' \
-    'parted -s $dev print >>out 2>&1'
+    '
+     parted -m -s $dev unit s print > t 2>&1
+     sed 's,.*/$dev:,$dev:,' t >> out
+    '
 
-pwd=`pwd`
-
-fail=0
+gen_exp()
 {
   cat <<EOF
-Model:  (file)
-Disk .../$dev: 65.5kB
-Sector size (logical/physical): 512B/512B
-Partition Table: gpt
-
-Number  Start   End     Size    File system  Name     Flags
- 1      17.4kB  48.6kB  31.2kB               primary
-
-Model:  (file)
-Disk .../$dev: 65.5kB
-Sector size (logical/physical): 512B/512B
-Partition Table: gpt
-
-Number  Start   End     Size    File system  Name     Flags
- 1      17.4kB  48.6kB  31.2kB               primary  bios_grub
-
+BYT;
+$dev:128s:file:$sector_size_:512:gpt:;
+1:34s:94s:61s::primary:;
+BYT;
+$dev:128s:file:$sector_size_:512:gpt:;
+1:34s:94s:61s::primary:bios_grub;
 EOF
-} > exp || fail=1
+}
 
-test_expect_success \
-    'prepare actual and expected output' \
-    'test $fail = 0 &&
-     mv out o2 && sed "s,^Disk .*/$dev:,Disk .../$dev:," o2 > out'
-
-test_expect_success 'check for expected output' 'compare out exp'
+test_expect_success 'check for expected output' \
+    '
+     gen_exp > exp &&
+     compare exp out
+    '
 
 test_done
