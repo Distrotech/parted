@@ -1020,10 +1020,18 @@ init_file (PedDevice* dev)
         if (!ped_device_open (dev))
                 goto error;
 
+        dev->sector_size = PED_SECTOR_SIZE_DEFAULT;
+        char *p = getenv ("PARTED_SECTOR_SIZE");
+        if (p) {
+                int s = atoi (p);
+                if (0 < s && s % 512 == 0)
+                        dev->sector_size = s;
+        }
+
         if (S_ISBLK(dev_stat.st_mode))
                 dev->length = _device_get_length (dev);
         else
-                dev->length = dev_stat.st_size / 512;
+                dev->length = dev_stat.st_size / dev->sector_size;
         if (dev->length <= 0) {
                 ped_exception_throw (
                         PED_EXCEPTION_ERROR,
@@ -1041,13 +1049,6 @@ init_file (PedDevice* dev)
         dev->bios_geom.heads = 4;
         dev->bios_geom.sectors = 32;
         dev->hw_geom = dev->bios_geom;
-        dev->sector_size = PED_SECTOR_SIZE_DEFAULT;
-        char *p = getenv ("PARTED_SECTOR_SIZE");
-        if (p) {
-                int s = atoi (p);
-                if (0 < s && s % 512 == 0)
-                        dev->sector_size = s;
-        }
         dev->phys_sector_size = PED_SECTOR_SIZE_DEFAULT;
         dev->model = strdup ("");
 
