@@ -35,6 +35,7 @@
 #endif /* ENABLE_NLS */
 
 #include "misc.h"
+#include "pt-tools.h"
 
 /* struct's & #define's stolen from libfdisk, which probably came from
  * Linux...
@@ -395,21 +396,9 @@ bsd_write (const PedDisk* disk)
 
 	alpha_bootblock_checksum (bsd_specific->boot_code);
 
-	/* Allocate a big enough buffer for ped_device_write.
-	   Must be sector_size bytes long, and when sector_size > 512,
-	   bsd_specific->boot_code is too short.  */
-	char *s0 = ped_malloc (disk->dev->sector_size);
-	if (s0 == NULL)
-		goto error;
-	/* Copy boot_code into the first part.  */
-	memcpy (s0, bsd_specific->boot_code, sizeof (BSDDiskData));
-	char *p = s0 + sizeof (BSDDiskData);
-	/* Fill the rest with zeros.  */
-	memset (p, 0, disk->dev->sector_size - sizeof (BSDDiskData));
-	int write_ok = ped_device_write (disk->dev, s0, 0, 1);
-	free (s0);
-	if (!write_ok)
-		goto error;
+        if (!ptt_write_sector (disk, bsd_specific->boot_code,
+                               sizeof (BSDDiskData)))
+                goto error;
 	return ped_device_sync (disk->dev);
 
 error:
