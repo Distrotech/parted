@@ -20,8 +20,10 @@
 #include <parted/parted.h>
 #include <parted/debug.h>
 #include <parted/endian.h>
+#include <stdbool.h>
 
 #include "dvh.h"
+#include "pt-tools.h"
 
 #if ENABLE_NLS
 #  include <libintl.h>
@@ -58,28 +60,50 @@ typedef struct _DVHPartData {
 
 static PedDiskType dvh_disk_type;
 
+/* FIXME: factor out this function: copied from aix.c, with changes to
+   the description, and an added sector number argument.
+   Read sector, SECTOR_NUM (which has length DEV->sector_size) into malloc'd
+   storage.  If the read fails, free the memory and return zero without
+   modifying *BUF.  Otherwise, set *BUF to the new buffer and return 1.  */
+static int
+read_sector (const PedDevice *dev, PedSector sector_num, char **buf)
+{
+	char *b = ped_malloc (dev->sector_size);
+	PED_ASSERT (b != NULL, return 0);
+	if (!ped_device_read (dev, b, sector_num, 1)) {
+		free (b);
+		return 0;
+	}
+	*buf = b;
+	return 1;
+}
+
 static int
 dvh_probe (const PedDevice *dev)
 {
-	struct volume_header	vh;
+	struct volume_header *vh;
 
-        if (dev->sector_size != 512)
-                return 0;
-
-	if (!ped_device_read (dev, &vh, 0, 1))
+	char *label;
+	if (!read_sector (dev, 0, &label))
 		return 0;
 
-	return PED_BE32_TO_CPU (vh.vh_magic) == VHMAGIC;
+	vh = (struct volume_header *) label;
+
+        bool found = PED_BE32_TO_CPU (vh->vh_magic) == VHMAGIC;
+	free (label);
+	return found;
 }
 
 #ifndef DISCOVER_ONLY
 static int
 dvh_clobber (PedDevice* dev)
 {
-	char	zeros[512];
-
-	memset (zeros, 0, 512);
-	return ped_device_write (dev, zeros, 0, 1);
+	char *zeros = ped_calloc (dev->sector_size);
+	if (zeros == NULL)
+                return 0;
+	int ok = ped_device_write (dev, zeros, 0, 1);
+	free (zeros);
+	return ok;
 }
 #endif /* !DISCOVER_ONLY */
 
@@ -302,8 +326,11 @@ dvh_read (PedDisk* disk)
 
 	ped_disk_delete_all (disk);
 
-	if (!ped_device_read (disk->dev, &vh, 0, 1))
+	char *s0;
+	if (!read_sector (disk->dev, 0, &s0))
 		return 0;
+	memcpy (&vh, s0, sizeof vh);
+	free (s0);
 
 	if (_checksum ((uint32_t*) &vh, sizeof (struct volume_header))) {
 		if (ped_exception_throw (
@@ -493,8 +520,8 @@ dvh_write (const PedDisk* disk)
 	vh.vh_csum = PED_CPU_TO_BE32 (_checksum ((uint32_t*) &vh,
 			       	      sizeof (struct volume_header)));
 
-	return ped_device_write (disk->dev, &vh, 0, 1)
-	       && ped_device_sync (disk->dev);
+        return (ptt_write_sector (disk, &vh, sizeof vh)
+                && ped_device_sync (disk->dev));
 }
 #endif /* !DISCOVER_ONLY */
 
