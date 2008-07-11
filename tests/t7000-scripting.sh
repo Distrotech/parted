@@ -21,19 +21,15 @@ test_description='Make sure the scripting option works (-s) properly.'
 . $srcdir/test-lib.sh
 
 # The failure messages.
-cat << EOF > err-orig || fail=1
+cat << EOF > errS || fail=1
 Error: You requested a partition from 512B to 50.7kB.
 The closest location we can manage is 17.4kB to 33.8kB.
 EOF
 
-# Replace the specific values with place-holders,
-# so the test does not depend on sector size.
-sed_normalize='s/ [0-9.k]*B to [0-9.k]*B\.$/ X to Y./'
-
-sed "$sed_normalize" err-orig > errS || fail=1
+normalize_part_diag_ errS || fail=1
 
 { emit_superuser_warning
-  sed "s/Error/Warning/;$sed_normalize" errS
+  sed s/Error/Warning/ errS
   printf 'Is this still acceptable to you?\nYes/No?'; } >> errI || fail=1
 
 for mkpart in mkpart mkpartfs; do
@@ -50,7 +46,7 @@ for mkpart in mkpart mkpartfs; do
   test_expect_success \
       'Compare the real error and the expected one' \
       '
-       sed "$sed_normalize" out > k && mv k out &&
+       normalize_part_diag_ out &&
        compare out errS
       '
 
@@ -72,7 +68,7 @@ for mkpart in mkpart mkpartfs; do
       'normalize the actual output' \
       '
        sed "s,   *,,;s, $,," out > o2 && mv -f o2 out &&
-       sed "$sed_normalize" out > k && mv k out
+       normalize_part_diag_ out
       '
 
   test_expect_success \
