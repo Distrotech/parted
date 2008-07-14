@@ -1027,6 +1027,7 @@ init_file (PedDevice* dev)
                 if (0 < s && s % 512 == 0)
                         dev->sector_size = s;
         }
+        dev->phys_sector_size = dev->sector_size;
 
         if (S_ISBLK(dev_stat.st_mode))
                 dev->length = _device_get_length (dev);
@@ -1049,7 +1050,6 @@ init_file (PedDevice* dev)
         dev->bios_geom.heads = 4;
         dev->bios_geom.sectors = 32;
         dev->hw_geom = dev->bios_geom;
-        dev->phys_sector_size = PED_SECTOR_SIZE_DEFAULT;
         dev->model = strdup ("");
 
         return 1;
