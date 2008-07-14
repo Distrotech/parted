@@ -22,9 +22,12 @@ test_description="test bios_grub flag in gpt labels"
 
 dev=loop-file
 
+nb=1024
+n_sectors=$(expr $nb '*' 512 / $sector_size_)
+
 test_expect_success \
     "setup: create zeroed device" \
-    '{ dd if=/dev/zero bs=1024 count=64; } > $dev'
+    'dd if=/dev/zero bs=512 count=$nb of=$dev'
 
 test_expect_success \
     'create gpt label' \
@@ -35,21 +38,20 @@ test_expect_success 'ensure there was no output' \
 
 test_expect_success \
     'print the table (before adding a partition)' \
-    '
-     parted -m -s $dev unit s print > t 2>&1 &&
-     sed 's,.*/$dev:,$dev:,' t > out
-    '
+    'parted -m -s $dev unit s print > t 2>&1 &&
+     sed 's,.*/$dev:,$dev:,' t > out'
 
 test_expect_success \
     'check for expected output' \
-    '
-     printf "BYT;\n$dev:128s:file:$sector_size_:512:gpt:;\n" > exp &&
-     compare exp out
-    '
+    'printf "BYT;\n$dev:${n_sectors}s:file:$sector_size_:$sector_size_:gpt:;\n" > exp &&
+     compare exp out'
 
+part_sectors=128
+start_sector=60
+end_sector=$(expr $start_sector + $part_sectors - 1)
 test_expect_success \
     'add a partition' \
-    'parted -s $dev mkpart primary 0 1 >out 2>&1'
+    'parted -s $dev mkpart primary ${start_sector}s ${end_sector}s >out 2>&1'
 
 test_expect_success \
     'print the table (before manual modification)' \
@@ -62,7 +64,7 @@ test_expect_success \
 # dash's builtin printf doesn't recognize such \xHH hexadecimal escapes.
 bios_boot_magic='\110\141\150\41\111\144\157\156\164\116\145\145\144\105\106\111'
 
-printf "$bios_boot_magic" | dd of=$dev bs=1024 seek=1 conv=notrunc
+printf "$bios_boot_magic" | dd of=$dev bs=$sector_size_ seek=2 conv=notrunc
 
 test_expect_success \
     'print the table (after manual modification)' \
@@ -75,11 +77,11 @@ gen_exp()
 {
   cat <<EOF
 BYT;
-$dev:128s:file:$sector_size_:512:gpt:;
-1:34s:94s:61s::primary:;
+$dev:${n_sectors}s:file:$sector_size_:$sector_size_:gpt:;
+1:${start_sector}s:${end_sector}s:${part_sectors}s::primary:;
 BYT;
-$dev:128s:file:$sector_size_:512:gpt:;
-1:34s:94s:61s::primary:bios_grub;
+$dev:${n_sectors}s:file:$sector_size_:$sector_size_:gpt:;
+1:${start_sector}s:${end_sector}s:${part_sectors}s::primary:bios_grub;
 EOF
 }
 
