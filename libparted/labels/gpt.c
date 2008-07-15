@@ -40,6 +40,8 @@
 #include <stdbool.h>
 #include "xalloc.h"
 
+#include "pt-tools.h"
+
 #if ENABLE_NLS
 #  include <libintl.h>
 #  define _(String) gettext (String)
@@ -259,23 +261,6 @@ typedef struct _GPTPartitionData {
 static PedDiskType gpt_disk_type;
 
 
-/* FIXME: factor out this function: copied from dos.c
-   Read sector, SECTOR_NUM (which has length DEV->sector_size) into malloc'd
-   storage.  If the read fails, free the memory and return zero without
-   modifying *BUF.  Otherwise, set *BUF to the new buffer and return 1.  */
-static int
-read_sector (const PedDevice *dev, PedSector sector_num, char **buf)
-{
-	char *b = ped_malloc (dev->sector_size);
-	PED_ASSERT (b != NULL, return 0);
-	if (!ped_device_read (dev, b, sector_num, 1)) {
-		free (b);
-		return 0;
-	}
-	*buf = b;
-	return 1;
-}
-
 static inline uint32_t
 pth_get_size (const PedDevice* dev)
 {
@@ -468,8 +453,8 @@ gpt_probe (const PedDevice * dev)
 		return 0;
 
 
-	char *label;
-	if (!read_sector (dev, 0, &label))
+	void *label;
+	if (!ptt_read_sector (dev, 0, &label))
 		return 0;
 
         int ok = 1;

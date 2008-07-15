@@ -31,6 +31,7 @@
 #endif /* ENABLE_NLS */
 
 #include "misc.h"
+#include "pt-tools.h"
 
 /* struct's hacked from Linux source:  fs/partitions/mac.h
  * I believe it was originally written by Paul Mackerras (from comments in
@@ -170,23 +171,6 @@ struct _MacDiskData {
 
 static PedDiskType mac_disk_type;
 
-/* FIXME: factor out this function: copied from dos.c
-   Read sector, SECTOR_NUM (which has length DEV->sector_size) into malloc'd
-   storage.  If the read fails, free the memory and return zero without
-   modifying *BUF.  Otherwise, set *BUF to the new buffer and return 1.  */
-static int
-read_sector (const PedDevice *dev, PedSector sector_num, char **buf)
-{
-	char *b = ped_malloc (dev->sector_size);
-	PED_ASSERT (b != NULL, return 0);
-	if (!ped_device_read (dev, b, sector_num, 1)) {
-		free (b);
-		return 0;
-	}
-	*buf = b;
-	return 1;
-}
-
 static int
 _check_signature (MacRawDisk const *raw_disk)
 {
@@ -221,8 +205,8 @@ mac_probe (const PedDevice * dev)
         if (dev->sector_size < sizeof (MacRawDisk))
                 return 0;
 
-	char *label;
-	if (!read_sector (dev, 0, &label))
+	void *label;
+	if (!ptt_read_sector (dev, 0, &label))
 		return 0;
 
 	int valid = _check_signature ((MacRawDisk *) &label);
@@ -777,8 +761,8 @@ mac_read (PedDisk* disk)
 	mac_disk_data = disk->disk_specific;
 	mac_disk_data->part_map_entry_num = 0;		/* 0 == none */
 
-	char *s0;
-	if (!read_sector (disk->dev, 0, &s0))
+	void *s0;
+	if (!ptt_read_sector (disk->dev, 0, &s0))
 		return 0;
 
 	MacRawDisk *raw_disk = (MacRawDisk *) s0;
@@ -1055,8 +1039,8 @@ static int
 write_block_zero (PedDisk* disk, MacDiskData* mac_driverdata)
 {
 	PedDevice*	dev = disk->dev;
-	char *s0;
-	if (!read_sector (dev, 0, &s0))
+	void *s0;
+	if (!ptt_read_sector (dev, 0, &s0))
 		return 0;
 	MacRawDisk *raw_disk = (MacRawDisk *) s0;
 

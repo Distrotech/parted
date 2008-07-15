@@ -148,23 +148,6 @@ alpha_bootblock_checksum (char *boot) {
 	dp[63] = sum;
 }
 
-/* FIXME: factor out this function: copied from dos.c
-   Read sector, SECTOR_NUM (which has length DEV->sector_size) into malloc'd
-   storage.  If the read fails, free the memory and return zero without
-   modifying *BUF.  Otherwise, set *BUF to the new buffer and return 1.  */
-static int
-read_sector (const PedDevice *dev, PedSector sector_num, char **buf)
-{
-	char *b = ped_malloc (dev->sector_size);
-	PED_ASSERT (b != NULL, return 0);
-	if (!ped_device_read (dev, b, sector_num, 1)) {
-		free (b);
-		return 0;
-	}
-	*buf = b;
-	return 1;
-}
-
 static int
 bsd_probe (const PedDevice *dev)
 {
@@ -175,11 +158,11 @@ bsd_probe (const PedDevice *dev)
         if (dev->sector_size < 512)
                 return 0;
 
-	char *label;
-	if (!read_sector (dev, 0, &label))
+	void *label;
+	if (!ptt_read_sector (dev, 0, &label))
 		return 0;
 
-	partition = (BSDRawLabel *) (label + BSD_LABEL_OFFSET);
+	partition = (BSDRawLabel *) ((char *) label + BSD_LABEL_OFFSET);
 
 	alpha_bootblock_checksum(label);
 
@@ -275,10 +258,11 @@ bsd_free (PedDisk* disk)
 static int
 bsd_clobber (PedDevice* dev)
 {
-	char *label;
-	if (!read_sector (dev, 0, &label))
+	void *label;
+	if (!ptt_read_sector (dev, 0, &label))
 		return 0;
-	BSDRawLabel *rawlabel = (BSDRawLabel *) (label + BSD_LABEL_OFFSET);
+	BSDRawLabel *rawlabel
+	  = (BSDRawLabel *) ((char *) label + BSD_LABEL_OFFSET);
 	rawlabel->d_magic = 0;
 	return ped_device_write (dev, label, 0, 1);
 }
@@ -293,8 +277,8 @@ bsd_read (PedDisk* disk)
 
 	ped_disk_delete_all (disk);
 
-	char *s0;
-	if (!read_sector (disk->dev, 0, &s0))
+	void *s0;
+	if (!ptt_read_sector (disk->dev, 0, &s0))
 		return 0;
 
 	memcpy (bsd_specific->boot_code, s0, sizeof (bsd_specific->boot_code));
@@ -339,8 +323,8 @@ error:
 static void
 _probe_and_add_boot_code (const PedDisk* disk)
 {
-	char *s0;
-	if (!read_sector (disk->dev, 0, &s0))
+	void *s0;
+	if (!ptt_read_sector (disk->dev, 0, &s0))
 		return;
 	char *old_boot_code = s0;
 	BSDRawLabel *old_label

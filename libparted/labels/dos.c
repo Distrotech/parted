@@ -33,6 +33,7 @@
 #endif /* ENABLE_NLS */
 
 #include "misc.h"
+#include "pt-tools.h"
 
 /* this MBR boot code is loaded into 0000:7c00 by the BIOS.  See mbr.s for
  * the source, and how to build it
@@ -153,24 +154,6 @@ typedef struct {
 
 static PedDiskType msdos_disk_type;
 
-/* FIXME: factor out this function: copied from aix.c, with changes to
-   the description, and an added sector number argument.
-   Read sector, SECTOR_NUM (which has length DEV->sector_size) into malloc'd
-   storage.  If the read fails, free the memory and return zero without
-   modifying *BUF.  Otherwise, set *BUF to the new buffer and return 1.  */
-static int
-read_sector (const PedDevice *dev, PedSector sector_num, char **buf)
-{
-	char *b = ped_malloc (dev->sector_size);
-	PED_ASSERT (b != NULL, return 0);
-	if (!ped_device_read (dev, b, sector_num, 1)) {
-		free (b);
-		return 0;
-	}
-	*buf = b;
-	return 1;
-}
-
 static int
 msdos_probe (const PedDevice *dev)
 {
@@ -183,8 +166,8 @@ msdos_probe (const PedDevice *dev)
         if (dev->sector_size < sizeof *part_table)
                 return 0;
 
-	char *label;
-	if (!read_sector (dev, 0, &label))
+	void *label;
+	if (!ptt_read_sector (dev, 0, &label))
 		return 0;
 
 	part_table = (DosRawTable *) label;
@@ -274,8 +257,8 @@ msdos_clobber (PedDevice* dev)
 	PED_ASSERT (dev != NULL, return 0);
 	PED_ASSERT (msdos_probe (dev), return 0);
 
-	char *label;
-	if (!read_sector (dev, 0, &label))
+	void *label;
+	if (!ptt_read_sector (dev, 0, &label))
 		return 0;
 
 	DosRawTable *table = (DosRawTable *) label;
@@ -846,8 +829,8 @@ read_table (PedDisk* disk, PedSector sector, int is_extended_table)
 	PED_ASSERT (disk != NULL, return 0);
 	PED_ASSERT (disk->dev != NULL, return 0);
 
-	char *label = NULL;
-	if (!read_sector (disk->dev, sector, &label))
+	void *label = NULL;
+	if (!ptt_read_sector (disk->dev, sector, &label))
 		goto error;
 
         table = (DosRawTable *) label;
@@ -1142,8 +1125,8 @@ msdos_write (const PedDisk* disk)
 	PED_ASSERT (disk != NULL, return 0);
 	PED_ASSERT (disk->dev != NULL, return 0);
 
-	char *s0 = NULL;
-	if (!read_sector (disk->dev, 0, &s0))
+	void *s0 = NULL;
+	if (!ptt_read_sector (disk->dev, 0, &s0))
 		return 0;
 	DosRawTable *table = (DosRawTable *) s0;
 

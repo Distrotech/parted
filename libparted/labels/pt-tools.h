@@ -18,3 +18,4 @@
 #include <parted/disk.h>
 
 int ptt_write_sector (PedDisk const *disk, void const *buf, size_t buflen);
+int ptt_read_sector (const PedDevice *dev, PedSector sector_num, void **buf);

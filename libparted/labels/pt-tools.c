@@ -46,3 +46,19 @@ ptt_write_sector (PedDisk const *disk, void const *buf, size_t buflen)
 
   return write_ok;
 }
+
+/* Read sector, SECTOR_NUM (which has length DEV->sector_size) into malloc'd
+   storage.  If the read fails, free the memory and return zero without
+   modifying *BUF.  Otherwise, set *BUF to the new buffer and return 1.  */
+int
+ptt_read_sector (PedDevice const *dev, PedSector sector_num, void **buf)
+{
+  char *b = ped_malloc (dev->sector_size);
+  PED_ASSERT (b != NULL, return 0);
+  if (!ped_device_read (dev, b, sector_num, 1)) {
+    free (b);
+    return 0;
+  }
+  *buf = b;
+  return 1;
+}

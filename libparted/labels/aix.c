@@ -1,7 +1,7 @@
 /* -*- Mode: c; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 8 -*-
 
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000, 2001, 2007, 2009 Free Software Foundation, Inc.
+    Copyright (C) 2000-2001, 2007-2009 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 #include <parted/debug.h>
 #include <parted/endian.h>
 #include <stdbool.h>
+#include "pt-tools.h"
 
 #if ENABLE_NLS
 #  include <libintl.h>
@@ -50,29 +51,13 @@ aix_label_magic_set (char *label, int magic_val)
 	*(unsigned int *)label = magic_val;
 }
 
-/* Read a single sector, of length DEV->sector_size, into malloc'd storage.
-   If the read fails, free the memory and return zero without modifying *BUF.
-   Otherwise, set *BUF to the new buffer and return 1.  */
-static int
-read_sector (const PedDevice *dev, char **buf)
-{
-	char *b = ped_malloc (dev->sector_size);
-	PED_ASSERT (b != NULL, return 0);
-	if (!ped_device_read (dev, b, 0, 1)) {
-		free (b);
-		return 0;
-	}
-	*buf = b;
-	return 1;
-}
-
 static int
 aix_probe (const PedDevice *dev)
 {
 	PED_ASSERT (dev != NULL, return 0);
 
-	char *label;
-	if (!read_sector (dev, &label))
+	void *label;
+	if (!ptt_read_sector (dev, 0, &label))
 		return 0;
 	unsigned int magic = aix_label_magic_get (label);
 	free (label);
@@ -88,8 +73,8 @@ aix_clobber (PedDevice* dev)
 	if (!aix_probe (dev))
 		return 0;
 
-	char *label;
-	if (!read_sector (dev, &label))
+	void *label;
+	if (!ptt_read_sector (dev, 0, &label))
 		return 0;
 
 	aix_label_magic_set (label, 0);

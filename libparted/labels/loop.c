@@ -23,6 +23,8 @@
 #include <parted/endian.h>
 #include <stdbool.h>
 
+#include "pt-tools.h"
+
 #if ENABLE_NLS
 #  include <libintl.h>
 #  define _(String) dgettext (PACKAGE, String)
@@ -37,23 +39,6 @@ static PedDiskType loop_disk_type;
 static PedDisk* loop_alloc (const PedDevice* dev);
 static void loop_free (PedDisk* disk);
 
-/* FIXME: factor out this function: copied from dos.c
-   Read sector, SECTOR_NUM (which has length DEV->sector_size) into malloc'd
-   storage.  If the read fails, free the memory and return zero without
-   modifying *BUF.  Otherwise, set *BUF to the new buffer and return 1.  */
-static int
-read_sector (const PedDevice *dev, PedSector sector_num, char **buf)
-{
-	char *b = ped_malloc (dev->sector_size);
-	PED_ASSERT (b != NULL, return 0);
-	if (!ped_device_read (dev, b, sector_num, 1)) {
-		free (b);
-		return 0;
-	}
-	*buf = b;
-	return 1;
-}
-
 static int
 loop_probe (const PedDevice* dev)
 {
@@ -61,8 +46,8 @@ loop_probe (const PedDevice* dev)
 	if (!disk)
 		goto error;
 
-	char *buf;
-	if (!read_sector (dev, 0, &buf))
+	void *buf;
+	if (!ptt_read_sector (dev, 0, &buf))
 		goto error_destroy_disk;
         int found_sig = !strncmp (buf, LOOP_SIGNATURE, strlen (LOOP_SIGNATURE));
         free (buf);
@@ -146,8 +131,8 @@ loop_read (PedDisk* disk)
 
 	ped_disk_delete_all (disk);
 
-	char *buf;
-	if (!read_sector (dev, 0, &buf))
+	void *buf;
+	if (!ptt_read_sector (dev, 0, &buf))
 		goto error;
 
         int found_sig = !strncmp (buf, LOOP_SIGNATURE, strlen (LOOP_SIGNATURE));
