@@ -15,7 +15,7 @@ static char* temporary_disk;
 static void
 create_disk (void)
 {
-        temporary_disk = _create_disk (20);
+        temporary_disk = _create_disk (20 * 1024 * 1024);
         fail_if (temporary_disk == NULL, "Failed to create temporary disk");
 }
 

@@ -7,13 +7,28 @@
 
 #include "common.h"
 #include "progname.h"
+#include "xstrtol.h"
 
 static char* temporary_disk;
+
+static
+size_t get_sector_size (void)
+{
+  char *p = getenv ("PARTED_SECTOR_SIZE");
+  size_t ss = 512;
+  unsigned long val;
+  if (p
+      && xstrtoul (p, NULL, 10, &val, NULL) == LONGINT_OK
+      && val % 512 == 0)
+    ss = val;
+
+  return ss;
+}
 
 static void
 create_disk (void)
 {
-        temporary_disk = _create_disk (20);
+        temporary_disk = _create_disk (get_sector_size () * 4 * 10 * 1024);
         fail_if (temporary_disk == NULL, "Failed to create temporary disk");
 }
 

@@ -19,7 +19,7 @@ _test_exception_handler (PedException* e)
 }
 
 char*
-_create_disk (const off_t size)
+_create_disk (const off_t n_bytes)
 {
         char* filename = strdup ("parted-test-XXXXXX");
 
@@ -37,9 +37,7 @@ _create_disk (const off_t size)
         if (disk == NULL)
                 goto free_filename;
 
-        off_t total_size = size * 1024 * 1024;	/* Mb */
-
-        int fail = (fseek (disk, total_size, SEEK_SET) != 0
+        int fail = (fseek (disk, n_bytes, SEEK_SET) != 0
                     || fwrite ("", sizeof (char), 1, disk) != 1);
 
         if (fclose (disk) != 0 || fail)
