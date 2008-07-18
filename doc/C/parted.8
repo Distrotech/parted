@@ -7,7 +7,7 @@ GNU Parted \- a partition manipulation program
 .SH DESCRIPTION
 .B parted
 is a disk partitioning and partition resizing program.  It allows you to
-create, destroy, resize, move and copy ext2, ext3, linux-swap, FAT, FAT32, and reiserfs
+create, destroy, resize, move and copy ext2, linux-swap, FAT, FAT32, and reiserfs
 partitions.  It can create, resize, and move Macintosh HFS partitions, as well as detect jfs,
 ntfs, ufs, and xfs partitions.  It is useful for creating space for new operating systems,
 reorganising disk usage, and copying data to new hard disks.
@@ -68,13 +68,18 @@ Create a new disklabel (partition table) of \fIlabel-type\fP.
 .B mkpart \fIpart-type\fP \fI[fs-type]\fP \fIstart\fP \fIend\fP
 Make a \fIpart-type\fP partition with filesystem \fIfs-type\fP (if specified),
 beginning at \fIstart\fP and ending at \fIend\fP (by default in megabytes).
-\fIfs-type\fP can be one of 
+\fIfs-type\fP can be one of
 "fat16", "fat32", "ext2", "HFS", "linux-swap", "NTFS", "reiserfs", or "ufs".
 \fIpart-type\fP should be one of "primary", "logical", or "extended".
 .TP
 .B mkpartfs \fIpart-type\fP \fIfs-type\fP \fIstart\fP \fIend\fP
 Make a \fIpart-type\fP partition with filesystem \fIfs-type\fP beginning at
-\fIstart\fP and ending at \fIend\fP (by default in megabytes).
+\fIstart\fP and ending at \fIend\fP (by default in megabytes).  Using
+this command is discouraged.  Instead use
+.BR mkpart
+to create an empty partition, and then use external tools like
+.BR mke2fs (8)
+to create the filesystem.
 .TP
 .B move \fIpartition\fP \fIstart\fP \fIend\fP
 Move \fIpartition\fP so that it begins at \fIstart\fP and ends at \fIend\fP.
@@ -125,16 +130,23 @@ and a human-friendly form for output).
 Display version information and a copyright message.
 .RE
 .SH KNOWN ISSUES
-ext3 filesystem resizing does not currently work, please use
+ext3 filesystem functionality does not currently work.  To manage ext3
+type filesystems use tools like
 .BR resize2fs (8)
-instead.
+or
+.BR mke2fs (8).
+Note that the currently supported ext2 filesystem will be deprecated
+once ext3 support is finalized.  Further note that ext3 support will
+have limited functionality that is yet to be defined.  Use tools like
+.BR resize2fs (8)
+and
+.BR mke2fs (8)
+to manage these types of filesystems.
 
-Resizing partitions with an ext3 filesystem will not generally work because
-of the above issue.  Use
-.BR resize2fs (8)
-to resize the filesystem and resize the partition manually using
+To manually resize an ext3 filesystem and/or a partition use
+.BR resize2fs (8),
 .BR fdisk (8)
-or a similar tool.  For LVM situations, you will need to use the LVM commands
+or similar tools.  For LVM situations, you will need to use the LVM commands
 to resize the LVM elements.
 .SH REPORTING BUGS
 Report bugs to <bug-parted@gnu.org>
@@ -142,7 +154,7 @@ Report bugs to <bug-parted@gnu.org>
 .BR fdisk (8),
 .BR mkfs (8),
 The \fIparted\fP program is fully documented in the
-.BR info(1) 
+.BR info(1)
 format
 .IR "GNU partitioning software"
 manual.

@@ -461,6 +461,14 @@ create a partition starting at 10.352Mb, not 10.4Mb)
 If the calculated values differ too much, Parted will ask you for
 confirmation.
 
+Currently ext3 filesystem functionality does not work. To manage ext3 type
+filesystems use tools like resize2fs or mke2fs.  Note that the currently
+supported ext2 filesystem will be deprecated once ext3 support is finalized.
+Further note that ext3 support will have limited functionality that is yet
+to be defined.  Use tools like resize2fs (8) and mke2fs (8) to manage these
+types of filesystems.
+
+
 @node Invoking Parted
 @section Command Line Options
 @cindex options at invocation
@@ -560,7 +568,7 @@ specifies which device the source partition is on.
 
 Supported file systems:
 @itemize @bullet
-@item ext2, ext3
+@item ext2
 (provided the destination partition is larger than the source partition)
 
 @item fat16, fat32
@@ -717,7 +725,9 @@ Creates a new partition of type @var{part-type} with a new file system
 of type @var{fs-type} on it.  The new partition will start @var{start}
 megabytes, and end @var{end} megabytes from the beginning of the disk.
 Do not use this command to recover a deleted partition (use mkpart
-instead).
+instead).  Using this command is discouraged.  Instead use mkpart
+to create an empty partition, and then use external tools like mke2fs (8)
+to create the filesystem.
 
 @var{part-type} is one of: primary, extended, logical.  Extended and logical
 are only used for msdos and dvh disk labels.
@@ -756,7 +766,7 @@ Move never changes the partition number.
 
 Supported file systems:
 @itemize @bullet
-@item ext2, ext3
+@item ext2
 (provided the destination partition is larger than the source partition)
 
 @item fat16, fat32
@@ -921,7 +931,7 @@ using Parted.
 
 Supported file systems:
 @itemize @bullet
-@item ext2, ext3 -- restriction: the new @var{start} must be the same as
+@item ext2 -- restriction: the new @var{start} must be the same as
 the old @var{start}.
 @item fat16, fat32
 @item hfs, hfs+, hfsx -- restriction: the new @var{start} must be the same as
