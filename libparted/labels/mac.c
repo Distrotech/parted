@@ -737,28 +737,34 @@ static int
 _disk_analyse_ghost_size (PedDisk* disk)
 {
 	MacDiskData*		mac_disk_data = disk->disk_specific;
-	MacRawPartition		raw_part;
-	int			i;
 
+	void *buf = ped_malloc (disk->dev->sector_size);
+	if (!buf)
+		return 0;
+
+	int i;
+	int found = 0;
 	for (i = 1; i < 64; i *= 2) {
-		if (!ped_device_read (disk->dev, &raw_part, i, 1))
-			return 0;
-		if (_rawpart_check_signature (&raw_part)
-		    && !_rawpart_is_void (&raw_part)) {
+		if (!ped_device_read (disk->dev, buf, i, 1))
+			break;
+		if (_rawpart_check_signature (buf)
+		    && !_rawpart_is_void (buf)) {
 			mac_disk_data->ghost_size = i;
-			PED_ASSERT (i <= disk->dev->sector_size / 512,
-				    return 0);
-			return 1;
+			PED_ASSERT (i <= disk->dev->sector_size / 512, break);
+			found = 1;
+			break;
 		}
 	}
+        free (buf);
 
 #ifndef DISCOVER_ONLY
-	ped_exception_throw (
-		PED_EXCEPTION_ERROR,
-		PED_EXCEPTION_CANCEL,
-		_("No valid partition map found."));
+        if (!found)
+		ped_exception_throw (
+			PED_EXCEPTION_ERROR,
+			PED_EXCEPTION_CANCEL,
+			_("No valid partition map found."));
 #endif
-	return 0;
+	return found;
 }
 
 static int
