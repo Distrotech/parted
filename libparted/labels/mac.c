@@ -1170,11 +1170,10 @@ mac_partition_new (
 	}
 	return part;
 
-	free (mac_data);
 error_free_part:
 	free (part);
 error:
-	return 0;
+	return NULL;
 }
 
 static PedPartition*
