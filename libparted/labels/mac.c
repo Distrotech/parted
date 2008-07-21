@@ -209,7 +209,7 @@ mac_probe (const PedDevice * dev)
 	if (!ptt_read_sector (dev, 0, &label))
 		return 0;
 
-	int valid = _check_signature ((MacRawDisk *) &label);
+	int valid = _check_signature (label);
 
 	free (label);
 	return valid;
@@ -351,31 +351,47 @@ mac_free (PedDisk* disk)
 static int
 _clobber_part_map (PedDevice* dev)
 {
-	MacRawPartition		raw_part;
-	PedSector		sector;
+        void *buf = ped_malloc (dev->sector_size);
+        if (!buf)
+                return 0;
 
+        int ok = 1;
+	PedSector sector;
 	for (sector=1; 1; sector++) {
-		if (!ped_device_read (dev, &raw_part, sector, 1))
-			return 0;
-		if (!_rawpart_check_signature (&raw_part))
-			return 1;
-		memset (&raw_part, 0, 512);
-		if (!ped_device_write (dev, &raw_part, sector, 1))
-			return 0;
+                if (!ped_device_read (dev, buf, sector, 1)) {
+                        ok = 0;
+                        break;
+                }
+		if (!_rawpart_check_signature (buf)) {
+                        ok = 1;
+                        break;
+                }
+		memset (buf, 0, dev->sector_size);
+		if (!ped_device_write (dev, buf, sector, 1)) {
+                        ok = 0;
+                        break;
+                }
 	}
+        free (buf);
+        return ok;
 }
 
 static int
 mac_clobber (PedDevice* dev)
 {
-	MacRawDisk		raw_disk;
+	void *buf;
+	if (!ptt_read_sector (dev, 0, &buf))
+		return 0;
 
-	if (!ped_device_read (dev, &raw_disk, 0, 1))
+	if (!_check_signature (buf)) {
+                free (buf);
 		return 0;
-	if (!_check_signature (&raw_disk))
-		return 0;
-	memset (&raw_disk, 0, 512);
-	if (!ped_device_write (dev, &raw_disk, 0, 1))
+        }
+
+        memset (buf, 0, dev->sector_size);
+        bool ok = ped_device_write (dev, buf, 0, 1);
+        free (buf);
+        if (!ok)
 		return 0;
 
 	return _clobber_part_map (dev);
@@ -1082,11 +1098,11 @@ mac_write (PedDisk* disk)
 		goto error;
 	memset (mac_driverdata, 0, sizeof(MacDiskData));
 
-	part_map = (MacRawPartition*)
-			ped_malloc (mac_disk_data->part_map_entry_count * 512);
+        size_t pmap_bytes = (mac_disk_data->part_map_entry_count
+                             * disk->dev->sector_size);
+	part_map = (MacRawPartition*) ped_calloc (pmap_bytes);
 	if (!part_map)
 		goto error_free_driverdata;
-	memset (part_map, 0, mac_disk_data->part_map_entry_count * 512);
 
 /* write (to memory) the "real" partitions */
 	for (part = ped_disk_next_partition (disk, NULL); part;
