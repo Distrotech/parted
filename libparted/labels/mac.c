@@ -318,7 +318,7 @@ mac_duplicate (const PedDisk* disk)
 
 	new_disk = ped_disk_new_fresh (disk->dev, &mac_disk_type);
 	if (!new_disk)
-		goto error;
+		return NULL;
 
 	new_mac_data = (MacDiskData*) new_disk->disk_specific;
 
@@ -332,10 +332,6 @@ mac_duplicate (const PedDisk* disk)
 	/* ugly, but C is ugly :p */
 	memcpy (new_mac_data, old_mac_data, sizeof (MacDiskData));
 	return new_disk;
-
-	_ped_disk_free (new_disk);
-error:
-	return NULL;
 }
 
 static void
