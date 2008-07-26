@@ -1,7 +1,7 @@
 /* -*- Mode: c; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 8 -*-
 
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000, 2001, 2005, 2007 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2001, 2005, 2007-2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -337,7 +337,8 @@ sun_read (PedDisk* disk)
 		end = start
 		      + PED_BE32_TO_CPU(label->partitions[i].num_sectors) - 1;
 
-		part = ped_partition_new (disk, 0, NULL, start, end);
+		part = ped_partition_new (disk, PED_PARTITION_NORMAL, NULL,
+                                          start, end);
 		if (!part)
 			goto error;
 

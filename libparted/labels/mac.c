@@ -234,7 +234,8 @@ _disk_add_part_map_entry (PedDisk* disk, int warn)
 	if (part_map_size == 0)
 		part_map_size = 64;
 
-	new_part = ped_partition_new (disk, 0, NULL, 1, part_map_size - 1);
+	new_part = ped_partition_new (disk, PED_PARTITION_NORMAL, NULL,
+                                      1, part_map_size - 1);
 	if (!new_part)
 		goto error;
 
@@ -553,7 +554,8 @@ _rawpart_analyse (MacRawPartition* raw_part, PedDisk* disk, int num)
 #endif
 		return NULL;
 	}
-	part = ped_partition_new (disk, 0, NULL, start, start + length - 1);
+	part = ped_partition_new (disk, PED_PARTITION_NORMAL, NULL,
+                                  start, start + length - 1);
 	if (!part)
 		goto error;
 

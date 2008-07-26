@@ -2,7 +2,7 @@
 
     libparted - a library for manipulating disk partitions
     disk_amiga.c - libparted module to manipulate amiga RDB partition tables.
-    Copyright (C) 2000, 2001, 2004, 2007 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2001, 2004, 2007-2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -547,7 +547,8 @@ amiga_read (PedDisk* disk)
 			+ 1) * cylblocks - 1;
 
 		/* We can now construct a new partition */
-		if (!(part = ped_partition_new (disk, 0, NULL, start, end))) {
+		if (!(part = ped_partition_new (disk, PED_PARTITION_NORMAL,
+                                                NULL, start, end))) {
 			free(partition);
 			return 0;
 		}

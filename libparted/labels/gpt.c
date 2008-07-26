@@ -4,8 +4,7 @@
     original version by Matt Domsch <Matt_Domsch@dell.com>
     Disclaimed into the Public Domain
 
-    Portions Copyright (C) 2001, 2002, 2003, 2005, 2006, 2007, 2008
-        Free Software Foundation, Inc.
+    Portions Copyright (C) 2001-2003, 2005-2008 Free Software Foundation, Inc.
 
     EFI GUID Partition Table handling
     Per Intel EFI Specification v1.02
@@ -743,7 +742,7 @@ _parse_part_entry (PedDisk* disk, GuidPartitionEntry_t* pte)
 	GPTPartitionData* gpt_part_data;
 	unsigned int i;
 
-	part = ped_partition_new (disk, 0, NULL,
+	part = ped_partition_new (disk, PED_PARTITION_NORMAL, NULL,
 			PED_LE64_TO_CPU(pte->StartingLBA),
 			PED_LE64_TO_CPU(pte->EndingLBA));
 	if (!part)

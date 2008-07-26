@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000, 2001, 2007 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2001, 2007-2008 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -370,7 +370,8 @@ read_table (PedDisk* disk)
 		part_start = legacy_start (disk, raw_part);
 		part_end   = legacy_end (disk, raw_part);
 
-		part = ped_partition_new (disk, 0, NULL, part_start, part_end);
+		part = ped_partition_new (disk, PED_PARTITION_NORMAL,
+                                          NULL, part_start, part_end);
 		if (!part)
 			goto error;
 		pc98_data = part->disk_specific;

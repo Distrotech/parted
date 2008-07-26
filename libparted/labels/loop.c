@@ -144,7 +144,8 @@ loop_read (PedDisk* disk)
 	if (!fs_type)
 		goto error_free_geom;
 
-	part = ped_partition_new (disk, 0, fs_type, geom->start, geom->end);
+	part = ped_partition_new (disk, PED_PARTITION_NORMAL,
+                                  fs_type, geom->start, geom->end);
 	ped_geometry_destroy (geom);
 	if (!part)
 		goto error;

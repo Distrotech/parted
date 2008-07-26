@@ -293,7 +293,8 @@ bsd_read (PedDisk* disk)
 		start = PED_LE32_TO_CPU(label->d_partitions[i - 1].p_offset);
 		end = PED_LE32_TO_CPU(label->d_partitions[i - 1].p_offset)
 		      + PED_LE32_TO_CPU(label->d_partitions[i - 1].p_size) - 1;
-		part = ped_partition_new (disk, 0, NULL, start, end);
+		part = ped_partition_new (disk, PED_PARTITION_NORMAL,
+                                          NULL, start, end);
 		if (!part)
 			goto error;
 		bsd_part_data = part->disk_specific;
