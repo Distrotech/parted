@@ -68,7 +68,6 @@ START_TEST (test_probe_label)
           fprintf (stderr, "PROBE label: %s\n", type->name); fflush (stderr);
                 if (!_implemented_disk_label (type->name))
                         continue;
-                if (strcmp (type->name, "mac") == 0) continue;
                 if (strcmp (type->name, "pc98") == 0) continue;
                 if (strcmp (type->name, "sun") == 0) continue;
 
@@ -106,7 +105,6 @@ START_TEST (test_read_label)
                         continue;
           if (strcmp (type->name, "pc98") == 0) continue; // segfault
           if (strcmp (type->name, "sun") == 0) continue; // failed assertion
-          if (strcmp (type->name, "mac") == 0) continue; // unrecog label
           if (strcmp (type->name, "loop") == 0) continue; // FIXME unrecog label
 
                 disk = _create_disk_label (dev, type);
@@ -145,11 +143,8 @@ START_TEST (test_clone_label)
 
                 /* FIXME: skip this test temporarily, while we wait
                    for someone to find the cycles to fix the bug.  */
-                if (strcmp (type->name, "mac") == 0 // overlapping
-                    || strcmp (type->name, "pc98") == 0 // segfault
-                    || strcmp (type->name, "sun") == 0 // segfault
-                    )
-                        continue;
+                if (STREQ (type->name, "pc98")) continue; // segfault
+                if (STREQ (type->name, "sun")) continue; // segfault
 
                 PedDisk* disk = _create_disk_label (dev, type);
 
