@@ -314,7 +314,6 @@ mac_duplicate (const PedDisk* disk)
 	PedDisk*	new_disk;
 	MacDiskData*	new_mac_data;
 	MacDiskData*	old_mac_data = (MacDiskData*) disk->disk_specific;
-	PedPartition*	partition_map;
 
 	new_disk = ped_disk_new_fresh (disk->dev, &mac_disk_type);
 	if (!new_disk)
@@ -325,8 +324,18 @@ mac_duplicate (const PedDisk* disk)
 	/* remove the partition map partition - it will be duplicated
 	 * later.
 	 */
-	partition_map = ped_disk_get_partition_by_sector (new_disk, 1);
+	PedSector first_part_map_sector = old_mac_data->ghost_size;
+	PedPartition *partition_map
+	  = ped_disk_get_partition_by_sector (new_disk, first_part_map_sector);
 	PED_ASSERT (partition_map != NULL, return 0);
+
+	/* ped_disk_remove_partition may be used only to delete a "normal"
+	   partition.  Trying to delete at least "freespace" or "metadata"
+	   partitions leads to a violation of assumptions in
+	   ped_disk_remove_partition, since it calls _disk_push_update_mode,
+	   which destroys all "freespace" and "metadata" partitions, and
+	   depends on that destruction not freeing its PART parameter.  */
+	PED_ASSERT (partition_map->type == PED_PARTITION_NORMAL, return 0);
 	ped_disk_remove_partition (new_disk, partition_map);
 
 	/* ugly, but C is ugly :p */
