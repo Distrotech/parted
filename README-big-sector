@@ -1,0 +1,56 @@
+How you can help:
+
+Debugging big-sector (>512 bytes) problems on the "next" branch:
+===============================================================
+
+I find it more convenient for debugging to build without shared libraries:
+
+    git clone git://git.debian.org/git/parted/parted.git
+    cd parted
+    git config remote.origin.fetch +next:next
+    git pull
+    git checkout next
+    ./bootstrap --gnulib-srcdir=.../gnulib
+    ./configure --enable-debug --disable-shared --disable-nls \
+       CFLAGS='-O -Dlint -Wall -Wshadow -Wformat-security' && make
+
+First ensure that all of the regular "make check" tests pass
+(i.e., running with the default sector size of 512):
+
+    make check
+
+Then, run the disk and label tests with a larger sector size:
+(note: this is not the full "make check" run.  That has numerous
+known failures due to bugs in file-system-related code.  For now,
+we're concentrating on making the partition table code work.)
+
+    cd libparted/tests
+    PARTED_SECTOR_SIZE=2048 CK_FORK=no make check
+
+If you see any failure, debug it, via e.g.,
+
+    PARTED_SECTOR_SIZE=2048 CK_FORK=no gdb ./label
+
+If you see no failure, try again using valgrind:
+
+    PARTED_SECTOR_SIZE=2048 CK_FORK=no valgrind ./label
+    PARTED_SECTOR_SIZE=2048 CK_FORK=no valgrind ./disk
+
+Then repeat, but with different sizes, e.g., PARTED_SECTOR_SIZE=1024.
+
+If those show no failures, then you're done ;-) with this subset of tests.
+See if the tests or support of any partition-table type is currently
+disabled.  Look in labels.c and common.c (_implemented_disk_label).
+
+However, if you see valgrind errors about writing uninitialized data,
+don't worry too much about them (yet).  Same thing with leaks.  If you
+want to fix either of those classes of bugs, great, but they're lower
+priority than fixing more serious problems involving stack smashing,
+used-uninitialized, using-freed, etc.  and generally getting the basic
+partition-related tests to pass.
+
+Note that I've been making almost no effort to make _file system_-
+related tests pass with >512 sector sizes.
+
+Before long, I expect to adjust or skip FS-related tests that fail
+when sector size is larger than 512.
