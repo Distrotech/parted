@@ -2240,6 +2240,7 @@ _disk_sync_part_table (PedDisk* disk)
                 }
         }
 
+        free (rets);
         free (errnums);
         return ret;
 }
