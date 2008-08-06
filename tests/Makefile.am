@@ -14,7 +14,8 @@ TESTS = \
   t4200-partprobe.sh \
   t5000-tags.sh \
   t6000-dm.sh \
-  t7000-scripting.sh
+  t7000-scripting.sh \
+  t8000-loop.sh
 
 EXTRA_DIST = \
   $(TESTS) test-lib.sh lvm-utils.sh
