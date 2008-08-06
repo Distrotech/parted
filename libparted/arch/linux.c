@@ -2211,11 +2211,15 @@ _blkpg_remove_partition (PedDisk* disk, int n)
 static int
 _disk_sync_part_table (PedDisk* disk)
 {
-        int     i;
-        int     last = PED_MIN (ped_disk_get_last_partition_num (disk), 16);
+        int largest_partnum = ped_disk_get_last_partition_num (disk);
+        if (largest_partnum <= 0)
+          return 1;
+
+        int     last = PED_MIN (largest_partnum, 16);
         int*    rets = ped_malloc(sizeof(int) * last);
         int*    errnums = ped_malloc(sizeof(int) * last);
         int     ret = 1;
+        int     i;
 
         for (i = 1; i <= last; i++) {
                 rets[i - 1] = _blkpg_remove_partition (disk, i);
@@ -2433,8 +2437,12 @@ err:
 static int
 _dm_reread_part_table (PedDisk* disk)
 {
+        int largest_partnum = ped_disk_get_last_partition_num (disk);
+        if (largest_partnum <= 0)
+          return 1;
+
         int     rc = 1;
-        int     last = PED_MIN (ped_disk_get_last_partition_num (disk), 16);
+        int     last = PED_MIN (largest_partnum, 16);
         int     i;
 
         sync();
