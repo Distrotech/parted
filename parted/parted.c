@@ -2333,7 +2333,7 @@ int     opt, help = 0, list = 0, version = 0, wrong = 0;
 
 while (1)
 {
-        opt = getopt_long (*argc_ptr, *argv_ptr, "hilmsv",
+        opt = getopt_long (*argc_ptr, *argv_ptr, "hlmsv",
                            options, NULL);
         if (opt == -1)
                 break;
