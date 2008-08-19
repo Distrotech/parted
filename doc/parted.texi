@@ -492,10 +492,6 @@ Options:
 @itemx --help
 display a help message
 
-@item -i
-@itemx --interactive
-prompt for user intervention
-
 @item -s
 @itemx --script
 never prompt the user

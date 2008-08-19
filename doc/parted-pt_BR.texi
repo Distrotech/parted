@@ -545,10 +545,6 @@ Opções
 @itemx --help
 mostra uma mensagem de ajuda
 
-@item -i
-@itemx --interactive
-quando necessário, pede ao usuário por intervenção
-
 @item -s
 @itemx --script
 nunca pede pela intervenção do usuário
