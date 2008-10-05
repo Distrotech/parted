@@ -1268,10 +1268,10 @@ do_print (PedDevice** dev)
         int             has_free_arg = 0;
         int             has_list_arg = 0;
         int             has_num_arg = 0;
-        const char *const transport[14] = {"unknown", "scsi", "ide", "dac960",
-					   "cpqarray", "file", "ataraid", "i2o",
-					   "ubd", "dasd", "viodasd", "sx8", "dm",
-					   "xvd"};
+        const char *const transport[] = {"unknown", "scsi", "ide", "dac960",
+                                         "cpqarray", "file", "ataraid", "i2o",
+                                         "ubd", "dasd", "viodasd", "sx8", "dm",
+                                         "xvd", "sd/mmc"};
         char*           peek_word;
         char*           start;
         char*           end;

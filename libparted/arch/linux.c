@@ -255,6 +255,7 @@ struct blkdev_ioctl_param {
 #define SX8_MAJOR1              160
 #define SX8_MAJOR2              161
 #define XVD_MAJOR               202
+#define SDMMC_MAJOR             179
 
 #define SCSI_BLK_MAJOR(M) (                                             \
                 (M) == SCSI_DISK0_MAJOR                                 \
@@ -537,6 +538,8 @@ _device_probe_type (PedDevice* dev)
 #endif
         } else if (dev_major == XVD_MAJOR && (dev_minor % 0x10 == 0)) {
                 dev->type = PED_DEVICE_XVD;
+        } else if (dev_major == SDMMC_MAJOR && (dev_minor % 0x08 == 0)) {
+                dev->type = PED_DEVICE_SDMMC;
         } else {
                 dev->type = PED_DEVICE_UNKNOWN;
         }
@@ -1147,6 +1150,34 @@ error:
         return 0;
 }
 
+static int
+sdmmc_get_product_info (PedDevice* dev, char **type, char **name)
+{
+        *type = read_device_sysfs_file (dev, "type");
+        *name = read_device_sysfs_file (dev, "name");
+        if (*type && *name)
+                return 1;
+
+        return 0;
+}
+
+static int
+init_sdmmc (PedDevice* dev)
+{
+        char id[128];
+        char *type, *name;
+
+        if (sdmmc_get_product_info (dev, &type, &name)) {
+                snprintf (id, sizeof(id) - 1, "%s %s", type, name);
+                free (type);
+                free (name);
+        } else {
+                snprintf (id, sizeof(id) - 1, "%s",
+                          _("Generic SD/MMC Storage Card"));
+        }
+        return init_generic(dev, id);
+}
+
 static PedDevice*
 linux_new (const char* path)
 {
@@ -1256,6 +1287,11 @@ linux_new (const char* path)
 
         case PED_DEVICE_UNKNOWN:
                 if (!init_generic (dev, _("Unknown")))
+                        goto error_free_arch_specific;
+                break;
+
+        case PED_DEVICE_SDMMC:
+                if (!init_sdmmc (dev))
                         goto error_free_arch_specific;
                 break;
 

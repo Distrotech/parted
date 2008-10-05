@@ -231,3 +231,6 @@ Debarshi Ray            <rishi@gnu.org>
         * Introduce 'print devices' and alias 'print list' to 'print all'.
         * Alias 'mktable' to 'mklabel'.
         * Code and API clean-up, bug fixes, and other miscellaneous stuff.
+
+Harald Welte            <laforge@gnumonks.org>
+        * SD/MMC Storage card support on Linux
