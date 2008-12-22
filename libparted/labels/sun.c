@@ -87,6 +87,7 @@ struct _SunPartitionData {
 	int			is_boot;
 	int			is_root;
 	int			is_lvm;
+	int			is_raid;
 };
 
 struct _SunDiskData {
@@ -347,6 +348,7 @@ sun_read (PedDisk* disk)
 		sun_data->is_boot = sun_data->type == 0x1;
 		sun_data->is_root = sun_data->type == 0x2;
 		sun_data->is_lvm = sun_data->type == 0x8e;
+		sun_data->is_raid = sun_data->type == 0xfd;
 
 		part->num = i + 1;
 		part->fs_type = ped_file_system_probe (&part->geom);
@@ -482,6 +484,7 @@ sun_partition_new (const PedDisk* disk, PedPartitionType part_type,
 		sun_data->is_boot = 0;
 		sun_data->is_root = 0;
 		sun_data->is_lvm = 0;
+		sun_data->is_raid = 0;
 	} else {
 		part->disk_specific = NULL;
 	}
@@ -515,6 +518,7 @@ sun_partition_duplicate (const PedPartition* part)
 	new_sun_data->is_boot = old_sun_data->is_boot;
 	new_sun_data->is_root = old_sun_data->is_root;
 	new_sun_data->is_lvm = old_sun_data->is_lvm;
+	new_sun_data->is_raid = old_sun_data->is_raid;
 	return new_part;
 }
 
@@ -547,6 +551,10 @@ sun_partition_set_system (PedPartition* part, const PedFileSystemType* fs_type)
 		sun_data->type = 0x8e;
 		return 1;
 	}
+	if (sun_data->is_raid) {
+		sun_data->type = 0xfd;
+		return 1;
+	}
 
 	sun_data->type = 0x83;
 	if (fs_type) {
@@ -573,20 +581,38 @@ sun_partition_set_flag (PedPartition* part, PedPartitionFlag flag, int state)
 	switch (flag) {
 		case PED_PARTITION_BOOT:
 			sun_data->is_boot = state;
-			if (state)
-				sun_data->is_root = sun_data->is_lvm = 0;
+			if (state) {
+				sun_data->is_lvm = 0;
+				sun_data->is_raid = 0;
+				sun_data->is_root = 0;
+			}
 			return ped_partition_set_system (part, part->fs_type);
 
 		case PED_PARTITION_ROOT:
 			sun_data->is_root = state;
-			if (state)
-				sun_data->is_boot = sun_data->is_lvm = 0;
+			if (state) {
+				sun_data->is_boot = 0;
+				sun_data->is_lvm = 0;
+				sun_data->is_raid = 0;
+			}
 			return ped_partition_set_system (part, part->fs_type);
 
 		case PED_PARTITION_LVM:
 			sun_data->is_lvm = state;
-			if (state)
-				sun_data->is_root = sun_data->is_boot = 0;
+			if (state) {
+				sun_data->is_boot = 0;
+				sun_data->is_raid = 0;
+				sun_data->is_root = 0;
+			}
+			return ped_partition_set_system (part, part->fs_type);
+
+		case PED_PARTITION_RAID:
+			sun_data->is_raid = state;
+			if (state) {
+				sun_data->is_boot = 0;
+				sun_data->is_lvm = 0;
+				sun_data->is_root = 0;
+			}
 			return ped_partition_set_system (part, part->fs_type);
 
 		default:
@@ -612,6 +638,8 @@ sun_partition_get_flag (const PedPartition* part, PedPartitionFlag flag)
 			return sun_data->is_root;
 		case PED_PARTITION_LVM:
 			return sun_data->is_lvm;
+		case PED_PARTITION_RAID:
+			return sun_data->is_raid;
 
 		default:
 			return 0;
@@ -627,6 +655,7 @@ sun_partition_is_flag_available (const PedPartition* part,
 		case PED_PARTITION_BOOT:
 		case PED_PARTITION_ROOT:
 		case PED_PARTITION_LVM:
+		case PED_PARTITION_RAID:
 			return 1;
 
 		default:

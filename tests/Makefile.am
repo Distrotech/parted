@@ -9,6 +9,7 @@ TESTS = \
   t2200-dos-label-recog.sh \
   t3000-constraints.sh \
   t3100-resize-ext2-partion.sh \
+  t4000-sun-raid-type.sh \
   t4100-msdos-partition-limits.sh \
   t4100-dvh-partition-limits.sh \
   t4200-partprobe.sh \
