@@ -1,10 +1,8 @@
 ## Process this file with automake to produce Makefile.in
 
-dist_man_MANS = \
+dist_man8_MANS = \
 	parted.8 \
 	partprobe.8
-
-man_MANS = $(dist_man_MANS)
 
 .PHONY: updatepo
 # Update the POT in srcdir
@@ -13,7 +11,7 @@ man_MANS = $(dist_man_MANS)
 updatepo:
 	cd $(srcdir); \
 	test -w . || exit 0; \
-	for name in $(dist_man_MANS); do \
+	for name in $(dist_man8_MANS); do \
 		echo $$name; \
 		cp po/$$name.pot po/$$name.new.pot; \
 		po4a-updatepo -f man -m $$name -p po/$$name.new.pot; \
