@@ -15,7 +15,7 @@
 
 /*
  * EXT2_*_*() convienience macros added by Andrew Clausen <clausen@gnu.org>
- * Copyright (C) 2000 Free Software Foundation, Inc.
+ * Copyright (C) 2000, 2009 Free Software Foundation, Inc.
  */
 
 #ifndef _EXT2_FS_H
@@ -56,9 +56,13 @@
 
 #define EXT2_FEATURE_RO_COMPAT_SPARSE_SUPER	0x0001
 #define EXT2_FEATURE_RO_COMPAT_LARGE_FILE	0x0002
+#define EXT4_FEATURE_RO_COMPAT_HUGE_FILE	0x0008
+#define EXT4_FEATURE_RO_COMPAT_DIR_NLINK	0x0020
 
 #define EXT2_FEATURE_INCOMPAT_FILETYPE		0x0002
 #define EXT3_FEATURE_INCOMPAT_RECOVER		0x0004
+#define EXT4_FEATURE_INCOMPAT_EXTENTS		0x0040
+#define EXT4_FEATURE_INCOMPAT_64BIT		0x0080
 
 /*
  * Special inodes numbers

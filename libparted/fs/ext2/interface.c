@@ -1,6 +1,6 @@
 /*
     interface.c -- parted binding glue to libext2resize
-    Copyright (C) 1998-2000, 2007 Free Software Foundation, Inc.
+    Copyright (C) 1998-2000, 2007, 2009 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ static PedFileSystemType _ext3_type;
 struct ext2_dev_handle* ext2_make_dev_handle_from_parted_geometry(PedGeometry* geom);
 
 static PedGeometry*
-_ext2_generic_probe (PedGeometry* geom, int expect_ext3)
+_ext2_generic_probe (PedGeometry* geom, int expect_ext_ver)
 {
 	struct ext2_super_block sb;
 
@@ -46,10 +46,29 @@ _ext2_generic_probe (PedGeometry* geom, int expect_ext3)
 		PedSector group_nr = EXT2_SUPER_BLOCK_GROUP_NR(sb);
 		PedSector first_data_block = EXT2_SUPER_FIRST_DATA_BLOCK(sb);
 		int version = EXT2_SUPER_REV_LEVEL(sb);
-		int is_ext3 = (EXT2_SUPER_FEATURE_COMPAT(sb) 
-				& EXT3_FEATURE_COMPAT_HAS_JOURNAL) != 0;
+		int is_ext3 = 0;
+		int is_ext4 = 0;
 
-		if (expect_ext3 != is_ext3)
+		is_ext3 = (EXT2_SUPER_FEATURE_COMPAT (sb)
+			   & EXT3_FEATURE_COMPAT_HAS_JOURNAL) != 0;
+		if (is_ext3) {
+			is_ext4 = ((EXT2_SUPER_FEATURE_RO_COMPAT (sb)
+				    & EXT4_FEATURE_RO_COMPAT_HUGE_FILE)
+				   || (EXT2_SUPER_FEATURE_RO_COMPAT (sb)
+				       & EXT4_FEATURE_RO_COMPAT_DIR_NLINK)
+				   || (EXT2_SUPER_FEATURE_INCOMPAT (sb)
+				       & EXT4_FEATURE_INCOMPAT_EXTENTS)
+				   || (EXT2_SUPER_FEATURE_INCOMPAT (sb)
+				       & EXT4_FEATURE_INCOMPAT_64BIT));
+			if (is_ext4)
+				is_ext3 = 0;
+		}
+
+		if (expect_ext_ver == 2 && (is_ext3 || is_ext4))
+			return NULL;
+		if (expect_ext_ver == 3 && !is_ext3)
+			return NULL;
+		else if (expect_ext_ver == 4 && !is_ext4)
 			return NULL;
 
 		if (version > 0 && group_nr > 0) {
@@ -64,7 +83,8 @@ _ext2_generic_probe (PedGeometry* geom, int expect_ext3)
 				return NULL;
 			ped_geometry_init (&probe_geom, geom->dev,
 					   start, block_count * block_size);
-			return _ext2_generic_probe (&probe_geom, expect_ext3);
+			return _ext2_generic_probe (&probe_geom,
+                                                    expect_ext_ver);
 		} else {
 			return ped_geometry_new (geom->dev, geom->start,
 						 block_count * block_size);
@@ -76,13 +96,19 @@ _ext2_generic_probe (PedGeometry* geom, int expect_ext3)
 static PedGeometry*
 _ext2_probe (PedGeometry* geom)
 {
-	return _ext2_generic_probe (geom, 0);
+	return _ext2_generic_probe (geom, 2);
 }
 
 static PedGeometry*
 _ext3_probe (PedGeometry* geom)
 {
-	return _ext2_generic_probe (geom, 1);
+	return _ext2_generic_probe (geom, 3);
+}
+
+static PedGeometry*
+_ext4_probe (PedGeometry* geom)
+{
+	return _ext2_generic_probe (geom, 4);
 }
 
 #ifndef DISCOVER_ONLY
@@ -323,6 +349,20 @@ static PedFileSystemOps _ext3_ops = {
 #endif /* !DISCOVER_ONLY */
 };
 
+static PedFileSystemOps _ext4_ops = {
+	probe:		_ext4_probe,
+	clobber:	NULL,
+	open:		NULL,
+	create:         NULL,
+	close:		NULL,
+	check:          NULL,
+	resize:		NULL,
+	copy:           NULL,
+	get_create_constraint:	NULL,
+	get_copy_constraint:	NULL,
+	get_resize_constraint:	NULL
+};
+
 #define EXT23_BLOCK_SIZES ((int[6]){512, 1024, 2048, 4096, 8192, 0})
 
 static PedFileSystemType _ext2_type = {
@@ -339,14 +379,23 @@ static PedFileSystemType _ext3_type = {
        block_sizes:      EXT23_BLOCK_SIZES
 };
 
+static PedFileSystemType _ext4_type = {
+       next:		 NULL,
+       ops:		 &_ext4_ops,
+       name:		 "ext4",
+       block_sizes:      EXT23_BLOCK_SIZES
+};
+
 void ped_file_system_ext2_init ()
 {
 	ped_file_system_type_register (&_ext2_type);
 	ped_file_system_type_register (&_ext3_type);
+	ped_file_system_type_register (&_ext4_type);
 }
 
 void ped_file_system_ext2_done ()
 {
 	ped_file_system_type_unregister (&_ext2_type);
 	ped_file_system_type_unregister (&_ext3_type);
+	ped_file_system_type_unregister (&_ext4_type);
 }

@@ -4,6 +4,7 @@ TESTS = \
   t1000-mkpartfs.sh \
   t1100-busy-label.sh \
   t1500-small-ext2.sh \
+  t1700-ext-probe.sh \
   t2000-mkfs.sh \
   t2100-mkswap.sh \
   t2200-dos-label-recog.sh \
