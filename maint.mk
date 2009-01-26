@@ -2,7 +2,7 @@
 # This Makefile fragment tries to be general-purpose enough to be
 # used by at least coreutils, idutils, CPPI, Bison, and Autoconf.
 
-## Copyright (C) 2001-2008 Free Software Foundation, Inc.
+## Copyright (C) 2001-2009 Free Software Foundation, Inc.
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ GIT = git
 VC = $(GIT)
 VC-tag = git tag -s -m '$(VERSION)'
 
-VC_LIST = build-aux/vc-list-files
+VC_LIST = $(srcdir)/build-aux/vc-list-files
 
 VC_LIST_EXCEPT = \
   $(VC_LIST) | if test -f .x-$@; then grep -vEf .x-$@; else grep -v ChangeLog; fi
@@ -70,13 +70,11 @@ export LC_ALL = C
 
 # Collect the names of rules starting with `sc_'.
 syntax-check-rules := $(shell sed -n 's/^\(sc_[a-zA-Z0-9_-]*\):.*/\1/p' \
-                        $(srcdir)/$(ME))
+                        $(srcdir)/$(ME) $(srcdir)/cfg.mk)
 .PHONY: $(syntax-check-rules)
 
 local-checks-available = \
-  po-check copyright-check m4-check author_mark_check \
-  patch-check strftime-check $(syntax-check-rules) \
-  makefile_path_separator_check \
+  patch-check $(syntax-check-rules) \
   makefile-check check-AUTHORS
 .PHONY: $(local-checks-available)
 
@@ -94,6 +92,17 @@ syntax-check: $(local-check)
 #	    exit 1; } || :
 # FIXME: don't allow `#include .strings\.h' anywhere
 
+# There are many rules below that prohibit constructs in this package.
+# If the offending construct can be matched with a grep-E-style regexp,
+# use this macro.  The shell variables "re" and "msg" must be defined.
+define _prohibit_regexp
+  dummy=; : so we do not need a semicolon before each use		\
+  test "x$$re" != x || { echo '$(ME): re not defined' 1>&2; exit 1; };	\
+  test "x$$msg" != x || { echo '$(ME): msg not defined' 1>&2; exit 1; };\
+  grep -nE "$$re" $$($(VC_LIST_EXCEPT)) &&				\
+    { echo '$(ME): '"$$msg" 1>&2; exit 1; } || :
+endef
+
 sc_avoid_if_before_free:
 	@$(srcdir)/build-aux/useless-if-before-free			\
 		$(useless_free_options)					\
@@ -102,37 +111,35 @@ sc_avoid_if_before_free:
 	    exit 1; } || :
 
 sc_cast_of_argument_to_free:
-	@grep -nE '\<free *\( *\(' $$($(VC_LIST_EXCEPT)) &&		\
-	  { echo '$(ME): don'\''t cast free argument' 1>&2;		\
-	    exit 1; } || :
+	@re='\<free *\( *\(' msg='don'\''t cast free argument'		\
+	  $(_prohibit_regexp)
 
 sc_cast_of_x_alloc_return_value:
-	@grep -nE '\*\) *x(m|c|re)alloc\>' $$($(VC_LIST_EXCEPT)) &&	\
-	  { echo '$(ME): don'\''t cast x*alloc return value' 1>&2;	\
-	    exit 1; } || :
+	@re='\*\) *x(m|c|re)alloc\>'					\
+	msg='don'\''t cast x*alloc return value'			\
+	  $(_prohibit_regexp)
 
 sc_cast_of_alloca_return_value:
-	@grep -nE '\*\) *alloca\>' $$($(VC_LIST_EXCEPT)) &&		\
-	  { echo '$(ME): don'\''t cast alloca return value' 1>&2;	\
-	    exit 1; } || :
+	@re='\*\) *alloca\>' msg='don'\''t cast alloca return value'	\
+	  $(_prohibit_regexp)
 
 sc_space_tab:
-	@grep -n '[ ]	' $$($(VC_LIST_EXCEPT)) &&			\
-	  { echo '$(ME): found SPACE-TAB sequence; remove the SPACE'	\
-		1>&2; exit 1; } || :
+	@re='[ ]	' msg='found SPACE-TAB sequence; remove the SPACE' \
+	  $(_prohibit_regexp)
 
 # Don't use *scanf or the old ato* functions in `real' code.
 # They provide no error checking mechanism.
 # Instead, use strto* functions.
 sc_prohibit_atoi_atof:
-	@grep -nE '\<([fs]?scanf|ato([filq]|ll))\>' $$($(VC_LIST_EXCEPT)) && \
-	  { echo '$(ME): do not use *scan''f, ato''f, ato''i, ato''l, ato''ll, ato''q, or ss''canf'	\
-		1>&2; exit 1; } || :
+	@re='\<([fs]?scanf|ato([filq]|ll))\>'				\
+	msg='do not use *scan''f, ato''f, ato''i, ato''l, ato''ll or ato''q' \
+	  $(_prohibit_regexp)
 
 # Use STREQ rather than comparing strcmp == 0, or != 0.
 sc_prohibit_strcmp:
 	@grep -nE '! *str''cmp *\(|\<str''cmp *\([^)]+\) *=='		\
-	    $$($(VC_LIST_EXCEPT)) &&					\
+	    $$($(VC_LIST_EXCEPT))					\
+	  | grep -vE ':# *define STREQ\(' &&				\
 	  { echo '$(ME): use STREQ in place of the above uses of str''cmp' \
 		1>&2; exit 1; } || :
 
@@ -189,6 +196,25 @@ sc_require_config_h:
 		1>&2; exit 1; } || :;					\
 	else :;								\
 	fi
+
+# You must include <config.h> before including any other header file.
+sc_require_config_h_first:
+	@if $(VC_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
+	  fail=0;							\
+	  for i in $$($(VC_LIST_EXCEPT) | grep '\.c$$'); do		\
+	    grep '^# *include\>' $$i | sed 1q				\
+		| grep '^# *include <config\.h>' > /dev/null		\
+	      || { echo $$i; fail=1; };					\
+	  done;								\
+	  test $$fail = 1 &&						\
+	    { echo '$(ME): the above files include some other header'	\
+		'before <config.h>' 1>&2; exit 1; } || :;		\
+	else :;								\
+	fi
+
+sc_prohibit_HAVE_MBRTOWC:
+	@re='\bHAVE_MBRTOWC\b' msg="do not use $$re; it is always defined" \
+	  $(_prohibit_regexp)
 
 # To use this "command" macro, you must first define two shell variables:
 # h: the header, enclosed in <> or ""
@@ -265,105 +291,6 @@ sc_changelog:
 	  { echo '$(ME): found unexpected prefix in a ChangeLog' 1>&2;	\
 	    exit 1; } || :
 
-# Ensure that dd's definition of LONGEST_SYMBOL stays in sync
-# with the strings from the two affected variables.
-dd_c = $(srcdir)/src/dd.c
-sc_dd_max_sym_length:
-ifneq ($(wildcard $(dd_c)),)
-	@len=$$( (sed -n '/conversions\[\] =$$/,/^};/p' $(dd_c);\
-		 sed -n '/flags\[\] =$$/,/^};/p' $(dd_c) )	\
-		|sed -n '/"/s/^[^"]*"\([^"]*\)".*/\1/p'		\
-	      | wc --max-line-length);				\
-	max=$$(sed -n '/^#define LONGEST_SYMBOL /s///p' $(dd_c)	\
-	      |tr -d '"' | wc --max-line-length);		\
-	if test "$$len" = "$$max"; then :; else			\
-	  echo 'dd.c: LONGEST_SYMBOL is not longest' 1>&2;	\
-	  exit 1;						\
-	fi
-endif
-
-# Many m4 macros names once began with `jm_'.
-# On 2004-04-13, they were all changed to start with gl_ instead.
-# Make sure that none are inadvertently reintroduced.
-sc_prohibit_jm_in_m4:
-	@grep -nE 'jm_[A-Z]'						\
-		$$($(VC_LIST) m4 |grep '\.m4$$'; echo /dev/null) &&	\
-	    { echo '$(ME): do not use jm_ in m4 macro names'		\
-	      1>&2; exit 1; } || :
-
-# Ensure that each root-requiring test is run via the "check-root" rule.
-sc_root_tests:
-	@if test -d tests \
-	      && grep check-root tests/Makefile.am>/dev/null 2>&1; then \
-	t1=sc-root.expected; t2=sc-root.actual;				\
-	grep -nl '^require_root_$$'					\
-	  $$($(VC_LIST) tests) |sed s,tests/,, |sort > $$t1;		\
-	sed -n '/^root_tests =[	 ]*\\$$/,/[^\]$$/p'			\
-	  $(srcdir)/tests/Makefile.am					\
-	    | sed 's/^  *//;/^root_tests =/d'				\
-	    | tr -s '\012\\' '  ' | fmt -1 | sort > $$t2;		\
-	diff -u $$t1 $$t2 || diff=1;					\
-	rm -f $$t1 $$t2;						\
-	test "$$diff"							\
-	  && { echo 'tests/Makefile.am: missing check-root action'>&2;	\
-	       exit 1; } || :;						\
-	fi
-
-headers_with_interesting_macro_defs = \
-  exit.h	\
-  fcntl_.h	\
-  fnmatch_.h	\
-  intprops.h	\
-  inttypes_.h	\
-  lchown.h	\
-  openat.h	\
-  stat-macros.h	\
-  stdint_.h
-
-# Create a list of regular expressions matching the names
-# of macros that are guaranteed by parts of gnulib to be defined.
-.re-defmac:
-	@(cd $(srcdir)/lib;						\
-	  for f in $(headers_with_interesting_macro_defs); do		\
-	    test -f $$f &&						\
-	      sed -n '/^# *define \([^_ (][^ (]*\)[ (].*/s//\1/p' $$f;	\
-	   done;							\
-	 ) | sort -u							\
-	   | grep -Ev 'ATTRIBUTE_NORETURN|SIZE_MAX'			\
-	   | sed 's/^/^# *define /'					\
-	  > $@-t
-	@mv $@-t $@
-
-# Don't define macros that we already get from gnulib header files.
-sc_always_defined_macros: .re-defmac
-	@if test -f $(srcdir)/src/system.h; then			\
-	  trap 'rc=$$?; rm -f .re-defmac; exit $$rc' 0 1 2 3 15;	\
-	  grep -f .re-defmac $$($(VC_LIST))				\
-	    && { echo '$(ME): define the above via some gnulib .h file'	\
-		  1>&2;  exit 1; } || :;				\
-	fi
-
-# Create a list of regular expressions matching the names
-# of files included from system.h.  Exclude a couple.
-.re-list:
-	@sed -n '/^# *include /s///p' $(srcdir)/src/system.h \
-	  | grep -Ev 'sys/(param|file)\.h' \
-	  | sed 's/ .*//;;s/^["<]/^# *include [<"]/;s/\.h[">]$$/\\.h[">]/' \
-	  > $@-t
-	@mv $@-t $@
-
-# Files in src/ should not include directly any of
-# the headers already included via system.h.
-sc_system_h_headers: .re-list
-	@if test -f $(srcdir)/src/system.h; then			\
-	  trap 'rc=$$?; rm -f .re-list; exit $$rc' 0 1 2 3 15;		\
-	  grep -nE -f .re-list						\
-	      $$($(VC_LIST) src |					\
-		 grep -Ev '((copy|system)\.h|parse-gram\.c)$$')		\
-	    && { echo '$(ME): the above are already included via system.h'\
-		  1>&2;  exit 1; } || :;				\
-	fi
-
 # Ensure that each .c file containing a "main" function also
 # calls set_program_name.
 sc_program_name:
@@ -377,35 +304,25 @@ sc_program_name:
 	fi
 
 # Require that the final line of each test-lib.sh-using test be this one:
-# (exit $fail); exit $fail
+# Exit $fail
 # Note: this test requires GNU grep's --label= option.
 sc_require_test_exit_idiom:
 	@if test -f $(srcdir)/tests/test-lib.sh; then			\
 	  die=0;							\
 	  for i in $$(grep -l -F /../test-lib.sh $$($(VC_LIST) tests)); do \
-	    tail -n1 $$i | grep '^(exit \$$fail); exit \$$fail$$' > /dev/null \
+	    tail -n1 $$i | grep '^Exit \$$fail$$' > /dev/null		\
 	      && : || { die=1; echo $$i; }				\
 	  done;								\
 	  test $$die = 1 &&						\
 	    { echo 1>&2 '$(ME): the final line in each of the above is not:'; \
-	      echo 1>&2 '(exit $$fail); exit $$fail';			\
+	      echo 1>&2 'Exit $$fail';					\
 	      exit 1; } || :;						\
 	fi
-
-sc_sun_os_names:
-	@grep -nEi \
-	    'solaris[^[:alnum:]]*2\.(7|8|9|[1-9][0-9])|sunos[^[:alnum:]][6-9]' \
-	    $$($(VC_LIST_EXCEPT)) &&					\
-	  { echo '$(ME): found misuse of Sun OS version numbers' 1>&2;	\
-	    exit 1; } || :
 
 sc_the_the:
 	@grep -ni '\<the ''the\>' $$($(VC_LIST_EXCEPT)) &&		\
 	  { echo '$(ME): found use of "the ''the";' 1>&2;		\
 	    exit 1; } || :
-
-sc_tight_scope:
-	$(MAKE) -C src $@
 
 sc_trailing_blank:
 	@grep -n '[	 ]$$' $$($(VC_LIST_EXCEPT)) &&			\
@@ -420,7 +337,7 @@ sc_two_space_separator_in_usage:
 	@grep -nE '^   *(-[A-Za-z],)? $(longopt_re) [^ ].*\\$$'		\
 	    $$($(VC_LIST_EXCEPT)) &&					\
 	  { echo "$(ME): help2man requires at least two spaces between"; \
-	    echo "$(ME): an option and its description"; \
+	    echo "$(ME): an option and its description";		\
 		1>&2; exit 1; } || :
 
 # Look for diagnostics that aren't marked for translation.
@@ -444,27 +361,27 @@ sc_GPL_version:
 	@grep -n 'either ''version [^3]' $$($(VC_LIST_EXCEPT)) &&	\
 	  { echo '$(ME): GPL vN, N!=3' 1>&2; exit 1; } || :
 
-# Perl-based tests used to exec perl from a #!/bin/sh script.
-# Now they all start with #!/usr/bin/perl and the portability
-# infrastructure is in tests/Makefile.am.  Make sure no old-style
-# script sneaks back in.
-sc_no_exec_perl_coreutils:
-	@if test -f $(srcdir)/tests/Coreutils.pm; then			\
-	  grep '^exec  *\$$PERL.*MCoreutils' $$($(VC_LIST) tests) &&	\
-	    { echo 1>&2 '$(ME): found anachronistic Perl-based tests';	\
-	      exit 1; } || :;						\
-	fi
+cvs_keywords = \
+  Author|Date|Header|Id|Name|Locker|Log|RCSfile|Revision|Source|State
 
-NEWS_hash = \
-  $$(sed -n '/^\*.* $(PREV_VERSION_REGEXP) ([0-9-]*)/,$$p' \
-     $(srcdir)/NEWS | md5sum -)
+sc_prohibit_cvs_keyword:
+	@re='\$$($(cvs_keywords))\$$'					\
+	    msg='do not use CVS keyword expansion'			\
+	  $(_prohibit_regexp)
 
-# Ensure that we don't accidentally insert an entry into an old NEWS block.
-sc_immutable_NEWS:
-	@if test -f $(srcdir)/NEWS; then				\
-	  test "$(NEWS_hash)" = '$(old_NEWS_hash)' && : ||		\
-	    { echo '$(ME): you have modified old NEWS' 1>&2; exit 1; };	\
-	fi
+# Make sure we don't use st_blocks.  Use ST_NBLOCKS instead.
+# This is a bit of a kludge, since it prevents use of the string
+# even in comments, but for now it does the job with no false positives.
+sc_prohibit_stat_st_blocks:
+	@re='[.>]st_blocks' msg='do not use st_blocks; use ST_NBLOCKS'	\
+	  $(_prohibit_regexp)
+
+# Make sure we don't define any S_IS* macros in src/*.c files.
+# They're already defined via gnulib's sys/stat.h replacement.
+sc_prohibit_S_IS_definition:
+	@re='^ *# *define  *S_IS'					\
+	msg='do not define S_IS* macros; include <sys/stat.h>'		\
+	  $(_prohibit_regexp)
 
 # Each program that uses proper_name_utf8 must link with
 # one of the ICONV libraries.
@@ -497,6 +414,17 @@ sc_const_long_option:
 	      echo 1>&2 '$(ME): add "const" to the above declarations'; \
 	      exit 1; } || :
 
+NEWS_hash = \
+  $$(sed -n '/^\*.* $(PREV_VERSION_REGEXP) ([0-9-]*)/,$$p' \
+     $(srcdir)/NEWS | md5sum -)
+
+# Ensure that we don't accidentally insert an entry into an old NEWS block.
+sc_immutable_NEWS:
+	@if test -f $(srcdir)/NEWS; then				\
+	  test "$(NEWS_hash)" = '$(old_NEWS_hash)' && : ||		\
+	    { echo '$(ME): you have modified old NEWS' 1>&2; exit 1; };	\
+	fi
+
 # Update the hash stored above.  Do this after each release and
 # for any corrections to old entries.
 update-NEWS-hash: NEWS
@@ -507,11 +435,16 @@ epoch_date = 1970-01-01 00:00:00.000000000 +0000
 # Ensure that the c99-to-c89 patch applies cleanly.
 patch-check:
 	rm -rf src-c89 $@.1 $@.2
-	cp -a src src-c89
-	(cd src-c89; patch -p1 -V never --fuzz=0) < src/c99-to-c89.diff \
+	cp -a $(srcdir)/src src-c89
+	if test "x$(srcdir)" != x.; then \
+	  cp -a src/* src-c89; \
+	  dotfiles=`ls src/.[!.]* 2>/dev/null`; \
+	  test -z "$$dotfiles" || cp -a src/.[!.]* src-c89; \
+	fi
+	(cd src-c89; patch -p1 -V never --fuzz=0) < $(srcdir)/src/c99-to-c89.diff \
 	  > $@.1 2>&1
 	if test "$(REGEN_PATCH)" = yes; then			\
-	  diff -upr src src-c89 | sed 's,src-c89/,src/,'	\
+	  diff -upr $(srcdir)/src src-c89 | sed 's,$(srcdir)/src-c89/,src/,'	\
 	    | grep -vE '^(Only in|File )'			\
 	    | perl -pe 's/^((?:\+\+\+|---) \S+\t).*/$${1}$(epoch_date)/;' \
 	       -e 's/^ $$//'					\
@@ -524,21 +457,6 @@ patch-check:
 	test "$$msg" = ok && rm -rf src-c89 $@.1 $@.2 || echo "$$msg" 1>&2; \
 	test "$$msg" = ok
 
-# Ensure that date's --help output stays in sync with the info
-# documentation for GNU strftime.  The only exception is %N,
-# which date accepts but GNU strftime does not.
-extract_char = sed 's/^[^%][^%]*%\(.\).*/\1/'
-strftime-check:
-	if test -f $(srcdir)/src/date.c; then				\
-	  grep '^  %.  ' $(srcdir)/src/date.c | sort			\
-	    | $(extract_char) > $@-src;					\
-	  { echo N;							\
-	    info libc date calendar format | grep '^    `%.'\'		\
-	      | $(extract_char); } | sort > $@-info;			\
-	  diff -u $@-src $@-info || exit 1;				\
-	  rm -f $@-src $@-info;						\
-	fi
-
 check-AUTHORS:
 	$(MAKE) -C src $@
 
@@ -546,7 +464,8 @@ check-AUTHORS:
 # not @...@ in Makefile.am, now that we can rely on automake
 # to emit a definition for each substituted variable.
 makefile-check:
-	@grep -nE '@[A-Z_0-9]+@' `find . -name Makefile.am` \
+	@grep -nE '@[A-Z_0-9]+@'					\
+	    $$($(VC_LIST_EXCEPT) | grep -E '(^|/)Makefile\.am$$')	\
 	  && { echo '$(ME): use $$(...), not @...@' 1>&2; exit 1; } || :
 
 news-date-check: NEWS
@@ -568,15 +487,21 @@ changelog-check:
 	  exit 1;							\
 	fi
 
-m4-check:
-	@grep -n 'AC_DEFUN([^[]' m4/*.m4 \
-	  && { echo '$(ME): quote the first arg to AC_DEFUN' 1>&2; \
+sc_m4_quote_check:
+	@grep -nE '(AC_DEFINE(_UNQUOTED)?|AC_DEFUN)\([^[]'		\
+	    $$($(VC_LIST_EXCEPT) | grep -E '(^configure\.ac|\.m4)$$')	\
+	  && { echo '$(ME): quote the first arg to AC_DEF*' 1>&2;	\
 	       exit 1; } || :
 
+fix_po_file_diag = \
+'you have changed the set of files with translatable diagnostics;\n\
+apply the above patch\n'
+
 # Verify that all source files using _() are listed in po/POTFILES.in.
-po-check:
-	@if test -f po/POTFILES.in; then				\
-	  grep -E -v '^(#|$$)' po/POTFILES.in				\
+po_file = po/POTFILES.in
+sc_po_check:
+	@if test -f $(po_file); then					\
+	  grep -E -v '^(#|$$)' $(po_file)				\
 	    | grep -v '^src/false\.c$$' | sort > $@-1;			\
 	  files=;							\
 	  for file in $$($(VC_LIST_EXCEPT)) lib/*.[ch]; do		\
@@ -593,17 +518,10 @@ po-check:
 	  done;								\
 	  grep -E -l '\b(N?_|gettext *)\([^)"]*("|$$)' $$files		\
 	    | sort -u > $@-2;						\
-	  diff -u $@-1 $@-2 || exit 1;					\
+	  diff -u -L $(po_file) -L $(po_file) $@-1 $@-2			\
+	    || { printf '$(ME): '$(fix_po_file_diag) 1>&2; exit 1; };	\
 	  rm -f $@-1 $@-2;						\
 	fi
-
-# In a definition of #define AUTHORS "... and ..." where the RHS contains
-# the English word `and', the string must be marked with `N_ (...)' so that
-# gettext recognizes it as a string requiring translation.
-author_mark_check:
-	@grep -n '^# *define AUTHORS "[^"]* and ' src/*.c |grep -v ' N_ (' && \
-	  { echo '$(ME): enclose the above strings in N_ (...)' 1>&2; \
-	    exit 1; } || :
 
 # Sometimes it is useful to change the PATH environment variable
 # in Makefiles.  When doing so, it's better not to use the Unix-centric
@@ -612,7 +530,7 @@ author_mark_check:
 # and there probably aren't many projects with so many Makefile.am files
 # that we'd have to worry about limits on command line length.
 msg = '$(ME): Do not use `:'\'' above; use @PATH_SEPARATOR@ instead'
-makefile_path_separator_check:
+sc_makefile_path_separator_check:
 	@grep -n 'PATH=.*:' `find $(srcdir) -name Makefile.am` \
 	  && { echo $(msg) 1>&2; exit 1; } || :
 
@@ -633,24 +551,24 @@ sample-test = tests/sample-test
 texi = doc/$(PACKAGE).texi
 # Make sure that the copyright date in $(v_etc_file) is up to date.
 # Do the same for the $(sample-test) and the main doc/.texi file.
-copyright-check:
-	@if test -f $(v_etc_file); then \
+sc_copyright_check:
+	@if test -f $(v_etc_file); then					\
 	  grep 'enum { COPYRIGHT_YEAR = '$$(date +%Y)' };' $(v_etc_file) \
-	    >/dev/null \
+	    >/dev/null							\
 	  || { echo 'out of date copyright in $(v_etc_file); update it' 1>&2; \
-	       exit 1; }; \
+	       exit 1; };						\
 	fi
-	@if test -f $(sample-test); then \
-	  grep '# Copyright (C) '$$(date +%Y)' Free' $(sample-test) \
-	    >/dev/null \
+	@if test -f $(sample-test); then				\
+	  grep '# Copyright (C) '$$(date +%Y)' Free' $(sample-test)	\
+	    >/dev/null							\
 	  || { echo 'out of date copyright in $(sample-test); update it' 1>&2; \
-	       exit 1; }; \
+	       exit 1; };						\
 	fi
-	@if test -f $(texi); then \
-	  grep 'Copyright @copyright{} .*'$$(date +%Y)' Free' $(texi) \
-	    >/dev/null \
-	  || { echo 'out of date copyright in $(texi); update it' 1>&2; \
-	       exit 1; }; \
+	@if test -f $(texi); then					\
+	  grep 'Copyright @copyright{} .*'$$(date +%Y)' Free' $(texi)	\
+	    >/dev/null							\
+	  || { echo 'out of date copyright in $(texi); update it' 1>&2;	\
+	       exit 1; };						\
 	fi
 
 vc-diff-check:
@@ -735,8 +653,7 @@ define install-transform-check
     && $(MAKE) program_transform_name='s/.*/zyx/'	\
       prefix=$(pfx) install				\
     && test "$$(echo $(pfx)/sbin/*)" = "$(pfx)/sbin/zyx"	\
-    && test "$$(echo $(pfx)/share/man/man1/*)" =	\
-                    "$(pfx)/share/man/man1/zyx.1"
+    && test "$$(find $(pfx)/share/man -type f|sed 's,.*/,,;s,\..*,,')" = "zyx"
 endef
 
 # Install, then verify that all binaries and man pages are in place.
@@ -757,6 +674,34 @@ define my-instcheck
       done;						\
       test $$fail = 1 && exit 1 || :;			\
     }
+endef
+
+define coreutils-path-check
+  {							\
+    if test -f $(srcdir)/src/true.c; then		\
+      fail=1;						\
+      mkdir $(bin)					\
+	&& ($(write_loser)) > $(bin)/loser		\
+	&& chmod a+x $(bin)/loser			\
+	&& for i in $(built_programs); do		\
+	       case $$i in				\
+		 rm|expr|basename|echo|sort|ls|tr);;	\
+		 cat|dirname|mv|wc);;			\
+		 *) ln $(bin)/loser $(bin)/$$i;;	\
+	       esac;					\
+	     done					\
+	  && ln -sf ../src/true $(bin)/false		\
+	  && PATH=`pwd`/$(bin):$$PATH $(MAKE) -C tests check \
+	  && { test -d gnulib-tests			\
+	         && $(MAKE) -C gnulib-tests check	\
+	         || :; }				\
+	  && rm -rf $(bin)				\
+	  && fail=0;					\
+    else						\
+      fail=0;						\
+    fi;							\
+    test $$fail = 1 && exit 1 || :;			\
+  }
 endef
 
 # Use -Wformat -Werror to detect format-string/arg-list mismatches.
@@ -782,34 +727,13 @@ my-distcheck: $(DIST_ARCHIVES) $(local-check)
 	  && $(MAKE) CFLAGS='$(warn_cflags)'		\
 	      AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)'	\
 	  && $(MAKE) dvi				\
+	  && $(install-transform-check)			\
 	  && $(my-instcheck)				\
-	  && mkdir $(bin)				\
-	  && ($(write_loser)) > $(bin)/loser            \
-	  && chmod a+x $(bin)/loser                     \
-	  && for i in $(built_programs); do		\
-	       case $$i in				\
-		 rm|expr|basename|echo|sort|ls|tr);;	\
-		 cat|dirname|mv|wc);;			\
-		 *) ln $(bin)/loser $(bin)/$$i;;	\
-	       esac;					\
-	     done					\
-	  && ln -sf ../src/true $(bin)/false		\
-	  && PATH=`pwd`/$(bin):$$PATH $(MAKE) -C tests check \
-	  && { test -d gnulib-tests			\
-	         && $(MAKE) -C gnulib-tests check	\
-	         || :; }				\
-	  && rm -rf $(bin)				\
+	  && $(coreutils-path-check)			\
 	  && $(MAKE) distclean
 	(cd $(t) && mv $(distdir) $(distdir).old	\
 	  && $(AMTAR) -zxf - ) < $(distdir).tar.gz
 	diff -ur $(t)/$(distdir).old $(t)/$(distdir)
-	if test -f $(srcdir)/src/c99-to-c89.diff; then			\
-	  cd $(t)/$(distdir)						\
-	    && (cd src && patch -V never --fuzz=0 <c99-to-c89.diff)	\
-	    && ./configure --disable-largefile				\
-	         CFLAGS='-Werror -ansi -Wno-long-long'			\
-	    && $(MAKE);							\
-	fi
 	-rm -rf $(t)
 	@echo "========================"; \
 	echo "$(distdir).tar.gz is ready for distribution"; \
@@ -889,4 +813,4 @@ alpha beta major: $(local-check) writable-files
 	$(MAKE) update-NEWS-hash
 	perl -pi -e '$$. == 3 and print "$(noteworthy)\n\n\n"' NEWS
 	$(emit-commit-log) > .ci-msg
-	$(VC) commit -F .ci-msg
+	$(VC) commit -F .ci-msg -a
