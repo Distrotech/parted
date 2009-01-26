@@ -1,5 +1,5 @@
 /* libparted - a library for manipulating disk partitions
-    Copyright (C) 1999 - 2005, 2007, 2008 Free Software Foundation, Inc.
+    Copyright (C) 1999 - 2005, 2007, 2008, 2009 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -2251,7 +2251,7 @@ _disk_sync_part_table (PedDisk* disk)
         if (largest_partnum <= 0)
           return 1;
 
-        int     last = PED_MIN (largest_partnum, 16);
+        int     last = 16;
         int*    rets = ped_malloc(sizeof(int) * last);
         int*    errnums = ped_malloc(sizeof(int) * last);
         int     ret = 1;
