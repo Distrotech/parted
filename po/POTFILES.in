@@ -1,5 +1,5 @@
 # libparted
-# Copyright (C) 1999, 2000, 2001, 2006, 2007  Free Software Foundation, Inc.
+# Copyright (C) 1999-2001, 2006-2007, 2009  Free Software Foundation, Inc.
 # This file may be modified and/or copied without restriction.
 
 # list of files containing translatable strings
@@ -13,6 +13,7 @@ lib/regcomp.c
 lib/rpmatch.c
 lib/version-etc.c
 lib/xalloc-die.c
+lib/xstrtol-error.c
 libparted/arch/beos.c
 
 debug/clearfat/clearfat.c
