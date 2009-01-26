@@ -9,7 +9,7 @@ dnl Example:
 dnl PARTED_CHECK_LIBPARTED(1.2.8, , [AC_MSG_ERROR([*** libparted >= 1.2.8 not installed - please install first ***])])
 dnl
 dnl Adds the required libraries to $PARTED_LIBS and does an
-dnl AC_SUBST(PARTED_LIBS)
+dnl AC_SUBST([PARTED_LIBS])
 dnl
 
 
@@ -21,13 +21,13 @@ dnl save LIBS
 saved_LIBS="$LIBS"
 
 dnl Check for headers and library
-AC_CHECK_HEADER(parted/parted.h, ,
+AC_CHECK_HEADER([parted/parted.h], ,
 		[AC_MSG_ERROR([<parted/parted.h> not found; install GNU/Parted])]
 		$3)
-AC_CHECK_LIB(uuid, uuid_generate, ,
+AC_CHECK_LIB([uuid], [uuid_generate], ,
 	     [AC_MSG_ERROR([libuuid not found; install e2fsprogs available at http://web.mit.edu/tytso/www/linux/e2fsprogs.html])]
              $3)
-AC_CHECK_LIB(parted,ped_device_read, ,
+AC_CHECK_LIB([parted],ped_device_read, ,
              [AC_MSG_ERROR([libparted not found; install GNU/Parted available at http://www.gnu.org/software/parted/parted.html])]
              $3)
 
@@ -36,21 +36,21 @@ case "$host_os" in
 		# with very generic names, which is why we special
 		# case these tests.
 
-		AC_CHECK_LIB(shouldbeinlibc,lcm, ,
+		AC_CHECK_LIB([shouldbeinlibc], [lcm], ,
                 	[AC_MSG_ERROR([libshouldbeinlibc not found; install the Hurd development libraries.])]
                 $3)
 
-		AC_CHECK_LIB(store,store_open, ,
+		AC_CHECK_LIB([store], [store_open], ,
                 	[AC_MSG_ERROR([libstore not found; install the Hurd development libraries.])]
                 $3)
 		;;
 	*)	;;
 esac
 
-AC_MSG_CHECKING(for libparted - version >= $1)
+AC_MSG_CHECKING([for libparted - version >= $1])
 
-AC_TRY_LINK_FUNC(ped_get_version,,
-                 AC_MSG_RESULT(failed)
+AC_TRY_LINK_FUNC([ped_get_version], ,
+                 AC_MSG_RESULT([failed])
                  AC_MSG_ERROR([*** libparted < 1.2.8 or == 1.3.0 can't execute test ***]))
 
 dnl Get major, minor, and micro version from arg MINIMUM-VERSION
@@ -95,14 +95,14 @@ int main ()
 	}
 }
 ], 
-    AC_MSG_RESULT(yes),
-    AC_MSG_RESULT(no) ; $3,
+    AC_MSG_RESULT([yes]),
+    AC_MSG_RESULT([no]) ; $3,
     [echo $ac_n "cross compiling; assumed OK... $ac_c"])
 
 dnl restore orignial LIBS and set @PARTED_LIBS@
 PARTED_LIBS="$LIBS"
 LIBS="$saved_LIBS"
-AC_SUBST(PARTED_LIBS)
+AC_SUBST([PARTED_LIBS])
 
 dnl Execute ACTION-IF-FOUND
 $2
