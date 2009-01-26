@@ -1,6 +1,6 @@
 /*
     parted - a frontend to libparted
-    Copyright (C) 1999, 2000, 2001, 2002, 2006, 2007, 2008
+    Copyright (C) 1999, 2000, 2001, 2002, 2006, 2007, 2008, 2009
     Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
@@ -17,6 +17,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <config.h>
+
 #include <parted/parted.h>
 #include <parted/debug.h>
 
@@ -27,7 +29,6 @@
 #include <unistd.h>
 #include <setjmp.h>
 
-#include <config.h>
 #include "command.h"
 #include "strlist.h"
 #include "ui.h"
