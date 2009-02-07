@@ -13,6 +13,7 @@ lib/regcomp.c
 lib/rpmatch.c
 lib/version-etc.c
 lib/xalloc-die.c
+lib/xstrtol-error.c
 libparted/arch/beos.c
 
 debug/clearfat/clearfat.c
