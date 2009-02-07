@@ -1,6 +1,6 @@
 /*
     clear_fat - a tool to clear unused space (for testing purposes)
-    Copyright (C) 2000, 2007-2008 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2007-2009 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,12 +21,14 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 #include <getopt.h>
 #include "closeout.h"
 #include "configmake.h"
 #include "error.h"
 #include "long-options.h"
 #include "progname.h"
+#include "xstrtol.h"
 
 #include "../../libparted/fs/fat/fat.h"
 
@@ -288,6 +290,14 @@ main (int argc, char* argv[])
             usage (EXIT_FAILURE);
           }
 
+	unsigned long minor_dev_number;
+	if (xstrtoul (argv[2], NULL, 10, &minor_dev_number, NULL)
+	    || INT_MAX < minor_dev_number)
+	  {
+	    error (0, 0, _("invalid minor device number: %s"), argv[2]);
+            usage (EXIT_FAILURE);
+	  }
+
 	dev = ped_device_get (argv [1]);
 	if (!dev)
 		goto error;
@@ -297,8 +307,8 @@ main (int argc, char* argv[])
 	disk = ped_disk_new (dev);
 	if (!disk)
 		goto error_close_dev;
- 
-	part = ped_disk_get_partition (disk, atoi (argv[2]));
+
+	part = ped_disk_get_partition (disk, minor_dev_number);
 	if (!part) {
 		printf ("Couldn't find partition `%s'\n", argv[2]);
 		goto error_destroy_disk;
