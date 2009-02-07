@@ -62,8 +62,6 @@ release_archive_dir ?= ../release
 # Doing it here saves us from having to set LC_ALL elsewhere in this file.
 export LC_ALL = C
 
-
-
 ## --------------- ##
 ## Sanity checks.  ##
 ## --------------- ##
@@ -77,6 +75,11 @@ local-checks-available = \
   patch-check $(syntax-check-rules) \
   makefile-check check-AUTHORS
 .PHONY: $(local-checks-available)
+
+# Arrange to print the name of each syntax-checking rule just before running it.
+$(syntax-check-rules): %: %.m
+$(patsubst %, %.m, $(syntax-check-rules)):
+	@echo $(patsubst sc_%.m, %, $@)
 
 local-check := $(filter-out $(local-checks-to-skip), $(local-checks-available))
 
@@ -92,6 +95,10 @@ syntax-check: $(local-check)
 #	    exit 1; } || :
 # FIXME: don't allow `#include .strings\.h' anywhere
 
+# By default, _prohibit_regexp does not ignore case.
+export ignore_case =
+_ignore_case = $$(test -n "$$ignore_case" && echo -i || :)
+
 # There are many rules below that prohibit constructs in this package.
 # If the offending construct can be matched with a grep-E-style regexp,
 # use this macro.  The shell variables "re" and "msg" must be defined.
@@ -99,7 +106,7 @@ define _prohibit_regexp
   dummy=; : so we do not need a semicolon before each use		\
   test "x$$re" != x || { echo '$(ME): re not defined' 1>&2; exit 1; };	\
   test "x$$msg" != x || { echo '$(ME): msg not defined' 1>&2; exit 1; };\
-  grep -nE "$$re" $$($(VC_LIST_EXCEPT)) &&				\
+  grep $(_ignore_case) -nE "$$re" $$($(VC_LIST_EXCEPT)) &&		\
     { echo '$(ME): '"$$msg" 1>&2; exit 1; } || :
 endef
 
@@ -131,7 +138,7 @@ sc_space_tab:
 # They provide no error checking mechanism.
 # Instead, use strto* functions.
 sc_prohibit_atoi_atof:
-	@re='\<([fs]?scanf|ato([filq]|ll))\>'				\
+	@re='\<([fs]?scanf|ato([filq]|ll)) *\('				\
 	msg='do not use *scan''f, ato''f, ato''i, ato''l, ato''ll or ato''q' \
 	  $(_prohibit_regexp)
 
@@ -175,13 +182,12 @@ sc_error_message_period:
 	    exit 1; } || :
 
 sc_file_system:
-	@grep -ni 'file''system' $$($(VC_LIST_EXCEPT)) &&		\
-	  { echo '$(ME): found use of "file''system";'			\
-	    'rewrite to use "file system"' 1>&2;			\
-	    exit 1; } || :
+	@re=file''system ignore_case=1					\
+	msg='found use of "file''system"; spell it "file system"'	\
+	  $(_prohibit_regexp)
 
 # Don't use cpp tests of this symbol.  All code assumes config.h is included.
-sc_no_have_config_h:
+sc_prohibit_have_config_h:
 	@grep -n '^# *if.*HAVE''_CONFIG_H' $$($(VC_LIST_EXCEPT)) &&	\
 	  { echo '$(ME): found use of HAVE''_CONFIG_H; remove'		\
 		1>&2; exit 1; } || :
@@ -277,11 +283,16 @@ sc_prohibit_root_dev_ino_without_use:
 	re='(\<ROOT_DEV_INO_(CHECK|WARN)\>|\<get_root_dev_ino *\()' \
 	  $(_header_without_use)
 
+# Prohibit the inclusion of c-ctype.h without an actual use.
+ctype_re = isalnum|isalpha|isascii|isblank|iscntrl|isdigit|isgraph|islower\
+|isprint|ispunct|isspace|isupper|isxdigit|tolower|toupper
+sc_prohibit_c_ctype_without_use:
+	@h='[<"]c-ctype.h[">]' re='\<c_($(ctype_re)) *\(' $(_header_without_use)
+
 sc_obsolete_symbols:
-	@grep -nE '\<(HAVE''_FCNTL_H|O''_NDELAY)\>'			\
-	     $$($(VC_LIST_EXCEPT)) &&					\
-	  { echo '$(ME): do not use HAVE''_FCNTL_H or O''_NDELAY'	\
-		1>&2; exit 1; } || :
+	@re='\<(HAVE''_FCNTL_H|O''_NDELAY)\>'				\
+	msg='do not use HAVE''_FCNTL_H or O'_NDELAY			\
+	  $(_prohibit_regexp)
 
 # FIXME: warn about definitions of EXIT_FAILURE, EXIT_SUCCESS, STREQ
 
@@ -320,14 +331,14 @@ sc_require_test_exit_idiom:
 	fi
 
 sc_the_the:
-	@grep -ni '\<the ''the\>' $$($(VC_LIST_EXCEPT)) &&		\
-	  { echo '$(ME): found use of "the ''the";' 1>&2;		\
-	    exit 1; } || :
+	@re='\<the ''the\>'						\
+	ignore_case=1 msg='found use of "the ''the";'			\
+	  $(_prohibit_regexp)
 
 sc_trailing_blank:
-	@grep -n '[	 ]$$' $$($(VC_LIST_EXCEPT)) &&			\
-	  { echo '$(ME): found trailing blank(s)'			\
-		1>&2; exit 1; } || :
+	@re='[	 ]$$'							\
+	ignore_case=1 msg='found trailing blank(s)'			\
+	  $(_prohibit_regexp)
 
 # Match lines like the following, but where there is only one space
 # between the options and the description:
@@ -358,8 +369,8 @@ sc_useless_cpp_parens:
 
 # Require the latest GPL.
 sc_GPL_version:
-	@grep -n 'either ''version [^3]' $$($(VC_LIST_EXCEPT)) &&	\
-	  { echo '$(ME): GPL vN, N!=3' 1>&2; exit 1; } || :
+	@re='either ''version [^3]' msg='GPL vN, N!=3'			\
+	  $(_prohibit_regexp)
 
 cvs_keywords = \
   Author|Date|Header|Id|Name|Locker|Log|RCSfile|Revision|Source|State
@@ -403,10 +414,9 @@ sc_proper_name_utf8_requires_ICONV:
 # Warn about "c0nst struct Foo const foo[]",
 # but not about "char const *const foo" or "#define const const".
 sc_redundant_const:
-	@grep -E '\bconst\b[[:space:][:alnum:]]{2,}\bconst\b'		\
-		$$($(VC_LIST_EXCEPT)) &&				\
-	    { echo 1>&2 '$(ME): redundant "const" in declarations';	\
-	      exit 1; } || :
+	@re='\bconst\b[[:space:][:alnum:]]{2,}\bconst\b'		\
+	msg='redundant "const" in declarations'				\
+	  $(_prohibit_regexp)
 
 sc_const_long_option:
 	@grep '^ *static.*struct option ' $$($(VC_LIST_EXCEPT))		\
