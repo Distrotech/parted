@@ -1,6 +1,6 @@
 /*
     libparted
-    Copyright (C) 1998, 1999, 2000, 2001, 2007 Free Software Foundation, Inc.
+    Copyright (C) 1998-2001, 2007-2009 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -265,12 +265,15 @@ fat_root_dir_clear (PedFileSystem* fs)
  * with /dev/random) number.  Unfortunately, we can only use 4 bytes of it
  */
 static uint32_t
-_gen_new_serial_number ()
+_gen_new_serial_number (void)
 {
-	uuid_t		uuid;
+	union {
+		uuid_t uuid;
+		uint32_t i;
+	} uu32;
 
-	uuid_generate (uuid);
-	return * (uint32_t*) &uuid [0];
+	uuid_generate (uu32.uuid);
+	return uu32.i;
 }
 
 PedFileSystem*
