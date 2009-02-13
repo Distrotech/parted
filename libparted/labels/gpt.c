@@ -831,21 +831,26 @@ gpt_read (PedDisk * disk)
 			char* zeros = ped_malloc (pth_get_size (disk->dev));
 
 #ifndef DISCOVER_ONLY
-			if (ped_exception_throw (
+			switch (ped_exception_throw (
 				PED_EXCEPTION_ERROR,
-				PED_EXCEPTION_FIX | PED_EXCEPTION_CANCEL,
+				PED_EXCEPTION_FIX | PED_EXCEPTION_CANCEL | PED_EXCEPTION_IGNORE,
 		_("The backup GPT table is not at the end of the disk, as it "
 		  "should be.  This might mean that another operating system "
 		  "believes the disk is smaller.  Fix, by moving the backup "
-		  "to the end (and removing the old backup)?"))
-					== PED_EXCEPTION_CANCEL)
-				goto error_free_gpt;
+		  "to the end (and removing the old backup)?"))) {
+				case PED_EXCEPTION_CANCEL:
+					goto error_free_gpt;
+				case PED_EXCEPTION_FIX:
+					write_back = 1;
+					memset (zeros, 0, disk->dev->sector_size);
+					ped_device_write (disk->dev, zeros,
+							  PED_LE64_TO_CPU (gpt->AlternateLBA),
+							  1);
+					break;
+				default:
+					break;
+			}
 
-			write_back = 1;
-			memset (zeros, 0, disk->dev->sector_size);
-			ped_device_write (disk->dev, zeros,
-					  PED_LE64_TO_CPU (gpt->AlternateLBA),
-					  1);
 #endif /* !DISCOVER_ONLY */
 		}
 	} else { /* primary GPT *not* ok */
