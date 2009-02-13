@@ -348,7 +348,7 @@ _dm_maptype (PedDevice *dev)
         next = dm_get_next_target(dmt, NULL, &start, &length,
                                   &target_type, &params);
 
-        arch_specific->dmtype = strdup(target_type);
+        arch_specific->dmtype = strdup(target_type ? target_type : "NO-TARGET");
         if (arch_specific->dmtype == NULL)
                 goto bad;
         r = 0;
