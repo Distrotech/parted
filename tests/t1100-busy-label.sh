@@ -29,7 +29,7 @@ test_expect_success \
     'dd if=/dev/zero "of=$dev" bs=1k count=1 2> /dev/null &&
      parted -s "$dev" mklabel msdos                > out 2>&1 &&
      parted -s "$dev" mkpartfs primary fat32 1 40 >> out 2>&1'
-test_expect_success 'expect no output' '$compare out /dev/null'
+test_expect_success 'expect no output' 'compare out /dev/null'
 
 mount_point="`pwd`/mnt"
 
@@ -55,7 +55,7 @@ test_expect_success \
     'echo "Error: Partition(s) on $dev are being used." > exp'
 test_expect_success \
     'check for expected failure diagnostic' \
-    '$compare out exp'
+    'compare out exp'
 
 # ==================================================
 # Now, test it in interactive mode.
@@ -80,6 +80,6 @@ test_expect_success \
 
 test_expect_success \
     'check for expected failure diagnostic' \
-    '$compare out exp'
+    'compare out exp'
 
 test_done

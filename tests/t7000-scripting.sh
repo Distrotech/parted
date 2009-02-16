@@ -43,7 +43,7 @@ for mkpart in mkpart mkpartfs; do
 
   test_expect_success \
       'Compare the real error and the expected one' \
-      '$compare out errS'
+      'compare out errS'
 
   # Test mkpart/mkpartfsin interactive mode.
   test_expect_success \
@@ -65,7 +65,7 @@ for mkpart in mkpart mkpartfs; do
 
   test_expect_success \
       'Compare the real error and the expected one' \
-      '$compare out errI'
+      'compare out errI'
 
 done
 test_done

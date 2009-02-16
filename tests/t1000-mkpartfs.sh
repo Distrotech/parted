@@ -29,7 +29,7 @@ test_expect_success \
 test_expect_success \
     'label the test disk' \
     'parted -s $dev mklabel msdos > out 2>&1'
-test_expect_success 'expect no output' '$compare out /dev/null'
+test_expect_success 'expect no output' 'compare out /dev/null'
 
 # Expect parted's mkpartfs command to fail.
 test_expect_failure \
@@ -42,7 +42,7 @@ test_expect_success \
 
 test_expect_success \
     'check for expected failure diagnostic' \
-    '$compare out exp'
+    'compare out exp'
 
 test_expect_success 'clean up, preparing for next test' 'rm $dev out'
 
@@ -57,12 +57,12 @@ test_expect_success \
 test_expect_success \
     'label the test disk' \
     'parted -s $dev mklabel msdos > out 2>&1'
-test_expect_success 'expect no output' '$compare out /dev/null'
+test_expect_success 'expect no output' 'compare out /dev/null'
 
 test_expect_success \
     'create an msdos file system' \
     'parted -s $dev mkpartfs primary fat32 1 40 > out 2>&1'
 
-test_expect_success 'expect no output' '$compare out /dev/null'
+test_expect_success 'expect no output' 'compare out /dev/null'
 
 test_done

@@ -41,7 +41,7 @@ test_expect_success \
 test_expect_success \
     'run parted -s FILE mklabel msdos' \
     'parted -s $dev mklabel msdos > out 2>&1'
-test_expect_success 'expect no output' '$compare out /dev/null'
+test_expect_success 'expect no output' 'compare out /dev/null'
 
 # ----------------------------------------------
 # Now, ensure that a simple mklabel command succeeds.
@@ -62,7 +62,7 @@ test_expect_success \
 
 test_expect_success \
     'check its "interactive" output' \
-    '$compare out exp 1>&2'
+    'compare out exp 1>&2'
 
 test_expect_success 'create interactive input' 'printf "y\n\n" > in'
 
@@ -94,6 +94,6 @@ test_expect_success \
 
 test_expect_success \
     'check its output -- slightly different here, due to prompts' \
-    '$compare out exp'
+    'compare out exp'
 
 test_done

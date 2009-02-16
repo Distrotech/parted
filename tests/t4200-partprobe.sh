@@ -57,9 +57,9 @@ test_expect_success \
     "ensure that partprobe succeeds and produces no output" \
     '
     partprobe -s $dev > out 2>err &&
-    $compare err /dev/null &&
+    compare err /dev/null &&
     echo "$dev: dvh partitions 9 <17>" > exp &&
-    $compare out exp
+    compare out exp
     '
 
 test_done

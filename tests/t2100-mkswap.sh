@@ -34,22 +34,22 @@ test_expect_success \
 test_expect_success \
     'label the test disk' \
     'parted -s $dev mklabel msdos > out 2>&1'
-test_expect_success 'expect no output' '$compare out /dev/null'
+test_expect_success 'expect no output' 'compare out /dev/null'
 
 test_expect_success \
     'create a partition' \
     'parted -s $dev mkpart primary 0 1 > out 2>&1'
-test_expect_success 'expect no output' '$compare out /dev/null'
+test_expect_success 'expect no output' 'compare out /dev/null'
 
 test_expect_success \
     'create a linux-swap file system' \
     'parted -s $dev mkfs 1 "linux-swap(new)" > out 2>&1'
-test_expect_success 'expect no output' '$compare out /dev/null'
+test_expect_success 'expect no output' 'compare out /dev/null'
 
 # Extract the byte at offset 451.  It must be 0x82, not 0x83.
 test_expect_success \
     'extract byte 451 (fs-type)' \
     'od -t x1 -An -j450 -N1 $dev > out && echo " 82" > exp'
-test_expect_success 'expect it to be 82, not 83' '$compare out exp'
+test_expect_success 'expect it to be 82, not 83' 'compare out exp'
 
 test_done

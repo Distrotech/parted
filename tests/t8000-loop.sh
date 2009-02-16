@@ -42,7 +42,7 @@ test_expect_success \
 test_expect_success \
     'run parted -s "$d1" mklabel msdos' \
     'parted -s $d1 mklabel msdos > out 2>&1'
-test_expect_success 'check for empty output' '$compare out /dev/null'
+test_expect_success 'check for empty output' 'compare out /dev/null'
 
 test_expect_failure \
     'run parted -s "$d1" mkpart primary 1 10' \
@@ -50,6 +50,6 @@ test_expect_failure \
 test_expect_success 'prepare actual/expected output' \
     'emit_expected_diagnostic > exp &&
      cut -b1-64 out > k && mv k out'
-test_expect_success 'check for expected output' '$compare exp out'
+test_expect_success 'check for expected output' 'compare exp out'
 
 test_done

@@ -38,16 +38,16 @@ test_expect_success \
 test_expect_success \
     'run parted -s FILE mklabel msdos' \
     'parted -s $dev mklabel msdos > out 2>&1'
-test_expect_success 'check for empty output' '$compare out /dev/null'
+test_expect_success 'check for empty output' 'compare out /dev/null'
 
 test_expect_success \
     'make an ext2 primary partition' \
     'parted -s $dev mkpartfs primary ext2 0 $ORIG_SIZE > out 2>&1'
-test_expect_success 'check for empty output' '$compare out /dev/null'
+test_expect_success 'check for empty output' 'compare out /dev/null'
 
 test_expect_success \
     'resize ext2 primary partition' \
     'parted -s $dev resize 1 0 $NEW_SIZE > out 2>&1'
-test_expect_success 'check for empty output' '$compare out /dev/null'
+test_expect_success 'check for empty output' 'compare out /dev/null'
 
 test_done

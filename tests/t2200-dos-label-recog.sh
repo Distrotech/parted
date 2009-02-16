@@ -34,7 +34,7 @@ test_expect_success \
 test_expect_success \
     'label the test disk' \
     'parted -s $dev mklabel msdos > out 2>&1'
-test_expect_success 'expect no output' '$compare out /dev/null'
+test_expect_success 'expect no output' 'compare out /dev/null'
 
 test_expect_success \
     'create two partition' \
@@ -43,7 +43,7 @@ test_expect_success \
     parted -s $dev mkpart primary 41s 80s > out 2>&1
 
     '
-test_expect_success 'expect no output' '$compare out /dev/null'
+test_expect_success 'expect no output' 'compare out /dev/null'
 
 test_expect_success \
     'write "FAT" where it would cause trouble' \
@@ -57,6 +57,6 @@ test_expect_success \
     printf "1:1s:40s:40s:::;\n2:41s:80s:40s:::;\n" > exp
 
     '
-test_expect_success 'expect two partitions' '$compare out exp'
+test_expect_success 'expect two partitions' 'compare out exp'
 
 test_done

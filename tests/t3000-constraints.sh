@@ -47,6 +47,6 @@ test_expect_success \
     'normalize the actual output' \
     'sed "s,   *,,;s, $,," out > o2 && mv -f o2 out'
 
-test_expect_success 'check for expected output' '$compare out exp'
+test_expect_success 'check for expected output' 'compare out exp'
 
 test_done

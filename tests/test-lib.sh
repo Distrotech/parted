@@ -311,9 +311,9 @@ trap '(exit $?); exit $?' 1 2 13 15
 cd "$test_dir_rand_" || error "failed to cd to $test_dir_rand_"
 
 if ( diff --version < /dev/null 2>&1 | grep GNU ) 2>&1 > /dev/null; then
-  compare='diff -u'
+  compare() { diff -u "$@"; }
 elif ( cmp --version < /dev/null 2>&1 | grep GNU ) 2>&1 > /dev/null; then
-  compare='cmp -s'
+  compare() { cmp -s "$@"; }
 else
-  compare=cmp
+  compare() { cmp "$@"; }
 fi

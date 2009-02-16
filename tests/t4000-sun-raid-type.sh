@@ -33,12 +33,12 @@ test_expect_success \
 test_expect_success \
     'label the test disk as a sun disk' \
     'parted -s $dev mklabel sun > out 2>&1'
-test_expect_success 'check for empty output' '$compare out /dev/null'
+test_expect_success 'check for empty output' 'compare out /dev/null'
 
 test_expect_success \
     'create a single partition' \
     'parted -s $dev unit s mkpart ext2 0s 50s > out 2>&1'
-test_expect_success 'check for empty output' '$compare out /dev/null'
+test_expect_success 'check for empty output' 'compare out /dev/null'
 
 test_expect_success \
     'print the partition data in machine readable format' \
@@ -48,12 +48,12 @@ test_expect_success \
 test_expect_success \
     'check for expected values for the partition' '
     printf "$exp:::;\n" > exp &&
-    $compare out exp'
+    compare out exp'
 
 test_expect_success \
     'set the raid flag' \
     'parted -s $dev set 1 raid >out 2>&1'
-test_expect_success 'check for empty output' '$compare out /dev/null'
+test_expect_success 'check for empty output' 'compare out /dev/null'
 
 test_expect_success \
     'print the partition data in machine readable format again' \
@@ -63,6 +63,6 @@ test_expect_success \
 test_expect_success \
     'check for expected values (including raid flag) for the partition' '
     printf "$exp:::raid;\n" > exp &&
-    $compare out exp'
+    compare out exp'
 
 test_done

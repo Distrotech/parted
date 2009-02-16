@@ -62,7 +62,7 @@ test_expect_success \
 test_expect_success \
     'run parted -s "$dev" mklabel msdos' \
     'parted -s $dev mklabel msdos > out 2>&1'
-test_expect_success 'check for empty output' '$compare out /dev/null'
+test_expect_success 'check for empty output' 'compare out /dev/null'
 
 test_expect_success \
     "determine the map type" \
@@ -86,7 +86,7 @@ test_expect_success \
 
 test_expect_success \
     'check its output' \
-    '$compare out exp'
+    'compare out exp'
 
 #
 # Multipath Map
@@ -101,7 +101,7 @@ test_expect_success \
 test_expect_success \
     'run parted -s "$dev" mklabel msdos' \
     'parted -s $dev mklabel msdos > out 2>&1'
-test_expect_success 'check for empty output' '$compare out /dev/null'
+test_expect_success 'check for empty output' 'compare out /dev/null'
 
 test_expect_success \
     "determine the map type" \
@@ -125,6 +125,6 @@ test_expect_success \
 
 test_expect_success \
     'check its output' \
-    '$compare out exp'
+    'compare out exp'
 
 test_done

@@ -77,6 +77,6 @@ test_expect_success \
     'test $fail = 0 &&
      mv out o2 && sed "s,^Disk .*/$dev:,Disk .../$dev:," o2 > out'
 
-test_expect_success 'check for expected output' '$compare out exp'
+test_expect_success 'check for expected output' 'compare out exp'
 
 test_done
