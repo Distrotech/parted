@@ -1,7 +1,7 @@
 /* -*- Mode: c; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 8 -*-
 
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000, 2001, 2007-2008 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2001, 2007-2009 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -213,7 +213,6 @@ ped_disk_dasd_done ()
 static int
 dasd_probe (const PedDevice *dev)
 {
-	char *errstr = 0;
 	LinuxSpecific* arch_specific;
 	struct fdasd_anchor anchor;
 
@@ -238,9 +237,10 @@ dasd_probe (const PedDevice *dev)
 
 	return 1;
 
-error_cleanup:
+ error_cleanup:
 	fdasd_cleanup(&anchor);
-	ped_exception_throw(PED_EXCEPTION_ERROR,PED_EXCEPTION_IGNORE_CANCEL,errstr);
+	ped_exception_throw(PED_EXCEPTION_ERROR,PED_EXCEPTION_IGNORE_CANCEL,
+			    "Error while probing device %s.", dev->name);
 
 	return 0;
 }
