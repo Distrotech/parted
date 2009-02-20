@@ -676,7 +676,7 @@ _parse_header (PedDisk* disk, GuidPartitionTableHeader_t* gpt,
 */
    
 	last_usable_if_grown 
-		= PED_CPU_TO_LE64 (disk->dev->length - 2 - 
+		= (disk->dev->length - 2 -
 		((PedSector)(PED_LE32_TO_CPU(gpt->NumberOfPartitionEntries)) * 
 		(PedSector)(PED_LE32_TO_CPU(gpt->SizeOfPartitionEntry)) / 
 		disk->dev->sector_size));
