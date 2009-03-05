@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (C) 2007,2008 Free Software Foundation, Inc.
+# Copyright (C) 2007-2009 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -59,14 +59,14 @@ Sector size (logical/physical): 512B/512B
 Partition Table: gpt
 
 Number  Start   End     Size    File system  Name     Flags
- 1      17.4kB  48.6kB  31.2kB               primary       
+ 1      17.4kB  48.6kB  31.2kB               primary
 
 Model:  (file)
 Disk .../$dev: 65.5kB
 Sector size (logical/physical): 512B/512B
 Partition Table: gpt
 
-Number  Start   End     Size    File system  Name     Flags    
+Number  Start   End     Size    File system  Name     Flags
  1      17.4kB  48.6kB  31.2kB               primary  bios_grub
 
 EOF

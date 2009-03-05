@@ -3,7 +3,7 @@
  */
 /*
     parted - a frontend to libparted
-    Copyright (C) 2006-2008 Free Software Foundation, Inc.
+    Copyright (C) 2006-2009 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -173,7 +173,7 @@ void table_add_row_from_strlist (Table* t, StrList* list)
 static void table_render_row (Table* t, int rownum, int ncols, wchar_t** s)
 {
         wchar_t** row = t->rows[rownum];
-        int len = 1, i;
+        size_t len = 1, i;
         size_t newsize;
 
         assert(t);
@@ -189,6 +189,10 @@ static void table_render_row (Table* t, int rownum, int ncols, wchar_t** s)
 
         for (i = 0; i < ncols; ++i)
         {
+                wcscat (*s, row[i]);
+                if (ncols <= i + 1)
+                        break;
+
                 int j;
                 int nspaces = max(t->widths[i] - wcswidth(row[i], MAX_WIDTH),
                                   0);
@@ -199,14 +203,20 @@ static void table_render_row (Table* t, int rownum, int ncols, wchar_t** s)
 
                 pad[nspaces] = L_('\0');
 
-                wcscat (*s, row[i]);
                 wcscat (*s, pad);
                 if (i + 1 < ncols) 
                         wcscat (*s, DELIMITER);
 
                 free (pad);
-                pad = NULL;
         }
+
+        /* Remove any trailing blanks.  */
+        wchar_t *p = *s;
+        size_t k = wcslen (p);
+        while (k && p[k-1] == L_(' '))
+                --k;
+        p[k] = L_('\0');
+
 
         wcscat (*s, COLSUFFIX);
 }
