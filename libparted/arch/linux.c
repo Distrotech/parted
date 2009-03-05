@@ -42,6 +42,7 @@
 
 #include "blkpg.h"
 #include "../architecture.h"
+#include "dirname.h"
 
 #if ENABLE_NLS
 #  include <libintl.h>
@@ -849,7 +850,7 @@ read_device_sysfs_file (PedDevice *dev, const char *file)
         char buf[256];
 
         snprintf (name_buf, 127, "/sys/block/%s/device/%s",
-                  basename (dev->path), file);
+                  last_component (dev->path), file);
 
         if ((f = fopen (name_buf, "r")) == NULL)
                 return NULL;
@@ -2278,7 +2279,7 @@ _device_get_partition_range(PedDevice* dev)
         bool        ok;
 
         r = snprintf(path, sizeof(path), "/sys/block/%s/range",
-                        basename(dev->path));
+                     last_component(dev->path));
         if(r < 0 || r >= sizeof(path))
                 return MAX_NUM_PARTS;
 
