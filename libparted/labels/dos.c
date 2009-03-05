@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1999, 2000, 2001, 2004, 2005, 2007
+    Copyright (C) 1999, 2000, 2001, 2004, 2005, 2007, 2009
     Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
@@ -2215,9 +2215,10 @@ msdos_get_max_primary_partition_count (const PedDisk* disk)
 }
 
 static bool
-msdos_get_max_supported_partition_count(const PedDisk* disk, int* supported)
+msdos_get_max_supported_partition_count(const PedDisk* disk, int *max_n)
 {
-	return *supported = MAX_TOTAL_PART;
+	*max_n = MAX_TOTAL_PART;
+	return true;
 }
 
 static PedDiskOps msdos_disk_ops = {

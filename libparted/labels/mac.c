@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000, 2002, 2004, 2007-2008 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2002, 2004, 2007-2009 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -1565,9 +1565,10 @@ mac_get_max_primary_partition_count (const PedDisk* disk)
 }
 
 static bool
-mac_get_max_supported_partition_count (const PedDisk* disk, int* supported)
+mac_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 {
-	return *supported = 65536;
+	*max_n = 65536;
+	return true;
 }
 
 static PedDiskOps mac_disk_ops = {

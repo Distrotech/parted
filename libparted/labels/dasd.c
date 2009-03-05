@@ -716,9 +716,10 @@ dasd_get_max_primary_partition_count (const PedDisk* disk)
 }
 
 static bool
-dasd_get_max_supported_partition_count (const PedDisk* disk, int* supported)
+dasd_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 {
-	return *supported = dasd_get_max_primary_partition_count(disk);
+	*max_n = dasd_get_max_primary_partition_count(disk);
+	return true;
 }
 
 static PedConstraint*

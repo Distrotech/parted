@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2001, 2002, 2005, 2007-2008 Free Software Foundation, Inc.
+    Copyright (C) 2001, 2002, 2005, 2007-2009 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -823,9 +823,10 @@ dvh_get_max_primary_partition_count (const PedDisk* disk)
 }
 
 static bool
-dvh_get_max_supported_partition_count (const PedDisk* disk, int* supported)
+dvh_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 {
-	return *supported = NPARTAB;
+	*max_n = NPARTAB;
+	return true;
 }
 
 

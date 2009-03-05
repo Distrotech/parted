@@ -2,7 +2,7 @@
 
     libparted - a library for manipulating disk partitions
     disk_amiga.c - libparted module to manipulate amiga RDB partition tables.
-    Copyright (C) 2000, 2001, 2004, 2007-2008 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2001, 2004, 2007-2009 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -1125,9 +1125,10 @@ amiga_get_max_primary_partition_count (const PedDisk* disk)
 }
 
 static bool
-amiga_get_max_supported_partition_count (const PedDisk* disk, int* supported)
+amiga_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 {
-	return *supported = AMIGA_MAX_PARTITIONS;
+	*max_n = AMIGA_MAX_PARTITIONS;
+	return true;
 }
 
 static PedDiskOps amiga_disk_ops = {

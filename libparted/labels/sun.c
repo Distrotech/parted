@@ -1,7 +1,7 @@
 /* -*- Mode: c; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 8 -*-
 
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000, 2001, 2005, 2007-2008 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2001, 2005, 2007-2009 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -665,9 +665,10 @@ sun_partition_is_flag_available (const PedPartition* part,
 }
 
 static bool
-sun_get_max_supported_partition_count (const PedDisk* disk, int* supported)
+sun_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 {
-	return *supported = SUN_DISK_MAXPARTITIONS;
+	*max_n = SUN_DISK_MAXPARTITIONS;
+	return true;
 }
 
 static int
