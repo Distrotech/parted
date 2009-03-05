@@ -36,6 +36,7 @@
 
 #include <parted/parted.h>
 #include <parted/debug.h>
+#include <stdbool.h>
 
 #include "architecture.h"
 #include "intprops.h"
@@ -628,7 +629,7 @@ ped_disk_get_primary_partition_count (const PedDisk* disk)
 }
 
 /**
- * Get the highest partition number on \p disk.
+ * Get the highest available partition number on \p disk.
  */
 int
 ped_disk_get_last_partition_num (const PedDisk* disk)
@@ -645,6 +646,20 @@ ped_disk_get_last_partition_num (const PedDisk* disk)
 	}
 
 	return highest;
+}
+
+/**
+ * Get the highest supported partition number on \p disk.
+ *
+ * \return 0 if call fails. 1 otherwise.
+ */
+bool
+ped_disk_get_max_supported_partition_count(const PedDisk* disk, int* supported)
+{
+	PED_ASSERT(disk != NULL, return -1);
+	PED_ASSERT(disk->type->ops->get_max_supported_partition_count != NULL, return -1);
+
+	return disk->type->ops->get_max_supported_partition_count(disk, supported);
 }
 
 /**

@@ -84,6 +84,7 @@ typedef const struct _PedDiskArchOps    PedDiskArchOps;
 #include <parted/filesys.h>
 #include <parted/natmath.h>
 #include <parted/geom.h>
+#include <stdbool.h>
 
 /** @} */
 
@@ -210,6 +211,8 @@ struct _PedDiskOps {
         /* other */
         int (*alloc_metadata) (PedDisk* disk);
         int (*get_max_primary_partition_count) (const PedDisk* disk);
+        bool (*get_max_supported_partition_count) (const PedDisk* disk,
+                                                   int* supported);
 };
 
 struct _PedDiskType {
@@ -257,6 +260,8 @@ extern void ped_disk_print (const PedDisk* disk);
 extern int ped_disk_get_primary_partition_count (const PedDisk* disk);
 extern int ped_disk_get_last_partition_num (const PedDisk* disk);
 extern int ped_disk_get_max_primary_partition_count (const PedDisk* disk);
+extern bool ped_disk_get_max_supported_partition_count(const PedDisk* disk,
+                                                       int* supported);
 
 /** @} */
 

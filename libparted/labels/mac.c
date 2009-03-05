@@ -21,6 +21,7 @@
 #include <parted/parted.h>
 #include <parted/debug.h>
 #include <parted/endian.h>
+#include <stdbool.h>
 
 #if ENABLE_NLS
 #  include <libintl.h>
@@ -1563,6 +1564,12 @@ mac_get_max_primary_partition_count (const PedDisk* disk)
 		- mac_disk_data->free_part_entry_count + 1;
 }
 
+static bool
+mac_get_max_supported_partition_count (const PedDisk* disk, int* supported)
+{
+	return *supported = 65536;
+}
+
 static PedDiskOps mac_disk_ops = {
 	probe:			mac_probe,
 #ifndef DISCOVER_ONLY
@@ -1596,7 +1603,9 @@ static PedDiskOps mac_disk_ops = {
 
 	alloc_metadata:		mac_alloc_metadata,
 	get_max_primary_partition_count:
-				mac_get_max_primary_partition_count
+				mac_get_max_primary_partition_count,
+	get_max_supported_partition_count:
+				mac_get_max_supported_partition_count
 };
 
 static PedDiskType mac_disk_type = {

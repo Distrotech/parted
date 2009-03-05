@@ -832,6 +832,12 @@ pc98_get_max_primary_partition_count (const PedDisk* disk)
 	return MAX_PART_COUNT;
 }
 
+static bool
+pc98_get_max_supported_partition_count (const PedDisk* disk, int* supported)
+{
+	return *supported = MAX_PART_COUNT;
+}
+
 static PedDiskOps pc98_disk_ops = {
 	probe:			pc98_probe,
 #ifndef DISCOVER_ONLY
@@ -863,7 +869,9 @@ static PedDiskOps pc98_disk_ops = {
 
 	alloc_metadata:		pc98_alloc_metadata,
 	get_max_primary_partition_count:
-				pc98_get_max_primary_partition_count
+				pc98_get_max_primary_partition_count,
+	get_max_supported_partition_count:
+				pc98_get_max_supported_partition_count
 };
 
 static PedDiskType pc98_disk_type = {

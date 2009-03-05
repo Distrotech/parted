@@ -24,6 +24,7 @@
 #include <parted/parted.h>
 #include <parted/debug.h>
 #include <parted/endian.h>
+#include <stdbool.h>
 
 #if ENABLE_NLS
 #  include <libintl.h>
@@ -663,6 +664,11 @@ sun_partition_is_flag_available (const PedPartition* part,
 	}
 }
 
+static bool
+sun_get_max_supported_partition_count (const PedDisk* disk, int* supported)
+{
+	return *supported = SUN_DISK_MAXPARTITIONS;
+}
 
 static int
 sun_get_max_primary_partition_count (const PedDisk* disk)
@@ -858,6 +864,8 @@ static PedDiskOps sun_disk_ops = {
 	alloc_metadata:		sun_alloc_metadata,
 	get_max_primary_partition_count:
 				sun_get_max_primary_partition_count,
+	get_max_supported_partition_count:
+				sun_get_max_supported_partition_count,
 
 	partition_set_name:		NULL,
 	partition_get_name:		NULL,

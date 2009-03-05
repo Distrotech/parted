@@ -24,6 +24,7 @@
 #include <parted/parted.h>
 #include <parted/debug.h>
 #include <parted/endian.h>
+#include <stdbool.h>
 
 #if ENABLE_NLS
 #  include <libintl.h>
@@ -547,6 +548,12 @@ bsd_get_max_primary_partition_count (const PedDisk* disk)
 	return BSD_MAXPARTITIONS;
 }
 
+static bool
+bsd_get_max_supported_partition_count(const PedDisk* disk, int* supported)
+{
+	return *supported = BSD_MAXPARTITIONS;
+}
+
 static PedConstraint*
 _get_constraint (const PedDevice* dev)
 {
@@ -656,7 +663,9 @@ static PedDiskOps bsd_disk_ops = {
 
 	alloc_metadata:		bsd_alloc_metadata,
 	get_max_primary_partition_count:
-				bsd_get_max_primary_partition_count
+				bsd_get_max_primary_partition_count,
+	get_max_supported_partition_count:
+				bsd_get_max_supported_partition_count
 };
 
 static PedDiskType bsd_disk_type = {

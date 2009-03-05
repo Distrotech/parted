@@ -1475,6 +1475,52 @@ gpt_get_max_primary_partition_count (const PedDisk *disk)
 	return gpt_disk_data->entry_count;
 }
 
+/*
+ * From (http://developer.apple.com/technotes/tn2006/tn2166.html Chapter 5).
+ * According to the specs the first LBA (LBA0) is not relevant (it exists
+ * to maintain compatibility).  on the second LBA(LBA1) gpt places the
+ * header.  The header is as big as the block size.  After the header we
+ * find the Entry array.  Each element of said array, describes each
+ * partition.  One can have as much elements as can fit between the end of
+ * the second LBA (where the header ends) and the FirstUsableLBA.
+ * FirstUsableLBA is the first logical block that is used for contents
+ * and is defined in header.
+ *
+ * /---------------------------------------------------\
+ * | BLOCK0 | HEADER | Entry Array | First Usable LBA  |
+ * |        | BLOCK1 |             |                   |
+ * \---------------------------------------------------/
+ *                  /              \
+ *     /----------/                  \----------\
+ *     /-----------------------------------------\
+ *     |  E1  |  E2  |  E3  |...............| EN |
+ *     \-----------------------------------------/
+ *
+ * The number of possible partitions or supported partitions is:
+ * SP = FirstUsableLBA*Blocksize - 2*Blocksize / SizeOfPartitionEntry
+ * SP = Blocksize(FirstusableLBA - 2) / SizeOfPartitoinEntry
+ */
+static bool
+gpt_get_max_supported_partition_count (const PedDisk *disk, int *supported)
+{
+	GuidPartitionTableHeader_t *pth = NULL;
+	uint8_t *pth_raw = ped_malloc (pth_get_size(disk->dev));
+
+	if(ped_device_read(disk->dev, pth_raw, 1, GPT_HEADER_SECTORS) ||
+			ped_device_read(disk->dev, pth_raw, disk->dev->length, GPT_HEADER_SECTORS))
+		pth = pth_new_from_raw(disk->dev, pth_raw);
+	free(pth_raw);
+
+	if(pth){
+		*supported = (disk->dev->sector_size*(pth->FirstUsableLBA - 2) /
+				pth->SizeOfPartitionEntry);
+		pth_free(pth);
+		return true;
+	}
+
+	return false;
+}
+
 static PedConstraint*
 _non_metadata_constraint (const PedDisk* disk)
 {
@@ -1529,7 +1575,8 @@ static PedDiskOps gpt_disk_ops = {
 	partition_align:		gpt_partition_align,
 	partition_enumerate:		gpt_partition_enumerate,
 	alloc_metadata:			gpt_alloc_metadata,
-	get_max_primary_partition_count: gpt_get_max_primary_partition_count
+	get_max_primary_partition_count: gpt_get_max_primary_partition_count,
+	get_max_supported_partition_count: gpt_get_max_supported_partition_count
 };
 
 static PedDiskType gpt_disk_type = {

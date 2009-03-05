@@ -24,6 +24,7 @@
 #include <parted/parted.h>
 #include <parted/debug.h>
 #include <parted/endian.h>
+#include <stdbool.h>
 
 #if ENABLE_NLS
 #  include <libintl.h>
@@ -33,6 +34,7 @@
 #endif /* ENABLE_NLS */
 
 #define	AIX_LABEL_MAGIC		0xc9c2d4c1
+#define	MAX_TOTAL_PART		16
 
 static PedDiskType aix_disk_type;
 
@@ -221,6 +223,12 @@ aix_get_max_primary_partition_count (const PedDisk* disk)
 	return 4;
 }
 
+static bool
+aix_get_max_supported_partition_count (const PedDisk* disk, int *supported)
+{
+	return *supported = MAX_TOTAL_PART;
+}
+
 static int
 aix_partition_align (PedPartition* part, const PedConstraint* constraint)
 {
@@ -270,6 +278,8 @@ static PedDiskOps aix_disk_ops = {
 	alloc_metadata:		aix_alloc_metadata,
 	get_max_primary_partition_count:
 				aix_get_max_primary_partition_count,
+	get_max_supported_partition_count:
+				aix_get_max_supported_partition_count,
 
 	partition_set_name:		NULL,
 	partition_get_name:		NULL,

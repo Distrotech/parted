@@ -279,6 +279,9 @@ struct blkdev_ioctl_param {
                 || (M) == SCSI_CDROM_MAJOR                              \
                 || ((M) >= SCSI_DISK1_MAJOR && (M) <= SCSI_DISK7_MAJOR))
 
+/* Maximum number of partitions supported by linux. */
+#define MAX_NUM_PARTS		64
+
 static char* _device_get_part_path (PedDevice* dev, int num);
 static int _partition_is_mounted_by_path (const char* path);
 
@@ -2261,25 +2264,77 @@ _blkpg_remove_partition (PedDisk* disk, int n)
                                     BLKPG_DEL_PARTITION);
 }
 
+/*
+ * The number of partitions that a device can have depends on the kernel.
+ * If we don't find this value in /sys/block/DEV/range, we will use our own
+ * value.
+ */
+static unsigned int
+_device_get_partition_range(PedDevice* dev)
+{
+        int         range, r;
+        char        path[128];
+        FILE*       fp;
+        bool        ok;
+
+        r = snprintf(path, sizeof(path), "/sys/block/%s/range",
+                        basename(dev->path));
+        if(r < 0 || r > sizeof(path))
+                return MAX_NUM_PARTS;
+
+        fp = fopen(path, "r");
+        if(!fp)
+                return MAX_NUM_PARTS;
+
+        ok = fscanf(fp, "%d", &range) == 1;
+        fclose(fp);
+
+        /* (range <= 0) is none sense.*/
+        return ok && range > 0 ? range : MAX_NUM_PARTS;
+}
+
+/*
+ * We sync the partition table in two step process:
+ * 1. We remove all the partitions from the kernel's tables.  The partitions
+ *    will not be removed if the ioctl call fails.
+ * 2. We add all the partitions that we hold in disk.
+ *
+ * To achieve this two step process we must calculate the minimum number of
+ * maximum possible partitions between what linux supports and what the label
+ * type supports. EX:
+ *
+ * number=MIN(max_parts_supported_in_linux,max_parts_supported_in_msdos_tables)
+ */
 static int
 _disk_sync_part_table (PedDisk* disk)
 {
-        int largest_partnum = ped_disk_get_last_partition_num (disk);
-        if (largest_partnum <= 0)
-          return 1;
+        PED_ASSERT(disk != NULL, return 0);
+        PED_ASSERT(disk->dev != NULL, return 0);
+        int lpn;
 
-        int     last = 16;
-        int*    rets = ped_malloc(sizeof(int) * last);
-        int*    errnums = ped_malloc(sizeof(int) * last);
-        int     ret = 1;
-        int     i;
+        /* lpn = largest partition number. */
+        if(ped_disk_get_max_supported_partition_count(disk, &lpn))
+                lpn = PED_MIN(lpn, _device_get_partition_range(disk->dev));
+        else
+                lpn = _device_get_partition_range(disk->dev);
 
-        for (i = 1; i <= last; i++) {
+        /* Its not possible to support largest_partnum < 0.
+         * largest_partnum == 0 would mean does not support partitions.
+         * */
+        if(lpn < 0)
+                return 0;
+
+        int*        rets = ped_malloc(sizeof(int) * lpn);
+        int*        errnums = ped_malloc(sizeof(int) * lpn);
+        int                 ret = 1;
+        int                 i;
+
+        for (i = 1; i <= lpn; i++) {
                 rets[i - 1] = _blkpg_remove_partition (disk, i);
                 errnums[i - 1] = errno;
         }
 
-        for (i = 1; i <= last; i++) {
+        for (i = 1; i <= lpn; i++) {
                 const PedPartition *part;
 
                 part = ped_disk_get_partition (disk, i);

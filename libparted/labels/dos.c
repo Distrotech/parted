@@ -97,6 +97,7 @@ static const char MBR_BOOT_CODE[] = {
  * (i.e. 1022 is sometimes used to indicate "use LBA").
  */
 #define MAX_CHS_CYLINDER	1021
+#define MAX_TOTAL_PART		16
 
 typedef struct _DosRawPartition		DosRawPartition;
 typedef struct _DosRawTable		DosRawTable;
@@ -2213,6 +2214,12 @@ msdos_get_max_primary_partition_count (const PedDisk* disk)
 	return 4;
 }
 
+static bool
+msdos_get_max_supported_partition_count(const PedDisk* disk, int* supported)
+{
+	return *supported = MAX_TOTAL_PART;
+}
+
 static PedDiskOps msdos_disk_ops = {
 	probe:			msdos_probe,
 #ifndef DISCOVER_ONLY
@@ -2244,7 +2251,9 @@ static PedDiskOps msdos_disk_ops = {
 
 	alloc_metadata:		msdos_alloc_metadata,
 	get_max_primary_partition_count:
-				msdos_get_max_primary_partition_count
+				msdos_get_max_primary_partition_count,
+	get_max_supported_partition_count:
+				msdos_get_max_supported_partition_count
 };
 
 static PedDiskType msdos_disk_type = {

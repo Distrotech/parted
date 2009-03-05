@@ -21,6 +21,7 @@
 #include <parted/parted.h>
 #include <parted/debug.h>
 #include <parted/endian.h>
+#include <stdbool.h>
 
 #if ENABLE_NLS
 #  include <libintl.h>
@@ -280,6 +281,12 @@ loop_get_max_primary_partition_count (const PedDisk* disk)
 	return 1;
 }
 
+static bool
+loop_get_max_supported_partition_count (const PedDisk* disk, int* supported)
+{
+	return *supported = 1;
+}
+
 static PedDiskOps loop_disk_ops = {
 	probe:			loop_probe,
 #ifndef DISCOVER_ONLY
@@ -311,7 +318,9 @@ static PedDiskOps loop_disk_ops = {
 
 	alloc_metadata:		loop_alloc_metadata,
 	get_max_primary_partition_count:
-				loop_get_max_primary_partition_count
+				loop_get_max_primary_partition_count,
+	get_max_supported_partition_count:
+				loop_get_max_supported_partition_count
 };
 
 static PedDiskType loop_disk_type = {

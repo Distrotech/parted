@@ -822,6 +822,13 @@ dvh_get_max_primary_partition_count (const PedDisk* disk)
 	return NPARTAB;
 }
 
+static bool
+dvh_get_max_supported_partition_count (const PedDisk* disk, int* supported)
+{
+	return *supported = NPARTAB;
+}
+
+
 static int
 dvh_alloc_metadata (PedDisk* disk)
 {
@@ -887,8 +894,8 @@ static PedDiskOps dvh_disk_ops = {
 	partition_enumerate:	dvh_partition_enumerate,
 
 	alloc_metadata:		dvh_alloc_metadata,
-	get_max_primary_partition_count:
-				dvh_get_max_primary_partition_count
+	get_max_primary_partition_count: dvh_get_max_primary_partition_count,
+	get_max_supported_partition_count: dvh_get_max_supported_partition_count
 };
 
 static PedDiskType dvh_disk_type = {

@@ -28,6 +28,7 @@
 #include <time.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #include <sys/stat.h>
 #include <sys/ioctl.h>
@@ -128,6 +129,7 @@ static PedDiskOps dasd_disk_ops = {
 
 	alloc_metadata: dasd_alloc_metadata,
 	get_max_primary_partition_count: dasd_get_max_primary_partition_count,
+	get_max_supported_partition_count: dasd_get_max_supported_partition_count,
 
 	partition_duplicate: NULL
 };
@@ -711,6 +713,12 @@ dasd_get_max_primary_partition_count (const PedDisk* disk)
 		return 1;
 
 	return USABLE_PARTITIONS;
+}
+
+static bool
+dasd_get_max_supported_partition_count (const PedDisk* disk, int* supported)
+{
+	return *supported = dasd_get_max_primary_partition_count(disk);
 }
 
 static PedConstraint*
