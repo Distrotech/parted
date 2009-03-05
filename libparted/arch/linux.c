@@ -2294,10 +2294,10 @@ _device_get_partition_range(PedDevice* dev)
 }
 
 /*
- * We sync the partition table in two step process:
- * 1. We remove all the partitions from the kernel's tables.  The partitions
- *    will not be removed if the ioctl call fails.
- * 2. We add all the partitions that we hold in disk.
+ * Sync the partition table in two step process:
+ * 1. Remove all of the partitions from the kernel's tables, but do not attempt
+ *    removal of any partition for which the corresponding ioctl call fails.
+ * 2. Add all the partitions that we hold in disk.
  *
  * To achieve this two step process we must calculate the minimum number of
  * maximum possible partitions between what linux supports and what the label
@@ -2324,10 +2324,10 @@ _disk_sync_part_table (PedDisk* disk)
         if(lpn < 0)
                 return 0;
 
-        int*        rets = ped_malloc(sizeof(int) * lpn);
-        int*        errnums = ped_malloc(sizeof(int) * lpn);
-        int                 ret = 1;
-        int                 i;
+        int *rets = ped_malloc(sizeof(int) * lpn);
+        int *errnums = ped_malloc(sizeof(int) * lpn);
+        int ret = 1;
+        int i;
 
         for (i = 1; i <= lpn; i++) {
                 rets[i - 1] = _blkpg_remove_partition (disk, i);
@@ -2335,9 +2335,7 @@ _disk_sync_part_table (PedDisk* disk)
         }
 
         for (i = 1; i <= lpn; i++) {
-                const PedPartition *part;
-
-                part = ped_disk_get_partition (disk, i);
+                const PedPartition *part = ped_disk_get_partition (disk, i);
                 if (part) {
                         /* busy... so we won't (can't!) disturb ;)  Prolly
                          * doesn't matter anyway, because users shouldn't be
