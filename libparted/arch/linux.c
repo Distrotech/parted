@@ -2279,7 +2279,7 @@ _device_get_partition_range(PedDevice* dev)
 
         r = snprintf(path, sizeof(path), "/sys/block/%s/range",
                         basename(dev->path));
-        if(r < 0 || r > sizeof(path))
+        if(r < 0 || r >= sizeof(path))
                 return MAX_NUM_PARTS;
 
         fp = fopen(path, "r");
