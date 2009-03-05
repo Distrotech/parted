@@ -833,7 +833,6 @@ gpt_read (PedDisk * disk)
 
 		if ((PedSector) PED_LE64_TO_CPU (gpt->AlternateLBA)
 				< disk->dev->length - 1) {
-			char* zeros = ped_malloc (pth_get_size (disk->dev));
 
 #ifndef DISCOVER_ONLY
 			switch (ped_exception_throw (
@@ -846,11 +845,16 @@ gpt_read (PedDisk * disk)
 				case PED_EXCEPTION_CANCEL:
 					goto error_free_gpt;
 				case PED_EXCEPTION_FIX:
+					{
+					char *zeros =
+					  ped_malloc (pth_get_size (disk->dev));
 					write_back = 1;
 					memset (zeros, 0, disk->dev->sector_size);
 					ped_device_write (disk->dev, zeros,
 							  PED_LE64_TO_CPU (gpt->AlternateLBA),
 							  1);
+					free (zeros);
+					}
 					break;
 				default:
 					break;
