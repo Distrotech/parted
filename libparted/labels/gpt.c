@@ -1501,24 +1501,24 @@ gpt_get_max_primary_partition_count (const PedDisk *disk)
  * SP = Blocksize(FirstusableLBA - 2) / SizeOfPartitoinEntry
  */
 static bool
-gpt_get_max_supported_partition_count (const PedDisk *disk, int *supported)
+gpt_get_max_supported_partition_count (const PedDisk *disk, int *max_n)
 {
 	GuidPartitionTableHeader_t *pth = NULL;
-	uint8_t *pth_raw = ped_malloc (pth_get_size(disk->dev));
+	uint8_t *pth_raw = ped_malloc (pth_get_size (disk->dev));
 
-	if(ped_device_read(disk->dev, pth_raw, 1, GPT_HEADER_SECTORS) ||
-			ped_device_read(disk->dev, pth_raw, disk->dev->length, GPT_HEADER_SECTORS))
-		pth = pth_new_from_raw(disk->dev, pth_raw);
-	free(pth_raw);
+	if (ped_device_read (disk->dev, pth_raw, 1, GPT_HEADER_SECTORS)
+	    || ped_device_read (disk->dev, pth_raw,
+				disk->dev->length, GPT_HEADER_SECTORS))
+		pth = pth_new_from_raw (disk->dev, pth_raw);
+	free (pth_raw);
 
-	if(pth){
-		*supported = (disk->dev->sector_size*(pth->FirstUsableLBA - 2) /
-				pth->SizeOfPartitionEntry);
-		pth_free(pth);
-		return true;
-	}
+	if (pth == NULL)
+		return false;
 
-	return false;
+	*max_n = (disk->dev->sector_size * (pth->FirstUsableLBA - 2)
+		  / pth->SizeOfPartitionEntry);
+	pth_free (pth);
+	return true;
 }
 
 static PedConstraint*
