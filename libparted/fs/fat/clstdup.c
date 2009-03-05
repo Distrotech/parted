@@ -43,7 +43,7 @@ needs_duplicating (const FatOpContext* ctx, FatFragment frag)
 
 	case FAT_FLAG_FILE:
 		return fat_op_context_map_static_fragment (ctx, frag) == -1;
-	
+
 	case FAT_FLAG_BAD:
 		return 0;
 	}
@@ -189,7 +189,7 @@ quick_group_write_read_underlay (FatOpContext* ctx, int first, int last)
 
 	underlay_length = last_underlay - first_underlay + 1;
 	if (!fat_read_fragments (ctx->new_fs,
-				new_fs_info->buffer 
+				new_fs_info->buffer
 				   + (first_underlay - ctx->buffer_map [first])
 					* new_fs_info->frag_size,
 				first_underlay,

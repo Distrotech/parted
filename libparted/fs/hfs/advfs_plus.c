@@ -48,7 +48,7 @@ hfsplus_extent_key_cmp(HfsPPrivateGenericKey* a, HfsPPrivateGenericKey* b)
 
 	if (key1->file_ID != key2->file_ID)
 		return PED_BE32_TO_CPU(key1->file_ID) <
-		       PED_BE32_TO_CPU(key2->file_ID) ? 
+		       PED_BE32_TO_CPU(key2->file_ID) ?
 				-1 : +1;
 
 	if (key1->type != key2->type)
@@ -56,7 +56,7 @@ hfsplus_extent_key_cmp(HfsPPrivateGenericKey* a, HfsPPrivateGenericKey* b)
 
 	if (key1->start == key2->start)
 		return 0;
-	return PED_BE32_TO_CPU(key1->start) < 
+	return PED_BE32_TO_CPU(key1->start) <
 	       PED_BE32_TO_CPU(key2->start) ?
 			-1 : +1;
 }
@@ -139,7 +139,7 @@ hfsplus_btree_search (HfsPPrivateFile* b_tree_file, HfsPPrivateGenericKey* key,
 				free (node);
 				return 0;
 			}
-		} else 
+		} else
 			break;
 	}
 
@@ -257,7 +257,7 @@ hfsplus_is_bad_block (const PedFileSystem *fs, unsigned int fblock)
 	for (walk = priv_data->bad_blocks_xtent_list; walk; walk = walk->next) {
 		/* Won't compile without the strange cast ! gcc bug ? */
 		/* or maybe C subtilties... */
-		if ((fblock >= PED_BE32_TO_CPU (walk->extent.start_block)) && 
+		if ((fblock >= PED_BE32_TO_CPU (walk->extent.start_block)) &&
 		    (fblock <  (unsigned int)(PED_BE32_TO_CPU (
 						walk->extent.start_block)
 			       + PED_BE32_TO_CPU (walk->extent.block_count))))
@@ -334,9 +334,9 @@ hfsplus_get_min_size (const PedFileSystem *fs)
 		hfs_sect_block =
 		    PED_BE32_TO_CPU (hfs_priv_data->mdb->block_size)
 		    / PED_SECTOR_SIZE_DEFAULT;
-		/* 
+		/*
 		 * if hfs+ is embedded in an hfs wrapper then the new size is :
-		 * the new size of the hfs+ volume rounded up to the size 
+		 * the new size of the hfs+ volume rounded up to the size
 		 *     of hfs blocks
 		 * + the minimum size of the hfs wrapper without any hfs+
 		 *     modification

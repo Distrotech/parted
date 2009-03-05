@@ -61,7 +61,7 @@ _scan_for_disks(const char* path)
 	dirent_t* entp;
 	size_t pos;
 	DIR* dirp;
-	
+
 	if ((dirp=opendir(path)) != NULL)
 	{
 		/* Build first part of path */
@@ -77,7 +77,7 @@ _scan_for_disks(const char* path)
 				continue;
 
 			strcpy(subdir+pos, entp->d_name);
-			
+
 			/* /dev/disk/.../raw are the complete disks
 				we're interested in */
 			if (strcmp(entp->d_name, "raw") == 0)
@@ -86,7 +86,7 @@ _scan_for_disks(const char* path)
 						be another subdir */
 				_scan_for_disks(subdir);
 		}
-		
+
 		closedir(dirp);
 	}
 }
@@ -110,20 +110,20 @@ _device_init_ata(PedDevice* dev)
 	int maxlen, len, idx, fd;
 	char buf[256];
 
-	/* Try and get information about device from ATA(PI) driver */	
+	/* Try and get information about device from ATA(PI) driver */
 	if ((fd=open(dev->path, O_RDONLY)) < 0)
 		goto ata_error;
-	
+
 	if (ioctl(fd, B_ATA_GET_DEVICE_INFO, &ide_info, sizeof(ide_info)) < 0)
 		goto ata_error_close;
 
 	close(fd);
-	
+
 	/* Copy 'logical' dimensions */
 	dev->bios_geom.cylinders = ide_info.cylinders;
 	dev->bios_geom.heads = ide_info.heads;
 	dev->bios_geom.sectors = ide_info.sectors;
-	
+
 	/* Copy used dimensions */
 	dev->hw_geom.cylinders = ide_info.current_cylinders;
 	dev->hw_geom.heads = ide_info.current_heads;
@@ -135,8 +135,8 @@ _device_init_ata(PedDevice* dev)
 	else if (ide_info.LBA_supported)
 		dev->length = ide_info.LBA_total_sectors;
 	else
-		dev->length = ide_info.cylinders * 
-				ide_info.heads * 
+		dev->length = ide_info.cylinders *
+				ide_info.heads *
 				ide_info.sectors;
 
 	dev->sector_size =
@@ -146,13 +146,13 @@ _device_init_ata(PedDevice* dev)
 	maxlen=sizeof(ide_info.model_number);
 	strncpy(buf, ide_info.model_number, maxlen);
 	buf[maxlen] = '\0';
-	
+
 	for (len=-1, idx=maxlen-1; idx > 0 && len < 0; idx--)
 		if (buf[idx] > 0x20)
 			len = idx;
-	
-	buf[(len == -1) ? 0 : len+1] = '\0';				
-	
+
+	buf[(len == -1) ? 0 : len+1] = '\0';
+
 	dev->model = strdup(buf);
 
 	return PED_DEVICE_IDE;
@@ -163,7 +163,7 @@ ata_error_close:
 ata_error:
 	return 0;
 }
-#endif 
+#endif
 
 static int
 _device_init_generic_blkdev(PedDevice* dev)
@@ -172,10 +172,10 @@ _device_init_generic_blkdev(PedDevice* dev)
 	int got_bios_info = 0;
 	int fd;
 
-	/* Try and get information about device from ATA(PI) driver */	
+	/* Try and get information about device from ATA(PI) driver */
 	if ((fd=open(dev->path, O_RDONLY)) < 0)
 		goto blkdev_error;
-	
+
 	/* B_GET_GEOMETRY is mandatory */
 	if (ioctl(fd, B_GET_GEOMETRY, &os, sizeof(os)) < 0)
 		goto blkdev_error_close;
@@ -185,14 +185,14 @@ _device_init_generic_blkdev(PedDevice* dev)
 		got_bios_info = 1;
 
 	close(fd);
-	
+
 	dev->hw_geom.cylinders = os.cylinder_count;
 	dev->hw_geom.heads = os.head_count;
 	dev->hw_geom.sectors = os.sectors_per_track;
-	
+
 	dev->sector_size =
 	dev->phys_sector_size = os.bytes_per_sector;
-	
+
 	if (got_bios_info)
 	{
 		dev->bios_geom.cylinders = bios.cylinder_count;
@@ -205,10 +205,10 @@ _device_init_generic_blkdev(PedDevice* dev)
 	dev->model = strdup("");
 
 	return PED_DEVICE_IDE;
-	
+
 blkdev_error_close:
 	close(fd);
-	
+
 blkdev_error:
 	return 0;
 }
@@ -243,7 +243,7 @@ _device_init_file(PedDevice* dev, struct stat* dev_statp)
 	dev->hw_geom = dev->bios_geom;
 
 	dev->model = strdup(_("Disk Image"));
-	
+
 	return PED_DEVICE_FILE;
 }
 
@@ -252,8 +252,8 @@ _device_init(PedDevice* dev)
 {
 	struct stat dev_stat;
 	int type = 0;
-	
-	/* Check if we're a regular file */	
+
+	/* Check if we're a regular file */
 	if (stat(dev->path, &dev_stat) < 0)
 		goto done;
 
@@ -283,7 +283,7 @@ beos_new (const char* path)
 	if (!dev->path)
 		goto error_free_dev;
 
-	dev->arch_specific 
+	dev->arch_specific
 		= (BEOSSpecific*) ped_malloc(sizeof(BEOSSpecific));
 	if (dev->arch_specific == NULL)
 		goto error_free_path;
@@ -299,16 +299,16 @@ beos_new (const char* path)
 
 	/* All OK! */
 	return dev;
-	
+
 error_free_arch_specific:
 	free (dev->arch_specific);
-	
+
 error_free_path:
 	free (dev->path);
-	
+
 error_free_dev:
 	free (dev);
-	
+
 error:
 	return NULL;
 }
@@ -431,14 +431,14 @@ beos_read (const PedDevice* dev, void* buffer, PedSector start, PedSector count)
 				return 0;
 		}
 	}
-	
+
 	/* If we seeked ok, now is the time to read */
 	while (1)
 	{
 		status = read(arch_specific->fd, buffer, read_length);
 		if (status == count * dev->sector_size)
 			break;
-		
+
 		if (status > 0)
 		{
 			read_length -= status;
@@ -527,7 +527,7 @@ beos_write (PedDevice* dev, const void* buffer, PedSector start,
 		status = write (arch_specific->fd, buffer, write_length);
 		if (status == count * dev->sector_size)
 			break;
-		
+
 		if (status > 0)
 		{
 			write_length -= status;
@@ -554,7 +554,7 @@ beos_write (PedDevice* dev, const void* buffer, PedSector start,
 		}
 	}
 #endif /* !READ_ONLY */
-	
+
 	return 1;
 }
 
@@ -566,7 +566,7 @@ beos_check (PedDevice* dev, void* buffer, PedSector start, PedSector count)
 	int				status;
 
 	PED_ASSERT(dev != NULL, return 0);
-        
+
 	if (lseek(arch_specific->fd, start * dev->sector_size, SEEK_SET)
 		!= start * dev->sector_size)
 		return 0;

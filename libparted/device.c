@@ -22,11 +22,11 @@
  * \addtogroup PedDevice
  *
  * \brief Device access.
- * 
+ *
  * When ped_device_probe_all() is called, libparted attempts to detect all
  * devices.  It constructs a list which can be accessed with
  * ped_device_get_next().
- * 
+ *
  * If you want to use a device that isn't on the list, use
  * ped_device_get().  Also, there may be OS-specific constructors, for creating
  * devices from file descriptors, stores, etc.  For example,
@@ -334,7 +334,7 @@ ped_device_end_external_access (PedDevice* dev)
 /**
  * \internal Read count sectors from dev into buffer, beginning with sector
  * start.
- * 
+ *
  * \return zero on failure.
  */
 int
@@ -352,7 +352,7 @@ ped_device_read (const PedDevice* dev, void* buffer, PedSector start,
 /**
  * \internal Write count sectors from buffer to dev, starting at sector
  * start.
- * 
+ *
  * \return zero on failure.
  *
  * \sa PedDevice::sector_size
@@ -430,7 +430,7 @@ ped_device_get_constraint (PedDevice* dev)
         int multiplier = dev->phys_sector_size / dev->sector_size;
 
         PedAlignment* start_align = ped_alignment_new (multiplier, multiplier);
-        
+
         PedGeometry *s, *e;
         PedConstraint* c = ped_constraint_new (
                                 start_align, ped_alignment_any,

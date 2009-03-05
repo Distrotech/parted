@@ -37,7 +37,7 @@
   -Mark out of volume blocks as used
     (improve compatibility with broken HFS+ Linux
     implementation)
-   WARNING : this fix is not 100% tn1150 compatible : 
+   WARNING : this fix is not 100% tn1150 compatible :
    "The allocation file may be larger than the minimum
    number of bits required for the given volume size.
    Any unused bits in the bitmap must be set to _zero_."
@@ -45,11 +45,11 @@
    previous implementations
    Maybe I should ask Apple to change the specifications
   -HISTORY, DOC and TODO files					29-04-2004
-12 Corrected a bug in hfsplus_volume_resize : size of alloc 
+12 Corrected a bug in hfsplus_volume_resize : size of alloc
    bitmap could be miscalculated				29-04-2004
 --------------------- PATCH FOR PARTED 1.6.12 ----------------------------
 13-Finally partial rewrite of *_search_move_*
-   Easier to maintain and prepare for extent search and 
+   Easier to maintain and prepare for extent search and
    relocation algorithm changes for better ones.
   -"An extent has not been relocated!" message now only when
    relocation requested
@@ -108,7 +108,7 @@
    now generate an error if file_ID or type mismatch after the
    first pass
    Also check return value of ped_malloc
-  -Bugfix: in hfsplus_btree_search, check return value of ped_malloc  
+  -Bugfix: in hfsplus_btree_search, check return value of ped_malloc
 								29-09-2004
 ---------------- INTEGRATION IN PARTED 1.6.22 (cvs) ----------------------
 Futur changes will be described in ../../ChangeLog

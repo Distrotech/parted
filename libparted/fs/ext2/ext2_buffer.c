@@ -54,7 +54,7 @@ static int try_to_flush(struct ext2_buffer_cache *bc)
 		struct ext2_buffer_head *bh;
 
 		bh = &bc->heads[i];
-	
+
 		if (bh->alloc && !bh->usecount && !bh->dirty)
 		{
 			ext2_bh_dealloc(bh);

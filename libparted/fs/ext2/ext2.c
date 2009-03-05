@@ -569,7 +569,7 @@ static int is_root(int x, int y)
 /* check whether group contains a superblock copy on file systems
  * where not all groups have one (sparse superblock feature) */
 int ext2_is_group_sparse(struct ext2_fs *fs, int group)
-{       
+{
 	if (!fs->sparse)
 		return 1;
 
@@ -779,7 +779,7 @@ struct ext2_fs *ext2_open(struct ext2_dev_handle *handle, int state)
 
 	ext2_read_blocks(fs, fs->gd, EXT2_SUPER_FIRST_DATA_BLOCK(fs->sb) + 1,
 			 fs->gdblocks);
-                
+
 	fs->metadirty = 0;
 	return fs;
 

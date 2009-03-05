@@ -74,7 +74,7 @@ struct _BSDRawLabel {
 	int16_t		d_type;			/* drive type */
 	int16_t		d_subtype;		/* controller/d_type specific */
 	int8_t		d_typename[16];		/* type name, e.g. "eagle" */
-	int8_t		d_packname[16];		/* pack identifier */ 
+	int8_t		d_packname[16];		/* pack identifier */
 	uint32_t	d_secsize;		/* # of bytes per sector */
 	uint32_t	d_nsectors;		/* # of data sectors per track */
 	uint32_t	d_ntracks;		/* # of tracks per cylinder */
@@ -97,7 +97,7 @@ struct _BSDRawLabel {
 	uint32_t	d_spare[NSPARE];	/* reserved for future use */
 	uint32_t	d_magic2;		/* the magic number (again) */
 	uint16_t	d_checksum;		/* xor of data incl. partitions */
-	
+
 	/* file system and partition information: */
 	uint16_t	d_npartitions;		/* number of partitions in following */
 	uint32_t	d_bbsize;		/* size of boot area at sn0, bytes */
@@ -123,7 +123,7 @@ static unsigned short
 xbsd_dkcksum (BSDRawLabel *lp) {
 	unsigned short *start, *end;
 	unsigned short sum = 0;
-	
+
 	lp->d_checksum = 0;
 	start = (u_short*) lp;
 	end = (u_short*) &lp->d_partitions [
@@ -138,7 +138,7 @@ static void
 alpha_bootblock_checksum (char *boot) {
 	uint64_t *dp, sum;
 	int i;
-	
+
 	dp = (uint64_t *)boot;
 	sum = 0;
 	for (i = 0; i < 63; i++)
@@ -164,7 +164,7 @@ bsd_probe (const PedDevice *dev)
 	label = (BSDRawLabel *) (boot + BSD_LABEL_OFFSET);
 
 	alpha_bootblock_checksum(boot);
-	
+
 	/* check magic */
 	if (PED_LE32_TO_CPU (label->d_magic) != BSD_DISKMAGIC)
 		return 0;
@@ -209,18 +209,18 @@ bsd_alloc (const PedDevice* dev)
 		= PED_CPU_TO_LE32 (dev->bios_geom.sectors
 				   * dev->bios_geom.heads
 				   * dev->bios_geom.cylinders);
-	
+
 	label->d_rpm = PED_CPU_TO_LE16 (3600);
 	label->d_interleave = PED_CPU_TO_LE16 (1);;
 	label->d_trackskew = 0;
 	label->d_cylskew = 0;
 	label->d_headswitch = 0;
 	label->d_trkseek = 0;
-	
+
 	label->d_magic2 = PED_CPU_TO_LE32 (BSD_DISKMAGIC);
 	label->d_bbsize = PED_CPU_TO_LE32 (BSD_BBSIZE);
 	label->d_sbsize = PED_CPU_TO_LE32 (BSD_SBSIZE);
-	
+
 	label->d_npartitions = 0;
 	label->d_checksum = xbsd_dkcksum (label);
 	return disk;
@@ -237,7 +237,7 @@ bsd_duplicate (const PedDisk* disk)
 	PedDisk*	new_disk;
 	BSDDiskData*	new_bsd_data;
 	BSDDiskData*	old_bsd_data = (BSDDiskData*) disk->disk_specific;
-       
+
 	new_disk = ped_disk_new_fresh (disk->dev, &bsd_disk_type);
 	if (!new_disk)
 		return NULL;
@@ -274,7 +274,7 @@ bsd_read (PedDisk* disk)
 	BSDDiskData*	bsd_specific = (BSDDiskData*) disk->disk_specific;
 	BSDRawLabel*	label;
 	int 		i;
-	
+
 	ped_disk_delete_all (disk);
 
 	if (!ped_device_read (disk->dev, bsd_specific->boot_code, 0, 1))
@@ -302,7 +302,7 @@ bsd_read (PedDisk* disk)
 		bsd_part_data->type = label->d_partitions[i - 1].p_fstype;
 		part->num = i;
 		part->fs_type = ped_file_system_probe (&part->geom);
-		
+
 		constraint_exact = ped_constraint_exact (&part->geom);
 		if (!ped_disk_add_partition (disk, part, constraint_exact))
 			goto error;
@@ -585,7 +585,7 @@ bsd_partition_enumerate (PedPartition* part)
 {
 	int i;
 	PedPartition* p;
-	
+
 	/* never change the partition numbers */
 	if (part->num != -1)
 		return 1;

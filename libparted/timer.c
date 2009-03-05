@@ -21,23 +21,23 @@
 /**
  * \addtogroup PedTimer
  *
- * \brief A PedTimer keeps track of the progress of a single (possibly 
- * compound) operation.  
+ * \brief A PedTimer keeps track of the progress of a single (possibly
+ * compound) operation.
  *
- * The user of libparted constructs a PedTimer, and passes it to libparted 
- * functions that are likely to be expensive operations 
+ * The user of libparted constructs a PedTimer, and passes it to libparted
+ * functions that are likely to be expensive operations
  * (like ped_file_system_resize).  Use of timers is optional... you may
  * pass NULL instead.
- * 
+ *
  * When you create a PedTimer, you must specify a timer handler function.
  * This will be called when there's an update on how work is progressing.
- * 
+ *
  * Timers may be nested.  When a timer is constructed, you can choose
  * to assign it a parent, along with an estimate of what proportion of
  * the total (parent's) time will be used in the nested operation.  In
  * this case, the nested timer's handler is internal to libparted,
  * and simply updates the parent's progress, and calls its handler.
- * 
+ *
  * @{
  */
 
@@ -56,7 +56,7 @@ typedef struct {
 
 
 /**
- * \brief Creates a timer.  
+ * \brief Creates a timer.
  *
  * Context will be passed in the \p context
  *         argument to the \p handler, when it is invoked.
@@ -107,14 +107,14 @@ _nest_handler (PedTimer* timer, void* context)
 }
 
 
-/** 
- * \brief Creates a new nested timer. 
+/**
+ * \brief Creates a new nested timer.
  *
  * This function creates a "nested" timer that describes the progress
- * of a subtask. \p parent is the parent timer, and \p nested_frac is 
- * the estimated proportion (between 0 and 1) of the time that will be 
- * spent doing the nested timer's operation. The timer should only be 
- * constructed immediately prior to starting the nested operation.  
+ * of a subtask. \p parent is the parent timer, and \p nested_frac is
+ * the estimated proportion (between 0 and 1) of the time that will be
+ * spent doing the nested timer's operation. The timer should only be
+ * constructed immediately prior to starting the nested operation.
  * (It will be inaccurate, otherwise).
  * Updates to the progress of the subtask are propagated
  * back through to the parent task's timer.
@@ -156,12 +156,12 @@ ped_timer_destroy_nested (PedTimer* timer)
 }
 
 /**
- * \internal 
+ * \internal
  *
  * \brief This function calls the update handler, making sure that it has
- * 	the latest time. 
+ * 	the latest time.
  *
- * First it updates \p timer->now and recomputes \p timer->predicted_end, 
+ * First it updates \p timer->now and recomputes \p timer->predicted_end,
  * and then calls the handler.
  */
 void
@@ -177,11 +177,11 @@ ped_timer_touch (PedTimer* timer)
 	timer->handler (timer, timer->context);
 }
 
-/** 
+/**
  * \internal
- * 
+ *
  * \brief This function sets the \p timer into a "start of task" position.
- * 
+ *
  * It resets the \p timer, by setting \p timer->start and \p timer->now
  * to the current time.
  */
@@ -198,12 +198,12 @@ ped_timer_reset (PedTimer* timer)
 	ped_timer_touch (timer);
 }
 
-/** 
+/**
  * \internal
- * 
+ *
  * \brief This function tells a \p timer what fraction \p frac of the task
  * has been completed.
- * 
+ *
  * Sets the new \p timer->frac, and calls ped_timer_touch().
  */
 void
@@ -224,11 +224,11 @@ ped_timer_update (PedTimer* timer, float frac)
 }
 
 /**
- * \internal 
- * 
+ * \internal
+ *
  * \brief This function changes the description of the current task that the
  * 	\p timer describes.
- * 	
+ *
  * Sets a new name - \p state_name - for the current "phase" of the operation,
  * and calls ped_timer_touch().
  */

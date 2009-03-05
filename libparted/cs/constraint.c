@@ -19,8 +19,8 @@
 /**
  * \addtogroup PedConstraint
  *
- * \brief Constraint solver interface. 
- * 
+ * \brief Constraint solver interface.
+ *
  * Constraints are used to communicate restrictions on operations Constraints
  * are restrictions on the location and alignment of the start and end of a
  * partition, and the minimum and maximum size.
@@ -399,7 +399,7 @@ _constraint_get_nearest_end_soln (const PedConstraint* constraint,
 
 /**
  * Return the nearest region to \p geom that satisfy a \p constraint.
- * 
+ *
  * Note that "nearest" is somewhat ambiguous.  This function makes
  * no guarantees about how this ambiguity is resovled.
  *
@@ -436,7 +436,7 @@ ped_constraint_solve_nearest (
 
 /**
  * Find the largest region that satisfies a constraint.
- * 
+ *
  * There might be more than one solution.  This function makes no
  * guarantees about which solution it will choose in this case.
  */

@@ -237,7 +237,7 @@ In the example, the intersection of the constraint is (16128, 64260).
 For more information on the maths, see the source -- there's a large comment
 containing proofs above ped_alignment_intersect() in libparted/natmath.c
 
-The restrictions on the location of the start and end are in the form of 
+The restrictions on the location of the start and end are in the form of
 PedGeometry objects -- continous regions in which the start and end must lie.
 Obviously, these restrictions are also closed under intersection.
 

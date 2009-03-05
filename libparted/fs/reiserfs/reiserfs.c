@@ -265,8 +265,8 @@ static PedFileSystem *reiserfs_open(PedGeometry *geom)
 		goto error_fs_geom_free;
 
 	/*
-	   We are passing NULL as DAL for journal. Therefore we let libreiserfs know, 
-	   that journal not available and parted will be working fine for reiserfs 
+	   We are passing NULL as DAL for journal. Therefore we let libreiserfs know,
+	   that journal not available and parted will be working fine for reiserfs
 	   with relocated journal too.
 	 */
 	if (!(fs = (PedFileSystem *) ped_malloc(sizeof(PedFileSystem))))
@@ -419,14 +419,14 @@ static int reiserfs_check(PedFileSystem *fs, PedTimer *timer)
 
 #ifdef HAVE_REISERFS_FS_CHECK
 	ped_timer_reset(timer);
-	
+
 	if (libreiserfs_gauge_create && libreiserfs_gauge_free) {
 		if (!
 		    (gauge =
 		     libreiserfs_gauge_create(NULL, gauge_handler, timer)))
 			return 0;
 	}
-		
+
 	ped_timer_set_state_name(timer, _("checking"));
 	ped_timer_update(timer, 0.0);
 
@@ -437,13 +437,13 @@ static int reiserfs_check(PedFileSystem *fs, PedTimer *timer)
 				      "Run reiserfsck --check first."));
 		return 0;
 	}
-	
+
 	ped_timer_update(timer, 1.0);
 
 	if (gauge)
 		libreiserfs_gauge_free(gauge);
 #endif
-	
+
 	ped_exception_throw(PED_EXCEPTION_INFORMATION, PED_EXCEPTION_OK,
 			    _("The reiserfs file system passed a basic check.  "
 			      "For a more comprehensive check, run "
@@ -559,9 +559,9 @@ static PedConstraint *reiserfs_get_resize_constraint(const PedFileSystem *
 	if (!ped_geometry_init(&start_sector, dev, fs->geom->start, 1))
 		return NULL;
 
-	/* 
-	   Minsize for reiserfs is area occupied by data blocks and 
-	   metadata blocks minus free space blocks and minus bitmap 
+	/*
+	   Minsize for reiserfs is area occupied by data blocks and
+	   metadata blocks minus free space blocks and minus bitmap
 	   blocks which describes free space blocks.
 	 */
 	min_size = reiserfs_fs_min_size(fs_info) *

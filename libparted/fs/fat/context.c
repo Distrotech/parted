@@ -58,7 +58,7 @@ calc_deltas (FatOpContext* ctx)
 			(int) new_fs_info->cluster_sectors);
 		return 0;
 	}
-	
+
 	ctx->start_move_delta = sector_delta / ctx->frag_sectors;
 
 #ifdef PED_VERBOSE
@@ -152,7 +152,7 @@ fat_op_context_map_static_cluster (const FatOpContext* ctx, FatCluster clst)
 	FatFragment	mapped_frag;
 
 	mapped_frag = fat_op_context_map_static_fragment (ctx,
-				fat_cluster_to_frag (ctx->old_fs, clst)); 
+				fat_cluster_to_frag (ctx->old_fs, clst));
 	if (mapped_frag != -1)
 		return fat_frag_to_cluster (ctx->new_fs, mapped_frag);
 	else
@@ -171,7 +171,7 @@ fat_op_context_map_cluster (const FatOpContext* ctx, FatCluster clst)
 	FatFragment	mapped_frag;
 
 	mapped_frag = fat_op_context_map_fragment (ctx,
-				fat_cluster_to_frag (ctx->old_fs, clst)); 
+				fat_cluster_to_frag (ctx->old_fs, clst));
 	if (mapped_frag != -1)
 		return fat_frag_to_cluster (ctx->new_fs, mapped_frag);
 	else

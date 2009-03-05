@@ -6,7 +6,7 @@ might also be there in 2.6, there is of course no warranty)
 
 ---
 
-    Technical doc about Apple HFS and HFS+ file systems is available at : 
+    Technical doc about Apple HFS and HFS+ file systems is available at :
     * For HFS, section "Data Organization on Volumes",
                        "Chapter 2 - File Manager"
            of the book "Inside Macintosh: Files"
@@ -16,7 +16,7 @@ might also be there in 2.6, there is of course no warranty)
 
     Some useful HFS precisions concerning alignement, bit ordering, and
     order of fields for extent key comparaisons are only in the HFS+ TN
-    
+
     These Apple Creator Codes are reserved for us :
     Shnk traP GP16 GnuP PH+x Xpnd Resz GP17 GP18 GP19 GP20
 
@@ -26,10 +26,10 @@ might also be there in 2.6, there is of course no warranty)
 
 Versions before HFS Patch 15 were very slow when data relocation was needed,
 because every extent to relocate involved scanning the whole file system,
-looking for a reference to its physical position on the volume (this was a 
+looking for a reference to its physical position on the volume (this was a
 dummy algorithm, I know :)
 
-HFS Patch 16 introduced a cache that allows to efficiently retrieve the place 
+HFS Patch 16 introduced a cache that allows to efficiently retrieve the place
 of the reference in the file system given the physical position of an extent.
 The cache is designed for : - efficiency
 			    - scaling
@@ -47,15 +47,15 @@ will just need a very special amount of RAM (on typical systems about
 (# of files) * 20 bytes. With very few files it's about (FS Size) / 1024 / 256.
 
 At the beginning of the resize process, the cache is filed by scanning the FS.
-The position of each extent is cut into 2 parts : high order is used as 
+The position of each extent is cut into 2 parts : high order is used as
 an index into a table of pointer to a linked list which contains :
 - the next ptr				(sizeof struct *)
 - the extent start			(4 bytes)
 - the extent size			(4 bytes)
 - number of BTree block or 0 if in prim (4 bytes)
-- offset of the extent start reference 
+- offset of the extent start reference
   from the block beginning              (2 bytes)
-- sectors by BTree block, or 
+- sectors by BTree block, or
   1 for VH/MDB				(1 byte)
 - FS special file / primary structure
   where the extent reference is stored  (1 byte)

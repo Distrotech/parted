@@ -100,7 +100,7 @@ struct ext2_dev_handle
 };
 
 struct ext2_fs
-{      
+{
 	struct ext2_dev_handle		 *devhandle;
 
 	struct ext2_super_block		  sb;

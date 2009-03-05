@@ -138,7 +138,7 @@ struct ufs_super_block {
 	uint32_t	fs_csp[UFS_MAXCSBUFS];	/* list of fs_cs info buffers */
 	uint32_t	fs_maxcluster;
 	uint32_t	fs_cpc;		/* cyl per cycle in postbl */
-	uint16_t	fs_opostbl[16][8];	/* old rotation block list head */	
+	uint16_t	fs_opostbl[16][8];	/* old rotation block list head */
 	union {
 		struct {
 			int32_t		fs_sparecon[53];/* reserved for future constants */

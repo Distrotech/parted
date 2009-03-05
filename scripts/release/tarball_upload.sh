@@ -34,7 +34,7 @@ message() {
 }
 
 correct_version() {
-	grep $1 $2  >/dev/null 
+	grep $1 $2  >/dev/null
 	if [ $? -eq 0 ]; then
 		return 0
 	fi
@@ -147,7 +147,7 @@ for EXT in gz bz2; do
 
 	for FILE in $TARBALL $SHA1FILE; do
 		DIRECTIVE=$FILE.directive
-		message "* creating and clearsigning directive file to $DIRECTIVE.asc" 
+		message "* creating and clearsigning directive file to $DIRECTIVE.asc"
 		echo "version: 1.1" > $DIRECTIVE
 		echo "directory: parted" >> $DIRECTIVE
 		echo "filename: $FILE" >> $DIRECTIVE
@@ -162,7 +162,7 @@ for EXT in gz bz2; do
 		echo -e "\t-> signed"
 
 		message "* deleting $DIRECTIVE."
-		rm $DIRECTIVE 
+		rm $DIRECTIVE
 	done
 
 	#kill $GPGAPID

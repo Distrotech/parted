@@ -32,7 +32,7 @@
 #include "ext2.h"
 
 /* formula grabbed from linux ext2 kernel source
- * 
+ *
  * returns 1 iff:
  * 	x == y^N,       N is some natural number
  * OR	x == 0
@@ -521,7 +521,7 @@ struct ext2_fs *ext2_mkfs(struct ext2_dev_handle *handle,
 	int first_block;
 	int last_group_blocks;
 	int last_group_admin;
-        
+
 	/* if the FS is > 512Mb, use 4k blocks, otherwise 1k blocks */
 	if (log_block_size == 0) {
 		handle->ops->set_blocksize(handle->cookie, 12);
@@ -534,9 +534,9 @@ struct ext2_fs *ext2_mkfs(struct ext2_dev_handle *handle,
         /* FIXME: block size must be > MAX(logicalbs, physicalbs)
          * to avoid modify-on-write.
          *      -- Leslie
-         */ 
+         */
 
-        
+
 	handle->ops->set_blocksize(handle->cookie, log_block_size);
 
 	if (numblocks == 0)

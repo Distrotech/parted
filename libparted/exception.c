@@ -22,7 +22,7 @@
  * \addtogroup PedException
  *
  * \brief Exception handling.
- * 
+ *
  * There are a few types of exceptions: PED_EXCEPTION_INFORMATION,
  * PED_EXCEPTION_WARNING, PED_EXCEPTION_ERROR, PED_EXCEPTION_FATAL,
  * PED_EXCEPTION_BUG.
@@ -214,7 +214,7 @@ do_throw ()
  * Throw an exception.
  *
  * You can also use this in a program using libparted.
- * "message" is a printf-like format string, so you can do 
+ * "message" is a printf-like format string, so you can do
  *
  * \code
  * ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_RETRY_CANCEL,

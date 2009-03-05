@@ -90,7 +90,7 @@ typedef const struct _PedDiskArchOps    PedDiskArchOps;
 
 /**
  * \addtogroup PedPartition
- * 
+ *
  * @{
  */
 
@@ -109,22 +109,22 @@ struct _PedPartition {
 
         /**< the partition number:  In Linux, this is the
              same as the minor number. No assumption
-             should be made about "num" and "type" 
+             should be made about "num" and "type"
              - different disk labels have different rules. */
 
         int                     num;
         PedPartitionType        type;	/**< the type of partition: a bit field of
 					  	PED_PARTITION_LOGICAL, PED_PARTITION_EXTENDED,
-						PED_PARTITION_METADATA 
-						and PED_PARTITION_FREESPACE.  
-						Both the first two, and the last two are 
+						PED_PARTITION_METADATA
+						and PED_PARTITION_FREESPACE.
+						Both the first two, and the last two are
 						mutually exclusive.
-							An extended partition is a primary 
+							An extended partition is a primary
 						partition that may contain logical partitions.
-						There is at most one extended partition on 
+						There is at most one extended partition on
 						a disk.
-							A logical partition is like a primary 
-						partition, except it's inside an extended 
+							A logical partition is like a primary
+						partition, except it's inside an extended
 						partition. Internally, pseudo partitions are
 						allocated to represent free space, or disk
 						label meta-data.  These have the
@@ -180,7 +180,7 @@ struct _PedDiskOps {
         int (*read) (PedDisk* disk);
         int (*write) (const PedDisk* disk);
         /** \todo add label guessing op here */
-        
+
         /* partition operations */
         PedPartition* (*partition_new) (
                 const PedDisk* disk,
@@ -267,7 +267,7 @@ extern bool ped_disk_get_max_supported_partition_count(const PedDisk* disk,
 
 /**
  * \addtogroup PedPartition
- * 
+ *
  * @{
  */
 

@@ -1,4 +1,4 @@
-/* 
+/*
  * Dec 5, 2000 Matt Domsch <Matt_Domsch@dell.com>
  * - Copied crc32.c from the linux/drivers/net/cipe directory.
  * - Now pass seed as an arg

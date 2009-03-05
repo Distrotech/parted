@@ -75,7 +75,7 @@ struct _PedException {
 	PedExceptionType	type;		/**< type of exception */
 	PedExceptionOption	options;	/**< ORed list of options that
 						   the exception handler can
-						   return (the ways an exception 
+						   return (the ways an exception
 						   can be resolved) */
 };
 

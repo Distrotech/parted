@@ -47,10 +47,10 @@
 /* tuning */
 #define CR_SHIFT		 8 /* number of bits to shift start_block by */
 				   /* to get the index of the linked list */
-#define CR_OVER_DIV		16 /* alloc a table for (1+1/CR_OVER_DIV) * 
+#define CR_OVER_DIV		16 /* alloc a table for (1+1/CR_OVER_DIV) *
 				      file_number + CR_ADD_CST */
 #define CR_ADD_CST		16
-#define CR_NEW_ALLOC_DIV	 4 /* divide the size of the first alloc table 
+#define CR_NEW_ALLOC_DIV	 4 /* divide the size of the first alloc table
 				      by this value to allocate next tables */
 
 /* See DOC for an explaination of this structure */
@@ -77,7 +77,7 @@ struct _HfsCPrivateCacheTable {
 };
 typedef struct _HfsCPrivateCacheTable HfsCPrivateCacheTable;
 
-/* Internaly used by cache.c for custom memory managment 
+/* Internaly used by cache.c for custom memory managment
    and cache handling only */
 struct _HfsCPrivateCache {
 	HfsCPrivateCacheTable*		table_list;

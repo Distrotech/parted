@@ -1,4 +1,4 @@
-/* 
+/*
     libparted/fs_amiga - amiga file system support.
     Copyright (C) 2000, 2001, 2007 Free Software Foundation, Inc.
 
@@ -38,7 +38,7 @@
 #define IDNAME_FILESYSHEADER	(uint32_t)0x46534844	/* 'FSHD' */
 #define IDNAME_LOADSEG		(uint32_t)0x4C534547	/* 'LSEG' */
 #define IDNAME_BOOT		(uint32_t)0x424f4f54	/* 'BOOT' */
-#define IDNAME_FREE		(uint32_t)0xffffffff	
+#define IDNAME_FREE		(uint32_t)0xffffffff
 
 static const char *
 _amiga_block_id (uint32_t id) {
@@ -103,7 +103,7 @@ struct AmigaBlock {
     uint32_t	amiga_SummedLongss;	/* Size of the structure for checksums */
     int32_t	amiga_ChkSum;		/* Checksum of the structure */
 };
-#define AMIGA(pos) ((struct AmigaBlock *)(pos)) 
+#define AMIGA(pos) ((struct AmigaBlock *)(pos))
 
 struct RigidDiskBlock {
     uint32_t	rdb_ID;			/* Identifier 32 bit word : 'RDSK' */
@@ -152,7 +152,7 @@ struct RigidDiskBlock {
 
 #define AMIGA_MAX_PARTITIONS	128
 #define	RDB_LOCATION_LIMIT	16
-#define RDSK(pos) ((struct RigidDiskBlock *)(pos)) 
+#define RDSK(pos) ((struct RigidDiskBlock *)(pos))
 
 static int
 _amiga_checksum (struct AmigaBlock *blk) {
@@ -176,7 +176,7 @@ _amiga_calculate_checksum (struct AmigaBlock *blk) {
 	blk->amiga_ChkSum = PED_CPU_TO_BE32(
 		PED_BE32_TO_CPU(blk->amiga_ChkSum) -
 		_amiga_checksum((struct AmigaBlock *) blk));
-	return;	
+	return;
 }
 
 
@@ -189,7 +189,7 @@ _amiga_read_block (PedDevice *dev, struct AmigaBlock *blk, PedSector block, stru
 		{
 			case PED_EXCEPTION_CANCEL :
 			case PED_EXCEPTION_UNHANDLED :
-			default : 
+			default :
 				return NULL;
 		}
 	}
@@ -212,13 +212,13 @@ _amiga_read_block (PedDevice *dev, struct AmigaBlock *blk, PedSector block, stru
 					{
 						case PED_EXCEPTION_CANCEL :
 						case PED_EXCEPTION_UNHANDLED :
-						default : 
+						default :
 							return NULL;
 					}
 				}
 			case PED_EXCEPTION_IGNORE :
 			case PED_EXCEPTION_UNHANDLED :
-			default : 
+			default :
 				return blk;
 		}
 	}
@@ -229,7 +229,7 @@ static uint32_t
 _amiga_find_rdb (PedDevice *dev, struct RigidDiskBlock *rdb) {
 	int i;
 	struct AmigaIds *ids;
-	
+
 	ids = _amiga_add_id (IDNAME_RIGIDDISK, NULL);
 
 	for (i = 0; i<RDB_LOCATION_LIMIT; i++) {
@@ -278,7 +278,7 @@ amiga_find_part (PedGeometry *geom, struct PartitionBlock *part)
 		{
 			case PED_EXCEPTION_CANCEL :
 			case PED_EXCEPTION_UNHANDLED :
-			default : 
+			default :
 				return NULL;
 		}
 	}
@@ -289,7 +289,7 @@ amiga_find_part (PedGeometry *geom, struct PartitionBlock *part)
 		{
 			case PED_EXCEPTION_CANCEL :
 			case PED_EXCEPTION_UNHANDLED :
-			default : 
+			default :
 				free(rdb);
 				return NULL;
 		}
@@ -319,7 +319,7 @@ amiga_find_part (PedGeometry *geom, struct PartitionBlock *part)
 			{
 				case PED_EXCEPTION_CANCEL :
 				case PED_EXCEPTION_UNHANDLED :
-				default : 
+				default :
 					free(rdb);
 					return NULL;
 			}

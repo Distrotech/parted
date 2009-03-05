@@ -36,7 +36,7 @@ typedef struct _PedAlignment	PedAlignment;
 #define PED_MAX(a, b)	( ((a)>(b)) ? (a) : (b) )
 
 /* this is weird (I'm still not sure I should be doing this!)
- * 
+ *
  * For the functions: new, destroy, duplicate and merge: the following values
  * for align are valid:
  * 	* align == NULL  (!)  		represents no solution

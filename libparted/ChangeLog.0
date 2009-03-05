@@ -14,7 +14,7 @@
 
 	* libparted/disk.c (ped_register_disk_type, ped_unregister_disk_type):
 	Clean-up. Patch sent by Debarshi 'Rishi' Ray <debarshi.ray@gmail.com>.
-	
+
 2006-11-08  Otavio Salvador  <otavio@debian.org>
 
 	* libparted/fs/hfs/probe.c: Fix a segmentation fault when running
@@ -174,7 +174,7 @@
 
 	* labels/mac.c (mac_partition_get_flag): added 'set 2 raid on/off'
 	capability for mac labels.
-	
+
 	* labels/mac.c (struct MacRawDisk, struct MacPartitionData): fixed
 	data types of some fields (do not need to be 64 bit wide) and updated
 	meaning of reserved spaces.
@@ -242,7 +242,7 @@
 	* labels/gpt.c (pth_crc32): calculate crc32 from static size.
 
 2006-02-20  Leslie P. Polzer <polzer@gnu.org>
-	* device.c: added ped_device_get_constraint. 
+	* device.c: added ped_device_get_constraint.
 
 
 -----------------------------------------------------------------------------

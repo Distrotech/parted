@@ -57,12 +57,12 @@ extern int ped_assert ( int cond, const char* cond_text,
 static void PED_DEBUG (int level, ...)
 {
         va_list         va_args;
-        
+
         va_start (va_args, level);
         ped_debug ( level, "unknown file", 0, "unknown function", va_args );
         va_end (va_args);
 }
-        
+
 #define PED_ASSERT(cond, action)				\
 	do {							\
 	if (!ped_assert ( cond,                     		\

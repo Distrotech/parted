@@ -46,11 +46,11 @@
  *	Apple_partition_map	partition map (table)
  *	Apple_Driver		device driver
  *	Apple_Driver43		SCSI Manager 4.3 device driver
- *	Apple_MFS		original Macintosh File System 
+ *	Apple_MFS		original Macintosh File System
  *	Apple_HFS		Hierarchical File System (and +)
  *	Apple_HFSX		HFS+ with case sensitivity and more
  *	Apple_UNIX_SVR2		UNIX file system (UFS?)
- *	Apple_PRODOS		ProDOS file system 
+ *	Apple_PRODOS		ProDOS file system
  *	Apple_Free		unused space
  *	Apple_Scratch		empty
  *	Apple_Void		padding for iso9660
@@ -312,7 +312,7 @@ mac_duplicate (const PedDisk* disk)
 	MacDiskData*	new_mac_data;
 	MacDiskData*	old_mac_data = (MacDiskData*) disk->disk_specific;
 	PedPartition*	partition_map;
-       
+
 	new_disk = ped_disk_new_fresh (disk->dev, &mac_disk_type);
 	if (!new_disk)
 		goto error;
@@ -957,7 +957,7 @@ _generate_raw_part (PedDisk* disk, PedPartition* part,
 	return 1;
 
 error:
-	return 0;	
+	return 0;
 }
 
 static int
@@ -992,7 +992,7 @@ _generate_raw_freespace_part (PedDisk* disk, PedGeometry* geom, int num,
 	return 1;
 
 error:
-	return 0;	
+	return 0;
 }
 
 static int

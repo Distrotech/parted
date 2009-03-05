@@ -80,7 +80,7 @@ hfsplus_effect_move_extent (PedFileSystem *fs, unsigned int *ptr_fblock,
 		}
 		ok = (stop-start == size);
 	}
-	
+
 	/* Forward search */
 	/* 1 pass relocation in the gap merged with 2 pass reloc after source */
 	if (!ok && *ptr_to_fblock != *ptr_fblock) {
@@ -195,13 +195,13 @@ hfsplus_do_move (PedFileSystem* fs, unsigned int *ptr_src,
 						ref->ext_length);
 
 	if (new_start == -1) return -1;
-	
+
 	if (ref->ext_start != (unsigned) new_start) {
 		switch (ref->where) {
 		/************ VH ************/
 		    case CR_PRIM_CAT :
 			priv_data->catalog_file
-			->first[ref->ref_index].start_block = 
+			->first[ref->ref_index].start_block =
 				PED_CPU_TO_BE32(new_start);
 			goto CR_PRIM;
 		    case CR_PRIM_EXT :
@@ -283,7 +283,7 @@ hfsplus_do_move (PedFileSystem* fs, unsigned int *ptr_src,
 		    CR_BTREE :
 			PED_ASSERT(PED_SECTOR_SIZE_DEFAULT * ref->sect_by_block
 				   > ref->ref_offset, return -1 );
-			if (!hfsplus_file_read(file, hfsp_block, 
+			if (!hfsplus_file_read(file, hfsp_block,
 				(PedSector)ref->ref_block * ref->sect_by_block,
 				ref->sect_by_block))
 				return -1;
@@ -327,11 +327,11 @@ hfsplus_save_allocation(PedFileSystem *fs)
 	unsigned int		map_sectors, i, j;
 	int			ret = 1;
 
-	map_sectors = ( PED_BE32_TO_CPU (priv_data->vh->total_blocks) 
+	map_sectors = ( PED_BE32_TO_CPU (priv_data->vh->total_blocks)
 			+ PED_SECTOR_SIZE_DEFAULT * 8 - 1 ) / (PED_SECTOR_SIZE_DEFAULT * 8);
 
 	for (i = 0; i < map_sectors;) {
-		for (j = i; 
+		for (j = i;
 		     (TST_BLOC_OCCUPATION(priv_data->dirty_alloc_map,j));
 		     ++j)
 			CLR_BLOC_OCCUPATION(priv_data->dirty_alloc_map,j);
@@ -658,7 +658,7 @@ hfsplus_cache_from_extent(HfsCPrivateCache* cache, PedFileSystem* fs,
 				free (node);
 				return -1;
 			}
-			
+
 			switch (extent_key->file_ID) {
 			    case PED_CPU_TO_BE32 (HFS_XTENT_ID) :
 				if (ped_exception_throw (
@@ -687,7 +687,7 @@ hfsplus_cache_from_extent(HfsCPrivateCache* cache, PedFileSystem* fs,
 			    	where = CR_BTREE_EXT_0;
 				break;
 			}
-			
+
 			for (j = 0; j < HFSP_EXT_NB; ++j) {
 				if (!extent[j].block_count) break;
 				if (!hfsc_cache_add_extent(
@@ -706,7 +706,7 @@ hfsplus_cache_from_extent(HfsCPrivateCache* cache, PedFileSystem* fs,
 			}
 		}
 	}
-	
+
 	free (node);
 	return 1;
 }

@@ -20,26 +20,26 @@
 
 /**
  * \addtogroup PedUnit
- * 
- * \brief The PedUnit module provides a standard mechanism for describing
- * and parsing locations within devices in human-friendly plain text. 
  *
- * Internally, libparted uses PedSector (which is typedef'ed to be long long 
- * in <parted/device.h>) to describe device locations such as the start and 
- * end of partitions.  However, sector numbers are often long and unintuitive.  
- * For example, my extended partition starts at sector 208845.  PedUnit allows 
- * this location to be represented in more intutitive ways, including "106Mb", 
- * "0Gb" and "0%", as well as "208845s".  PedUnit aims to provide facilities 
+ * \brief The PedUnit module provides a standard mechanism for describing
+ * and parsing locations within devices in human-friendly plain text.
+ *
+ * Internally, libparted uses PedSector (which is typedef'ed to be long long
+ * in <parted/device.h>) to describe device locations such as the start and
+ * end of partitions.  However, sector numbers are often long and unintuitive.
+ * For example, my extended partition starts at sector 208845.  PedUnit allows
+ * this location to be represented in more intutitive ways, including "106Mb",
+ * "0Gb" and "0%", as well as "208845s".  PedUnit aims to provide facilities
  * to provide a consistent system for describing device locations all
  * throughout libparted.
- * 
+ *
  * PedUnit provides two basic services: converting a PedSector into a text
  * representation, and parsing a text representation into a PedSector.
  * PedUnit currently supports these units:
- * 
+ *
  * 	sectors, bytes, kilobytes, megabytes, gigabytes, terabytes, compact,
  * 	cylinder and percent.
- * 	
+ *
  * PedUnit has a global variable that contains the default unit for all
  * conversions.
  *
@@ -147,7 +147,7 @@ ped_unit_get_size (const PedDevice* dev, PedUnit unit)
 
 /**
  * Get a textual (non-internationalized) representation of a \p unit.
- * 
+ *
  * For example, the textual representation of PED_UNIT_SECTOR is "s".
  */
 const char*
@@ -186,7 +186,7 @@ ped_strdup (const char *str)
 /**
  * \brief Get a string that describes the location of the \p byte on
  * device \p dev.
- * 
+ *
  * The string is described with the desired \p unit.
  * The returned string must be freed with free().
  */
@@ -199,7 +199,7 @@ ped_unit_format_custom_byte (const PedDevice* dev, PedSector byte, PedUnit unit)
 	int p;
 
 	PED_ASSERT (dev != NULL, return NULL);
-	
+
 	/* CHS has a special comma-separated format. */
 	if (unit == PED_UNIT_CHS) {
 		const PedCHSGeometry *chs = &dev->bios_geom;
@@ -219,7 +219,7 @@ ped_unit_format_custom_byte (const PedDevice* dev, PedSector byte, PedUnit unit)
 			  ped_unit_get_name (unit));
 		return ped_strdup (buf);
 	}
-	
+
         if (unit == PED_UNIT_COMPACT) {
                 if (byte >= 10LL * PED_TERABYTE_SIZE)
                         unit = PED_UNIT_TERABYTE;
@@ -258,7 +258,7 @@ ped_unit_format_custom_byte (const PedDevice* dev, PedSector byte, PedUnit unit)
 /**
  * \brief Get a string that describes the location of the \p byte on
  * device \p dev.
- * 
+ *
  * The string is described with the default unit, which is set
  * by ped_unit_set_default().
  * The returned string must be freed with free().
@@ -272,7 +272,7 @@ ped_unit_format_byte (const PedDevice* dev, PedSector byte)
 
 /**
  * \brief Get a string that describes the location \p sector on device \p dev.
- * 
+ *
  * The string is described with the desired \p unit.
  * The returned string must be freed with free().
  */
@@ -285,7 +285,7 @@ ped_unit_format_custom (const PedDevice* dev, PedSector sector, PedUnit unit)
 
 /**
  * \brief Get a string that describes the location \p sector on device \p dev.
- * 
+ *
  * The string is described with the default unit, which is set
  * by ped_unit_set_default().
  * The returned string must be freed with free().
@@ -299,13 +299,13 @@ ped_unit_format (const PedDevice* dev, PedSector sector)
 }
 
 /**
- * If \p str contains a valid description of a location on \p dev, 
- * then \p *sector is modified to describe the location and a geometry 
- * is created in \p *range describing a 2 units large area centered on 
- * \p *sector.  If the \p range as described here would be partially outside 
- * the device \p dev, the geometry returned is the intersection between the 
- * former and the whole	device geometry.  If no units are specified, then the 
- * default unit is assumed.  
+ * If \p str contains a valid description of a location on \p dev,
+ * then \p *sector is modified to describe the location and a geometry
+ * is created in \p *range describing a 2 units large area centered on
+ * \p *sector.  If the \p range as described here would be partially outside
+ * the device \p dev, the geometry returned is the intersection between the
+ * former and the whole	device geometry.  If no units are specified, then the
+ * default unit is assumed.
  *
  * \return \c 1 if \p str is a valid location description, \c 0 otherwise
  */
@@ -464,9 +464,9 @@ parse_unit_suffix (const char* suffix, PedUnit suggested_unit)
 			case 'b': return PED_UNIT_BYTE;
 			case 'k': return PED_UNIT_KILOBYTE;
 			case 'm': return PED_UNIT_MEGABYTE;
-			case 'g': return PED_UNIT_GIGABYTE; 
+			case 'g': return PED_UNIT_GIGABYTE;
 			case 't': return PED_UNIT_TERABYTE;
-			case 'c': return PED_UNIT_CYLINDER; 
+			case 'c': return PED_UNIT_CYLINDER;
 			case '%': return PED_UNIT_PERCENT;
 		}
 	}
@@ -482,17 +482,17 @@ parse_unit_suffix (const char* suffix, PedUnit suggested_unit)
 }
 
 /**
- * If \p str contains a valid description of a location on \p dev, then 
+ * If \p str contains a valid description of a location on \p dev, then
  * \p *sector is modified to describe the location and a geometry is created
  * in \p *range describing a 2 units large area centered on \p *sector.  If the
  * \p range as described here would be partially outside the device \p dev, the
  * geometry returned is the intersection between the former and the whole
  * device geometry.  If no units are specified, then the default unit is
- * assumed. 
+ * assumed.
  *
  * \throws PED_EXCEPTION_ERROR if \p str contains invalid description of a
  * location
- * \throws PED_EXCEPTION_ERROR if location described by \p str 
+ * \throws PED_EXCEPTION_ERROR if location described by \p str
  * is outside of the device \p dev->path
  *
  * \return \c 1 if \p str is a valid location description, \c 0 otherwise.

@@ -172,9 +172,9 @@ struct __attribute__ ((packed)) _GuidPartitionEntry_t {
 #define GPT_PMBR_SECTORS 1
 #define GPT_PRIMARY_HEADER_LBA 1
 #define GPT_HEADER_SECTORS 1
-#define GPT_PRIMARY_PART_TABLE_LBA 2 
+#define GPT_PRIMARY_PART_TABLE_LBA 2
 
-/* 
+/*
    These values are only defaults.  The actual on-disk structures
    may define different sizes, so use those unless creating a new GPT disk!
 */
@@ -285,7 +285,7 @@ pth_new (const PedDevice* dev)
         GuidPartitionTableHeader_t* pth = ped_malloc (
                         sizeof (GuidPartitionTableHeader_t)
                         + sizeof (uint8_t));
-        
+
         pth->Reserved2 = ped_malloc ( pth_get_size_rsv2 (dev) );
 
         return pth;
@@ -296,25 +296,25 @@ static GuidPartitionTableHeader_t*
 pth_new_zeroed (const PedDevice* dev)
 {
         GuidPartitionTableHeader_t* pth = pth_new (dev);
-        
+
         memset (pth, 0, pth_get_size_static (dev));
-        memset (pth->Reserved2, 0, pth_get_size_rsv2 (dev));        
-        
+        memset (pth->Reserved2, 0, pth_get_size_rsv2 (dev));
+
         return (pth);
 }
-                        
+
 
 static GuidPartitionTableHeader_t*
 pth_new_from_raw (const PedDevice* dev, const uint8_t* pth_raw)
 {
-        GuidPartitionTableHeader_t* pth = pth_new (dev); 
+        GuidPartitionTableHeader_t* pth = pth_new (dev);
 
         PED_ASSERT (pth_raw != NULL, return 0);
-        
+
         memcpy (pth, pth_raw, pth_get_size_static (dev));
         memcpy (pth->Reserved2, pth_raw + pth_get_size_static (dev),
                         pth_get_size_rsv2 (dev));
-        
+
         return pth;
 }
 
@@ -333,13 +333,13 @@ pth_get_raw (const PedDevice* dev, const GuidPartitionTableHeader_t* pth)
 {
         uint8_t* pth_raw = ped_malloc (pth_get_size (dev));
         int size_static = pth_get_size_static (dev);
-        
+
         PED_ASSERT (pth != NULL, return 0);
         PED_ASSERT (pth->Reserved2 != NULL, return 0);
-       
+
         memcpy (pth_raw, pth, size_static);
         memcpy (pth_raw + size_static, pth->Reserved2, pth_get_size_rsv2 (dev));
-        
+
         return pth_raw;
 }
 
@@ -350,7 +350,7 @@ pth_get_raw (const PedDevice* dev, const GuidPartitionTableHeader_t* pth)
  *
  * There are two different representations for Globally Unique Identifiers
  * (GUIDs or UUIDs).
- * 
+ *
  * The RFC specifies a UUID as a string of 16 bytes, essentially
  * a big-endian array of char.
  * Intel, in their EFI Specification, references the same RFC, but
@@ -390,14 +390,14 @@ pth_crc32(const PedDevice* dev, const GuidPartitionTableHeader_t* pth)
 {
         uint8_t* pth_raw = pth_get_raw (dev, pth);
         uint32_t crc32 = 0;
-       
+
         PED_ASSERT (dev != NULL, return 0);
         PED_ASSERT (pth != NULL, return 0);
-       
+
         crc32 = efi_crc32 (pth_raw, PED_LE32_TO_CPU (pth->HeaderSize));
 
         free (pth_raw);
-      
+
         return crc32;
 }
 
@@ -440,13 +440,13 @@ gpt_probe (const PedDevice * dev)
 		if (gpt->Signature == PED_CPU_TO_LE64(GPT_HEADER_SIGNATURE))
 			gpt_sig_found = 1;
 	}
-	
+
         free (pth_raw);
 
         if (gpt)
 	        pth_free (gpt);
 
-        
+
 	if (!gpt_sig_found)
 		return 0;
 
@@ -486,7 +486,7 @@ gpt_clobber(PedDevice * dev)
 
 	memset(&pmbr, 0, sizeof(pmbr));
 	memset(zeroed_pth_raw, 0, pth_get_size (dev));
-	
+
         /*
          * TO DISCUSS: check whether checksum is correct?
          * If not, we might get a wrong AlternateLBA field and destroy
@@ -497,7 +497,7 @@ gpt_clobber(PedDevice * dev)
                 goto error_free;
 
         gpt = pth_new_from_raw (dev, pth_raw);
-        
+
 	if (!ped_device_write(dev, &pmbr, GPT_PMBR_LBA, GPT_PMBR_SECTORS))
                 goto error_free_with_gpt;
 	if (!ped_device_write(dev, &zeroed_pth_raw,
@@ -513,11 +513,11 @@ gpt_clobber(PedDevice * dev)
 				      GPT_HEADER_SECTORS))
 			return 0;
 	}
-        
+
 	pth_free (gpt);
 
         return 1;
-        
+
 error_free_with_gpt:
         pth_free (gpt);
 error_free:
@@ -623,9 +623,9 @@ _read_header (const PedDevice* dev, GuidPartitionTableHeader_t** gpt,
 		free (pth_raw);
 		return 0;
         }
- 
+
         *gpt = pth_new_from_raw (dev, pth_raw);
-        
+
         free (pth_raw);
 
         if (_header_is_valid (dev, *gpt))
@@ -636,9 +636,9 @@ _read_header (const PedDevice* dev, GuidPartitionTableHeader_t** gpt,
 }
 
 static int
-_parse_header (PedDisk* disk, GuidPartitionTableHeader_t* gpt, 
+_parse_header (PedDisk* disk, GuidPartitionTableHeader_t* gpt,
 	       int *update_needed)
-{ 
+{
 	GPTDiskData* gpt_disk_data = disk->disk_specific;
 	PedSector first_usable;
 	PedSector last_usable;
@@ -668,20 +668,20 @@ _parse_header (PedDisk* disk, GuidPartitionTableHeader_t* gpt,
 /*
    Need to check whether the volume has grown, the LastUsableLBA is
    normally set to disk->dev->length - 2 - ptes_size (at least for parted
-   created volumes), where ptes_size is the number of entries * 
+   created volumes), where ptes_size is the number of entries *
    size of each entry / sector size or 16k / sector size, whatever the greater.
    If the volume has grown, offer the user the chance to use the new
-   space or continue with the current usable area.  Only ask once per 
+   space or continue with the current usable area.  Only ask once per
    parted invocation.
 */
-   
-	last_usable_if_grown 
+
+	last_usable_if_grown
 		= (disk->dev->length - 2 -
-		((PedSector)(PED_LE32_TO_CPU(gpt->NumberOfPartitionEntries)) * 
-		(PedSector)(PED_LE32_TO_CPU(gpt->SizeOfPartitionEntry)) / 
+		((PedSector)(PED_LE32_TO_CPU(gpt->NumberOfPartitionEntries)) *
+		(PedSector)(PED_LE32_TO_CPU(gpt->SizeOfPartitionEntry)) /
 		disk->dev->sector_size));
 
-	last_usable_min_default = disk->dev->length - 2 - 
+	last_usable_min_default = disk->dev->length - 2 -
 		GPT_DEFAULT_PARTITION_ENTRY_ARRAY_SIZE / disk->dev->sector_size;
 
 	if ( last_usable_if_grown > last_usable_min_default ) {
@@ -705,7 +705,7 @@ _parse_header (PedDisk* disk, GuidPartitionTableHeader_t* gpt,
 			_("Not all of the space available to %s appears "
 			"to be used, you can fix the GPT to use all of the "
 			"space (an extra %llu blocks) or continue with the "
-			"current setting? "), disk->dev->path, 
+			"current setting? "), disk->dev->path,
 			(uint64_t)(last_usable_if_grown - last_usable));
 
 
@@ -755,15 +755,15 @@ _parse_part_entry (PedDisk* disk, GuidPartitionEntry_t* pte)
 		gpt_part_data->name[i] = (efi_char16_t) PED_LE16_TO_CPU(
 					   (uint16_t) pte->PartitionName[i]);
 	gpt_part_data->name[i] = 0;
-        
-        gpt_part_data->lvm = gpt_part_data->raid 
+
+        gpt_part_data->lvm = gpt_part_data->raid
                 = gpt_part_data->boot = gpt_part_data->hp_service
                 = gpt_part_data->hidden = gpt_part_data->msftres
                 = gpt_part_data->bios_grub = 0;
 
         if (pte->Attributes.RequiredToFunction & 0x1)
                 gpt_part_data->hidden = 1;
-       
+
 	if (!guid_cmp (gpt_part_data->type, PARTITION_SYSTEM_GUID))
 		gpt_part_data->boot = 1;
 	else if (!guid_cmp (gpt_part_data->type, PARTITION_BIOS_GRUB_GUID))
@@ -776,7 +776,7 @@ _parse_part_entry (PedDisk* disk, GuidPartitionEntry_t* pte)
 		gpt_part_data->hp_service = 1;
         else if (!guid_cmp (gpt_part_data->type, PARTITION_MSFT_RESERVED_GUID))
                 gpt_part_data->msftres = 1;
-        
+
 	return part;
 }
 
@@ -816,7 +816,7 @@ gpt_read (PedDisk * disk)
 
 	ped_disk_delete_all (disk);
 
-        /* 
+        /*
          * motivation: let the user decide about the pmbr... during
          * ped_disk_probe(), they probably didn't get a choice...
          */
@@ -966,7 +966,7 @@ _write_pmbr (PedDevice * dev)
 	pmbr.PartitionRecord[0].EndSector   = 0xFF;
 	pmbr.PartitionRecord[0].EndTrack    = 0xFF;
 	pmbr.PartitionRecord[0].StartingLBA = PED_CPU_TO_LE32(1);
-	if ((dev->length - 1ULL) > 0xFFFFFFFFULL) 
+	if ((dev->length - 1ULL) > 0xFFFFFFFFULL)
 		pmbr.PartitionRecord[0].SizeInLBA = PED_CPU_TO_LE32(0xFFFFFFFF);
 	else
 		pmbr.PartitionRecord[0].SizeInLBA = PED_CPU_TO_LE32(dev->length - 1UL);
@@ -982,9 +982,9 @@ _generate_header (const PedDisk* disk, int alternate, uint32_t ptes_crc,
         GuidPartitionTableHeader_t* gpt;
 
         *gpt_p = pth_new_zeroed (disk->dev);
-        
+
         gpt = *gpt_p;
-        
+
 	gpt->Signature = PED_CPU_TO_LE64 (GPT_HEADER_SIGNATURE);
 	gpt->Revision = PED_CPU_TO_LE32 (GPT_HEADER_REVISION_V1_00);
 
@@ -1034,7 +1034,7 @@ _partition_generate_part_entry (PedPartition* part, GuidPartitionEntry_t* pte)
 
         if (gpt_part_data->hidden)
                 pte->Attributes.RequiredToFunction = 1;
-        
+
 	for (i = 0; i < 72 / sizeof(efi_char16_t); i++)
 		pte->PartitionName[i]
 			= (efi_char16_t) PED_CPU_TO_LE16(
@@ -1252,7 +1252,7 @@ gpt_partition_set_system (PedPartition* part, const PedFileSystemType* fs_type)
                 gpt_part_data->type = PARTITION_MSFT_RESERVED_GUID;
                 return 1;
         }
-        
+
 	if (fs_type) {
 		if (strncmp (fs_type->name, "fat", 3) == 0
 		    || strcmp (fs_type->name, "ntfs") == 0) {
@@ -1340,7 +1340,7 @@ gpt_partition_set_flag(PedPartition *part,
 	case PED_PARTITION_BOOT:
 		gpt_part_data->boot = state;
 		if (state)
-                        gpt_part_data->raid 
+                        gpt_part_data->raid
                                 = gpt_part_data->lvm
                                 = gpt_part_data->bios_grub
                                 = gpt_part_data->hp_service
@@ -1349,7 +1349,7 @@ gpt_partition_set_flag(PedPartition *part,
 	case PED_PARTITION_BIOS_GRUB:
 		gpt_part_data->bios_grub = state;
 		if (state)
-                        gpt_part_data->raid 
+                        gpt_part_data->raid
                                 = gpt_part_data->lvm
                                 = gpt_part_data->boot
                                 = gpt_part_data->hp_service
@@ -1445,7 +1445,7 @@ gpt_partition_is_flag_available(const PedPartition * part,
 	case PED_PARTITION_BIOS_GRUB:
 	case PED_PARTITION_HPSERVICE:
         case PED_PARTITION_MSFT_RESERVED:
-        case PED_PARTITION_HIDDEN:        
+        case PED_PARTITION_HIDDEN:
 		return 1;
 	case PED_PARTITION_SWAP:
 	case PED_PARTITION_ROOT:

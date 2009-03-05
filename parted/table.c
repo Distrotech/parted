@@ -63,14 +63,14 @@ typedef struct
 Table* table_new(int ncols)
 {
         assert ( ncols >= 0 );
-        
+
         Table *t = xmalloc (sizeof(*t));
 
         t->ncols = ncols;
         t->nrows = 0;
         t->rows = (wchar_t***)NULL;
         t->widths = NULL;
-        
+
         return t;
 }
 
@@ -78,10 +78,10 @@ Table* table_new(int ncols)
 void table_destroy (Table* t)
 {
         unsigned int r, c;
-        
+
         assert (t);
         assert (t->ncols > 0);
-        
+
         for (r = 0; r < t->nrows; ++r)
         {
                 for (c = 0; c < t->ncols; ++c)
@@ -104,16 +104,16 @@ static int max (int x, int y)
 static void table_calc_column_widths (Table* t)
 {
         unsigned int r, c;
-        
+
         assert(t);
         assert(t->ncols > 0);
-        
+
         if (!t->widths)
                 t->widths = xmalloc (t->ncols * sizeof(t->widths[0]));
 
         for (c = 0; c < t->ncols; ++c)
                 t->widths[c] = 0;
-        
+
         for (r = 0; r < t->nrows; ++r)
                 for (c = 0; c < t->ncols; ++c)
                 {
@@ -124,7 +124,7 @@ static void table_calc_column_widths (Table* t)
 }
 
 
-/* 
+/*
  * add a row which is a string array of ncols elements.
  * 'row' will get freed by table_destroy;  you must not free it
  * yourself.
@@ -140,7 +140,7 @@ void table_add_row (Table* t, wchar_t** row)
         putchar ('\n');*/
 
         t->rows = xrealloc (t->rows, (t->nrows + 1) * sizeof(wchar_t***));
-         
+
         t->rows[t->nrows] = row;
 
         ++t->nrows;
@@ -199,12 +199,12 @@ static void table_render_row (Table* t, int rownum, int ncols, wchar_t** s)
                 wchar_t* pad = xmalloc ((nspaces + 1) * sizeof(*pad));
 
                 for (j = 0; j < nspaces; ++j)
-                       pad[j] = L' '; 
+                       pad[j] = L' ';
 
                 pad[nspaces] = L_('\0');
 
                 wcscat (*s, pad);
-                if (i + 1 < ncols) 
+                if (i + 1 < ncols)
                         wcscat (*s, DELIMITER);
 
                 free (pad);
@@ -222,7 +222,7 @@ static void table_render_row (Table* t, int rownum, int ncols, wchar_t** s)
 }
 
 
-/* 
+/*
  * Render the rows.
  * \p s must be a null-terminated string.
  */
@@ -235,7 +235,7 @@ static void table_render_rows (Table* t, wchar_t** s)
                 table_render_row (t, i, t->ncols, s);
 }
 
-/* 
+/*
  * Render the table to a string.
  * You are responsible for freeing the returned string.
  */

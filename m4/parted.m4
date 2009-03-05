@@ -70,15 +70,15 @@ AC_TRY_RUN([
 int main ()
 {
 	int		major, minor, micro;
-	const char	*version;    
-	
+	const char	*version;
+
 	if ( !(version = ped_get_version ()) )
 		exit(1);
 	if (sscanf(version, "%d.%d.%d", &major, &minor, &micro) != 3) {
 		printf("%s, bad version string\n", version);
 		exit(1);
 	}
-	
+
 	if ((major > $parted_config_major_version) ||
 	   ((major == $parted_config_major_version) && (minor > $parted_config_minor_version)) ||
 	   ((major == $parted_config_major_version) && (minor == $parted_config_minor_version) && (micro >= $parted_config_micro_version))) {
@@ -87,14 +87,14 @@ int main ()
 		printf("\n*** An old version of libparted (%s) was found.\n",
 		       version);
 		printf("*** You need a version of libparted equal to or newer than %d.%d.%d.\n",
-			$parted_config_major_version, 
+			$parted_config_major_version,
 			$parted_config_minor_version,
 			$parted_config_micro_version);
 		printf("*** You can get it at - ftp://ftp.gnu.org/gnu/parted/\n");
 		return 1;
 	}
 }
-], 
+],
     AC_MSG_RESULT([yes]),
     AC_MSG_RESULT([no]) ; $3,
     [echo $ac_n "cross compiling; assumed OK... $ac_c"])

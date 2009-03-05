@@ -140,9 +140,9 @@ hfsc_cache_add_extent(HfsCPrivateCache* cache, uint32_t start, uint32_t length,
 		return NULL;
 	}
 
-	if ( cache->last_table->table_first_free 
+	if ( cache->last_table->table_first_free
 	     == cache->last_table->table_size ) {
-		cache->last_table->next_cache = 
+		cache->last_table->next_cache =
 			hfsc_new_cachetable( ( cache->first_cachetable_size
 					       / CR_NEW_ALLOC_DIV )
 					     + CR_ADD_CST );

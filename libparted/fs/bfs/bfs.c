@@ -52,7 +52,7 @@ bfs_probe (PedGeometry* geom)
         PED_ASSERT (geom->dev != NULL, return NULL);
 
         buf = ped_malloc (geom->dev->sector_size);
-        
+
 	if (!ped_geometry_read (geom, buf, 0, 1))
 		return 0;
 
@@ -75,7 +75,7 @@ bfs_clobber (PedGeometry* geom)
         PED_ASSERT (geom->dev != NULL, return 0);
 
         buf = ped_malloc (geom->dev->sector_size);
-        
+
         if (!ped_geometry_read (geom, buf, 0, 1))
                 return 0;
 	memset (buf, 0, 512);
@@ -123,30 +123,30 @@ bfs_free (PedFileSystem* fs)
 }
 
 
-static PedFileSystem* 
+static PedFileSystem*
 bfs_open (PedGeometry *geom)
 {
         PedFileSystem* fs = bfs_alloc (geom);
-        
+
         struct bfs_sb* sb = (struct bfs_sb*) ped_malloc(sizeof(struct bfs_sb));
         struct BfsSpecific* bfs;
         uint8_t* buf;
-       
+
         PED_ASSERT (geom      != NULL, return NULL);
         PED_ASSERT (geom->dev != NULL, return NULL);
-        
+
         buf = ped_malloc (geom->dev->sector_size);
-        
+
         if (!fs)
                 return NULL;
 
         bfs = fs->type_specific;
-        
+
         if (!ped_geometry_read (geom, buf, 0, 1))
                 return NULL;
-        
+
         memcpy (sb, buf, BFS_SECTOR_SIZE);
-                        
+
         bfs->sb = sb;
 
         return fs;
@@ -168,7 +168,7 @@ static struct bfs_inode* create_root_inode()
         root->nlinks = 0UL;
         root->atime = root->ctime = 0UL;
         memset ((void*)root->reserved, 0, 32*4);
-        
+
         return root;
 }
 
@@ -195,37 +195,37 @@ static int _write_block (PedFileSystem* fs, uint8_t* buf, int n)
 static int _write_sb (PedFileSystem* fs)
 {
         uint8_t* sb = _block_alloc (1);
-        
+
         BFS_SB(fs)->magic  = BFS_MAGIC;
         BFS_SB(fs)->sanity = BFS_PED_SANITY;
         BFS_SB(fs)->start  = BFS_SPECIFIC(fs)->data_start;
         BFS_SB(fs)->size   = BFS_SPECIFIC(fs)->size;
-        
+
         memcpy (sb, BFS_SB(fs), sizeof(struct bfs_sb));
 
         return _write_block (fs, sb, 1);
 }
 
 
-static PedFileSystem* 
+static PedFileSystem*
 bfs_create (PedGeometry *geom, PedTimer *timer)
 {
         PedFileSystem* fs = bfs_alloc (geom);
         int n_inodes = PED_MAX (BFS_PED_MIN_INODES, 16/*some sane value here*/);
-        
+
         /* TODO: check whether geometry is big enough */
-        
+
         fs->data_start = 1 + ped_round_up_to (n_inodes * 64, 512);
         fs->size = geom->dev->sector_size * length;
-        
-        ped_timer_set_state_name (timer, "Writing inodes"); 
-        
-       
-        
+
+        ped_timer_set_state_name (timer, "Writing inodes");
+
+
+
         ped_timer_set_state_name (timer, "Writing super block");
         _write_sb (fs);
-                
-        return 0; 
+
+        return 0;
 }
 #endif /* !DISCOVER_ONLY */
 
@@ -236,7 +236,7 @@ static PedFileSystemOps bfs_ops = {
 	clobber:	bfs_clobber,
 #else
 	clobber:	NULL,
-#endif 
+#endif
 	open:		bfs_open,
 #ifndef DISCOVER_ONLY
 	create:		bfs_create,

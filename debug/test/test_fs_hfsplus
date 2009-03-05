@@ -31,7 +31,7 @@ test_newfs_hfs()
 {
 # -w option for newfs_hfs adds an HFS wrapper around the HFS+ F.S.
 # update : don't use -w yet because it doesn't works well
-# it seems that the wrapper bad block file is stored differently by 
+# it seems that the wrapper bad block file is stored differently by
 # newfs_hfs than by mac os X install format program
 # -dfn for fsck_hfs means Debug, Force, No
 # Debug => print more informations
@@ -50,9 +50,9 @@ prepare_resize_tests()
 	part_num=1
 	part=$TEST_DRIVE$part_num
 	hole_parent=`echo $TEST_DATA_HOLE | sed -e "s/[-_.a-zA-Z0-9]+\///g"`
-	
+
 	umount $TEST_MOUNT_POINT 2>&1 > /dev/null
-	
+
 	mount $part $TEST_MOUNT_POINT -t $FILE_SYSTEM \
 	&& cp $TEST_DATA/* $TEST_MOUNT_POINT -r \
 	&& cp -r $TEST_DATA $TEST_MOUNT_POINT/tmp_copy \
@@ -86,7 +86,7 @@ main()
 	if ! test_newfs_hfs; then
 		return 1
 	fi
-	
+
 	prepare_resize_tests
 	test_resize_move_end_backward
 }

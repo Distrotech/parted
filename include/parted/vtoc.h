@@ -3,8 +3,8 @@
  * Author(s)......: Horst Hummel <horst.hummel@de.ibm.com>
  * Bugreports.to..: <Linux390@de.ibm.com>
  *
- * This is a user-space copy of the kernel vtoc,h. 
- * 
+ * This is a user-space copy of the kernel vtoc,h.
+ *
  * (C) IBM Corporation, IBM Deutschland Entwicklung GmbH, 2002
  *
  * History of changes (starts March 2002)
@@ -160,8 +160,8 @@ struct __attribute__ ((packed)) format4_label {
 	u_int8_t  DS4VTOCI;     /* VTOC indicators                         */
 	u_int8_t  DS4NOEXT;     /* number of extents in VTOC               */
 	u_int8_t  DS4SMSFG;     /* system managed storage indicators       */
-	u_int8_t  DS4DEVAC;     /* number of alternate cylinders. 
-                                   Subtract from first two bytes of 
+	u_int8_t  DS4DEVAC;     /* number of alternate cylinders.
+                                   Subtract from first two bytes of
                                    DS4DEVSZ to get number of usable
 	                           cylinders. can be zero. valid
 	                           only if DS4DEVAV on.                    */
@@ -229,7 +229,7 @@ void vtoc_volume_label_set_volser (volume_label_t *vlabel, char *volser);
 
 char *vtoc_volume_label_get_volser (volume_label_t *vlabel, char *volser);
 
-void vtoc_volume_label_set_key (volume_label_t *vlabel, char *key);     
+void vtoc_volume_label_set_key (volume_label_t *vlabel, char *key);
 
 void vtoc_volume_label_set_label (volume_label_t *vlabel, char *lbl);
 
@@ -262,9 +262,9 @@ void vtoc_init_format5_label (format5_label_t *f5);
 void vtoc_update_format5_label_add (format5_label_t *f5, int verbose, int cyl,
                                     int trk, u_int16_t a, u_int16_t b,
                                     u_int8_t c);
- 
+
 void vtoc_update_format5_label_del (format5_label_t *f5, int verbose, int cyl,
-                                    int trk, u_int16_t a, u_int16_t b, 
+                                    int trk, u_int16_t a, u_int16_t b,
                                     u_int8_t c);
 
 void vtoc_init_format7_label (format7_label_t *f7);

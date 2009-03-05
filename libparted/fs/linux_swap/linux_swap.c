@@ -574,7 +574,7 @@ swap_get_create_constraint (const PedDevice* dev)
 
 	if (!ped_geometry_init (&full_dev, dev, 0, dev->length - 1))
 		return NULL;
-	
+
 	return ped_constraint_new (ped_alignment_any, ped_alignment_any,
 				   &full_dev, &full_dev,
 				   getpagesize() / 512, dev->length);

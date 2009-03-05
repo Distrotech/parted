@@ -115,7 +115,7 @@ static PedDisk*
 aix_duplicate (const PedDisk* disk)
 {
 	PedDisk*	new_disk;
-       
+
 	new_disk = ped_disk_new_fresh (disk->dev, &aix_disk_type);
 	if (!new_disk)
 		return NULL;

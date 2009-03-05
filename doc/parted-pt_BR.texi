@@ -228,7 +228,7 @@ Suporte experimental.
 @end table
 
 A GNU libc 2.1 ou superior é necessária. Você provavelmente pode usar
-versões anteriores usando a opção @samp{--disable-nls}. 
+versões anteriores usando a opção @samp{--disable-nls}.
 @xref{Compilando o GNU Parted}. (Nota: Eu acho que nós já tiramos essa
 necessidade.  Á fazer: checar se funciona na libc 2.0!)
 
@@ -265,7 +265,7 @@ $ @kbd{make}
 Contudo há algumas opções para o @command{configure}:
 
 @table @code
-@item --without-readline		
+@item --without-readline
 desliga o uso de readline. Isso é útil para fazer discos de boot,
 etc., onde poucas bibliotecas estão disponíveis.
 
@@ -284,12 +284,12 @@ não precisa de flexibilidade.
 @item --disable-fs
 desabilita o suporte a todos os sistemas de arquivo
 
-@item --disable-nls			
+@item --disable-nls
 desativa o suporte a língua nativa. Isso é útil par usar com versões
 antigas da glibc, ou uma versão reduzida da glibc boa para discos de
 boot.
 
-@item --disable-shared		
+@item --disable-shared
 desabilita o uso de bibliotecas compartilhadas. Ela pode ser necessária
 para uso com versões antigas da GNU libc, se você receber um erro sobre
 algum ``registrador cuspido''.  Também útil para discos de boot.
@@ -297,7 +297,7 @@ algum ``registrador cuspido''.  Também útil para discos de boot.
 @item --disable-Werror
 ignorar avisos na compilação
 
-@item --enable-all-static		
+@item --enable-all-static
 compila o executável do Parted como um binário completamente estático
 Isto é conveniente para discos de boot, porque você não precisa instalar
 qualquer bibliotecas no disco de boot (contudo, alguns programas podem
@@ -447,7 +447,7 @@ Você freqüentemente ter partições de sistemas de arquivo diferente.
 O Parted suporta muitas combinações de BIOS, carregadores de boot,
 sistemas operacionais, e sistemas de arquivo, e vai suportar mais
 ainda no futuro. Para melhor entender as regras de cada, por favor
-veja @ref{BIOSes and Firmware}, @ref{Boot Loaders}, 
+veja @ref{BIOSes and Firmware}, @ref{Boot Loaders},
 @ref{Sistemas operacionais}, e @ref{Sistemas de arquivo}.
 
 Este capítulo descreve como usar o Parted, que é sempre o mesmo, não
@@ -455,7 +455,7 @@ importa que sistemas que você está usando. Você deve ler esse capítulo,
 então cada um dos capítulos sobre BIOS's, carregadores de boot, sistemas
 operacionais, e sistemas de arquivo. Contudo, você só precisa ler as
 seções que são relevantes pra você. Por exemplo, se você só usa o LILO
-como carregador de boot, você só precisar ler a introdução e 
+como carregador de boot, você só precisar ler a introdução e
 @ref{LILO, the section on LILO}.
 
 @node Rodando o Parted
@@ -620,7 +620,7 @@ Sistemas de arquivo suportados
 (desde que a partição de destino é maior que a partição de origem)
 
 @item fat16, fat32
-@item linux-swap	
+@item linux-swap
 (equivalente ao mkswap na partição de destino)
 @item reiserfs (se a libreiserfs está instalada)
 
@@ -740,7 +740,7 @@ de sistemas de arquivo, para definir o código de partição apropriado
 na tabela de partições para a nova partição. @var{tipo-de-sistemas-de-arquivo}
 é necessário para partições de dados (por exemplo, partições não-
 extendidas). @var{começo} e @var{fim} são a distância do começo do
-didco, isto é, a ``distância'' do começo do disco. 
+didco, isto é, a ``distância'' do começo do disco.
 
 @var{tipo-de-partição} é uma dessas: primary (primária), extended
 (extendida), logical (lógica). Extendida e lógica somente são usadas
@@ -1060,8 +1060,8 @@ no Linux) como um dispositivo para editar.
 
 @deffn Comando set @var{minor} @var{sinalizador} @var{estado}
 
-Muda um sinalizador na partição de número @var{minor}. Um 
-sinalizador pode ser ``on'' ou ``off''. Algumas ou todas essas 
+Muda um sinalizador na partição de número @var{minor}. Um
+sinalizador pode ser ``on'' ou ``off''. Algumas ou todas essas
 flags estarão disponíveis, dependendo qual tabela de partições
 você está usando:
 
@@ -2639,7 +2639,7 @@ Eu não teria tempo para fazer isso --- algum voluntário?
 @cindex documentação relacionada
 
 Se você quer procurar mais informações, sinta-se à vontade para enviar
-perguntas para @email{parted@@gnu.org}. (!) indica que a 
+perguntas para @email{parted@@gnu.org}. (!) indica que a
 informação/software está provavelmente incluída na sua distribuição.
 
 Estes arquivos na distribuição do Parted contém informações adicionais:

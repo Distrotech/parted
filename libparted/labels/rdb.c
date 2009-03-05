@@ -51,7 +51,7 @@ static void _amiga_set_bstr (const char *cstr, char *bstr, int maxsize) {
 static const char * _amiga_get_bstr (char * bstr) {
 	char * cstr = bstr + 1;
 	int size = bstr[0];
-	
+
 	cstr[size] = '\0';
 	return cstr;
 }
@@ -62,7 +62,7 @@ static const char * _amiga_get_bstr (char * bstr) {
 #define IDNAME_FILESYSHEADER	(uint32_t)0x46534844	/* 'FSHD' */
 #define IDNAME_LOADSEG		(uint32_t)0x4C534547	/* 'LSEG' */
 #define IDNAME_BOOT		(uint32_t)0x424f4f54	/* 'BOOT' */
-#define IDNAME_FREE		(uint32_t)0xffffffff	
+#define IDNAME_FREE		(uint32_t)0xffffffff
 
 static const char *
 _amiga_block_id (uint32_t id) {
@@ -127,7 +127,7 @@ struct AmigaBlock {
 	uint32_t	amiga_SummedLongss;	/* Size of the structure for checksums */
 	int32_t		amiga_ChkSum;		/* Checksum of the structure */
 };
-#define AMIGA(pos) ((struct AmigaBlock *)(pos)) 
+#define AMIGA(pos) ((struct AmigaBlock *)(pos))
 
 static int
 _amiga_checksum (struct AmigaBlock *blk) {
@@ -150,7 +150,7 @@ _amiga_calculate_checksum (struct AmigaBlock *blk) {
 	blk->amiga_ChkSum = PED_CPU_TO_BE32(
 		PED_BE32_TO_CPU(blk->amiga_ChkSum) -
 		_amiga_checksum((struct AmigaBlock *) blk));
-	return;	
+	return;
 }
 
 static struct AmigaBlock *
@@ -175,7 +175,7 @@ _amiga_read_block (const PedDevice *dev, struct AmigaBlock *blk,
 					return NULL;
 			case PED_EXCEPTION_IGNORE :
 			case PED_EXCEPTION_UNHANDLED :
-			default : 
+			default :
 				return blk;
 		}
 	}
@@ -227,7 +227,7 @@ struct RigidDiskBlock {
     uint32_t	rdb_Reserved5[10];
 };
 
-#define RDSK(pos) ((struct RigidDiskBlock *)(pos)) 
+#define RDSK(pos) ((struct RigidDiskBlock *)(pos))
 
 #define AMIGA_RDB_NOT_FOUND ((uint32_t)0xffffffff)
 #define	RDB_LOCATION_LIMIT	16
@@ -339,7 +339,7 @@ amiga_probe (const PedDevice *dev)
 
 	return (found == AMIGA_RDB_NOT_FOUND ? 0 : 1);
 }
-		
+
 static PedDisk*
 amiga_alloc (const PedDevice* dev)
 {
@@ -374,7 +374,7 @@ amiga_alloc (const PedDevice* dev)
 	rdb->rdb_FileSysHeaderList = PED_CPU_TO_BE32 (LINK_END);
 	rdb->rdb_DriveInit = PED_CPU_TO_BE32 (LINK_END);
 	rdb->rdb_BootBlockList = PED_CPU_TO_BE32 (LINK_END);
-	
+
 	/* Physical drive characteristics */
 	rdb->rdb_Cylinders = PED_CPU_TO_BE32 (dev->hw_geom.cylinders);
 	rdb->rdb_Sectors = PED_CPU_TO_BE32 (dev->hw_geom.sectors);
@@ -408,7 +408,7 @@ amiga_alloc (const PedDevice* dev)
 
 	/* And calculate the checksum */
 	_amiga_calculate_checksum ((struct AmigaBlock *) rdb);
-	
+
 	return disk;
 }
 
@@ -423,7 +423,7 @@ amiga_duplicate (const PedDisk* disk)
 	PED_ASSERT(disk->disk_specific != NULL, return NULL);
 
 	old_rdb = (struct RigidDiskBlock *) disk->disk_specific;
-       
+
 	if (!(new_disk = ped_disk_new_fresh (disk->dev, &amiga_disk_type)))
 		return NULL;
 
@@ -559,7 +559,7 @@ amiga_read (PedDisk* disk)
 		part->type = 0;
 		/* Let's probe what file system is present on the disk */
 		part->fs_type = ped_file_system_probe (&part->geom);
-		
+
 		constraint_exact = ped_constraint_exact (&part->geom);
 		if (!ped_disk_add_partition (disk, part, constraint_exact)) {
 			ped_partition_destroy(part);
@@ -593,7 +593,7 @@ _amiga_find_free_blocks(const PedDisk *disk, uint32_t *table,
 					/* TODO : Need to add fixing code */
 				case PED_EXCEPTION_IGNORE :
 				case PED_EXCEPTION_UNHANDLED :
-				default : 
+				default :
 					return 1;
 			}
 		}
@@ -610,7 +610,7 @@ _amiga_find_free_blocks(const PedDisk *disk, uint32_t *table,
 				/* TODO : to more subtile things here */
 				case PED_EXCEPTION_CANCEL :
 				case PED_EXCEPTION_UNHANDLED :
-				default : 
+				default :
 					return 0;
 			}
 		}
@@ -1000,9 +1000,9 @@ amiga_partition_is_flag_available (const PedPartition* part,
 	}
 }
 
-static void             
+static void
 amiga_partition_set_name (PedPartition* part, const char* name)
-{               
+{
 	struct PartitionBlock *partition;
 
 	PED_ASSERT (part != NULL, return);
@@ -1049,7 +1049,7 @@ amiga_partition_align (PedPartition* part, const PedConstraint* constraint)
 {
 	PED_ASSERT (part != NULL, return 0);
 	PED_ASSERT (part->disk != NULL, return 0);
-	
+
 	if (_ped_partition_attempt_align (part, constraint,
 					  _amiga_get_constraint (part->disk)))
 	       	return 1;
@@ -1066,7 +1066,7 @@ amiga_partition_enumerate (PedPartition* part)
 {
 	int i;
 	PedPartition* p;
-	
+
 	PED_ASSERT (part != NULL, return 0);
 	PED_ASSERT (part->disk != NULL, return 0);
 

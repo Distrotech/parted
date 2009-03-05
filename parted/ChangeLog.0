@@ -7,8 +7,8 @@
 	model type and transport type (from Debarshi Ray).
 
 2006-09-12  Anant Narayanan <anant@kix.in>
-	* ui.c (sig*_handler): fallback to signal() if sigaction() is not 
-	available 
+	* ui.c (sig*_handler): fallback to signal() if sigaction() is not
+	available
 
 2006-09-01  David Cantrell  <dcantrell@redhat.com>
 	* parted.c (do_print): wrap assignment-as-test in while statement.
@@ -26,7 +26,7 @@
 2006-05-13  Anant Narayanan <anant@kix.in>
 	* parted.c: Show a friendly message if parted is run as a non-root
 	user
-	
+
 	* ../configure.ac: Check for presence of getuid()
 
 2006-04-06  Leslie P. Polzer <polzer@gnu.org>
@@ -42,7 +42,7 @@
 
 2006-03-21  Anant Narayanan <anant@kix.in>
 	* ui.c: Added 'default' cases for Signal type handlers.
-	
+
 2006-03-13  Anant Narayanan <anant@kix.in>
 	* ui.c: Switched to sigaction() from signal() and catch SIGFPE
 	and SIGILL too.
@@ -50,7 +50,7 @@
 2006-03-13  Anant Narayanan <anant@kix.in>
 	* parted.c: Intoduced a new "toggle" command, and reverted the
 	"set" command back to its old semantics.
-	
+
 2006-03-11  Leslie P. Polzer <polzer@gnu.org>
 	* parted.c (partition_print_flags): added some pointer juggling to
 	avoid problems with -fstrict-aliasing enabled.
@@ -66,13 +66,13 @@
 	* ui.c: Added a SIGSEGV handler, implemented signal masking and
 	slightly modified the default bug message.
 
-2006-02-27 Anant Narayanan <anant@kix.in>  	 
-	* ui.c (command_line_get_partition): Automatically select the 
+2006-02-27 Anant Narayanan <anant@kix.in>
+	* ui.c (command_line_get_partition): Automatically select the
 	partition if only one is present.
-	
+
 2006-02-25  Leslie P. Polzer <polzer@gnu.org>
 	* parted.c (do_mkpart, do_mkpartfs): offer the user an alternative
-	when his constraints can't be satisfied (this was the behaviour 
+	when his constraints can't be satisfied (this was the behaviour
 	before the introduction of PedUnit in 1.6.24).
 
 	* parted.c (partition_print_flags, do_print): fixed memory leak and
@@ -100,7 +100,7 @@
 	automatically, instead of prompting for its state.
 
 2006-02-14  Anant Narayanan <anant@kix.in>
-	* parted/parted.c: Merged the "print-all" command into do_print 
+	* parted/parted.c: Merged the "print-all" command into do_print
 	with [all] as an optional parameter to the "print" command.
 
 2006-02-13  Anant Narayanan <anant@kix.in>
@@ -112,12 +112,12 @@
 
 	* parted/ui.c: Modified bug message to point to website instead
 	of the mailing list.
-	  
+
 2006-02-06  Anant Narayanan <anant@kix.in>
 	* parted/parted.c: Implemented the "version" command that displays
 	copyright and version info instead of at the beginning.
 
-	* parted/ui.c: Removed initial copyright message and created a 
+	* parted/ui.c: Removed initial copyright message and created a
 	welcome	message instead.
 -----------------------------------------------------------------------------
 

@@ -86,7 +86,7 @@ msgstr "Esta página de manual documenta brevemente o comando B<partprobe>"
 
 # type: Plain text
 #.  TeX users may be more comfortable with the \fB<whatever>\fP and
-#.  \fI<whatever>\fP escape sequences to invode bold face and italics, 
+#.  \fI<whatever>\fP escape sequences to invode bold face and italics,
 #.  respectively.
 #: partprobe.8:36
 msgid ""

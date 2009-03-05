@@ -48,7 +48,7 @@ ped_file_system_type_register (PedFileSystemType* fs_type)
 	PED_ASSERT (fs_type != NULL, return);
 	PED_ASSERT (fs_type->ops != NULL, return);
 	PED_ASSERT (fs_type->name != NULL, return);
-	
+
         fs_type->next = fs_types;
         fs_types = fs_type;
 }
@@ -69,7 +69,7 @@ ped_file_system_type_unregister (PedFileSystemType* fs_type)
 	if (last)
 		((struct _PedFileSystemType*) last)->next = fs_type->next;
 	else
-		fs_types = fs_type->next;	
+		fs_types = fs_type->next;
 }
 
 /**
@@ -184,7 +184,7 @@ _probe_with_open (PedGeometry* geom, int detected_count,
 		} else {
 			open_detected = detected [i];
 		}
-	}	
+	}
 
 	ped_device_close (geom->dev);
 	return open_detected;
@@ -231,7 +231,7 @@ _best_match (const PedGeometry* geom, PedFileSystemType* detected [],
 
 
 /**
- * Attempt to detect a file system in region \p geom. 
+ * Attempt to detect a file system in region \p geom.
  * This function tries to be clever at dealing with ambiguous
  * situations, such as when one file system was not completely erased before a
  * new file system was created on top of it.
@@ -284,7 +284,7 @@ ped_file_system_probe (PedGeometry* geom)
  * After this operation ped_file_system_probe() won't detect any file system.
  *
  * \note ped_file_system_create() calls this before creating a new file system.
- * 
+ *
  * \return \c 1 on success, \c 0 on failure
  */
 int
@@ -359,7 +359,7 @@ ped_file_system_clobber_exclude (PedGeometry* geom,
  *
  * \throws PED_EXCEPTION_ERROR if file system could not be detected
  * \throws PED_EXCEPTION_ERROR if the file system is bigger than its volume
- * \throws PED_EXCEPTION_NO_FEATURE if opening of a file system stored on 
+ * \throws PED_EXCEPTION_NO_FEATURE if opening of a file system stored on
  * 	\p geom is not implemented
  *
  * \return a PedFileSystem on success, \c NULL on failure.
@@ -419,11 +419,11 @@ error:
 }
 
 /**
- * This function initializes a new file system of type \p type on 
- * a region described by \p geom, writing out appropriate metadata and 
+ * This function initializes a new file system of type \p type on
+ * a region described by \p geom, writing out appropriate metadata and
  * signatures.  If \p timer is non-NULL, it is used as the progress meter.
  *
- * \throws PED_EXCEPTION_NO_FEATURE if creating file system type \p type 
+ * \throws PED_EXCEPTION_NO_FEATURE if creating file system type \p type
  * 	is not implemented yet
  *
  * \return a PedFileSystem on success, \c NULL on failure
@@ -487,7 +487,7 @@ error_close_dev:
 /**
  * Check \p fs file system for errors.
  *
- * \throws PED_EXCEPTION_NO_FEATURE if checking file system \p fs is 
+ * \throws PED_EXCEPTION_NO_FEATURE if checking file system \p fs is
  * 	not implemented yet
  *
  * \return \c 0 on failure (i.e. unfixed errors)
@@ -594,11 +594,11 @@ error:
 
 /**
  * Create a new file system (of the same type) on \p geom, and
- * copy the contents of \p fs into the new filesystem.  
+ * copy the contents of \p fs into the new filesystem.
  * If \p timer is non-NULL, it is used as the progress meter.
  *
  * \throws PED_EXCEPTION_ERROR when trying to copy onto an overlapping partition
- * \throws PED_EXCEPTION_NO_FEATURE if copying of file system \p fs 
+ * \throws PED_EXCEPTION_NO_FEATURE if copying of file system \p fs
  * 	is not implemented yet
  *
  * \return a new PedFileSystem on success, \c NULL on failure
@@ -635,7 +635,7 @@ ped_file_system_copy (PedFileSystem* fs, PedGeometry* geom, PedTimer* timer)
 				return _raw_copy_and_resize (
 						fs, (PedGeometry*) geom,
 						timer);
-				
+
 			ped_exception_throw (
 				PED_EXCEPTION_NO_FEATURE,
 				PED_EXCEPTION_CANCEL,
@@ -677,10 +677,10 @@ error:
  * (This isn't asserted, so it's not a bug not to... just it's likely
  * to fail ;)  If \p timer is non-NULL, it is used as the progress meter.
  *
- * \throws PED_EXCEPTION_NO_FEATURE if resizing of file system \p fs 
+ * \throws PED_EXCEPTION_NO_FEATURE if resizing of file system \p fs
  * 	is not implemented yet
- * 
- * \return \c 0 on failure 
+ *
+ * \return \c 0 on failure
  */
 int
 ped_file_system_resize (PedFileSystem* fs, PedGeometry* geom, PedTimer* timer)
@@ -708,7 +708,7 @@ ped_file_system_resize (PedFileSystem* fs, PedGeometry* geom, PedTimer* timer)
 
 /**
  * This function returns a constraint on the region that all file systems
- * of a particular type \p fs_type created on device \p dev with 
+ * of a particular type \p fs_type created on device \p dev with
  * ped_file_system_create() must satisfy. For example, FAT16 file systems must
  * be at least 32 megabytes.
  *
@@ -727,7 +727,7 @@ ped_file_system_get_create_constraint (const PedFileSystemType* fs_type,
 }
 /**
  * Return a constraint, that represents all of the possible ways the
- * file system \p fs can be resized with ped_file_system_resize().  
+ * file system \p fs can be resized with ped_file_system_resize().
  * This takes into account the amount of used space on
  * the filesystem \p fs and the capabilities of the resize algorithm.
  * Hints:
@@ -735,7 +735,7 @@ ped_file_system_get_create_constraint (const PedFileSystemType* fs_type,
  *    constraint->start_geom->length == 1, then the start can not be moved
  * -# constraint->min_size is the minimum size you can resize the partition
  *    to.  You might want to tell the user this ;-).
- *    
+ *
  * \return a PedConstraint on success, \c NULL on failure
  */
 PedConstraint*
@@ -753,7 +753,7 @@ ped_file_system_get_resize_constraint (const PedFileSystem* fs)
  * to somewhere on \p dev.
  *
  * \return a PedConstraint on success, \c NULL on failure
- */ 
+ */
 PedConstraint*
 ped_file_system_get_copy_constraint (const PedFileSystem* fs,
 				     const PedDevice* dev)

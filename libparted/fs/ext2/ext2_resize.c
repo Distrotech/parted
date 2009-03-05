@@ -575,7 +575,7 @@ static int ext2_shrink_fs(struct ext2_fs *fs, blk_t newsize,
 			diff -= sizelast;
 		}
 	}
-	
+
 	ped_timer_update (timer, 1.0);
 
 	return 1;
@@ -589,7 +589,7 @@ int ext2_determine_itoffset(struct ext2_fs *fs)
 		       - EXT2_SUPER_FIRST_DATA_BLOCK(fs->sb);
 
         /*PED_DEBUG (0x20, "itoffset is %d", fs->itoffset);
-        
+
         PED_DEBUG (0x20, "walking %d groups", fs->numgroups);*/
 
 	for (i=0;i<fs->numgroups;i++)
@@ -637,7 +637,7 @@ int ext2_determine_itoffset(struct ext2_fs *fs)
                         PED_DEBUG (0x21, "calculated inode table to be %d, "
                                          "but fs says %d.", it,
                                          EXT2_GROUP_INODE_TABLE(fs->gd[i]));*/
-                        
+
 			return 0;
 		}
 	}

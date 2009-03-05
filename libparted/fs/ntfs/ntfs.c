@@ -67,7 +67,7 @@ static PedFileSystemOps ntfs_ops = {
 	clobber:	ntfs_clobber,
 #else
 	clobber:	NULL,
-#endif 
+#endif
 	open:		NULL,
 	create:		NULL,
 	close:		NULL,

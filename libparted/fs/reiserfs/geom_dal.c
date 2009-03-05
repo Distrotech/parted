@@ -27,8 +27,8 @@
 
 static blk_t __len(dal_t *dal) {
     PED_ASSERT(dal != NULL, return 0);
-    
-    return ((PedGeometry *)dal->dev)->length / 
+
+    return ((PedGeometry *)dal->dev)->length /
 	(dal->block_size / PED_SECTOR_SIZE_DEFAULT);
 }
 
@@ -36,13 +36,13 @@ static int __read(dal_t *dal, void *buff, blk_t block, blk_t count) {
     blk_t k;
     PedSector block_pos;
     PedSector block_count;
-    
+
     PED_ASSERT(dal != NULL, return 0);
-    
+
     k = dal->block_size / PED_SECTOR_SIZE_DEFAULT;
     block_pos = (PedSector)(block * k);
     block_count = (PedSector)(count * k);
-    
+
     return ped_geometry_read((PedGeometry *)dal->dev, buff, block_pos, block_count);
 }
 
@@ -50,14 +50,14 @@ static int __write(dal_t *dal, void *buff, blk_t block, blk_t count) {
     blk_t k;
     PedSector block_pos;
     PedSector block_count;
-    
+
     PED_ASSERT(dal != NULL, return 0);
-    
+
     k = dal->block_size / PED_SECTOR_SIZE_DEFAULT;
     block_pos = (PedSector)(block * k);
     block_count = (PedSector)(count * k);
-    
-    return ped_geometry_write((PedGeometry *)dal->dev, buff, block_pos, 
+
+    return ped_geometry_write((PedGeometry *)dal->dev, buff, block_pos,
 	block_count);
 }
 
@@ -75,15 +75,15 @@ static int __equals(dal_t *dal1, dal_t *dal2) {
     PED_ASSERT(dal1 != NULL, return 0);
     PED_ASSERT(dal2 != NULL, return 0);
 
-    return ped_geometry_test_equal((PedGeometry *)dal1->dev, 
+    return ped_geometry_test_equal((PedGeometry *)dal1->dev,
 	(PedGeometry *)dal2->dev);
 }
 
 static int __stat(dal_t *dal, struct stat *st) {
-    
+
     PED_ASSERT(dal != NULL, return 0);
     PED_ASSERT(st != NULL, return 0);
-    
+
     if (stat(((PedGeometry *)dal->dev)->dev->path, st))
 	return 0;
 
@@ -92,27 +92,27 @@ static int __stat(dal_t *dal, struct stat *st) {
 
 static dev_t __dev(dal_t *dal) {
     struct stat st;
-    
+
     if (!__stat(dal, &st))
 	return (dev_t)0;
-	
+
     return st.st_dev;
 }
 
 static struct dal_ops ops = {
-    __len, __read, __write, __sync, 
+    __len, __read, __write, __sync,
     __flags, __equals, __stat, __dev
 };
 
 dal_t *geom_dal_create(PedGeometry *geom, size_t block_size, int flags) {
     dal_t *dal;
 
-    if (!geom) 
+    if (!geom)
 	return NULL;
-    
+
     if (!(dal = ped_malloc(sizeof(dal_t))))
 	return NULL;
-    
+
     dal->ops = &ops;
     dal->dev = geom;
     dal->block_size = block_size;
@@ -126,7 +126,7 @@ int geom_dal_reopen(dal_t *dal, int flags) {
 
     if (!dal) return 0;
     dal->flags = flags;
-    
+
     return 1;
 }
 

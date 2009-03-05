@@ -605,12 +605,12 @@ _have_devfs ()
         return have_devfs = S_ISCHR(sb.st_mode) ? 1 : 0;
 }
 
-static void 
+static void
 _device_set_sector_size (PedDevice* dev)
 {
         LinuxSpecific*  arch_specific = LINUX_SPECIFIC (dev);
         int sector_size;
-        
+
         dev->sector_size = PED_SECTOR_SIZE_DEFAULT;
         dev->phys_sector_size = PED_SECTOR_SIZE_DEFAULT;
 
@@ -620,7 +620,7 @@ _device_set_sector_size (PedDevice* dev)
                 dev->sector_size = PED_SECTOR_SIZE_DEFAULT;
                 return;
         }
-        
+
         if (ioctl (arch_specific->fd, BLKSSZGET, &sector_size)) {
                 ped_exception_throw (
                         PED_EXCEPTION_WARNING,
@@ -702,7 +702,7 @@ _device_probe_geometry (PedDevice* dev)
         PED_ASSERT (S_ISBLK (dev_stat.st_mode), return 0);
 
         _device_set_sector_size (dev);
-        
+
         dev->length = _device_get_length (dev);
         if (!dev->length)
                 return 0;
@@ -757,7 +757,7 @@ init_ide (PedDevice* dev)
         PedExceptionOption      ex_status;
         char                    hdi_buf[41];
         int                     sector_multiplier = 0;
-        
+
         if (!_device_stat (dev, &dev_stat))
                 goto error;
 
@@ -790,12 +790,12 @@ init_ide (PedDevice* dev)
                 memcpy (hdi_buf, hdi.model, 40);
                 hdi_buf[40] = '\0';
                 dev->model = strip_name (hdi_buf);
-                
+
                 if (!hdi.ata7_sectinfo.valid1 && hdi.ata7_sectinfo.valid2)
                         sector_multiplier = hdi.ata7_sectinfo.multiplier;
                 else
                         sector_multiplier = 1;
-                        
+
                 if (sector_multiplier != 1) {
                         ex_status = ped_exception_throw (
                                 PED_EXCEPTION_WARNING,
@@ -808,7 +808,7 @@ init_ide (PedDevice* dev)
                                   "Please consult the web site for up-to-date "
                                   "information."),
                                 dev->path, sector_multiplier);
-                        
+
                         switch (ex_status) {
                                 case PED_EXCEPTION_CANCEL:
                                         goto error_close_dev;
@@ -822,7 +822,7 @@ init_ide (PedDevice* dev)
                                         break;
                         }
                 }
-                
+
                 /* XXX sector_size has not been set yet! */
                 /* dev->phys_sector_size = dev->sector_size
                    * sector_multiplier;*/
@@ -1016,7 +1016,7 @@ static int
 init_file (PedDevice* dev)
 {
         struct stat     dev_stat;
- 
+
         if (!_device_stat (dev, &dev_stat))
                 goto error;
         if (!ped_device_open (dev))
@@ -1046,9 +1046,9 @@ init_file (PedDevice* dev)
         dev->sector_size = PED_SECTOR_SIZE_DEFAULT;
         dev->phys_sector_size = PED_SECTOR_SIZE_DEFAULT;
         dev->model = strdup ("");
-        
+
         return 1;
-        
+
 error_close_dev:
         ped_device_close (dev);
 error:
@@ -1502,11 +1502,11 @@ static int
 _device_seek (const PedDevice* dev, PedSector sector)
 {
         LinuxSpecific*  arch_specific;
-        
+
         PED_ASSERT (dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0, return 0);
         PED_ASSERT (dev != NULL, return 0);
         PED_ASSERT (!dev->external_mode, return 0);
-        
+
         arch_specific = LINUX_SPECIFIC (dev);
 
 #if SIZEOF_OFF_T < 8
@@ -1529,14 +1529,14 @@ _read_lastoddsector (const PedDevice* dev, void* buffer)
 
         PED_ASSERT(dev != NULL, return 0);
         PED_ASSERT(buffer != NULL, return 0);
-        
+
         arch_specific = LINUX_SPECIFIC (dev);
 
 retry:
         ioctl_param.block = 0; /* read the last sector */
         ioctl_param.content_length = dev->sector_size;
         ioctl_param.block_contents = buffer;
-        
+
         if (ioctl(arch_specific->fd, BLKGETLASTSECT, &ioctl_param) == -1) {
                 PedExceptionOption      opt;
                 opt = ped_exception_throw (
@@ -1657,14 +1657,14 @@ _write_lastoddsector (PedDevice* dev, const void* buffer)
 
         PED_ASSERT(dev != NULL, return 0);
         PED_ASSERT(buffer != NULL, return 0);
-        
+
         arch_specific = LINUX_SPECIFIC (dev);
 
 retry:
         ioctl_param.block = 0; /* write the last sector */
         ioctl_param.content_length = dev->sector_size;
         ioctl_param.block_contents = (void*) buffer;
-        
+
         if (ioctl(arch_specific->fd, BLKSETLASTSECT, &ioctl_param) == -1) {
                 PedExceptionOption      opt;
                 opt = ped_exception_throw (
@@ -1800,7 +1800,7 @@ linux_check (PedDevice* dev, void* buffer, PedSector start, PedSector count)
         void*           diobuf;
 
         PED_ASSERT(dev != NULL, return 0);
-        
+
         if (!_device_seek (dev, start))
                 return 0;
 
@@ -1853,7 +1853,7 @@ _do_fsync (PedDevice* dev)
                                 PED_ASSERT (0, (void) 0);
                                 break;
                 }
-        } 
+        }
         return 1;
 }
 
@@ -2014,7 +2014,7 @@ _probe_sys_block ()
 		}
 		_ped_device_probe (dev_name);
 	}
-	
+
 	closedir (blockdir);
 	return 1;
 }
@@ -2378,7 +2378,7 @@ _dm_remove_map_name(char *name)
         return 0;
 }
 
-static int 
+static int
 _dm_is_part (struct dm_info *this, char *name)
 {
         struct dm_task* task = NULL;
@@ -2390,7 +2390,7 @@ _dm_is_part (struct dm_info *this, char *name)
         task = dm_task_create(DM_DEVICE_DEPS);
         if (!task)
                 return 0;
-        
+
         dm_task_set_name(task, name);
         rc = dm_task_run(task);
         if (rc < 0) {

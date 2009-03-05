@@ -474,8 +474,8 @@ dvh_write (const PedDisk* disk)
 	}
 
 	/* whole disk partition
-	 * This is only ever written here, and never modified 
-	 * (or even shown) as it must contain the entire disk, 
+	 * This is only ever written here, and never modified
+	 * (or even shown) as it must contain the entire disk,
 	 * and parted does not like overlapping partitions
 	 */
 	vh.vh_pt[PNUM_VOLUME].pt_nblks = PED_CPU_TO_BE32 (disk->dev->length);

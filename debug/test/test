@@ -149,7 +149,7 @@ ped_test()
 {
 	ped_testing "$1"
 	if ped_test_get_val "$2" "$3"; then
-		ped_test_failed	
+		ped_test_failed
 		return 1
 	else
 		ped_test_ok

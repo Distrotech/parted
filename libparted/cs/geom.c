@@ -96,7 +96,7 @@ error:
  * independent copy of \p geom.  Both the input, \p geom, and the output
  * should be destroyed with ped_geometry_destroy() when they are no
  * longer needed.
- * 
+ *
  * \return NULL on failure.
  */
 PedGeometry*
@@ -202,7 +202,7 @@ ped_geometry_set_end (PedGeometry* geom, PedSector end)
  *
  * That is, they lie on the same physical device, and they share
  * the same physical region at least partially.
- * 
+ *
  * \return 1 if \p a and \p b overlap.
  */
 int
@@ -241,7 +241,7 @@ ped_geometry_test_inside (const PedGeometry* a, const PedGeometry* b)
 
 /**
  * Tests if \a a and \p b refer to the same physical region.
- * 
+ *
  * \return 1 if \p a and \p b describe the same regions
  *
  */
@@ -269,7 +269,7 @@ ped_geometry_test_sector_inside (const PedGeometry* geom, PedSector sector)
 	return sector >= geom->start && sector <= geom->end;
 }
 
-/** 
+/**
  * Reads data from the region represented by \p geom.  \p offset is the
  * location from within the region, not from the start of the disk.
  * \p count sectors are read into \p buffer.
@@ -293,7 +293,7 @@ ped_geometry_read (const PedGeometry* geom, void* buffer, PedSector offset,
 	PED_ASSERT (buffer != NULL, return 0);
 	PED_ASSERT (offset >= 0, return 0);
 	PED_ASSERT (count >= 0, return 0);
-	
+
 	real_start = geom->start + offset;
 
 	if (real_start + count - 1 > geom->end)
@@ -306,11 +306,11 @@ ped_geometry_read (const PedGeometry* geom, void* buffer, PedSector offset,
 
 /**
  * Flushes the cache on \p geom.
- *  
+ *
  * This function flushes all write-behind caches that might be holding
  * writes made by ped_geometry_write() to \p geom.  It is slow, because
  * it guarantees cache coherency among all relevant caches.
- * 
+ *
  * \return 0 on failure
  */
 int
@@ -321,13 +321,13 @@ ped_geometry_sync (PedGeometry* geom)
 }
 
 /**
- * Flushes the cache on \p geom. 
+ * Flushes the cache on \p geom.
  *
  * This function flushes all write-behind caches that might be holding writes
  * made by ped_geometry_write() to \p geom.  It does NOT ensure cache coherency
- * with other caches that cache data in the region described by \p geom. 
+ * with other caches that cache data in the region described by \p geom.
  * If you need cache coherency, use ped_geometry_sync() instead.
- * 
+ *
  * \return 0 on failure
  */
 int
@@ -355,7 +355,7 @@ ped_geometry_write (PedGeometry* geom, const void* buffer, PedSector offset,
 	PED_ASSERT (buffer != NULL, return 0);
 	PED_ASSERT (offset >= 0, return 0);
 	PED_ASSERT (count >= 0, return 0);
-	
+
 	real_start = geom->start + offset;
 
 	if (real_start + count - 1 > geom->end) {
@@ -438,16 +438,16 @@ found_error:
  * \endcode
  *
  * does the same thing as
- * 
+ *
  * \code
  * 	ped_geometry_read (src, buf, sector, 1)
  * \endcode
  *
- * Clearly, this will only work if \p src and \p dst overlap.  
+ * Clearly, this will only work if \p src and \p dst overlap.
  *
- * \return -1 if \p sector is not within \p dst's space, 
+ * \return -1 if \p sector is not within \p dst's space,
  * 	or \p sector's address inside \p dst
- * 
+ *
  */
 PedSector
 ped_geometry_map (const PedGeometry* dst, const PedGeometry* src,

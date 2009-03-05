@@ -26,7 +26,7 @@
  * media (sector 0).  It contains information pertaining to physical
  * device parameters and logical partition information.
  *
- * The volume header is manipulated by disk formatters/verifiers, 
+ * The volume header is manipulated by disk formatters/verifiers,
  * partition builders (e.g. fx, dvhtool, and mkfs), and disk drivers.
  *
  * Previous versions of IRIX wrote a copy of the volume header is

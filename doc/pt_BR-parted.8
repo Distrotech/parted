@@ -50,8 +50,8 @@ O
 .B parted
 é uma ferramenta para particionamento de discos e redimensionamento de
 partições.  Sua função é criar, destruir, redimensionar, mover e copiar
-partições ext2, ext3, linux-swap, FAT e FAT32. Isso é útil para criar 
-espaço para um novo sistema operacional, reorganizar o uso do disco e 
+partições ext2, ext3, linux-swap, FAT e FAT32. Isso é útil para criar
+espaço para um novo sistema operacional, reorganizar o uso do disco e
 copiar dados para um novo disco rígido.
 .\" .SH OPTIONS
 .\" .TP
@@ -105,8 +105,8 @@ faz uma checagem simples em \fIpartição\fP
 .\" on the current device.
 .\" .TP
 .B cp \fIsource\fP [dispositivo] \fIdest\fP
-copia o sistema de arquivos da partição \fIsource\fP em \fIsource-device\fP 
-(ou o dispositivo atual se nenhum outro dispositivo for especificado) 
+copia o sistema de arquivos da partição \fIsource\fP em \fIsource-device\fP
+(ou o dispositivo atual se nenhum outro dispositivo for especificado)
 para a partição \fIdest\fP do dispositivo atual.
 .TP
 .\" .B help \fI[command]\fP
@@ -130,7 +130,7 @@ cria o sistema de arquivos \fIfs-type\fP em \fIpartition\fP.
 .\" .TP
 .B mklabel \fIlabel-type\fP
 cria um novo disklabel (tabela de partições) de \fIlabel-type\fP.
-\fIlabel-type\fP pode ser "bsd", "gpt", "loop", "mac", "mips", "msdos", 
+\fIlabel-type\fP pode ser "bsd", "gpt", "loop", "mac", "mips", "msdos",
 "pc98" ou "sun"
 .TP
 .\" .B mkpart \fIpart-type\fP \fI[fs-type]\fP \fIstart\fP \fIend\fP
@@ -156,7 +156,7 @@ com início em \fIstart\fP e fim em \fIend\fP (em megabytes).
 .\" never changes the minor number
 .\" .TP
 .B move \fIpartition\fP \fIstart\fP \fIend\fP
-move \fIpartition\fP para iniciar em \fIstart\fP e terminar em \fIend\fP. Nota: 
+move \fIpartition\fP para iniciar em \fIstart\fP e terminar em \fIend\fP. Nota:
 mover nunca muda o minor number
 .TP
 .\" .B name \fIpartition\fP \fIname\fP
@@ -164,7 +164,7 @@ mover nunca muda o minor number
 .\" and PC98 disklabels. The name can be placed in quotes, if necessary
 .\" .TP
 .B name \fIpartition\fP \fIname\fP
-configura o nome da \fIpartition\fP para \fIname\fP. Esta opção funciona 
+configura o nome da \fIpartition\fP para \fIname\fP. Esta opção funciona
 somente em disklabels Mac e PC98. O nome pode ser colocado entre aspas, se
 necessário
 .TP
@@ -226,7 +226,7 @@ suportadas são "boot", "root", "swap", "hidden", "raid", "lvm" e "lba".
 .\" .SH AUTHOR
 .\" This manual page was written by Timshel Knoll <timshel@debian.org>,
 .\" for the Debian GNU/Linux system (but may be used by others).
-.RS 
+.RS
 .SH PROBLEMAS
 Relate bugs para <bug-parted@gnu.org>
 .SH VEJA TAMBÉM

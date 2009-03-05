@@ -117,7 +117,7 @@ retry_open:
 			case PED_EXCEPTION_CANCEL:
 				goto error;
 		}
-	
+
 		return 0;
 	}
 
@@ -252,12 +252,12 @@ gnu_new (const char* path)
 	/* Try read-write. */
 	if (strchr (dev->path, '/') != NULL) {
 	        /* We set this to prevent having to use strchr more then once. */
-	        ispath = 1; 
+	        ispath = 1;
 
 	        rw_err = store_open (dev->path, 0, NULL, &arch_specific->store);
-	} else { 
+	} else {
 	        rw_err = store_typed_open (dev->path, 0, NULL, &arch_specific->store);
-	}        
+	}
 
 	/* Try readonly. */
 	if (rw_err) {
@@ -268,7 +268,7 @@ gnu_new (const char* path)
 	        ro_err = store_typed_open (dev->path, STORE_READONLY, NULL,
 				       &arch_specific->store);
 	  }
-                 
+
 	if (ro_err) {
 	        if (ped_exception_throw (
 			        PED_EXCEPTION_ERROR,
@@ -350,7 +350,7 @@ static int
 gnu_close (PedDevice* dev)
 {
 	GNUSpecific*	arch_specific = GNU_SPECIFIC (dev);
-	
+
 	_flush_cache (dev);
 
 	if (dev->dirty && dev->type != PED_DEVICE_FILE) {
@@ -588,7 +588,7 @@ doggy_first_block_read:
 doggy_first_block_write:
 		err = store_write (arch_specific->store,
 		    		   PED_TO_STORE (arch_specific->store, start),
-				   temp, arch_specific->store->block_size, 
+				   temp, arch_specific->store->block_size,
 				   &did_write);
 		if (! err && did_write != arch_specific->store->block_size)
 			err = EIO;
@@ -710,7 +710,7 @@ doggy_last_block_read:
 doggy_last_block_write:
 	err = store_write (arch_specific->store,
 	    		   PED_TO_STORE (arch_specific->store, start),
-			   temp, arch_specific->store->block_size, 
+			   temp, arch_specific->store->block_size,
 			   &did_write);
 	if (! err && did_write != arch_specific->store->block_size)
 		err = EIO;
@@ -769,7 +769,7 @@ gnu_sync (PedDevice* dev)
 
 	PED_ASSERT (dev != NULL, return 0);
 	PED_ASSERT (!dev->external_mode, return 0);
-	
+
 	arch_specific = GNU_SPECIFIC (dev);
 
 	if (dev->read_only || ! dev->dirty)
@@ -801,7 +801,7 @@ gnu_sync (PedDevice* dev)
 			case PED_EXCEPTION_CANCEL:
 				return 0;
 		}
-	} 
+	}
 
 	return 1;
 }

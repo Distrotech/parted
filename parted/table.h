@@ -41,12 +41,12 @@ typedef void Table;
 Table* table_new(int ncols);
 void table_destroy (Table* t);
 
-/* 
+/*
  * you must not free neither 'row' nor 'list'
  *      -- this will be done by table_destroy()
  */
 void table_add_row (Table* t, wchar_t** row);
 void table_add_row_from_strlist (Table* t, StrList* list);
-        
+
 wchar_t* table_render(Table* t);
 

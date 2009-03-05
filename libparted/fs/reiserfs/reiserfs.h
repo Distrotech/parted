@@ -98,7 +98,7 @@ typedef void * reiserfs_fs_t;
 #define JOURNAL_DEF_RATIO 		8
 #define JOURNAL_MIN_RATIO 		2
 #define JOURNAL_MAX_BATCH   		900
-#define JOURNAL_MAX_COMMIT_AGE 		30 
+#define JOURNAL_MAX_COMMIT_AGE 		30
 #define JOURNAL_MAX_TRANS_AGE 		30
 
 #define TEA_HASH  			1

@@ -52,7 +52,7 @@ hfs_file_open (PedFileSystem *fs, uint32_t CNID,
 	file->CNID = CNID;
 	memcpy(file->first, ext_desc, sizeof (HfsExtDataRec));
 	file->start_cache = 0;
-	
+
 	return file;
 }
 
@@ -82,7 +82,7 @@ hfs_get_extent_containing (HfsPrivateFile* file, unsigned int block,
 	search.file_ID = file->CNID;
 	search.start = PED_CPU_TO_BE16 (block);
 
-	if (!hfs_btree_search (priv_data->extent_file, 
+	if (!hfs_btree_search (priv_data->extent_file,
 			       (HfsPrivateGenericKey*) &search,
 			       record, sizeof (record), NULL))
 		return 0;
@@ -207,7 +207,7 @@ hfs_file_write_sector (HfsPrivateFile* file, void *buf, PedSector sector)
 			PED_EXCEPTION_ERROR,
 			PED_EXCEPTION_CANCEL,
 			_("Trying to write HFS file with CNID %X behind EOF."),
-			  PED_BE32_TO_CPU(file->CNID));		
+			  PED_BE32_TO_CPU(file->CNID));
 		return 0;
 	}
 

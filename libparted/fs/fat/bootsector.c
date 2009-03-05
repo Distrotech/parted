@@ -130,7 +130,7 @@ fat_boot_sector_analyse (FatBootSector* bs, PedFileSystem* fs)
 	int			fat_entry_size;
 
 	PED_ASSERT (bs != NULL, return 0);
-	
+
 	if (PED_LE16_TO_CPU (bs->sector_size) != 512) {
 		if (ped_exception_throw (
 			PED_EXCEPTION_BUG,
@@ -400,7 +400,7 @@ fat_info_sector_read (FatInfoSector* is, const PedFileSystem* fs)
 	int		status;
 
 	PED_ASSERT (is != NULL, return 0);
-	
+
 	if (!ped_geometry_read (fs->geom, is, fs_info->info_sector_offset, 1))
 		return 0;
 
@@ -423,7 +423,7 @@ fat_info_sector_generate (FatInfoSector* is, const PedFileSystem* fs)
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 
 	PED_ASSERT (is != NULL, return 0);
-	
+
 	fat_table_count_stats (fs_info->fat);
 
 	memset (is, 0, 512);
@@ -443,7 +443,7 @@ fat_info_sector_write (const FatInfoSector* is, PedFileSystem *fs)
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 
 	PED_ASSERT (is != NULL, return 0);
-	
+
 	if (!ped_geometry_write (fs->geom, is, fs_info->info_sector_offset, 1))
 		return 0;
 	return ped_geometry_sync (fs->geom);

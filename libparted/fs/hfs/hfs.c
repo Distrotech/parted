@@ -16,8 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* 
-   Author : Guillaume Knispel <k_guillaume@libertysurf.fr> 
+/*
+   Author : Guillaume Knispel <k_guillaume@libertysurf.fr>
    Report bug to <bug-parted@gnu.org>
 */
 
@@ -68,7 +68,7 @@ hfs_clobber (PedGeometry* geom)
 	uint8_t	buf[PED_SECTOR_SIZE_DEFAULT];
 
 	memset (buf, 0, PED_SECTOR_SIZE_DEFAULT);
-	
+
 	/* destroy boot blocks, mdb, alternate mdb ... */
 	return	(!!ped_geometry_write (geom, buf, 0, 1)) &
 		(!!ped_geometry_write (geom, buf, 1, 1)) &
@@ -92,7 +92,7 @@ hfs_open (PedGeometry* geom)
 	/* Read MDB */
 	if (!ped_geometry_read (geom, buf, 2, 1))
 		return NULL;
-	
+
 	/* Allocate memory */
 	fs = (PedFileSystem*) ped_malloc (sizeof (PedFileSystem));
 	if (!fs) goto ho;
@@ -165,7 +165,7 @@ hfs_close (PedFileSystem *fs)
 	return 1;
 }
 
-static PedConstraint* 
+static PedConstraint*
 hfs_get_resize_constraint (const PedFileSystem *fs)
 {
 	PedDevice*	dev = fs->geom->dev;
@@ -289,7 +289,7 @@ hfs_resize (PedFileSystem* fs, PedGeometry* geom, PedTimer* timer)
 		SET_BLOC_OCCUPATION(priv_data->alloc_map,block);
 
 	/* save the allocation map
-	I do not write until start of allocation blocks 
+	I do not write until start of allocation blocks
 	but only until pre-resize end of bitmap blocks
 	because the specifications do _not_ assert that everything
 	until allocation blocks is boot, mdb and alloc */
@@ -360,7 +360,7 @@ hfsplus_clobber (PedGeometry* geom)
 		    (PedSector) geom->start
 		     + PED_BE16_TO_CPU (mdb->start_block)
 		     + (PedSector) PED_BE16_TO_CPU (
-			mdb->old_new.embedded.location.start_block ) * i, 
+			mdb->old_new.embedded.location.start_block ) * i,
 		    (PedSector) PED_BE16_TO_CPU (
 			mdb->old_new.embedded.location.block_count ) * i );
 		if (!embedded) i = 0;
@@ -523,7 +523,7 @@ hfsplus_open (PedGeometry* geom)
 				   / PED_SECTOR_SIZE_DEFAULT);
 	if (!priv_data->attributes_file) goto hpo_cc;
 
-	map_sectors = ( PED_BE32_TO_CPU (vh->total_blocks) 
+	map_sectors = ( PED_BE32_TO_CPU (vh->total_blocks)
 	                + PED_SECTOR_SIZE_DEFAULT * 8 - 1 )
 		      / (PED_SECTOR_SIZE_DEFAULT * 8);
 	priv_data->dirty_alloc_map = (uint8_t*)
@@ -568,7 +568,7 @@ hpo_fs: free(fs);
 hpo:	return NULL;
 }
 
-static PedConstraint* 
+static PedConstraint*
 hfsplus_get_resize_constraint (const PedFileSystem *fs)
 {
 	PedDevice*	dev = fs->geom->dev;
@@ -628,7 +628,7 @@ hfsplus_volume_resize (PedFileSystem* fs, PedGeometry* geom, PedTimer* timer)
 	ped_timer_set_state_name(timer, _("shrinking"));
 	ped_timer_update(timer, 0.0);
 	/* relocate data */
-	to_free = ( priv_data->plus_geom->length 
+	to_free = ( priv_data->plus_geom->length
 	          - geom->length + hfsp_sect_block
 		  - 1 ) / hfsp_sect_block;
 	block = hfsplus_find_start_pack (fs, to_free);
@@ -644,7 +644,7 @@ hfsplus_volume_resize (PedFileSystem* fs, PedGeometry* geom, PedTimer* timer)
 	/* Calculate new block number and other VH field */
 	/* nblock must be rounded _down_ */
 	nblock = geom->length / hfsp_sect_block;
-	nfree = PED_BE32_TO_CPU (vh->free_blocks) 
+	nfree = PED_BE32_TO_CPU (vh->free_blocks)
 		- (old_blocks - nblock);
 	/* free block readjustement is only needed when incorrect nblock
 	   was used by my previous implementation, so detect the case */
@@ -829,7 +829,7 @@ hfsplus_wrapper_update (PedFileSystem* fs)
 				 PED_BE16_TO_CPU (
 				      hfs_priv_data->mdb->volume_bitmap_block ),
 				 ( PED_BE16_TO_CPU (
-				        hfs_priv_data->mdb->total_blocks ) 
+				        hfs_priv_data->mdb->total_blocks )
 				   + PED_SECTOR_SIZE_DEFAULT * 8 - 1 )
 				 / (PED_SECTOR_SIZE_DEFAULT * 8)))
 		return 0;
@@ -859,7 +859,7 @@ hfsplus_wrapper_update (PedFileSystem* fs)
 
 	while (ret_key->type == key.type && ret_key->file_ID == key.file_ID) {
 		for (i = 0; i < HFS_EXT_NB; i++) {
-			if ( ret_data[i].start_block 
+			if ( ret_data[i].start_block
 			     == hfs_priv_data->mdb->old_new
 			        .embedded.location.start_block) {
 				ret_data[i].block_count =
@@ -915,7 +915,7 @@ hfsplus_resize (PedFileSystem* fs, PedGeometry* geom, PedTimer* timer)
 
 	/* check preconditions */
 	PED_ASSERT (fs != NULL, return 0);
-	PED_ASSERT (fs->geom != NULL, return 0); 
+	PED_ASSERT (fs->geom != NULL, return 0);
 	PED_ASSERT (geom != NULL, return 0);
 	PED_ASSERT (fs->geom->dev == geom->dev, return 0);
 #ifdef DEBUG
@@ -1133,7 +1133,7 @@ hfsplus_extract_file(const char* filename, HfsPPrivateFile* hfsp_file)
 
 	for (rem_sect = hfsp_file->sect_nb; rem_sect; rem_sect -= cp_sect) {
 		cp_sect = rem_sect < BLOCK_MAX_BUFF ? rem_sect : BLOCK_MAX_BUFF;
-		if (!hfsplus_file_read(hfsp_file, extract_buffer, 
+		if (!hfsplus_file_read(hfsp_file, extract_buffer,
 				       hfsp_file->sect_nb - rem_sect, cp_sect))
 			goto err_close;
 		if (!fwrite (extract_buffer, cp_sect * PED_SECTOR_SIZE_DEFAULT,

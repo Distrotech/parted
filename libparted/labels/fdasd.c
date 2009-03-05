@@ -13,7 +13,7 @@
  * 2001-06-26 '-a' option added, it is now possible to add a single
  *            partition in non-interactive mode
  * 2001-06-26 long parameter support added
- *           
+ *
  */
 
 #include <config.h>
@@ -58,7 +58,7 @@ setpos (fdasd_anchor_t *anc, int dsn, int pos)
 }
 
 void
-fdasd_cleanup (fdasd_anchor_t *anchor) 
+fdasd_cleanup (fdasd_anchor_t *anchor)
 {
 	PDEBUG
 	int i;
@@ -85,8 +85,8 @@ fdasd_cleanup (fdasd_anchor_t *anchor)
 	}
 }
 
-static void 
-fdasd_error (fdasd_anchor_t *anc, enum fdasd_failure why, char * str) 
+static void
+fdasd_error (fdasd_anchor_t *anc, enum fdasd_failure why, char * str)
 {
 	PDEBUG
 	char error[2*LINE_LENGTH], *message = error;
@@ -110,23 +110,23 @@ fdasd_error (fdasd_anchor_t *anc, enum fdasd_failure why, char * str)
 		case api_version_mismatch:
 			sprintf(error, "fdasd: %s -- %s\n",
 				_("API version mismatch"), str);
-			break;     
+			break;
 		case wrong_disk_type:
 			sprintf(error, "fdasd: %s -- %s\n",
 				_("Unsupported disk type"), str);
-			break; 
+			break;
 		case wrong_disk_format:
 			sprintf(error, "fdasd: %s -- %s\n",
 				_("Unsupported disk format"), str);
-			break;   
+			break;
 		case disk_in_use:
 			sprintf(error, "fdasd: %s -- %s\n",
 				_("Disk is in use"), str);
-			break;      
+			break;
 		case config_syntax_error:
 			sprintf(error, "fdasd: %s -- %s\n",
 				_("Syntax error in config file"), str);
-			break;       
+			break;
 		case vlabel_corrupted:
 			sprintf(error, "fdasd: %s -- %s\n",
 				_("Volume label is corrupted"), str);
@@ -144,7 +144,7 @@ fdasd_error (fdasd_anchor_t *anc, enum fdasd_failure why, char * str)
 				_("Device verification failed"),
 				_("The specified device is not a valid DASD device"));
 			break;
-		default: 
+		default:
 			sprintf(error, "fdasd: %s: %s\n", _("Fatal error"), str);
 	}
 
@@ -154,8 +154,8 @@ fdasd_error (fdasd_anchor_t *anc, enum fdasd_failure why, char * str)
 /*
  * converts cyl-cyl-head-head-blk to blk
  */
-static unsigned long 
-cchhb2blk (cchhb_t *p, struct fdasd_hd_geometry *geo) 
+static unsigned long
+cchhb2blk (cchhb_t *p, struct fdasd_hd_geometry *geo)
 {
 	PDEBUG
 	return (unsigned long) (p->cc * geo->heads * geo->sectors
@@ -167,7 +167,7 @@ cchhb2blk (cchhb_t *p, struct fdasd_hd_geometry *geo)
  * memory for the labels
  */
 void
-fdasd_initialize_anchor (fdasd_anchor_t * anc) 
+fdasd_initialize_anchor (fdasd_anchor_t * anc)
 {
 	PDEBUG
 	int i;
@@ -203,15 +203,15 @@ fdasd_initialize_anchor (fdasd_anchor_t * anc)
 	bzero(anc->confdata, sizeof(config_data_t));
 
 	anc->f4 = malloc(sizeof(format4_label_t));
-	if (anc->f4 == NULL) 
+	if (anc->f4 == NULL)
 		fdasd_error(anc, malloc_failed, "FMT4 DSCB.");
 
 	anc->f5 = malloc(sizeof(format5_label_t));
-	if (anc->f5 == NULL) 
+	if (anc->f5 == NULL)
 		fdasd_error(anc, malloc_failed, "FMT5 DSCB.");
 
 	anc->f7 = malloc(sizeof(format7_label_t));
-	if (anc->f7 == NULL) 
+	if (anc->f7 == NULL)
 		fdasd_error(anc, malloc_failed, "FMT7 DSCB.");
 
 	bzero(anc->f4, sizeof(format4_label_t));
@@ -219,7 +219,7 @@ fdasd_initialize_anchor (fdasd_anchor_t * anc)
 	bzero(anc->f7, sizeof(format7_label_t));
 
 	v = malloc(sizeof(volume_label_t));
-	if (v == NULL) 
+	if (v == NULL)
 		fdasd_error(anc, malloc_failed,
 			    _("No room for volume label."));
 	bzero(v, sizeof(volume_label_t));
@@ -227,7 +227,7 @@ fdasd_initialize_anchor (fdasd_anchor_t * anc)
 
 	for (i=1; i<=USABLE_PARTITIONS; i++) {
         p = malloc(sizeof(partition_info_t));
-		if (p == NULL) 
+		if (p == NULL)
 			fdasd_error(anc, malloc_failed,
 				    _("No room for partition info."));
 		p->used       = 0x00;
@@ -251,10 +251,10 @@ fdasd_initialize_anchor (fdasd_anchor_t * anc)
 		}
 
 		p->f1 = malloc(sizeof(format1_label_t));
-		if (p->f1 == NULL) 
+		if (p->f1 == NULL)
 			fdasd_error(anc, malloc_failed, "FMT1 DSCB.");
 		bzero(p->f1, sizeof(format1_label_t));
-		
+
 		q = p;
 	}
 }
@@ -264,13 +264,13 @@ fdasd_initialize_anchor (fdasd_anchor_t * anc)
  */
 static void
 fdasd_write_vtoc_labels (fdasd_anchor_t * anc, int fd)
-{ 
+{
 	PDEBUG
 	partition_info_t *p;
 	unsigned long b;
 	char dsno[6], s1[7], s2[45], *c1, *c2, *ch;
 	int i = 0, k = 0;
-    
+
 	b = (cchhb2blk (&anc->vlabel->vtoc, &anc->geo) - 1) * anc->blksize;
 	if (b <= 0)
 		fdasd_error (anc, vlabel_corrupted, "");
@@ -297,13 +297,13 @@ fdasd_write_vtoc_labels (fdasd_anchor_t * anc, int fd)
 			vtoc_write_label (fd, b, p->f1, NULL, NULL, NULL);
 			continue;
 		}
-  
+
 		strncpy (p->f1->DS1DSSN, anc->vlabel->volid, 6);
 
 		ch = p->f1->DS1DSNAM;
 		vtoc_ebcdic_dec (ch, ch, 44);
 		c1 = ch + 7;
-  
+
 		if (getdsn (anc, i) > -1) {
 			/* re-use the existing data set name */
 			c2 = strchr (c1, '.');
@@ -389,7 +389,7 @@ fdasd_write_labels (fdasd_anchor_t * anc, int fd)
  * writes all changes to dasd
  */
 int
-fdasd_prepare_labels (fdasd_anchor_t *anc, int fd) 
+fdasd_prepare_labels (fdasd_anchor_t *anc, int fd)
 {
 	PDEBUG
 	partition_info_t *p = anc->first;
@@ -404,7 +404,7 @@ fdasd_prepare_labels (fdasd_anchor_t *anc, int fd)
 		ch = p->f1->DS1DSNAM;
 		vtoc_ebcdic_dec (ch, ch, 44);
 		c1 = ch + 7;
-  
+
 		if (getdsn (anc, i) > -1) {
 			/* re-use the existing data set name */
 			c2 = strchr (c1, '.');
@@ -487,7 +487,7 @@ fdasd_recreate_vtoc (fdasd_anchor_t *anc)
 
 	vtoc_init_format5_label(anc->f5);
 	vtoc_init_format7_label(anc->f7);
-	vtoc_set_freespace(anc->f4, anc->f5, anc->f7, 
+	vtoc_set_freespace(anc->f4, anc->f5, anc->f7,
 					   '+', anc->verbose,
 					   FIRST_USABLE_TRK,
 					   anc->geo.cylinders * anc->geo.heads - 1,
@@ -520,7 +520,7 @@ fdasd_recreate_vtoc (fdasd_anchor_t *anc)
  * information provided in the labels
  */
 static void
-fdasd_update_partition_info (fdasd_anchor_t *anc) 
+fdasd_update_partition_info (fdasd_anchor_t *anc)
 {
 	PDEBUG
 	partition_info_t *q = NULL, *p = anc->first;
@@ -580,11 +580,11 @@ fdasd_update_partition_info (fdasd_anchor_t *anc)
 }
 
 /*
- * reorganizes all FMT1s, after that all used FMT1s should be right in 
+ * reorganizes all FMT1s, after that all used FMT1s should be right in
  * front of all unused FMT1s
  */
 static void
-fdasd_reorganize_FMT1s (fdasd_anchor_t *anc) 
+fdasd_reorganize_FMT1s (fdasd_anchor_t *anc)
 {
 	PDEBUG
 	int i, j;
@@ -693,7 +693,7 @@ fdasd_valid_vtoc_pointer(fdasd_anchor_t *anc, unsigned long b, int fd)
 	PDEBUG
 	char str[LINE_LENGTH];
 
-	/* VOL1 label contains valid VTOC pointer */ 
+	/* VOL1 label contains valid VTOC pointer */
 	vtoc_read_label (fd, b, NULL, anc->f4, NULL, NULL);
 
 	if (anc->f4->DS4IDFMT != 0xf4) {
@@ -710,8 +710,8 @@ fdasd_valid_vtoc_pointer(fdasd_anchor_t *anc, unsigned long b, int fd)
 /*
  * check the dasd for a volume label
  */
-int 
-fdasd_check_volume (fdasd_anchor_t *anc, int fd) 
+int
+fdasd_check_volume (fdasd_anchor_t *anc, int fd)
 {
 	PDEBUG
 	volume_label_t *v = anc->vlabel;
@@ -751,31 +751,31 @@ fdasd_check_api_version (fdasd_anchor_t *anc, int f)
 	PDEBUG
 	int api;
 	char s[LINE_LENGTH];
- 
+
 	if (ioctl(f, DASDAPIVER, &api) != 0)
 		fdasd_error(anc, unable_to_ioctl,
 			    _("Could not retrieve API version."));
- 
+
 	if (api != DASD_MIN_API_VERSION) {
 		sprintf(s, _("The current API version '%d' doesn't " \
 				"match dasd driver API version " \
 				"'%d'!"), api, DASD_MIN_API_VERSION);
 		fdasd_error(anc, api_version_mismatch, s);
 	}
-}                                      
+}
 
 /*
  * reads dasd geometry data
  */
-void 
-fdasd_get_geometry (fdasd_anchor_t *anc, int f) 
+void
+fdasd_get_geometry (fdasd_anchor_t *anc, int f)
 {
 	PDEBUG
 	int blksize = 0;
 	dasd_information_t dasd_info;
 	char s[LINE_LENGTH];
 
-	if (ioctl(f, HDIO_GETGEO, &anc->geo) != 0) 
+	if (ioctl(f, HDIO_GETGEO, &anc->geo) != 0)
 		fdasd_error(anc, unable_to_ioctl,
 			    _("Could not retrieve disk geometry information."));
 
@@ -784,8 +784,8 @@ fdasd_get_geometry (fdasd_anchor_t *anc, int f)
 			    _("Could not retrieve blocksize information."));
 
 	/* get disk type */
-	if (ioctl(f, BIODASDINFO, &dasd_info) != 0) 
-		fdasd_error(anc, unable_to_ioctl, 
+	if (ioctl(f, BIODASDINFO, &dasd_info) != 0)
+		fdasd_error(anc, unable_to_ioctl,
 			    _("Could not retrieve disk information."));
 
 	if (strncmp(dasd_info.type, "ECKD", 4) != 0)
@@ -804,12 +804,12 @@ fdasd_get_geometry (fdasd_anchor_t *anc, int f)
  * returns unused partition info pointer if there
  * is a free partition, otherwise NULL
  */
-static partition_info_t * 
-fdasd_get_empty_f1_label (fdasd_anchor_t * anc) 
+static partition_info_t *
+fdasd_get_empty_f1_label (fdasd_anchor_t * anc)
 {
 	PDEBUG
-	if (anc->used_partitions < USABLE_PARTITIONS)	  
-		return anc->last;	      
+	if (anc->used_partitions < USABLE_PARTITIONS)
+		return anc->last;
 	else
 		return NULL;
 }
@@ -817,10 +817,10 @@ fdasd_get_empty_f1_label (fdasd_anchor_t * anc)
 /*
  * asks for and sets some important partition data
  */
-static int 
+static int
 fdasd_get_partition_data (fdasd_anchor_t *anc, extent_t *part_extent,
                           partition_info_t *p, unsigned int *start_ptr,
-                          unsigned int *stop_ptr) 
+                          unsigned int *stop_ptr)
 {
 	PDEBUG
 	unsigned int limit, cc, hh;
@@ -877,7 +877,7 @@ fdasd_get_partition_data (fdasd_anchor_t *anc, extent_t *part_extent,
 	vtoc_set_cchh(&llimit, cc, hh);
 
 	/* check for cylinder boundary */
-	if (hh == 0)  
+	if (hh == 0)
 		b1 = 0x81;
 	else
 		b1 = 0x01;
@@ -914,7 +914,7 @@ fdasd_get_partition_data (fdasd_anchor_t *anc, extent_t *part_extent,
 }
 
 static void
-fdasd_enqueue_new_partition (fdasd_anchor_t *anc) 
+fdasd_enqueue_new_partition (fdasd_anchor_t *anc)
 {
 	PDEBUG
 	partition_info_t *q = anc->first, *p = anc->last;
@@ -923,7 +923,7 @@ fdasd_enqueue_new_partition (fdasd_anchor_t *anc)
 	for (i=1; i<USABLE_PARTITIONS; i++) {
 		if ((q->end_trk == 0) || (p->start_trk < q->start_trk)) {
 			break;
-		} else { 
+		} else {
 			q = q->next;
 			k++;
 		}
@@ -931,7 +931,7 @@ fdasd_enqueue_new_partition (fdasd_anchor_t *anc)
 
 	if (anc->first == q)
 		anc->first = p;
-	
+
 	if (p != q) {
 		anc->last->prev->next = NULL;
 		anc->last = anc->last->prev;
@@ -939,7 +939,7 @@ fdasd_enqueue_new_partition (fdasd_anchor_t *anc)
 		p->next = q;
 		p->prev = q->prev;
 		q->prev = p;
-		
+
 		if (p->prev != NULL)
 			p->prev->next = p;
 	}
@@ -986,7 +986,7 @@ fdasd_enqueue_new_partition (fdasd_anchor_t *anc)
  */
 partition_info_t *
 fdasd_add_partition (fdasd_anchor_t *anc, unsigned int start,
-                     unsigned int stop) 
+                     unsigned int stop)
 {
 	PDEBUG
 	cchhb_t hf1;
@@ -1010,7 +1010,7 @@ fdasd_add_partition (fdasd_anchor_t *anc, unsigned int start,
 
 	PDEBUG;
 	fdasd_enqueue_new_partition(anc);
-	
+
 	PDEBUG;
 	anc->used_partitions += 1;
 

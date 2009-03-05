@@ -23,7 +23,7 @@
  * \addtogroup PedDisk
  *
  * \brief Disk label access.
- * 
+ *
  * Most programs will need to use ped_disk_new() or ped_disk_new_fresh() to get
  * anything done.  A PedDisk is always associated with a device and has a
  * partition table.  There are different types of partition tables (or disk
@@ -71,7 +71,7 @@ ped_disk_type_register (PedDiskType* disk_type)
 	PED_ASSERT (disk_type != NULL, return);
 	PED_ASSERT (disk_type->ops != NULL, return);
 	PED_ASSERT (disk_type->name != NULL, return);
-	
+
         disk_type->next = disk_types;
         disk_types =  disk_type;
 }
@@ -160,12 +160,12 @@ ped_disk_probe (PedDevice* dev)
 }
 
 /**
- * Read the partition table off a device (if one is found). 
- * 
+ * Read the partition table off a device (if one is found).
+ *
  * \warning May modify \p dev->cylinders, \p dev->heads and \p dev->sectors
  *      if the partition table indicates that the existing values
  *      are incorrect.
- * 
+ *
  * \return A new \link _PedDisk PedDisk \endlink object;
  *         NULL on failure (e.g. partition table not detected).
  */
@@ -273,9 +273,9 @@ error:
 /**
  * Remove all identifying signatures of a partition table,
  * except for partition tables of a given type.
- * 
+ *
  * \return 0 on error, 1 otherwise.
- * 
+ *
  * \sa ped_disk_clobber()
  */
 int
@@ -315,11 +315,11 @@ error:
 	return 0;
 }
 
-/** 
+/**
  * Remove all identifying signatures of a partition table,
- * 
+ *
  * \return 0 on error, 1 otherwise.
- * 
+ *
  * \sa ped_disk_clobber_exclude()
  */
 int
@@ -333,7 +333,7 @@ ped_disk_clobber (PedDevice* dev)
  *
  * This new partition table is only created in-memory, and nothing is written
  * to disk until ped_disk_commit_to_dev() is called.
- * 
+ *
  * \return The newly constructed \link _PedDisk PedDisk \endlink,
  *      NULL on failure.
  */
@@ -415,7 +415,7 @@ ped_disk_destroy (PedDisk* disk)
  * use the new blkpg interface to tell Linux where each partition
  * starts/ends, etc. In this case, Linux does not need to have support for
  * a specific type of partition table.
- * 
+ *
  * \return 0 on failure, 1 otherwise.
  */
 int
@@ -664,7 +664,7 @@ ped_disk_get_max_supported_partition_count(const PedDisk* disk, int* supported)
 
 /**
  * Get the maximum number of (primary) partitions the disk label supports.
- * 
+ *
  * For example, MacIntosh partition maps can have different sizes,
  * and accordingly support a different number of partitions.
  */
@@ -835,7 +835,7 @@ _alloc_extended_freespace (PedDisk* disk)
 
 	last_end = extended_part->geom.start;
 	last = NULL;
-	
+
 	for (walk = extended_part->part_list; walk; walk = walk->next) {
 		if (walk->geom.start > last_end + 1) {
 			free_space = ped_partition_new (
@@ -965,7 +965,7 @@ _disk_pop_update_mode (PedDisk* disk)
  * \addtogroup PedPartition
  *
  * \brief Partition access.
- * 
+ *
  * @{
  */
 
@@ -1043,13 +1043,13 @@ fail:
  *
  * \note The constructed partition is not added to <tt>disk</tt>'s
  *      partition table. Use ped_disk_add_partition() to do this.
- * 
+ *
  * \return A new \link _PedPartition PedPartition \endlink object,
  *      NULL on failure.
  *
  * \throws PED_EXCEPTION_ERROR if \p type is \p EXTENDED or \p LOGICAL but the
  *      label does not support this concept.
- */ 
+ */
 PedPartition*
 ped_partition_new (const PedDisk* disk, PedPartitionType type,
 		   const PedFileSystemType* fs_type, PedSector start,
@@ -1126,7 +1126,7 @@ ped_partition_is_active (const PedPartition* part)
 
 /**
  * Set the state (\c 1 or \c 0) of a flag on a partition.
- * 
+ *
  * Flags are disk label specific, although they have a global
  * "namespace": the flag PED_PARTITION_BOOT, for example, roughly means
  * "this" partition is bootable". But this means different things on different
@@ -1134,7 +1134,7 @@ ped_partition_is_active (const PedPartition* part)
  * on MS-DOS disk labels, there can only be one boot partition, and this
  * refers to the partition that will be booted from on startup. On PC98
  * disk labels, the user can choose from any bootable partition on startup.
- * 
+ *
  * \note It is an error to call this on an unavailable flag -- use
  * ped_partition_is_flag_available() to determine which flags are available
  * for a given disk label.
@@ -1253,7 +1253,7 @@ _assert_partition_name_feature (const PedDiskType* disk_type)
  * ped_disk_type_check_feature (part->disk->type, PED_DISK_TYPE_PARTITION_NAME);
  *      \endcode
  *      to check whether this feature is enabled for a label.
- *      
+ *
  * \note \p name will not be modified by libparted. It can be freed
  *      by the caller immediately after ped_partition_set_name() is called.
  *
@@ -1320,7 +1320,7 @@ ped_disk_extended_partition (const PedDisk* disk)
 	return walk;
 }
 
-/** 
+/**
  * Return the next partition after \p part on \p disk. If \p part is \c NULL,
  * return the first partition. If \p part is the last partition, returns
  * \c NULL. If \p part is an extended partition, returns the first logical
@@ -1374,7 +1374,7 @@ _disk_check_sanity (PedDisk* disk)
 #endif
 
 /**
- * Returns the partition numbered \p num. 
+ * Returns the partition numbered \p num.
  *
  * \return \c NULL if the specified partition does not exist.
  */
@@ -1516,7 +1516,7 @@ _disk_raw_add (PedDisk* disk, PedPartition* part)
 				ext_part->part_list = part;
 			else
 				disk->part_list = part;
-		} 
+		}
 	}
 
 	return 1;
@@ -1535,7 +1535,7 @@ _partition_get_overlap_constraint (PedPartition* part, PedGeometry* geom)
 
 	if (part->type & PED_PARTITION_LOGICAL) {
 		PedPartition* ext_part;
-		
+
 		ext_part = ped_disk_extended_partition (part->disk);
 		PED_ASSERT (ext_part != NULL, return NULL);
 
@@ -1574,7 +1574,7 @@ _partition_get_overlap_constraint (PedPartition* part, PedGeometry* geom)
  * Returns \c 0 if the partition, \p part overlaps with any partitions on the
  * \p disk.  The geometry of \p part is taken to be \p geom, NOT \p part->geom
  * (the idea here is to check if \p geom is valid, before changing \p part).
- * 
+ *
  * This is useful for seeing if a resized partitions new geometry is going to
  * fit, without the existing geomtry getting in the way.
  *
@@ -1802,7 +1802,7 @@ _check_partition (PedDisk* disk, PedPartition* part)
 
 /**
  * Adds PedPartition \p part to PedPartition \p disk.
- * 
+ *
  * \warning The partition's geometry may be changed, subject to \p constraint.
  * You could set \p constraint to <tt>ped_constraint_exact(&part->geom)</tt>,
  * but many partition table schemes have special requirements on the start
@@ -1810,7 +1810,7 @@ _check_partition (PedDisk* disk, PedPartition* part)
  * will probably mean that this function will fail (in which
  * case \p part will be left unmodified)
  * \p part is assigned a number (\p part->num) in this process.
- * 
+ *
  * \return \c 0 on failure.
  */
 int
@@ -1974,7 +1974,7 @@ ped_disk_delete_all (PedDisk* disk)
  * to \p constraint.
  *
  * \warning The constraint warning from ped_disk_add_partition() applies.
- * 
+ *
  * \note this function does not modify the contents of the partition.  You need
  *       to call ped_file_system_resize() separately.
  */
@@ -2035,7 +2035,7 @@ error_pop_update_mode:
 /**
  * Grow PedPartition \p part geometry to the maximum possible subject to
  * \p constraint.  The new geometry will be a superset of the old geometry.
- * 
+ *
  * \return 0 on failure
  */
 int
@@ -2129,7 +2129,7 @@ ped_disk_get_max_partition_geometry (PedDisk* disk, PedPartition* part,
 	return max_geom;
 }
 
-/** 
+/**
  * Reduce the size of the extended partition to a minimum while still wrapping
  * its logical partitions.  If there are no logical partitions, remove the
  * extended partition.
@@ -2185,11 +2185,11 @@ ped_disk_minimize_extended_partition (PedDisk* disk)
 
 /**
  * Returns a name that seems mildly appropriate for a partition type \p type.
- * 
+ *
  * Eg, if you pass (PED_PARTITION_LOGICAL & PED_PARTITION_FREESPACE), it
  * will return "free".  This isn't to be taken too seriously - it's just
  * useful for user interfaces, so you can show the user something ;-)
- * 
+ *
  * \note The returned string will be in English.  However,
  * translations are provided, so the caller can call
  * dgettext("parted", RESULT) on the result.
@@ -2213,7 +2213,7 @@ ped_partition_type_get_name (PedPartitionType type)
 
 /**
  * Returns a name for a \p flag, e.g. PED_PARTITION_BOOT will return "boot".
- * 
+ *
  * \note The returned string will be in English.  However,
  * translations are provided, so the caller can call
  * dgettext("parted", RESULT) on the result.
@@ -2258,8 +2258,8 @@ ped_partition_flag_get_name (PedPartitionFlag flag)
 }
 
 /**
- * Iterates through all flags. 
- * 
+ * Iterates through all flags.
+ *
  * ped_partition_flag_next(0) returns the first flag
  *
  * \return the next flag, or 0 if there are no more flags
@@ -2271,7 +2271,7 @@ ped_partition_flag_next (PedPartitionFlag flag)
 }
 
 /**
- * Returns the flag associated with \p name.  
+ * Returns the flag associated with \p name.
  *
  * \p name can be the English
  * string, or the translation for the native language.

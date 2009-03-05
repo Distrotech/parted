@@ -572,7 +572,7 @@ ask_type (PedFileSystem* fs, int fat16_ok, int fat32_ok, FatType* out_fat_type)
 		*out_fat_type = FAT_TYPE_FAT32;
 		return 1;
 	}
-	
+
 	ped_exception_throw (
 		PED_EXCEPTION_NO_FEATURE,
 		PED_EXCEPTION_CANCEL,
@@ -683,7 +683,7 @@ create_resize_context (PedFileSystem* fs, const PedGeometry* new_geom)
 	new_fs_info->cluster_count = new_cluster_count;
 	new_fs_info->dir_entries_per_cluster = fs_info->dir_entries_per_cluster;
 
-	new_fs_info->fat_type = new_fat_type; 
+	new_fs_info->fat_type = new_fat_type;
 	new_fs_info->fat_table_count = 2;
 	new_fs_info->fat_sectors = new_fat_sectors;
 
@@ -711,7 +711,7 @@ create_resize_context (PedFileSystem* fs, const PedGeometry* new_geom)
 			  + 2 * new_fs_info->fat_sectors;
 	} else {
 		new_fs_info->root_dir_sector_count = root_dir_sector_count;
-		new_fs_info->root_dir_entry_count 
+		new_fs_info->root_dir_entry_count
 			= root_dir_sector_count * 512 / sizeof (FatDirEntry);
 
 		new_fs_info->fat_offset
@@ -724,7 +724,7 @@ create_resize_context (PedFileSystem* fs, const PedGeometry* new_geom)
 		new_fs_info->cluster_offset = new_fs_info->root_dir_offset
 					  + new_fs_info->root_dir_sector_count;
 	}
-	
+
 	new_fs_info->total_dir_clusters = fs_info->total_dir_clusters;
 
 	context = fat_op_context_new (new_fs, fs);

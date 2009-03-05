@@ -17,7 +17,7 @@
 */
 
 #include <config.h>
-#include "fat.h" 
+#include "fat.h"
 
 #ifndef DISCOVER_ONLY
 
@@ -328,7 +328,7 @@ fat_calc_align_sectors (const PedFileSystem* new_fs,
 	PedSector	align;
 
 	new_meta_data_size
-		= fat_min_reserved_sector_count (new_fs_info->fat_type) 
+		= fat_min_reserved_sector_count (new_fs_info->fat_type)
 		  + new_fs_info->fat_sectors * 2;
 
 	if (new_fs_info->fat_type == FAT_TYPE_FAT16)

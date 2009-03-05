@@ -192,7 +192,7 @@ loop_partition_new (const PedDisk* disk, PedPartitionType part_type,
 		    PedSector start, PedSector end)
 {
 	PedPartition*	part;
-	
+
 	part = _ped_partition_alloc (disk, part_type, fs_type, start, end);
 	if (!part)
 		return NULL;
@@ -204,7 +204,7 @@ static PedPartition*
 loop_partition_duplicate (const PedPartition* part)
 {
 	PedPartition* result;
-	
+
 	result = ped_partition_new (part->disk, part->type, part->fs_type,
 				    part->geom.start, part->geom.end);
 	result->num = part->num;

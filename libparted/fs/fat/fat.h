@@ -135,7 +135,7 @@ struct _FatSpecific {
 #define DIRECTORY_ATTR		0x10
 #define ARCH_ATTR		0x20
 
-#define MAX_FAT12_CLUSTERS	4086      
+#define MAX_FAT12_CLUSTERS	4086
 #define MAX_FAT16_CLUSTERS	65526
 #define MAX_FAT32_CLUSTERS	2000000
 

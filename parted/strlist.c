@@ -203,7 +203,7 @@ print_wchar (const wchar_t* str, size_t count)
 	free (tmp);
 }
 
-static StrList* 
+static StrList*
 str_list_alloc ()
 {
 	StrList*	list;

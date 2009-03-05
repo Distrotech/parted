@@ -300,7 +300,7 @@ _dump_history (void)
 
 /* Resets the environment by jumping to the initial state
  * saved during ui intitialisation.
- * Pass 1 as the parameter if you want to quit parted, 
+ * Pass 1 as the parameter if you want to quit parted,
  * 0 if you just want to reset to the command prompt.
  */
 static void
@@ -309,10 +309,10 @@ reset_env (int quit)
         int    in_readline = readline_state.in_readline;
 
         readline_state.in_readline = 0;
-        
+
         if (in_readline) {
                 putchar ('\n');
-                if (quit)    
+                if (quit)
                         exit (0);
 
                 siglongjmp (readline_state.jmp_state, 1);
@@ -383,12 +383,12 @@ sa_sigfpe_handler (int signum, siginfo_t* info, void* ucontext)
                         fputs(_("\nError: FPE_INTDIV (Integer: "
                                 "divide by zero)"), stdout);
                         break;
-        
+
                 case FPE_INTOVF:
                         fputs(_("\nError: FPE_INTOVF (Integer: "
                                 "overflow)"), stdout);
                         break;
-        
+
                 case FPE_FLTDIV:
                         fputs(_("\nError: FPE_FLTDIV (Float: "
                                 "divide by zero)"), stdout);
@@ -488,7 +488,7 @@ sa_sigill_handler (int signum, siginfo_t* info, void* ucontext)
                                 "signal was encountered."), stdout);
                         break;
         }
-   
+
         abort ();
 }
 
@@ -1019,16 +1019,16 @@ command_line_get_partition (const char* prompt, PedDisk* disk,
 {
         PedPartition*    part;
 
-        /* Flawed logic, doesn't seem to work?! 
+        /* Flawed logic, doesn't seem to work?!
         check = ped_disk_next_partition (disk, part);
         part  = ped_disk_next_partition (disk, check);
 
         if (part == NULL) {
 
-        *value = check;          
+        *value = check;
         printf (_("The (only) primary partition has "
                   "been automatically selected\n"));
-        return 1;          
+        return 1;
 
         } else {
         */
@@ -1229,7 +1229,7 @@ command_line_get_ex_opt (const char* prompt, PedExceptionOption options)
         PedExceptionOption    opt;
         char*                 opt_name;
 
-        for (opt = option_get_next (options, 0); opt; 
+        for (opt = option_get_next (options, 0); opt;
              opt = option_get_next (options, opt)) {
                 options_strlist = str_list_append_unique (options_strlist,
                                      _(ped_exception_get_option_string (opt)));
@@ -1404,14 +1404,14 @@ init_ui ()
         sig_fpe.sa_sigaction = &sa_sigfpe_handler;
         sig_ill.sa_sigaction = &sa_sigill_handler;
 
-        sig_segv.sa_mask = 
-                sig_int.sa_mask = 
-                        sig_fpe.sa_mask = 
+        sig_segv.sa_mask =
+                sig_int.sa_mask =
+                        sig_fpe.sa_mask =
                                 sig_ill.sa_mask = curr;
-    
-        sig_segv.sa_flags = 
-                sig_int.sa_flags = 
-                        sig_fpe.sa_flags = 
+
+        sig_segv.sa_flags =
+                sig_int.sa_flags =
+                        sig_fpe.sa_flags =
                                 sig_ill.sa_flags = SA_SIGINFO;
 
         sigaction (SIGSEGV, &sig_segv, NULL);
@@ -1537,7 +1537,7 @@ non_interactive_mode (PedDevice** dev, Command* cmd_list[],
                         exit(1);
                         goto error;
                 }
-                
+
                 if (!command_run (cmd, dev))
                         goto error;
         }

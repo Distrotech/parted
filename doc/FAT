@@ -515,7 +515,7 @@ File allocation table (FAT) is a strange name, come to think of it.  Perhaps it
 should be called cluster allocation table, or something (?).  Essentially,
 it is used to represent file chains (i.e. linked lists) for files and
 directories.  There are usually two FATs (one is a backup, and should be
-identical). 
+identical).
 
 Anyway, a FAT is essentially an array.  In FAT12, each entry is 12 bits,
 FAT16 - 16 bits, FAT32 - 32 bits.  Hence the names.

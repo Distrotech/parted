@@ -54,7 +54,7 @@ typedef struct _PedCHSGeometry PedCHSGeometry;
 
 /**
  * A cylinder-head-sector "old-style" geometry.
- * 
+ *
  * A device addressed in this way has C*H*S sectors.
  */
 struct _PedCHSGeometry {

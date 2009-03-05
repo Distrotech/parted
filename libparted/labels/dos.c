@@ -251,7 +251,7 @@ static PedDisk*
 msdos_duplicate (const PedDisk* disk)
 {
 	PedDisk*	new_disk;
-       
+
 	new_disk = ped_disk_new_fresh (disk->dev, &msdos_disk_type);
 	if (!new_disk)
 		return NULL;
@@ -333,7 +333,7 @@ sector_to_chs (const PedDevice* dev, const PedCHSGeometry* bios_geom,
 
 	PED_ASSERT (dev != NULL, return);
 	PED_ASSERT (chs != NULL, return);
-	
+
 	if (!bios_geom)
 		bios_geom = &dev->bios_geom;
 
@@ -461,7 +461,7 @@ probe_filesystem_for_geom (const PedPartition* part, PedCHSGeometry* bios_geom)
                     return 0);
 
         buf = ped_malloc (part->disk->dev->sector_size);
-        
+
 	if (!buf)
 		return 0;
 
@@ -515,14 +515,14 @@ end:
  *
  * [ c h ] [ cyl_sectors  ]  =  [ s - a ]  =  [ a_ ]
  * [ C H ] [ head_sectors ]     [ S - A ]     [ A_ ].
- * 
+ *
  * (s - a is abbreviated to a_to simplify the notation.)
  *
  * This can be abbreviated into augmented matrix form:
  *
  * [ c h | a_ ]
  * [ C H | A_ ].
- * 
+ *
  * Solving these equations requires following the row reduction algorithm.  We
  * need to be careful about a few things though:
  * 	- the equations might be linearly dependent, in which case there
@@ -632,7 +632,7 @@ probe_partition_for_geom (const PedPartition* part, PedCHSGeometry* bios_geom)
 		head_size = ( a_ - c * cyl_size ) / h;
 	else if (H > 0)
 		head_size = ( A_ - C * cyl_size ) / H;
-	else { 
+	else {
 		/* should not happen because denum != 0 */
 		head_size = 0;
 		PED_ASSERT (0, return 0);
@@ -878,7 +878,7 @@ read_table (PedDisk* disk, PedSector sector, int is_extended_table)
 		 * partitions, to make sure we get the order right.
 		 */
 		if (is_extended_table && raw_part_is_extended (raw_part))
-			continue;	
+			continue;
 
 		lba_offset = is_extended_table ? sector : 0;
 
@@ -1780,7 +1780,7 @@ _logical_min_start_head (const PedPartition* part,
  * 2)*The partition table of part5 is always at the beginning of the ext_part
  *    so there is no need to leave a one sector gap before part5.
  *   *There always is a partition table at the beginning of each partition != 5.
- * We don't need to worry to much about consistency with 
+ * We don't need to worry to much about consistency with
  * _partition_get_overlap_constraint because missing it means we are in edge
  * cases anyway, and we don't lose anything by just refusing to do the job in
  * those cases.
@@ -2002,7 +2002,7 @@ msdos_partition_align (PedPartition* part, const PedConstraint* constraint)
 		return 1;
 	if (_align_no_geom (part, constraint))
 		return 1;
- 
+
 #ifndef DISCOVER_ONLY
 	ped_exception_throw (
 		PED_EXCEPTION_ERROR,
@@ -2143,7 +2143,7 @@ msdos_alloc_metadata (PedDisk* disk)
 		int		i;
 		PedSector	start, end;
 		PedCHSGeometry	bios_geom;
-		
+
 		for (i=5; 1; i++) {
 			PedPartition* log_part;
 			log_part = ped_disk_get_partition (disk, i);

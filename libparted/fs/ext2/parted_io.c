@@ -90,7 +90,7 @@ static int do_set_blocksize(void *cookie, int logsize)
 
 	monster->logsize = logsize;
 	return 1;
-} 
+}
 
 static int do_write(void *cookie, void *ptr, blk_t block, blk_t num)
 {

@@ -42,7 +42,7 @@ fat_traverse_entries_per_buffer (FatTraverseInfo* trav_info)
 static int
 is_last_buffer (FatTraverseInfo* trav_info) {
 	FatSpecific*	fs_info = FAT_SPECIFIC (trav_info->fs);
-    
+
 	if (trav_info->is_legacy_root_dir)
 		return 1;
 	else
@@ -53,7 +53,7 @@ static int
 write_root_dir (FatTraverseInfo* trav_info)
 {
 	FatSpecific*	fs_info = FAT_SPECIFIC (trav_info->fs);
-	
+
 	if (!ped_geometry_write (trav_info->fs->geom, trav_info->dir_entries,
 				 fs_info->root_dir_offset,
 				 fs_info->root_dir_sector_count))
@@ -258,7 +258,7 @@ fat_dir_entry_set_first_cluster (FatDirEntry* dir_entry, PedFileSystem* fs,
 		case FAT_TYPE_FAT16:
 		dir_entry->first_cluster = PED_CPU_TO_LE16 (cluster);
 		break;
-            
+
 		case FAT_TYPE_FAT32:
 		dir_entry->first_cluster
 			= PED_CPU_TO_LE16 (cluster & 0xffff);
@@ -323,7 +323,7 @@ fat_dir_entry_has_first_cluster (FatDirEntry* dir_entry, PedFileSystem* fs)
 {
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 	FatCluster	first_cluster;
-    
+
 	if (!fat_dir_entry_is_file (dir_entry)
 		&& !fat_dir_entry_is_directory (dir_entry))
 		return 0;

@@ -164,7 +164,7 @@ sun_clobber (PedDevice* dev)
 
 	if (!ped_device_read (dev, &label, 0, 1))
 		return 0;
-	
+
 	label.magic = 0;
 	return ped_device_write (dev, &label, 0, 1);
 }
@@ -234,7 +234,7 @@ sun_duplicate (const PedDisk* disk)
 	PedDisk*	new_disk;
 	SunDiskData*	new_sun_data;
 	SunDiskData*	old_sun_data = (SunDiskData*) disk->disk_specific;
-       
+
 	new_disk = ped_disk_new_fresh (disk->dev, &sun_disk_type);
 	if (!new_disk)
 		return NULL;
@@ -308,11 +308,11 @@ sun_read (PedDisk* disk)
 	PedPartition* part;
 	PedSector end, start, block;
 	PedConstraint* constraint_exact;
-	
+
 	PED_ASSERT (disk != NULL, return 0);
 	PED_ASSERT (disk->dev != NULL, return 0);
 	PED_ASSERT (disk->disk_specific != NULL, return 0);
-	
+
 	disk_data = (SunDiskData*) disk->disk_specific;
 	label = &disk_data->raw_label;
 
@@ -353,7 +353,7 @@ sun_read (PedDisk* disk)
 
 		part->num = i + 1;
 		part->fs_type = ped_file_system_probe (&part->geom);
-	
+
 		constraint_exact = ped_constraint_exact (&part->geom);
 		if (!ped_disk_add_partition (disk, part, constraint_exact))
 			goto error;
@@ -414,7 +414,7 @@ sun_write (const PedDisk* disk)
 
 			label->infos[i].id = WHOLE_DISK_ID;
 			label->partitions[i].start_cylinder = 0;
-			label->partitions[i].num_sectors = 
+			label->partitions[i].num_sectors =
 				PED_CPU_TO_BE32(disk_data->length);
 			continue;
 		}
@@ -750,7 +750,7 @@ sun_partition_enumerate (PedPartition* part)
 {
 	int i;
 	PedPartition* p;
-	
+
 	/* never change the partition numbers */
 	if (part->num != -1)
 		return 1;

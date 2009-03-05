@@ -234,7 +234,7 @@ fat_open (PedGeometry* geom)
 
 	if (!_init_fats (fs))
 		goto error_free_fs;
-	if (!fat_alloc_buffers (fs)) 
+	if (!fat_alloc_buffers (fs))
 		goto error_free_fat_table;
 	if (!fat_collect_cluster_info (fs))
 		goto error_free_buffers;
@@ -362,7 +362,7 @@ fat_create (PedGeometry* geom, FatType fat_type, PedTimer* timer)
 	if (!fs_info->fat)
 		goto error_free_fs;
 	fat_table_set_cluster_count (fs_info->fat, fs_info->cluster_count);
-	if (!fat_alloc_buffers (fs)) 
+	if (!fat_alloc_buffers (fs))
 		goto error_free_fat_table;
 
 	if (fs_info->fat_type == FAT_TYPE_FAT32) {
@@ -539,7 +539,7 @@ fat_check (PedFileSystem* fs, PedTimer* timer)
 					!= PED_EXCEPTION_IGNORE)
 				goto error;
 		}
-	} 
+	}
 
 	if (fs_info->fat_type == FAT_TYPE_FAT32) {
 		info_free_clusters
@@ -646,7 +646,7 @@ _get_min_resize_size (const PedFileSystem* fs, PedSector min_data_size)
 	}
 
 /* adds a bit of leeway (64 sectors), for resolving extra issues, like root
- * directory allocation, that aren't covered here. 
+ * directory allocation, that aren't covered here.
  */
 	return max_length + 64;
 }

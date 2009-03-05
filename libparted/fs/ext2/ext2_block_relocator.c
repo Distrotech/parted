@@ -51,11 +51,11 @@ struct ext2_block_entry
  * 	and the first data block in the group.  This can change when a
  * 	filesystem is resized, because the size of the group descriptors is
  * 	proportional to the size of the filesystem.
- * 
+ *
  * 	- allocentries is the size of the "block" array.  It is a tuneable
  * 	parameter that determines how many blocks can be moved in each
  * 	pass.
- * 
+ *
  * 	- usedentries says how many entries of the "block" array have been
  * 	used.  That is, how many blocks have been scheduled so far to
  * 	be moved.

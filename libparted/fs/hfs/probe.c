@@ -172,9 +172,9 @@ hfs_probe (PedGeometry* geom)
 {
 	PedGeometry*	geom_base;
 	PedGeometry*	geom_plus = NULL;
-	
+
 	PED_ASSERT (geom != NULL, return NULL);
-	
+
 	if (!hfsc_can_use_geom (geom))
 		return NULL;
 

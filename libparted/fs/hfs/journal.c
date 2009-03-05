@@ -114,7 +114,7 @@ hfsj_journal_read(PedGeometry* geom, HfsJJournalHeader* jh,
 		read_sect++;
 		if (read_sect == journ_length)
 			read_sect = 1; /* skip journal header
-					  which is asserted to be 
+					  which is asserted to be
 					  1 sector long */
 	}
 
@@ -144,7 +144,7 @@ hfsj_replay_transaction(PedFileSystem* fs, HfsJJournalHeader* jh,
 		start = hfsj_journal_read(priv_data->plus_geom, jh, jsector,
 					  jlength, start, blhdr_nbsect, blhdr);
 		if (!start) goto err_replay;
-		
+
 		cksum = HFS_32_TO_CPU(blhdr->checksum, is_le);
 		blhdr->checksum = 0;
 		if (cksum!=hfsj_calc_checksum((uint8_t*)blhdr, sizeof(*blhdr))){
@@ -155,7 +155,7 @@ hfsj_replay_transaction(PedFileSystem* fs, HfsJJournalHeader* jh,
 			goto err_replay;
 		}
 		blhdr->checksum = HFS_CPU_TO_32(cksum, is_le);
-		
+
 		for (i=1; i < HFS_16_TO_CPU(blhdr->num_blocks, is_le); ++i) {
 			size = HFS_32_TO_CPU(blhdr->binfo[i].bsize, is_le);
 			sector = HFS_64_TO_CPU(blhdr->binfo[i].bnum, is_le);
@@ -241,10 +241,10 @@ hfsj_replay_journal(PedFileSystem* fs)
 	if (!ped_geometry_read(priv_data->plus_geom, buf, sector, 1))
 		return 0;
 	jib = (HfsJJournalInfoBlock*) buf;
-	
+
 	if (    (jib->flags & PED_CPU_TO_BE32(1 << HFSJ_JOURN_IN_FS))
 	    && !(jib->flags & PED_CPU_TO_BE32(1 << HFSJ_JOURN_OTHER_DEV)) ) {
-		priv_data->jl_start_block = HFS_64_TO_CPU(jib->offset, is_le) 
+		priv_data->jl_start_block = HFS_64_TO_CPU(jib->offset, is_le)
 					    / ( PED_SECTOR_SIZE_DEFAULT * binsect );
 	}
 
@@ -322,7 +322,7 @@ hfsj_replay_journal(PedFileSystem* fs)
 			_("The sector size stored in the journal is not 512 "
 			  "bytes.  Parted only supports 512 bytes length "
 			  "sectors."));
-		return 0;	
+		return 0;
 	}
 
 	cksum = HFS_32_TO_CPU(jh->checksum, is_le);

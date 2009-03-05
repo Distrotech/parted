@@ -47,7 +47,7 @@
 #define PDEBUG
 #endif
 
-/* 
+/*
  * struct dasd_information_t
  * represents any data about the device, which is visible to userspace.
  *  including foramt and featueres.
@@ -60,8 +60,8 @@ typedef struct dasd_information_t {
 	unsigned int cu_model :  8;   /* from SenseID                        */
 	unsigned int dev_type : 16;   /* from SenseID                        */
 	unsigned int dev_model : 8;   /* from SenseID                        */
-	unsigned int open_count; 
-	unsigned int req_queue_len; 
+	unsigned int open_count;
+	unsigned int req_queue_len;
 	unsigned int chanq_len;       /* length of chanq                     */
 	char type[4];                 /* from discipline.name, 'none' for    */
 	                              /* unknown                             */
@@ -74,7 +74,7 @@ typedef struct dasd_information_t {
 	char configuration_data[256]; /* from read_configuration_data        */
 } dasd_information_t;
 
-/* 
+/*
  * struct format_data_t
  * represents all data necessary to format a dasd
  */
@@ -82,7 +82,7 @@ typedef struct format_data_t {
 	int start_unit; /* from track */
 	int stop_unit;  /* to track */
 	int blksize;    /* sectorsize */
-	int intensity;  
+	int intensity;
 } format_data_t;
 
 /*
@@ -99,9 +99,9 @@ typedef struct format_data_t {
 
 
 /* Disable the volume (for Linux) */
-#define BIODASDDISABLE _IO(DASD_IOCTL_LETTER,0) 
+#define BIODASDDISABLE _IO(DASD_IOCTL_LETTER,0)
 /* Enable the volume (for Linux) */
-#define BIODASDENABLE  _IO(DASD_IOCTL_LETTER,1)  
+#define BIODASDENABLE  _IO(DASD_IOCTL_LETTER,1)
 
 /* retrieve API version number */
 #define DASDAPIVER     _IOR(DASD_IOCTL_LETTER,0,int)
@@ -113,7 +113,7 @@ typedef struct format_data_t {
  * SECTION: Further IOCTL Definitions  (see fs.h)                            *
  *****************************************************************************/
 /* re-read partition table */
-#define BLKRRPART  _IO(0x12,95)	
+#define BLKRRPART  _IO(0x12,95)
 /* get block device sector size */
 #define BLKSSZGET  _IO(0x12,104)
 
@@ -129,7 +129,7 @@ struct fdasd_hd_geometry {
 };
 
 /* get device geometry */
-#define HDIO_GETGEO		0x0301	
+#define HDIO_GETGEO		0x0301
 
 /*****************************************************************************
  * SECTION: FDASD internal types                                             *
@@ -155,7 +155,7 @@ typedef struct partition_info {
 	unsigned long end_trk;
 	unsigned long len_trk;
 	unsigned long fspace_trk;
-	format1_label_t *f1; 
+	format1_label_t *f1;
 	struct partition_info *next;
 	struct partition_info *prev;
 	u_int8_t type;

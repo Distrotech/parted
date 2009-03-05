@@ -121,7 +121,7 @@ ped_greatest_common_divisor (PedSector a, PedSector b)
  * Initialize a preallocated piece of memory for an alignment object
  * (used by PedConstraint).
  *
- * The object will represent all sectors \e s for which the equation 
+ * The object will represent all sectors \e s for which the equation
  * <tt>s = offset + X * grain_size</tt> holds.
  */
 int
@@ -221,7 +221,7 @@ extended_euclid (int a, int b)
  * intersection of two alignments.  That is, a sector satisfies the
  * new alignment object if and only if it satisfies both of the original
  * ones.  (See ped_alignment_is_aligned() for the meaning of "satisfies")
- * 
+ *
  * Apart from the trivial cases (where one or both of the alignment objects
  * constraints have no sectors that satisfy them), this is what we're trying to
  * do:
@@ -231,18 +231,18 @@ extended_euclid (int a, int b)
  *  - hard part - solve the simultaneous equations, for offset, where offset,
  *  X and Y are variables.  (Note: offset can be obtained from either X or Y,
  *  by substituing into either equation)
- * 
+ *
  * \code
  *  	offset = \p a->offset + X * \p a->grain_size		(1)
  *  	offset = \p b->offset + Y * \p b->grain_size		(2)
  * \endcode
- * 
+ *
  * or, abbreviated:
  *
  * \code
  *  	o = Ao + X*Ag		(1)
  *  	o = Bo + Y*Bg		(2)
- * 
+ *
  *  =>	Ao + X*Ag    = Bo + Y*Bg     (1) = (2)
  *  	X*Ag - Y*Bg  = Bo - Ao  (3)
  * \endcode
@@ -260,9 +260,9 @@ extended_euclid (int a, int b)
  * \endcode
  *
  * gcd is a factor of the linear combination.  QED
- * 
- * Anyway, \p a * Ag + \p b * Bg = gcd can be solved (for \p a, \p b and gcd) 
- * with Euclid's extended algorithm.  Then, we just multiply through by 
+ *
+ * Anyway, \p a * Ag + \p b * Bg = gcd can be solved (for \p a, \p b and gcd)
+ * with Euclid's extended algorithm.  Then, we just multiply through by
  * (Bo - Ao) / gcd to get (3).
  *
  * i.e.
@@ -274,7 +274,7 @@ extended_euclid (int a, int b)
  * 	X = A*(Bo-Ao)/gcd
  * 	Y = - B*(Bo-Ao)/gcd
  * \endcode
- * 
+ *
  * then:
  * \code
  *  	o = Ao + X*Ag			(1)
@@ -299,14 +299,14 @@ ped_alignment_intersect (const PedAlignment* a, const PedAlignment* b)
 	PedSector	delta_on_gcd;
 	EuclidTriple	gcd_factors;
 
-        
+
 	if (!a || !b)
 		return NULL;
 
         /*PED_DEBUG (0x10, "intersecting alignments (%d,%d) and (%d,%d)",
                         a->offset, a->grain_size, b->offset, b->grain_size);
         */
-        
+
 	if (a->grain_size < b->grain_size) {
 		const PedAlignment*	tmp;
 	        tmp = a; a = b; b = tmp;
@@ -370,7 +370,7 @@ _closest_inside_geometry (const PedAlignment* align, const PedGeometry* geom,
 /**
  * This function returns the closest sector to \p sector that lies inside
  * \p geom that satisfies the given alignment constraint \p align.  It prefers
- * sectors that are beyond \p sector (are not smaller than \p sector), 
+ * sectors that are beyond \p sector (are not smaller than \p sector),
  * but does not guarantee that this.
  *
  * \return a PedSector on success, \c -1 on failure
@@ -439,7 +439,7 @@ closest (PedSector sector, PedSector a, PedSector b)
 }
 
 /**
- * This function returns the sector that is closest to \p sector, 
+ * This function returns the sector that is closest to \p sector,
  * satisfies the \p align constraint and lies inside \p geom.
  *
  * \return a PedSector on success, \c -1 on failure
@@ -455,7 +455,7 @@ ped_alignment_align_nearest (const PedAlignment* align, const PedGeometry* geom,
 }
 
 /**
- * This function returns 1 if \p sector satisfies the alignment 
+ * This function returns 1 if \p sector satisfies the alignment
  * constraint \p align and lies inside \p geom.
  *
  * \return \c 1 on success, \c 0 on failure

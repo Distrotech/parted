@@ -36,7 +36,7 @@
  *      http://www.kmc.kyoto-u.ac.jp/proj/linux98/index-english.html
  *
  * Partition types:
- * 
+ *
  *   id0(mid):
  *      bit 7: 1=bootable, 0=not bootable
  *        # Linux uses this flag to make a distinction between ext2 and swap.
@@ -49,7 +49,7 @@
  *        20H      : DOS(data), Windows95/98/NT, Linux
  *        21H..2FH : DOS(system#1 .. system#15)
  *        40H      : Minix
- *        
+ *
  *   id1(sid):
  *      bit 7: 1=active, 0=sleep(hidden)
  *        # PC-UX uses this flag to make a distinction between its file system
@@ -139,7 +139,7 @@ static int
 pc98_check_ipl_signature (const PC98RawTable *part_table)
 {
 	return !memcmp (part_table->boot_code + 4, "IPL1", 4);
-}		
+}
 
 static int
 check_partition_consistency (const PedDevice* dev,
@@ -603,7 +603,7 @@ static int
 pc98_partition_set_system (PedPartition* part, const PedFileSystemType* fs_type)
 {
 	PC98PartitionData* pc98_data = part->disk_specific;
-	
+
 	part->fs_type = fs_type;
 
 	pc98_data->system = 0x2062;
@@ -855,7 +855,7 @@ static PedDiskOps pc98_disk_ops = {
 #else
 	write:			NULL,
 #endif
-	
+
 	partition_new:		pc98_partition_new,
 	partition_duplicate:	pc98_partition_duplicate,
 	partition_destroy:	pc98_partition_destroy,

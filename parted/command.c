@@ -36,12 +36,12 @@ command_create (const StrList* names,
 	Command*	cmd;
 
 	cmd = xmalloc (sizeof (Command));
-        
+
         if (non_interactive)
                 cmd->non_interactive = 1;
         else
                 cmd->non_interactive = 0;
-                
+
 	cmd->names = (StrList*) names;
 	cmd->method = method;
 	cmd->summary = (StrList*) summary;

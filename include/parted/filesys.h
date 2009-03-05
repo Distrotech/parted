@@ -53,7 +53,7 @@ struct _PedFileSystemOps {
 };
 
 /**
- * Structure describing type of file system 
+ * Structure describing type of file system
  */
 struct _PedFileSystemType {
 	PedFileSystemType*	next;

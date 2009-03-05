@@ -76,7 +76,7 @@ hfs_effect_move_extent (PedFileSystem *fs, unsigned int *ptr_fblock,
 		}
 		ok = (stop-start == size);
 	}
-	
+
 	/* Forward search */
 	/* 1 pass relocation in the gap merged with 2 pass reloc after source */
 	if (!ok && *ptr_to_fblock != *ptr_fblock) {
@@ -96,7 +96,7 @@ hfs_effect_move_extent (PedFileSystem *fs, unsigned int *ptr_fblock,
 		unsigned int j;
 		unsigned int start_block =
 			PED_BE16_TO_CPU (priv_data->mdb->start_block );
-		unsigned int block_sz = 
+		unsigned int block_sz =
 			(PED_BE32_TO_CPU (priv_data->mdb->block_size)
 			 / PED_SECTOR_SIZE_DEFAULT);
 
@@ -190,7 +190,7 @@ hfs_do_move (PedFileSystem* fs, unsigned int *ptr_src,
 	HfsCPrivateExtent*	move;
 	int			new_start;
 
-	new_start = hfs_effect_move_extent (fs, ptr_src, ptr_dest, 
+	new_start = hfs_effect_move_extent (fs, ptr_src, ptr_dest,
 					    ref->ext_length);
 	if (new_start == -1) return -1;
 
@@ -200,13 +200,13 @@ hfs_do_move (PedFileSystem* fs, unsigned int *ptr_src,
 		/******** MDB *********/
 		    case CR_PRIM_CAT :
 			priv_data->catalog_file
-			->first[ref->ref_index].start_block = 
+			->first[ref->ref_index].start_block =
 				PED_CPU_TO_BE16(new_start);
 			goto CR_PRIM;
 		    case CR_PRIM_EXT :
 			priv_data->extent_file
-			->first[ref->ref_index].start_block = 
-				PED_CPU_TO_BE16(new_start);		    
+			->first[ref->ref_index].start_block =
+				PED_CPU_TO_BE16(new_start);
 		    CR_PRIM :
 			extent = ( HfsExtDescriptor* )
 				 ( (uint8_t*)priv_data->mdb + ref->ref_offset );
@@ -287,12 +287,12 @@ hfs_save_allocation(PedFileSystem* fs)
 /* Generic search thanks to the file system cache */
 static int
 hfs_move_extent_starting_at (PedFileSystem *fs, unsigned int *ptr_fblock,
-			     unsigned int *ptr_to_fblock, 
+			     unsigned int *ptr_to_fblock,
 			     HfsCPrivateCache* cache)
 {
 	HfsCPrivateExtent*	ref;
 	unsigned int		old_start, new_start;
-	
+
 	/* Reference search powered by the cache... */
 	/* This is the optimisation secret :) */
 	ref = hfsc_cache_search_extent(cache, *ptr_fblock);
@@ -405,7 +405,7 @@ hfs_cache_from_catalog(HfsCPrivateCache* cache, PedFileSystem* fs,
 			/* check for obvious error in FS */
 			if (((uint8_t*)catalog_key - node < HFS_FIRST_REC)
 			    || ((uint8_t*)catalog_data - node
-				>= PED_SECTOR_SIZE_DEFAULT 
+				>= PED_SECTOR_SIZE_DEFAULT
 				   - 2 * (signed)(record_number+1))) {
 				ped_exception_throw (
 					PED_EXCEPTION_ERROR,
@@ -498,7 +498,7 @@ hfs_cache_from_extent(HfsCPrivateCache* cache, PedFileSystem* fs,
 						       + sizeof (HfsExtentKey));
 			/* check for obvious error in FS */
 			if (((uint8_t*)extent_key - node < HFS_FIRST_REC)
-			    || ((uint8_t*)extent - node 
+			    || ((uint8_t*)extent - node
 			        >= PED_SECTOR_SIZE_DEFAULT
 				   - 2 * (signed)(record_number+1))) {
 				ped_exception_throw (

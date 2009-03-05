@@ -1658,7 +1658,7 @@ Parted でファイル・システムの大きさを変更するために、resize コマンドを使い
 (4) その CD のイメージのディレクトリに 640 Mb のディスク・イメージのファイル
 (例: /root/cdimage/diskimage) を作成します:
 
-        # dd if=/dev/zero of=/root/cdimage/diskimage bs=1M count=640 
+        # dd if=/dev/zero of=/root/cdimage/diskimage bs=1M count=640
 
 (5) Windows パーティションをディスク・イメージへコピーするため、Parted を
 利用します:
@@ -1673,7 +1673,7 @@ Parted でファイル・システムの大きさを変更するために、resize コマンドを使い
 をコンパイルします (あるいは、Freshmeat から特別な RPM をダウンロードします):
 
         localhost:~/parted-1.0.0# ./configure --disable-nls
-        --without-readline --disable-shared; make 
+        --without-readline --disable-shared; make
 
 (8) Linux のブート・ディスクを作成します (Bootdisk HOWTO を参照)。
 
@@ -1686,7 +1686,7 @@ Parted でファイル・システムの大きさを変更するために、resize コマンドを使い
         parted --script /dev/hda mklabel msdos mkpartfs primary fat 0 SOME-SIZE
 	parted --script /dev/hda cp /mnt/cdrom/diskimage 1 1
 	parted --script /dev/hda set 1 boot on
-        /sbin/halt 
+        /sbin/halt
 
 (11) インストール開始！ そのフロッピィと CD を各コンピュータに挿し込み、
 それを回していきます...

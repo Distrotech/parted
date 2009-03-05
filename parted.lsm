@@ -1,7 +1,7 @@
 Begin4
-Title: parted 
+Title: parted
 Version: 1.9.0
-Entered-date: 
+Entered-date:
 Description: GNU Parted is a program for creating, destroying, resizing,
 checking and copying partitions, and the filesystems on them. This is useful for
 creating space for new operating systems, reorganising disk usage, copying data

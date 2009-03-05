@@ -283,7 +283,7 @@ flag_traverse_dir (FatTraverseInfo* trav_info) {
 				return 0;
 		} else if (fat_dir_entry_is_file (this_entry)) {
 			if (!flag_traverse_fat (fs, file_name, first_cluster,
-						FAT_FLAG_FILE, size)) 
+						FAT_FLAG_FILE, size))
 				return 0;
 		}
 	}
@@ -304,7 +304,7 @@ _mark_bad_clusters (PedFileSystem* fs)
 	}
 }
 
-/*  
+/*
     fills in cluster_info.  Each FAT entry (= cluster) is flagged as either
     FAT_FLAG_FREE, FAT_FLAG_FILE or FAT_FLAG_DIRECTORY.
 
@@ -314,7 +314,7 @@ int
 fat_collect_cluster_info (PedFileSystem* fs) {
 	FatSpecific*		fs_info = FAT_SPECIFIC (fs);
 	FatTraverseInfo*	trav_info;
-    
+
 	/* set all clusters to unused as a default */
 	memset (fs_info->cluster_info, 0, fs_info->fat->cluster_count + 2);
 	fs_info->total_dir_clusters = 0;

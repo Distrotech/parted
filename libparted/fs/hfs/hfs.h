@@ -334,29 +334,29 @@ struct __attribute__ ((packed)) _HfsPVolumeHeader {
         uint32_t        attributes;
         uint32_t        last_mounted_version;
         uint32_t        journal_info_block;
-        
+
         uint32_t        create_date;
         uint32_t        modify_date;
         uint32_t        backup_date;
         uint32_t        checked_date;
-        
+
         uint32_t        file_count;
         uint32_t        dir_count;
-        
+
         uint32_t        block_size;
         uint32_t        total_blocks;
         uint32_t        free_blocks;
-        
+
         uint32_t        next_allocation;
         uint32_t        res_clump_size;
         uint32_t        data_clump_size;
         HfsPNodeID      next_catalog_ID;
-        
+
         uint32_t        write_count;
         uint64_t        encodings_bitmap;
-        
+
         uint8_t         finder_info[32];
-        
+
         HfsPForkData    allocation_file;
         HfsPForkData    extents_file;
         HfsPForkData    catalog_file;
@@ -388,7 +388,7 @@ struct __attribute__ ((packed)) _HfsPHeaderRecord {
         uint32_t        total_nodes;
         uint32_t        free_nodes;        /* same as hfs btree until here */
         uint16_t        reserved1;
-        
+
         uint32_t        clump_size;
         uint8_t         btree_type;        /* must be 0 for HFS+ B-Tree */
         uint8_t         key_compare_type; /* hfsx => 0xCF = case folding */
@@ -440,7 +440,7 @@ struct __attribute__ ((packed)) _HfsPFile {
         int8_t          FXInfo[16];       /* used by Finder, handle as reserved */
         uint32_t        text_encoding;
         uint32_t        reserved2;
-        
+
         HfsPForkData    data_fork;
         HfsPForkData    res_fork;
 };

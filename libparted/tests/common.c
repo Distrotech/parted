@@ -69,6 +69,6 @@ _implemented_disk_label (const char *label)
         /* Not implemented yet */
         if (strncmp (label, "aix", 3) == 0)
                 return 0;
-        
+
         return 1;
 }

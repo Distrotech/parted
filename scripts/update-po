@@ -46,7 +46,7 @@ get_translations() {
     case $po_file in
     '') (cd $subdir && rm -f dummy `ls | sed -n '/\.gmo$/p; /\.po/p'`);;
     esac &&
-  
+
     $WGET_COMMAND -O "$subdir/$domain.html" "$TP_URL$domain" &&
 
     sed -n 's|.*"http://[^"]*/translation/teams/PO/\([^/"]*\)/'"$domain"'-\([^/"]*\)\.[^."]*\.po".*|\1.\2|p' <"$subdir/$domain.html" |
@@ -59,7 +59,7 @@ get_translations() {
       {
 	lang = $1
         if (po_file && po_file != (lang ".po")) next
-	
+
 	ver = $2
 	urlfmt = ""
 	printf "{ $WGET_COMMAND -O %s/%s.po '\'"$TP_PO_URL"'/%s/%s-%s.%s.po'\'' &&\n", subdir, lang, lang, domain, ver, lang

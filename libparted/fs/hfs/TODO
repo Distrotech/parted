@@ -6,12 +6,12 @@
    * write doc, website, ...					-- (high)
    * Check block allocation in linux 2.4 and remove
      compatibility code if possible				-- (high)
-  
+
    * In hfs(plus)_btree_search , use a static variable to detect
      illegal recursion and abort in that case. (find the right
      number of recursion before reporting bug) -- easy		-- (medium)
    * Finish the HFS Extractor					-- (medium)
-     (add mdb & vh extraction, and maybe journal)    
+     (add mdb & vh extraction, and maybe journal)
 
    * Write code to allow enlarging and moving HFS[+x]		-- (low)
    * Use a bitmap to internaly store the bad blocks		-- (low)

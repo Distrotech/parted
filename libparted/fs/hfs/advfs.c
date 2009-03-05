@@ -54,7 +54,7 @@ hfs_extent_key_cmp(HfsPrivateGenericKey* a, HfsPrivateGenericKey* b)
 	/* 0xFFFFFFFF > 1 !!! (this is the 2.4 bug) */
 	if (key1->file_ID != key2->file_ID)
 		return PED_BE32_TO_CPU(key1->file_ID) <
-		       PED_BE32_TO_CPU(key2->file_ID) ? 
+		       PED_BE32_TO_CPU(key2->file_ID) ?
 				-1 : +1;
 
 	if (key1->type != key2->type)
@@ -64,7 +64,7 @@ hfs_extent_key_cmp(HfsPrivateGenericKey* a, HfsPrivateGenericKey* b)
 		return 0;
 	/* the whole thing wont work with 16 bits ints */
 	/* anyway */
-	return (int)( PED_BE16_TO_CPU(key1->start) - 
+	return (int)( PED_BE16_TO_CPU(key1->start) -
 		      PED_BE16_TO_CPU(key2->start) );
 }
 
@@ -133,7 +133,7 @@ hfs_btree_search (HfsPrivateFile* b_tree_file, HfsPrivateGenericKey* key,
 			if (!hfs_file_read_sector(b_tree_file, node,
 						  node_number))
 				return 0;
-		} else 
+		} else
 			break;
 	}
 
@@ -178,7 +178,7 @@ hfs_read_bad_blocks (const PedFileSystem *fs)
 		return 1;
 
 	{
-	uint8_t			record[sizeof (HfsExtentKey) 
+	uint8_t			record[sizeof (HfsExtentKey)
 					       + sizeof (HfsExtDataRec)];
 	HfsExtentKey		search;
 	HfsExtentKey*		ret_key = (HfsExtentKey*) record;
@@ -248,7 +248,7 @@ hfs_is_bad_block (const PedFileSystem *fs, unsigned int fblock)
 	for (walk = priv_data->bad_blocks_xtent_list; walk; walk = walk->next) {
 		/* Won't compile without the strange cast ! gcc bug ? */
 		/* or maybe C subtilties... */
-		if ((fblock >= PED_BE16_TO_CPU (walk->extent.start_block)) && 
+		if ((fblock >= PED_BE16_TO_CPU (walk->extent.start_block)) &&
 		    (fblock <  (unsigned int) (PED_BE16_TO_CPU (
 						    walk->extent.start_block)
 					       + PED_BE16_TO_CPU (
