@@ -1,5 +1,5 @@
 /* partition table tools
-   Copyright (C) 2008 Free Software Foundation, Inc.
+   Copyright (C) 2008-2009 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@
 #include <parted/debug.h>
 
 #include "pt-tools.h"
+
+static char zero[16 * 1024];
 
 /* Write a single sector to DISK, filling the first BUFLEN
    bytes of that sector with data from BUF, and NUL-filling
@@ -61,4 +63,24 @@ ptt_read_sector (PedDevice const *dev, PedSector sector_num, void **buf)
   }
   *buf = b;
   return 1;
+}
+
+/* Zero N sectors of DEV, starting with START.
+   Return nonzero to indicate success, zero otherwise.  */
+int
+ptt_clear_sectors (PedDevice *dev, PedSector start, PedSector n)
+{
+  PED_ASSERT (dev->sector_size <= sizeof zero, return 0);
+  PedSector n_z_sectors = sizeof zero / dev->sector_size;
+  PedSector n_full = n / n_z_sectors;
+  PedSector i;
+  for (i = 0; i < n_full; i++)
+    {
+      if (!ped_device_write (dev, zero, start + n_z_sectors * i, n_z_sectors))
+        return 0;
+    }
+
+  PedSector rem = n - n_z_sectors * i;
+  return (rem == 0
+          ? 1 : ped_device_write (dev, zero, start + n_z_sectors * i, rem));
 }
