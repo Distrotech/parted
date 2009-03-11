@@ -20,6 +20,14 @@ test_description='Make sure the scripting option works (-s) properly.'
 : ${srcdir=.}
 . $srcdir/test-lib.sh
 
+config_h=$abs_top_srcdir
+grep '^#define HAVE_LIBREADLINE 1' $CONFIG_HEADER > /dev/null ||
+  {
+    say "skipping $0: configured without readline support"
+    test_done
+    exit
+  }
+
 # The failure messages.
 cat << EOF > errS || fail=1
 Error: You requested a partition from 512B to 50.7kB.

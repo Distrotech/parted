@@ -46,4 +46,5 @@ init.sh: Makefile.in
 
 TESTS_ENVIRONMENT =	\
   srcdir='$(srcdir)'	\
+  CONFIG_HEADER='$(abs_top_builddir)/lib/config.h' \
   ENABLE_DEVICE_MAPPER=$(ENABLE_DEVICE_MAPPER)
