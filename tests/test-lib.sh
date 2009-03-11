@@ -51,6 +51,7 @@ do
 		exit 0 ;;
 	-v|--v|--ve|--ver|--verb|--verbo|--verbos|--verbose)
 		verbose=t; shift ;;
+	*) echo "invalid option: $1"; exit 1;;
 	esac
 done
 
