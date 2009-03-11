@@ -365,4 +365,14 @@ normalize_part_diag_()
   return 1
 }
 
+require_xfs_()
+{
+  ( mkfs.xfs -V ) >/dev/null 2>&1 ||
+    {
+      say "skipping $0: this test requires XFS support"
+      test_done
+      exit
+    }
+}
+
 sector_size_=${PARTED_SECTOR_SIZE:-512}

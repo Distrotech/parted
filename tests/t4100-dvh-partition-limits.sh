@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (C) 2008 Free Software Foundation, Inc.
+# Copyright (C) 2008-2009 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ privileges_required_=1
 
 : ${srcdir=.}
 . $srcdir/test-lib.sh
+require_xfs_
 
 ####################################################
 # Create and mount a file system capable of dealing with >=2TB files.
