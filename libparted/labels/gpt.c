@@ -484,15 +484,10 @@ gpt_probe (const PedDevice * dev)
 static int
 gpt_clobber(PedDevice * dev)
 {
-	LegacyMBR_t pmbr;
-        uint8_t* zeroed_pth_raw = ped_malloc (pth_get_size (dev));
         uint8_t* pth_raw = ped_malloc (pth_get_size (dev));
 	GuidPartitionTableHeader_t* gpt;
 
 	PED_ASSERT (dev != NULL, return 0);
-
-	memset(&pmbr, 0, sizeof(pmbr));
-	memset(zeroed_pth_raw, 0, pth_get_size (dev));
 
         /*
          * TO DISCUSS: check whether checksum is correct?
@@ -500,19 +495,20 @@ gpt_clobber(PedDevice * dev)
          * one sector of random data.
          */
 	if (!ped_device_read(dev, pth_raw,
-			     GPT_PRIMARY_HEADER_LBA, GPT_HEADER_SECTORS))
-                goto error_free;
+			     GPT_PRIMARY_HEADER_LBA, GPT_HEADER_SECTORS)) {
+                free (pth_raw);
+                return 0;
+        }
 
         gpt = pth_new_from_raw (dev, pth_raw);
         free (pth_raw);
 
-	if (!ped_device_write(dev, &pmbr, GPT_PMBR_LBA, GPT_PMBR_SECTORS))
+	if (!ptt_clear_sectors(dev, GPT_PMBR_LBA, GPT_PMBR_SECTORS))
                 goto error_free_with_gpt;
-	if (!ped_device_write(dev, &zeroed_pth_raw,
-			      GPT_PRIMARY_HEADER_LBA, GPT_HEADER_SECTORS))
+	if (!ptt_clear_sectors(dev, GPT_PRIMARY_HEADER_LBA, GPT_HEADER_SECTORS))
                 goto error_free_with_gpt;
-	if (!ped_device_write(dev, &zeroed_pth_raw, dev->length - GPT_HEADER_SECTORS,
-			      GPT_HEADER_SECTORS))
+	if (!ptt_clear_sectors(dev, dev->length - GPT_HEADER_SECTORS,
+                               GPT_HEADER_SECTORS))
                 goto error_free_with_gpt;
 
 	if ((PedSector) PED_LE64_TO_CPU (gpt->AlternateLBA) < dev->length - 1) {
@@ -528,9 +524,6 @@ gpt_clobber(PedDevice * dev)
 
 error_free_with_gpt:
         pth_free (gpt);
-error_free:
-        free (pth_raw);
-        free (zeroed_pth_raw);
 	return 0;
 }
 #endif /* !DISCOVER_ONLY */
