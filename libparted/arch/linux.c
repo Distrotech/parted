@@ -1722,7 +1722,8 @@ linux_write (PedDevice* dev, const void* buffer, PedSector start,
                     && start + count - 1 == dev->length - 1)
                         return ped_device_write (dev, buffer, start, count - 1)
                                 && _write_lastoddsector (
-                                        dev, (char*) buffer + (count-1) * 512);
+                                        dev, ((char*) buffer
+                                              + (count-1) * dev->sector_size));
         }
         while (1) {
                 if (_device_seek (dev, start))
