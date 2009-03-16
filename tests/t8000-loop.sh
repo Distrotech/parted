@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (C) 2008 Free Software Foundation, Inc.
+# Copyright (C) 2008-2009 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,6 +22,11 @@ device_mapper_required_=1
 
 : ${srcdir=.}
 . $srcdir/test-lib.sh
+
+# Stop immediately, upon failure.
+# Otherwise, subsequent tests would fail,
+# too and just obscure the earlier failure.
+immediate=1
 
 cleanup_() {
     test -n "$d1" && losetup -d "$d1"
