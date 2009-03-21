@@ -153,10 +153,9 @@ sc_prohibit_strcmp:
 # Using EXIT_SUCCESS as the first argument to error is misleading,
 # since when that parameter is 0, error does not exit.  Use `0' instead.
 sc_error_exit_success:
-	@grep -nF 'error (EXIT_SUCCESS,'				\
-	    $$(find -type f -name '*.[chly]') &&			\
-	  { echo '$(ME): found error (EXIT_SUCCESS' 1>&2;		\
-	    exit 1; } || :
+	@grep -nE 'error \(EXIT_SUCCESS,'				\
+	    $$($(VC_LIST_EXCEPT) | grep -E '\.[chly]$$') &&		\
+	  { echo '$(ME): found error (EXIT_SUCCESS' 1>&2; exit 1; } || :
 
 # `FATAL:' should be fully upper-cased in error messages
 # `WARNING:' should be fully upper-cased, or fully lower-cased
@@ -374,7 +373,7 @@ sc_the_the:
 
 sc_trailing_blank:
 	@re='[	 ]$$'							\
-	ignore_case=1 msg='found trailing blank(s)'			\
+	msg='found trailing blank(s)'					\
 	  $(_prohibit_regexp)
 
 # Match lines like the following, but where there is only one space
@@ -534,6 +533,12 @@ changelog-check:
 	  exit 1;							\
 	fi
 
+sc_makefile_TAB_only_indentation:
+	@grep -nE '^	[ ]{8}'						\
+	    $$($(VC_LIST_EXCEPT) | grep -E 'akefile|\.mk$$')		\
+	  && { echo '$(ME): found TAB-8-space indentation' 1>&2;	\
+	       exit 1; } || :
+
 sc_m4_quote_check:
 	@grep -nE '(AC_DEFINE(_UNQUOTED)?|AC_DEFUN)\([^[]'		\
 	    $$($(VC_LIST_EXCEPT) | grep -E '(^configure\.ac|\.m4)$$')	\
@@ -572,20 +577,18 @@ sc_po_check:
 
 # Sometimes it is useful to change the PATH environment variable
 # in Makefiles.  When doing so, it's better not to use the Unix-centric
-# path separator of `:', but rather the automake-provided `@PATH_SEPARATOR@'.
-# It'd be better to use `find -print0 ...|xargs -0 ...', but less portable,
-# and there probably aren't many projects with so many Makefile.am files
-# that we'd have to worry about limits on command line length.
-msg = '$(ME): Do not use `:'\'' above; use @PATH_SEPARATOR@ instead'
+# path separator of `:', but rather the automake-provided `$(PATH_SEPARATOR)'.
+msg = '$(ME): Do not use `:'\'' above; use $$(PATH_SEPARATOR) instead'
 sc_makefile_path_separator_check:
-	@grep -n 'PATH=.*:' `find $(srcdir) -name Makefile.am` \
+	@grep -nE 'PATH[=].*:'						\
+	    $$($(VC_LIST_EXCEPT) | grep -E 'akefile|\.mk$$')		\
 	  && { echo $(msg) 1>&2; exit 1; } || :
 
 # Check that `make alpha' will not fail at the end of the process.
 writable-files:
 	if test -d $(release_archive_dir); then :; else			\
 	  for file in $(distdir).tar.gz					\
-	              $(release_archive_dir)/$(distdir).tar.gz; do	\
+		      $(release_archive_dir)/$(distdir).tar.gz; do	\
 	    test -e $$file || continue;					\
 	    test -w $$file						\
 	      || { echo ERROR: $$file is not writable; fail=1; };	\
@@ -738,10 +741,11 @@ define coreutils-path-check
 	       esac;					\
 	     done					\
 	  && ln -sf ../src/true $(bin)/false		\
-	  && PATH=`pwd`/$(bin):$$PATH $(MAKE) -C tests check \
+	  && PATH=`pwd`/$(bin)$(PATH_SEPARATOR)$$PATH	\
+		$(MAKE) -C tests check			\
 	  && { test -d gnulib-tests			\
-	         && $(MAKE) -C gnulib-tests check	\
-	         || :; }				\
+		 && $(MAKE) -C gnulib-tests check	\
+		 || :; }				\
 	  && rm -rf $(bin)				\
 	  && fail=0;					\
     else						\
