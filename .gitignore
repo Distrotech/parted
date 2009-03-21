@@ -1,6 +1,8 @@
-*.o
+*.[ao]
+*.l[ao]
 *~
 .deps
+.gdb-history
 .libs
 .tarball-version
 .version
@@ -21,6 +23,12 @@ config.status
 configure
 doc/C/po/parted.8.pot
 doc/pt_BR/parted.8.pt_BR.po
+gnulib-tests
+lib/.gitignore
+lib/charset.alias
+lib/config.h
+lib/config.h.in
+lib/configmake.h
 libparted.pc
 libparted/tests/init.sh
 libparted/tests/label
@@ -31,9 +39,8 @@ parted-*.tar.bz2
 parted-*.tar.bz2.sig
 parted-*.tar.gz
 parted-*.tar.gz.sig
-parted-*.xdelta
-parted-*.xdelta.sig
 parted.spec
 partprobe/partprobe
+po/.reference
 stamp-h1
 tests/init.sh
