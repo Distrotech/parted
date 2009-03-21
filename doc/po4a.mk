@@ -66,10 +66,10 @@ updatepo:
 	      rm -f $$tmpdir/$${po%po}new.po; \
 	    else \
 	      if mv -f $$tmpdir/$${po%po}new.po $$po; then \
-	        :; \
+		:; \
 	      else \
-	        echo "msgmerge for $$po failed: cannot move $$tmpdir/$${po%po}new.po to $$po" 1>&2; \
-	        exit 1; \
+		echo "msgmerge for $$po failed: cannot move $$tmpdir/$${po%po}new.po to $$po" 1>&2; \
+		exit 1; \
 	      fi; \
 	    fi; \
 	  else \
