@@ -15,7 +15,7 @@ static char* temporary_disk;
 static void
 create_disk (void)
 {
-        temporary_disk = _create_disk (20 * 1024 * 1024);
+        temporary_disk = _create_disk (80 * 1024 * 1024);
         fail_if (temporary_disk == NULL, "Failed to create temporary disk");
 }
 
@@ -105,7 +105,6 @@ START_TEST (test_read_label)
                         continue;
           if (strcmp (type->name, "pc98") == 0) continue; // segfault
           if (strcmp (type->name, "sun") == 0) continue; // failed assertion
-          if (strcmp (type->name, "loop") == 0) continue; // FIXME unrecog label
 
                 disk = _create_disk_label (dev, type);
                 ped_disk_destroy (disk);
