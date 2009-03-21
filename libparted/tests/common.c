@@ -72,6 +72,8 @@ _implemented_disk_label (const char *label)
 
         /* Not implemented yet */
         if (STREQ (label, "aix")) return 0;
+        if (STREQ (label, "pc98")) return 0;
+        if (STREQ (label, "sun")) return 0;
 
         return 1;
 }
