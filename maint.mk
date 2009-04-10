@@ -103,7 +103,7 @@ _ignore_case = $$(test -n "$$ignore_case" && echo -i || :)
 # If the offending construct can be matched with a grep-E-style regexp,
 # use this macro.  The shell variables "re" and "msg" must be defined.
 define _prohibit_regexp
-  dummy=; : so we do not need a semicolon before each use		\
+  dummy=; : so we do not need a semicolon before each use;		\
   test "x$$re" != x || { echo '$(ME): re not defined' 1>&2; exit 1; };	\
   test "x$$msg" != x || { echo '$(ME): msg not defined' 1>&2; exit 1; };\
   grep $(_ignore_case) -nE "$$re" $$($(VC_LIST_EXCEPT)) &&		\
@@ -193,7 +193,7 @@ sc_prohibit_have_config_h:
 
 # Nearly all .c files must include <config.h>.
 sc_require_config_h:
-	@if $(VC_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
+	@if $(VC_LIST_EXCEPT) | grep -l '\.c$$' > /dev/null; then		\
 	  grep -L '^# *include <config\.h>'				\
 		$$($(VC_LIST_EXCEPT) | grep '\.c$$')			\
 	      | grep . &&						\
@@ -204,7 +204,7 @@ sc_require_config_h:
 
 # You must include <config.h> before including any other header file.
 sc_require_config_h_first:
-	@if $(VC_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
+	@if $(VC_LIST_EXCEPT) | grep -l '\.c$$' > /dev/null; then	\
 	  fail=0;							\
 	  for i in $$($(VC_LIST_EXCEPT) | grep '\.c$$'); do		\
 	    grep '^# *include\>' $$i | sed 1q				\
@@ -225,8 +225,8 @@ sc_prohibit_HAVE_MBRTOWC:
 # h: the header, enclosed in <> or ""
 # re: a regular expression that matches IFF something provided by $h is used.
 define _header_without_use
-  h_esc=`echo "$$h"|sed 's/\./\\./'`;					\
-  if $(VC_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then			\
+  h_esc=`echo "$$h"|sed 's/\./\\./g'`;					\
+  if $(VC_LIST_EXCEPT) | grep -l '\.c$$' > /dev/null; then		\
     files=$$(grep -l '^# *include '"$$h_esc"				\
 	     $$($(VC_LIST_EXCEPT) | grep '\.c$$')) &&			\
     grep -LE "$$re" $$files | grep . &&					\
@@ -332,16 +332,19 @@ sc_obsolete_symbols:
 
 # FIXME: warn about definitions of EXIT_FAILURE, EXIT_SUCCESS, STREQ
 
-# Each nonempty line must start with a year number, or a TAB.
+# Each nonempty ChangeLog line must start with a year number, or a TAB.
 sc_changelog:
-	@grep -n '^[^12	]' $$(find . -maxdepth 2 -name ChangeLog) &&	\
+	@if $(VC_LIST_EXCEPT) | grep -l '^ChangeLog$$' >/dev/null; then	\
+	  grep -n '^[^12	]'					\
+	    $$($(VC_LIST_EXCEPT) | grep '^ChangeLog$$') &&		\
 	  { echo '$(ME): found unexpected prefix in a ChangeLog' 1>&2;	\
-	    exit 1; } || :
+	    exit 1; } || :;						\
+	fi
 
 # Ensure that each .c file containing a "main" function also
 # calls set_program_name.
 sc_program_name:
-	@if $(VC_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
+	@if $(VC_LIST_EXCEPT) | grep -l '\.c$$' > /dev/null; then	\
 	  files=$$(grep -l '^main *(' $$($(VC_LIST_EXCEPT) | grep '\.c$$')); \
 	  grep -LE 'set_program_name *\(m?argv\[0\]\);' $$files		\
 	      | grep . &&						\
@@ -460,9 +463,12 @@ sc_const_long_option:
 	      echo 1>&2 '$(ME): add "const" to the above declarations'; \
 	      exit 1; } || :
 
-NEWS_hash = \
-  $$(sed -n '/^\*.* $(PREV_VERSION_REGEXP) ([0-9-]*)/,$$p' \
-     $(srcdir)/NEWS | grep -v '^Copyright .*Free Software' | md5sum -)
+NEWS_hash =								\
+  $$(sed -n '/^\*.* $(PREV_VERSION_REGEXP) ([0-9-]*)/,$$p'		\
+       $(srcdir)/NEWS							\
+     | grep -v '^Copyright .*Free Software'				\
+     | md5sum -								\
+     | sed 's/ .*//')
 
 # Ensure that we don't accidentally insert an entry into an old NEWS block.
 sc_immutable_NEWS:
@@ -557,6 +563,7 @@ sc_po_check:
 	    | grep -v '^src/false\.c$$' | sort > $@-1;			\
 	  files=;							\
 	  for file in $$($(VC_LIST_EXCEPT)) lib/*.[ch]; do		\
+	    test -r $$file || continue;					\
 	    case $$file in						\
 	      *.?|*.??) ;;						\
 	      *) continue;;						\
