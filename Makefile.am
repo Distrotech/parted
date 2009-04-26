@@ -12,6 +12,7 @@ EXTRA_DIST =				\
   scripts/data/abi/baseline_symbols.txt \
   scripts/extract_symvers		\
   cfg.mk				\
+  dist-check.mk				\
   maint.mk				\
   GNUmakefile
 
