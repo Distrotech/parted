@@ -25,6 +25,7 @@ libparted/tests/init.sh
 libparted/tests/label
 libtool
 m4
+maint.mk
 parted-*.tar.bz2
 parted-*.tar.bz2.sig
 parted-*.tar.gz
