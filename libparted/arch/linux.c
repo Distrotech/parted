@@ -322,7 +322,110 @@ _is_sx8_major (int major)
         return (SX8_MAJOR1 <= major && major <= SX8_MAJOR2);
 }
 
+static int
+readFD (int fd, char **buf)
+{
+        char* p;
+        size_t size = PROC_DEVICES_BUFSIZ;
+        int s, filesize = 0;
+
+        *buf = malloc (size * sizeof (char));
+        if (*buf == 0) {
+                return -1;
+        }
+
+        do {
+                p = &(*buf) [filesize];
+                s = read (fd, p, PROC_DEVICES_BUFSIZ);
+                /* exit if there is an error or EOF is reached */
+                if (s <= 0)
+                        break;
+                filesize += s;
+                size += s;
+                *buf = realloc (*buf, size);
+        } while (1);
+
+        if (filesize == 0 && s < 0) {
+                free (*buf);
+                *buf = NULL;
+                return -1;
+        } else {
+                /* there is always some excess memory left unused */
+                *buf = realloc (*buf, filesize+1);
+                (*buf)[filesize] = '\0';
+        }
+
+        return filesize;
+}
+
+static int
+_is_major_type (int major, const char* type)
+{
+        int fd;
+        char* buf = NULL;
+        char* line;
+        char* end;
+        int bd = 0;
+        char c;
+
+        fd = open ("/proc/devices", O_RDONLY);
+        if (fd < 0)
+                return 0;
+
+        if (readFD(fd, &buf) < 0) {
+                close(fd);
+                return 0;
+        }
+
+        line = buf;
+        end = strchr(line, '\n');
+        while (end) {
+                char *name;
+                int maj;
+
+                c = *end;
+                *end = '\0';
+
+                if (!bd) {
+                        if (!strncmp(line, "Block devices:", 14))
+                                bd = 1;
+                        goto next;
+                }
+
+                name = strrchr(line, ' ');
+                if (!name || strcmp(name+1, type))
+                        goto next;
+
+                maj = strtol(line, &name, 10);
+                if (maj == major) {
+                        free(buf);
+                        close(fd);
+                        return 1;
+                }
+
+next:
+                *end = c;
+                line = end+1;
+                end = strchr(line, '\n');
+        }
+        free(buf);
+        close(fd);
+        return 0;
+}
+
+static int
+_is_virtblk_major (int major)
+{
+        return _is_major_type (major, "virtblk");
+}
+
 #ifdef ENABLE_DEVICE_MAPPER
+static int
+_is_dm_major (int major)
+{
+        return _is_major_type (major, "device-mapper");
+}
+
 static int
 _dm_maptype (PedDevice *dev)
 {
@@ -361,96 +464,6 @@ bad:
         return r;
 }
 
-static int
-readFD (int fd, char **buf)
-{
-        char* p;
-        size_t size = PROC_DEVICES_BUFSIZ;
-        int s, filesize = 0;
-
-        *buf = malloc (size * sizeof (char));
-        if (*buf == 0) {
-                return -1;
-        }
-
-        do {
-                p = &(*buf) [filesize];
-                s = read (fd, p, PROC_DEVICES_BUFSIZ);
-                /* exit if there is an error or EOF is reached */
-                if (s <= 0)
-                        break;
-                filesize += s;
-                size += s;
-                *buf = realloc (*buf, size);
-        } while (1);
-
-        if (filesize == 0 && s < 0) {
-                free (*buf);
-                *buf = NULL;
-                return -1;
-        } else {
-                /* there is always some excess memory left unused */
-                *buf = realloc (*buf, filesize+1);
-                (*buf)[filesize] = '\0';
-        }
-
-        return filesize;
-}
-
-static int
-_is_dm_major (int major)
-{
-        int fd;
-        char* buf = NULL;
-        char* line;
-        char* end;
-        int bd = 0;
-        char c;
-
-        fd = open ("/proc/devices", O_RDONLY);
-        if (fd < 0)
-                return 0;
-
-        if (readFD(fd, &buf) < 0) {
-                close(fd);
-                return 0;
-        }
-
-        line = buf;
-        end = strchr(line, '\n');
-        while (end) {
-                char *name;
-                int maj;
-
-                c = *end;
-                *end = '\0';
-
-                if (!bd) {
-                        if (!strncmp(line, "Block devices:", 14))
-                                bd = 1;
-                        goto next;
-                }
-
-                name = strrchr(line, ' ');
-                if (!name || strcmp(name+1, "device-mapper"))
-                        goto next;
-
-                maj = strtol(line, &name, 10);
-                if (maj == major) {
-                        free(buf);
-                        close(fd);
-                        return 1;
-                }
-
-next:
-                *end = c;
-                line = end+1;
-                end = strchr(line, '\n');
-        }
-        free(buf);
-        close(fd);
-        return 0;
-}
 
 static int
 _probe_dm_devices ()
@@ -561,6 +574,8 @@ _device_probe_type (PedDevice* dev)
                 dev->type = PED_DEVICE_XVD;
         } else if (dev_major == SDMMC_MAJOR && (dev_minor % 0x08 == 0)) {
                 dev->type = PED_DEVICE_SDMMC;
+        } else if (_is_virtblk_major(dev_major)) {
+                dev->type = PED_DEVICE_VIRTBLK;
         } else {
                 dev->type = PED_DEVICE_UNKNOWN;
         }
@@ -1313,6 +1328,10 @@ linux_new (const char* path)
 
         case PED_DEVICE_SDMMC:
                 if (!init_sdmmc (dev))
+                        goto error_free_arch_specific;
+                break;
+        case PED_DEVICE_VIRTBLK:
+                if (!init_generic(dev, _("Virtio Block Device")))
                         goto error_free_arch_specific;
                 break;
 
