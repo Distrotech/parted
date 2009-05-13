@@ -2081,16 +2081,58 @@ add_logical_part_metadata (PedDisk* disk, const PedPartition* log_part)
 				  metadata_start, metadata_end);
 }
 
-static PedPartition*
-get_last_part (const PedDisk* disk)
+/*
+ * Find the starting sector number of the first non-free partition,
+ * set *SECTOR to that value, and return 1.
+ * If there is no non-free partition, don't modify *SECTOR and return 0.
+ */
+static int
+get_start_first_nonfree_part (const PedDisk* disk, PedSector *sector)
 {
-	PedPartition* first_part = disk->part_list;
 	PedPartition* walk;
 
-	if (!first_part)
-		return NULL;
-	for (walk = first_part; walk->next; walk = walk->next);
-	return walk;
+	// disk->part_list is the first partition on the disk.
+	if (!disk->part_list)
+		return 0;
+
+	for (walk = disk->part_list; walk; walk = walk->next) {
+		if (walk->type == PED_PARTITION_NORMAL ||
+				walk->type == PED_PARTITION_EXTENDED) {
+			*sector = walk->geom.start;
+			return 1;
+		}
+	}
+	return 0;
+}
+
+/*
+ * Find the ending sector number of the last non-free partition,
+ * set *SECTOR to that value, and return 1.
+ * If there is no non-free partition, don't modify *SECTOR and return 0.
+ */
+static int
+get_end_last_nonfree_part (const PedDisk* disk, PedSector *sector)
+{
+	PedPartition* last_part = NULL;
+	PedPartition* walk;
+
+	// disk->part_list is the first partition on the disk.
+	if (!disk->part_list)
+		return 0;
+
+	for (walk = disk->part_list; walk; walk = walk->next) {
+		if (walk->type == PED_PARTITION_NORMAL ||
+				walk->type == PED_PARTITION_EXTENDED) {
+			last_part = walk;
+		}
+	}
+
+	if (!last_part)
+		return 0;
+	else {
+		*sector = last_part->geom.end;
+		return 1;
+	}
 }
 
 /* Adds metadata placeholder partitions to cover the partition table (and
@@ -2104,25 +2146,37 @@ add_startend_metadata (PedDisk* disk)
 {
 	PedDevice* dev = disk->dev;
 	PedSector cyl_size = dev->bios_geom.sectors * dev->bios_geom.heads;
-	PedPartition* first_part = disk->part_list;
-	PedPartition* last_part = get_last_part (disk);
-	PedSector start, end;
+	PedSector init_start, init_end, final_start, final_end;
 
-	if (!first_part)
-		return 1;
+	// Ranges for the initial and final metadata partition.
+	init_start = 0;
+	if (!get_start_first_nonfree_part(disk, &init_end))
+		init_end = dev->bios_geom.sectors - 1;
+	else
+		init_end = PED_MIN (dev->bios_geom.sectors - 1, init_end - 1);
 
-	start = 0;
-	end = PED_MIN (dev->bios_geom.sectors - 1, first_part->geom.start - 1);
-	if (!add_metadata_part (disk, PED_PARTITION_NORMAL, start, end))
-		return 0;
+	if (!get_end_last_nonfree_part(disk, &final_start))
+		final_start = ped_round_down_to (dev->length, cyl_size);
+	else
+		final_start = PED_MAX (final_start + 1,
+				ped_round_down_to (dev->length, cyl_size));
+	final_end = dev->length - 1;
 
-	start = PED_MAX (last_part->geom.end + 1,
-			 ped_round_down_to (dev->length, cyl_size));
-	end = dev->length - 1;
-	if (start < end) {
-		if (!add_metadata_part (disk, PED_PARTITION_NORMAL, start, end))
+	// Create the metadata partitions.
+	// init_end <= dev->length for devices that are _real_ small.
+	if (init_start < init_end &&
+			init_end <= dev->length &&
+			!add_metadata_part (disk, PED_PARTITION_NORMAL,
+				init_start, init_end))
 			return 0;
-	}
+
+	// init_end < final_start so they dont overlap.  For very small devs.
+	if (final_start < final_end &&
+			init_end < final_start &&
+			final_end <= dev->length &&
+			!add_metadata_part (disk, PED_PARTITION_NORMAL,
+				final_start, final_end))
+			return 0;
 
 	return 1;
 }
