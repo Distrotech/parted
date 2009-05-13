@@ -15,6 +15,7 @@ TESTS = \
   t4000-sun-raid-type.sh \
   t4100-msdos-partition-limits.sh \
   t4100-dvh-partition-limits.sh \
+  t4100-msdos-starting-sector.sh \
   t4200-partprobe.sh \
   t5000-tags.sh \
   t6000-dm.sh \
