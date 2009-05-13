@@ -287,43 +287,7 @@ static char* _device_get_part_path (PedDevice* dev, int num);
 static int _partition_is_mounted_by_path (const char* path);
 
 static int
-_is_ide_major (int major)
-{
-        switch (major) {
-                case IDE0_MAJOR:
-                case IDE1_MAJOR:
-                case IDE2_MAJOR:
-                case IDE3_MAJOR:
-                case IDE4_MAJOR:
-                case IDE5_MAJOR:
-                        return 1;
-
-                default:
-                        return 0;
-        }
-}
-
-static int
-_is_cpqarray_major (int major)
-{
-        return ((COMPAQ_SMART2_MAJOR <= major && major <= COMPAQ_SMART2_MAJOR7)
-             || (COMPAQ_SMART_MAJOR <= major && major <= COMPAQ_SMART_MAJOR7));
-}
-
-static int
-_is_i2o_major (int major)
-{
-        return (I2O_MAJOR1 <= major && major <= I2O_MAJOR8);
-}
-
-static int
-_is_sx8_major (int major)
-{
-        return (SX8_MAJOR1 <= major && major <= SX8_MAJOR2);
-}
-
-static int
-readFD (int fd, char **buf)
+_read_fd (int fd, char **buf)
 {
         char* p;
         size_t size = PROC_DEVICES_BUFSIZ;
@@ -359,7 +323,7 @@ readFD (int fd, char **buf)
 }
 
 static int
-_is_major_type (int major, const char* type)
+_major_type_in_devices (int major, const char* type)
 {
         int fd;
         char* buf = NULL;
@@ -372,7 +336,7 @@ _is_major_type (int major, const char* type)
         if (fd < 0)
                 return 0;
 
-        if (readFD(fd, &buf) < 0) {
+        if (_read_fd(fd, &buf) < 0) {
                 close(fd);
                 return 0;
         }
@@ -414,16 +378,52 @@ next:
 }
 
 static int
+_is_ide_major (int major)
+{
+        switch (major) {
+                case IDE0_MAJOR:
+                case IDE1_MAJOR:
+                case IDE2_MAJOR:
+                case IDE3_MAJOR:
+                case IDE4_MAJOR:
+                case IDE5_MAJOR:
+                        return 1;
+
+                default:
+                        return 0;
+        }
+}
+
+static int
+_is_cpqarray_major (int major)
+{
+        return ((COMPAQ_SMART2_MAJOR <= major && major <= COMPAQ_SMART2_MAJOR7)
+             || (COMPAQ_SMART_MAJOR <= major && major <= COMPAQ_SMART_MAJOR7));
+}
+
+static int
+_is_i2o_major (int major)
+{
+        return (I2O_MAJOR1 <= major && major <= I2O_MAJOR8);
+}
+
+static int
+_is_sx8_major (int major)
+{
+        return (SX8_MAJOR1 <= major && major <= SX8_MAJOR2);
+}
+
+static int
 _is_virtblk_major (int major)
 {
-        return _is_major_type (major, "virtblk");
+        return _major_type_in_devices (major, "virtblk");
 }
 
 #ifdef ENABLE_DEVICE_MAPPER
 static int
 _is_dm_major (int major)
 {
-        return _is_major_type (major, "device-mapper");
+        return _major_type_in_devices (major, "device-mapper");
 }
 
 static int
