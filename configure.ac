@@ -79,10 +79,10 @@ if test "$enable_mtrace" = yes; then
 fi
 
 AC_SUBST([ENABLE_DEVICE_MAPPER])
-ENABLE_DEVICE_MAPPER=no
+ENABLE_DEVICE_MAPPER=yes
 AC_ARG_ENABLE([device-mapper],
-	[  --enable-device-mapper  enable device mapper support [default=no]],
-	[ENABLE_DEVICE_MAPPER=yes])
+	[  --enable-device-mapper  enable device mapper support [default=yes]],
+	[ENABLE_DEVICE_MAPPER=$enable_device_mapper])
 if test $ENABLE_DEVICE_MAPPER = yes; then
 	AC_DEFINE([ENABLE_DEVICE_MAPPER],
                   1, [device mapper (libdevmapper) support])
@@ -258,8 +258,16 @@ DM_LIBS=
 if test $ENABLE_DEVICE_MAPPER = yes; then
   AC_CHECK_LIB([devmapper], [dm_task_create],
     [DM_LIBS=-ldevmapper],
-    [AC_MSG_ERROR([libdevmapper not found!  Try using --disable-device-mapper])
-      ])
+    [AC_MSG_ERROR(
+libdevmapper could not be found, but is required for the
+--enable-device-mapper option, which is enabled by default.  Either disable
+device-mapper support with --disable-device-mapper or download and install
+device-mapper from:
+	http://sources.redhat.com/dm/
+Note: if you are using precompiled packages you will need the development
+package as well (it may be called device-mapper-devel or something similar).
+    )]
+  )
 fi
 AC_SUBST([DM_LIBS])
 
