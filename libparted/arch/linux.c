@@ -2457,7 +2457,7 @@ _dm_remove_parts (PedDevice* dev)
 
         rc = 0;
         do {
-                names = (void *)names + next;
+                names = (void *) ((char *) names + next);
 
                 if (_dm_is_part(info, names->name))
                         rc += _dm_remove_map_name(names->name);
