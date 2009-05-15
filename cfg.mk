@@ -47,10 +47,6 @@ local-checks-to-skip = \
   sc_cast_of_argument_to_free \
   check-AUTHORS
 
-# The local directory containing the checked-out copy of gnulib used in this
-# release.  Used solely to get gnulib's SHA1 for the "announcement" target.
-gnulib_dir = /gnulib
-
 # Now that we have better (check.mk) tests, make this the default.
 export VERBOSE = yes
 
