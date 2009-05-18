@@ -2279,26 +2279,8 @@ msdos_get_max_supported_partition_count(const PedDisk* disk, int *max_n)
 static bool
 msdos_partition_check (const PedPartition* part)
 {
-	if (part->geom.length > UINT32_MAX) {
-		ped_exception_throw (
-			PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
-			_("partition length of %jd sectors exceeds the "
-			  "msdos-partition-table-imposed maximum of %jd"),
-			part->geom.length,
-			UINT32_MAX);
+	if (!ptt_partition_max_start_len("msdos", part))
 		return false;
-	}
-
-	/* The starting sector number must fit in 32 bytes.  */
-	if (part->geom.start > UINT32_MAX) {
-		ped_exception_throw (
-			PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
-			_("starting sector number, %jd exceeds the"
-			  " msdos-partition-table-imposed maximum of %jd"),
-			part->geom.start,
-			UINT32_MAX);
-		return false;
-	}
 
 	return true;
 }

@@ -38,6 +38,7 @@ libparted/labels/gpt.c
 libparted/labels/loop.c
 libparted/labels/mac.c
 libparted/labels/pc98.c
+libparted/labels/pt-tools.c
 libparted/labels/rdb.c
 libparted/labels/sun.c
 libparted/labels/vtoc.c

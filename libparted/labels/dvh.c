@@ -901,29 +901,10 @@ error:
 static bool
 dvh_partition_check (const PedPartition* part)
 {
-	if (part->geom.length > UINT32_MAX) {
-		ped_exception_throw (
-			PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
-			_("partition length of %jd sectors exceeds the "
-			  "dhv-partition-table-imposed maximum of %jd"),
-			part->geom.length,
-			UINT32_MAX);
+	if (!ptt_partition_max_start_len("dvh", part))
 		return false;
-	}
-
-	/* The starting sector number must fit in 32 bytes.  */
-	if (part->geom.start > UINT32_MAX) {
-		ped_exception_throw (
-			PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
-			_("starting sector number, %jd exceeds the"
-			  " dhv-partition-table-imposed maximum of %jd"),
-			part->geom.start,
-			UINT32_MAX);
-		return false;
-	}
 
 	return true;
-
 }
 
 static PedDiskOps dvh_disk_ops = {

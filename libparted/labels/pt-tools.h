@@ -20,3 +20,5 @@
 int ptt_write_sector (PedDisk const *disk, void const *buf, size_t buflen);
 int ptt_read_sector (PedDevice const *dev, PedSector sector_num, void **buf);
 int ptt_clear_sectors (PedDevice *dev, PedSector start, PedSector count);
+int ptt_partition_max_start_len (char const *label_type,
+                const PedPartition *part);

@@ -24,6 +24,13 @@
 
 #include "pt-tools.h"
 
+#if ENABLE_NLS
+# include <libintl.h>
+# define _(String) dgettext (PACKAGE, String)
+#else
+# define _(String) (String)
+#endif /* ENABLE_NLS */
+
 static char zero[16 * 1024];
 
 /* Write a single sector to DISK, filling the first BUFLEN
@@ -83,4 +90,48 @@ ptt_clear_sectors (PedDevice *dev, PedSector start, PedSector n)
   PedSector rem = n - n_z_sectors * i;
   return (rem == 0
           ? 1 : ped_device_write (dev, zero, start + n_z_sectors * i, rem));
+}
+
+/* Throw an exception and return 0 if PART's starting sector number or
+   its length is greater than the maximum allowed value for LABEL_TYPE.
+   Otherwise, return 1.  */
+int
+ptt_partition_max_start_len (char const *label_type, const PedPartition *part)
+{
+  static char const *const max_32[] = {"msdos", "dvh"};
+  unsigned int i;
+
+  for (i = 0; i < sizeof max_32 / sizeof *max_32; i++)
+    {
+      if (strcmp (label_type, max_32[i]) == 0)
+        {
+          /* The starting sector length must fit in 32 bytes.  */
+          if (part->geom.length > UINT32_MAX)
+            {
+              ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
+                                   _("partition length of %jd sectors exceeds"
+                                     " the %s-partition-table-imposed maximum"
+                                     " of %jd"),
+                                   part->geom.length,
+                                   label_type,
+                                   UINT32_MAX);
+              return 0;
+            }
+
+          /* The starting sector number must fit in 32 bytes.  */
+          if (part->geom.start > UINT32_MAX) {
+            ped_exception_throw (
+                                 PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
+                                 _("starting sector number, %jd exceeds"
+                                   " the  %s-partition-table-imposed maximum"
+                                   " of %jd"),
+                                 part->geom.start,
+                                 label_type,
+                                 UINT32_MAX);
+            return 0;
+          }
+        }
+    }
+
+  return 1;
 }
