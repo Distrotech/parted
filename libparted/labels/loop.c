@@ -303,6 +303,12 @@ loop_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 	return true;
 }
 
+static bool
+loop_partition_check (const PedPartition* part)
+{
+	return true;
+}
+
 static PedDiskOps loop_disk_ops = {
 	probe:			loop_probe,
 #ifndef DISCOVER_ONLY
@@ -331,6 +337,7 @@ static PedDiskOps loop_disk_ops = {
 	partition_get_name:	NULL,
 	partition_align:	loop_partition_align,
 	partition_enumerate:	loop_partition_enumerate,
+	partition_check:	loop_partition_check,
 
 	alloc_metadata:		loop_alloc_metadata,
 	get_max_primary_partition_count:

@@ -640,6 +640,12 @@ error:
 	return 0;
 }
 
+static bool
+bsd_partition_check (const PedPartition* part)
+{
+	return true;
+}
+
 static PedDiskOps bsd_disk_ops = {
 	probe:			bsd_probe,
 #ifndef DISCOVER_ONLY
@@ -668,6 +674,7 @@ static PedDiskOps bsd_disk_ops = {
 	partition_get_name:	NULL,
 	partition_align:	bsd_partition_align,
 	partition_enumerate:	bsd_partition_enumerate,
+	partition_check:	bsd_partition_check,
 
 	alloc_metadata:		bsd_alloc_metadata,
 	get_max_primary_partition_count:

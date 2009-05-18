@@ -1621,6 +1621,12 @@ mac_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 	return true;
 }
 
+static bool
+mac_partition_check (const PedPartition* part)
+{
+	return true;
+}
+
 static PedDiskOps mac_disk_ops = {
 	probe:			mac_probe,
 #ifndef DISCOVER_ONLY
@@ -1651,6 +1657,7 @@ static PedDiskOps mac_disk_ops = {
 	partition_get_name:	mac_partition_get_name,
 	partition_align:	mac_partition_align,
 	partition_enumerate:	mac_partition_enumerate,
+	partition_check:	mac_partition_check,
 
 	alloc_metadata:		mac_alloc_metadata,
 	get_max_primary_partition_count:

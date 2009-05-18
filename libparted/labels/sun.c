@@ -836,6 +836,12 @@ error:
 	return 0;
 }
 
+static bool
+sun_partition_check (const PedPartition* part)
+{
+	return true;
+}
+
 static PedDiskOps sun_disk_ops = {
 	probe:			sun_probe,
 #ifndef DISCOVER_ONLY
@@ -862,6 +868,7 @@ static PedDiskOps sun_disk_ops = {
 	partition_is_flag_available:	sun_partition_is_flag_available,
 	partition_align:	sun_partition_align,
 	partition_enumerate:	sun_partition_enumerate,
+	partition_check:	sun_partition_check,
 	alloc_metadata:		sun_alloc_metadata,
 	get_max_primary_partition_count:
 				sun_get_max_primary_partition_count,

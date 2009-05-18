@@ -1700,31 +1700,6 @@ _check_extended_partition (PedDisk* disk, PedPartition* part)
 	return 1;
 }
 
-static PedSector
-_partition_max_start (char const *label_type)
-{
-  /* List partition table names (a la disk->type->name) for which
-     the partition length, in sectors, must fit in 32 bytes.  */
-  static char const *const max_32[] = {"msdos", "dvh"};
-  unsigned int i;
-
-  for (i = 0; i < sizeof max_32 / sizeof *max_32; i++)
-    if (strcmp (label_type, max_32[i]) == 0)
-      return UINT32_MAX;
-
-  return TYPE_MAXIMUM (PedSector);
-}
-
-static PedSector
-_partition_max_len (char const *label_type)
-{
-  /* NOTE: for now, they happen to be the same, so don't
-     duplicate needlessly.  Of course, if there's some format
-     with different length and starting sector limits, then
-     these functions will diverge.  */
-  return _partition_max_start (label_type);
-}
-
 static int
 _check_partition (PedDisk* disk, PedPartition* part)
 {
@@ -1765,44 +1740,9 @@ _check_partition (PedDisk* disk, PedPartition* part)
 		return 0;
 	}
 
-	if (!(part->type & PED_PARTITION_METADATA)) {
-		char const *label_type = disk->type->name;
-		/* Enforce some restrictions inherent in the DOS
-		   partition table format.  Without these, one would be able
-		   to create a 2TB partition (or larger), and it would work,
-		   but only until the next reboot.  This was insidious: the
-		   too-large partition would work initially, because with
-		   Linux-2.4.x and newer we set the partition start sector
-		   and length (in sectors) accurately and directly via the
-		   BLKPG ioctl.  However, only the last 32 bits of each
-		   number would be written to the partition table, and the
-		   next time the system would read/use those corrupted numbers
-		   it would usually complain about an invalid partition.
-                   The same applies to the starting sector number.  */
-
-		if (part->geom.length > _partition_max_len (label_type)) {
-			ped_exception_throw (
-				PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
-				_("partition length of %jd sectors exceeds the "
-                                  "%s-partition-table-imposed maximum of %jd"),
-				part->geom.length,
-                                label_type,
-                                _partition_max_len (label_type));
+	if (!(part->type & PED_PARTITION_METADATA))
+		if (!disk->type->ops->partition_check(part))
 			return 0;
-		}
-
-		/* The starting sector number must fit in 32 bytes.  */
-		if (part->geom.start > _partition_max_start (label_type)) {
-			ped_exception_throw (
-				PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
-				_("starting sector number, %jd exceeds the"
-                                  " %s-partition-table-imposed maximum of %jd"),
-                                part->geom.start,
-                                label_type,
-                                _partition_max_start (label_type));
-			return 0;
-		}
-	}
 
 	return 1;
 }

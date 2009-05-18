@@ -207,6 +207,7 @@ struct _PedDiskOps {
         int (*partition_align) (PedPartition* part,
                                 const PedConstraint* constraint);
         int (*partition_enumerate) (PedPartition* part);
+        bool (*partition_check) (const PedPartition* part);
 
         /* other */
         int (*alloc_metadata) (PedDisk* disk);

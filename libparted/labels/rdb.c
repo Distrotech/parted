@@ -1135,6 +1135,12 @@ amiga_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 	return true;
 }
 
+static bool
+amiga_partition_check (const PedPartition* part)
+{
+	return true;
+}
+
 static PedDiskOps amiga_disk_ops = {
 	probe:			amiga_probe,
 #ifndef DISCOVER_ONLY
@@ -1164,7 +1170,7 @@ static PedDiskOps amiga_disk_ops = {
 	partition_get_name:	amiga_partition_get_name,
 	partition_align:	amiga_partition_align,
 	partition_enumerate:	amiga_partition_enumerate,
-
+	partition_check:	amiga_partition_check,
 
 	alloc_metadata:		amiga_alloc_metadata,
 	get_max_primary_partition_count:

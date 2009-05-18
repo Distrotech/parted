@@ -892,6 +892,40 @@ error:
 	return 0;
 }
 
+/*
+ * Enforce some restrictions inherent in the dvh partition table format.
+ * 1. Partition size must be smaller than 2^32 (unsigned int) sectors.
+ *    If sector size is 512 bytes, this results in 2T aprox.
+ * 2. Partition starting sector number must be smaller than 2^32.
+ */
+static bool
+dvh_partition_check (const PedPartition* part)
+{
+	if (part->geom.length > UINT32_MAX) {
+		ped_exception_throw (
+			PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
+			_("partition length of %jd sectors exceeds the "
+			  "dhv-partition-table-imposed maximum of %jd"),
+			part->geom.length,
+			UINT32_MAX);
+		return false;
+	}
+
+	/* The starting sector number must fit in 32 bytes.  */
+	if (part->geom.start > UINT32_MAX) {
+		ped_exception_throw (
+			PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
+			_("starting sector number, %jd exceeds the"
+			  " dhv-partition-table-imposed maximum of %jd"),
+			part->geom.start,
+			UINT32_MAX);
+		return false;
+	}
+
+	return true;
+
+}
+
 static PedDiskOps dvh_disk_ops = {
 	probe:			dvh_probe,
 #ifndef DISCOVER_ONLY
@@ -920,6 +954,7 @@ static PedDiskOps dvh_disk_ops = {
 	partition_get_name:	dvh_partition_get_name,
 	partition_align:	dvh_partition_align,
 	partition_enumerate:	dvh_partition_enumerate,
+	partition_check:	dvh_partition_check,
 
 	alloc_metadata:		dvh_alloc_metadata,
 	get_max_primary_partition_count: dvh_get_max_primary_partition_count,

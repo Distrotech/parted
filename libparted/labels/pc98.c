@@ -839,6 +839,12 @@ pc98_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 	return true;
 }
 
+static bool
+pc98_partition_check (const PedPartition* part)
+{
+	return true;
+}
+
 static PedDiskOps pc98_disk_ops = {
 	probe:			pc98_probe,
 #ifndef DISCOVER_ONLY
@@ -867,6 +873,7 @@ static PedDiskOps pc98_disk_ops = {
 	partition_get_name:	pc98_partition_get_name,
 	partition_align:	pc98_partition_align,
 	partition_enumerate:	pc98_partition_enumerate,
+	partition_check:	pc98_partition_check,
 
 	alloc_metadata:		pc98_alloc_metadata,
 	get_max_primary_partition_count:

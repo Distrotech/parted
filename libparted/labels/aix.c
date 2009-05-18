@@ -235,6 +235,12 @@ aix_alloc_metadata (PedDisk* disk)
 	return 1;
 }
 
+static bool
+aix_partition_check (const PedPartition* part)
+{
+	return true;
+}
+
 static PedDiskOps aix_disk_ops = {
 	probe:			aix_probe,
 #ifndef DISCOVER_ONLY
@@ -261,6 +267,7 @@ static PedDiskOps aix_disk_ops = {
 	partition_is_flag_available:	aix_partition_is_flag_available,
 	partition_align:	aix_partition_align,
 	partition_enumerate:	aix_partition_enumerate,
+	partition_check:	aix_partition_check,
 	alloc_metadata:		aix_alloc_metadata,
 	get_max_primary_partition_count:
 				aix_get_max_primary_partition_count,

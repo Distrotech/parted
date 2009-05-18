@@ -2270,6 +2270,39 @@ msdos_get_max_supported_partition_count(const PedDisk* disk, int *max_n)
 	return true;
 }
 
+/*
+ * Enforce some restrictions inherent in the DOS partition table format.
+ * 1. Partition size must be smaller than 2^32 (unsigned int) sectors.
+ *    If sector size is 512 bytes, this results in 2T aprox.
+ * 2. Partition starting sector number must be smaller than 2^32.
+ */
+static bool
+msdos_partition_check (const PedPartition* part)
+{
+	if (part->geom.length > UINT32_MAX) {
+		ped_exception_throw (
+			PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
+			_("partition length of %jd sectors exceeds the "
+			  "msdos-partition-table-imposed maximum of %jd"),
+			part->geom.length,
+			UINT32_MAX);
+		return false;
+	}
+
+	/* The starting sector number must fit in 32 bytes.  */
+	if (part->geom.start > UINT32_MAX) {
+		ped_exception_throw (
+			PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
+			_("starting sector number, %jd exceeds the"
+			  " msdos-partition-table-imposed maximum of %jd"),
+			part->geom.start,
+			UINT32_MAX);
+		return false;
+	}
+
+	return true;
+}
+
 static PedDiskOps msdos_disk_ops = {
 	probe:			msdos_probe,
 #ifndef DISCOVER_ONLY
@@ -2298,6 +2331,7 @@ static PedDiskOps msdos_disk_ops = {
 	partition_get_name:	NULL,
 	partition_align:	msdos_partition_align,
 	partition_enumerate:	msdos_partition_enumerate,
+	partition_check:	msdos_partition_check,
 
 	alloc_metadata:		msdos_alloc_metadata,
 	get_max_primary_partition_count:

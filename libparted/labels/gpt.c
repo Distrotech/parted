@@ -1586,6 +1586,12 @@ gpt_partition_align (PedPartition* part, const PedConstraint* constraint)
 	return 0;
 }
 
+static bool
+gpt_partition_check (const PedPartition* part)
+{
+	return true;
+}
+
 static PedDiskOps gpt_disk_ops = {
 	probe:		gpt_probe,
 #ifndef DISCOVER_ONLY
@@ -1613,6 +1619,7 @@ static PedDiskOps gpt_disk_ops = {
 	partition_get_name:		gpt_partition_get_name,
 	partition_align:		gpt_partition_align,
 	partition_enumerate:		gpt_partition_enumerate,
+	partition_check:		gpt_partition_check,
 	alloc_metadata:			gpt_alloc_metadata,
 	get_max_primary_partition_count: gpt_get_max_primary_partition_count,
 	get_max_supported_partition_count: gpt_get_max_supported_partition_count
