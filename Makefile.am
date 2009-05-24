@@ -63,9 +63,9 @@ new-abi-baseline:
 check-abi: baseline_symbols current_symbols.txt
 	@diff -u ${baseline_file} ./current_symbols.txt 2>&1 \
          | tee libparted.abi-diff
-	@test `wc -l < libparted.abi-diff` -gt 0 \
-         && (echo "ABI has changed. Please, update you ABI package version."; exit 1) \
-         || exit 0
+	@test `wc -l < libparted.abi-diff` -eq 0 && exit 0 \
+         || echo "ABI has changed. Please, update you ABI package version." \
+         && exit 1
 
 MOSTLYCLEANDIRS = m4
 
