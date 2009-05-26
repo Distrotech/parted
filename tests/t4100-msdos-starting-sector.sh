@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (C) 2008 Free Software Foundation, Inc.
+# Copyright (C) 2008, 2009 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -40,38 +40,29 @@ test_expect_success 'expect no output' 'compare out /dev/null'
 # Test the output of print free with no partitions.
 fail=0
 cat <<EOF > exp || fail=1
-Model:  (file)
-Disk $(pwd)/$dev: 200s
-Sector size (logical/physical): 512B/512B
-Partition Table: msdos
-
-Number  Start  End   Size  Type  File system  Flags
-        32s    127s  96s         Free Space
-
+BYT;
+path:200s:file:512:512:msdos:;
+1:32s:127s:96s:free;
 EOF
 
 test_expect_success 'create expected output file' 'test $fail = 0'
 
 test_expect_success \
     'display output of label without partitions' \
-    'parted -s $dev unit s print free > out 2>&1'
+    'parted -m -s $dev unit s print free > out 2>&1'
 
 test_expect_success \
     'check for expected output' \
-    'compare out exp'
+    'sed "2s/^[^:]*:/path:/" < out > k; mv k out
+    compare out exp'
 
 # Test the output of print free with one partition.
 fail=0
 cat <<EOF > exp || fail=1
-Model:  (file)
-Disk $(pwd)/$dev: 200s
-Sector size (logical/physical): 512B/512B
-Partition Table: msdos
-
-Number  Start  End   Size  Type     File system  Flags
-        32s    96s   65s            Free Space
-         1      97s    195s  99s   primary
-
+BYT;
+path:200s:file:512:512:msdos:;
+1:32s:96s:65s:free;
+1:97s:195s:99s:::;
 EOF
 
 test_expect_success 'create expected output file' 'test $fail = 0'
@@ -82,10 +73,11 @@ test_expect_success \
 
 test_expect_success \
     'display output of label with partition' \
-    'parted -s $dev unit s print free > out 2>&1'
+    'parted -m -s $dev unit s print free > out 2>&1'
 
 test_expect_success \
     'check for expected output' \
-    'compare out exp; cp out /tmp/out ; cp exp /tmp/exp'
+    'sed "2s/^[^:]*:/path:/" < out > k; mv k out
+    compare out exp'
 
 test_done
