@@ -39,7 +39,7 @@ EXTRA_libparted_la_SOURCES    = arch/linux.c		\
 libparted_la_LIBADD =	\
   fs/libfs.la		\
   labels/liblabels.la	\
-  $(top_builddir)/lib/libparted.la \
+  $(top_builddir)/lib/libgnulib.la \
   $(OS_LIBS)		\
   $(DL_LIBS)		\
   $(DM_LIBS)		\
