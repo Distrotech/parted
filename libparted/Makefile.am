@@ -1,5 +1,5 @@
 # This file is part of GNU Parted
-# Copyright (C) 1999, 2000, 2001, 2007 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2001, 2007, 2009 Free Software Foundation, Inc.
 #
 # This file may be modified and/or distributed without restriction.
 
@@ -36,13 +36,15 @@ EXTRA_libparted_la_SOURCES    = arch/linux.c		\
 				arch/gnu.c \
 				arch/beos.c
 
-libparted_la_LIBADD   = $(OS_LIBS)		\
-			$(DL_LIBS)		\
-			$(DM_LIBS)		\
-			$(SELINUX_LIBS)		\
-			$(INTLLIBS)		\
-			fs/libfs.la		\
-			labels/liblabels.la
+libparted_la_LIBADD =	\
+  fs/libfs.la		\
+  labels/liblabels.la	\
+  $(top_builddir)/lib/libparted.la \
+  $(OS_LIBS)		\
+  $(DL_LIBS)		\
+  $(DM_LIBS)		\
+  $(SELINUX_LIBS)	\
+  $(INTLLIBS)
 
 EXTRA_DIST	      = mbr.s
 

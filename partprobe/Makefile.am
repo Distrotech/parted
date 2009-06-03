@@ -6,7 +6,6 @@ partprobe_SOURCES = partprobe.c
 
 partprobe_LDADD = \
   $(top_builddir)/libparted/libparted.la \
-  $(top_builddir)/lib/libparted.la \
   $(INTLLIBS) $(LIBS) \
   $(PARTED_LIBS)
 

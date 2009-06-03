@@ -1,5 +1,5 @@
 # This file is part of GNU Parted
-# Copyright (C) 1999-2001, 2007-2008 Free Software Foundation, Inc.
+# Copyright (C) 1999-2001, 2007-2009 Free Software Foundation, Inc.
 #
 # This file may be modified and/or distributed without restriction.
 
@@ -9,7 +9,6 @@ bin_PROGRAMS = label disk
 
 LDADD = \
   $(top_builddir)/libparted/libparted.la \
-  $(top_builddir)/lib/libparted.la \
   $(CHECK_LIBS)
 
 AM_CPPFLAGS = \

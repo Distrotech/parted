@@ -17,7 +17,6 @@ parted_CFLAGS = -DBUILDINFO=
 
 parted_LDADD = \
   $(top_builddir)/libparted/libparted.la \
-  $(top_builddir)/lib/libparted.la \
   $(INTLLIBS) $(LIBS) \
   $(PARTED_LIBS)
 
