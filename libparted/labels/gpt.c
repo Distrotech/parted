@@ -969,13 +969,23 @@ error:
 }
 
 #ifndef DISCOVER_ONLY
-/* Writes the protective MBR (to keep DOS happy) */
+/* Write the protective MBR (to keep DOS happy) */
 static int
 _write_pmbr (PedDevice * dev)
 {
 	LegacyMBR_t pmbr;
 
-	memset(&pmbr, 0, sizeof(pmbr));
+	/* The UEFI spec is not clear about what to do with the following
+	   elements of the Protective MBR (pmbr): BootCode (0-440B),
+	   UniqueMBRSignature (440B-444B) and Unknown (444B-446B).
+	   With this in mind, we try not to modify these elements.  */
+	if (ped_device_read (dev, &pmbr, 0, GPT_PMBR_SECTORS) < GPT_PMBR_SECTORS)
+		memset (&pmbr, 0, sizeof(pmbr));
+
+	/* Zero out all the legacy partitions.
+	   There are 4 PartitionRecords.  */
+	memset (pmbr.PartitionRecord, 0, sizeof pmbr.PartitionRecord);
+
 	pmbr.Signature = PED_CPU_TO_LE16(MSDOS_MBR_SIGNATURE);
 	pmbr.PartitionRecord[0].OSType      = EFI_PMBR_OSTYPE_EFI;
 	pmbr.PartitionRecord[0].StartSector = 1;
