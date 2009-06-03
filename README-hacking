@@ -5,45 +5,63 @@ These requirements do not apply when building from a distribution tarball.
 
 * Requirements
 
-Only the sources are installed in the GIT repository (to ease the
-maintenance, merges etc.), therefore you will have to get the latest
-stable versions of the maintainer tools we depend upon, including:
+We've opted to keep only the highest-level sources in the GIT repository.
+This eases our maintenance burden, (fewer merges etc.), but imposes more
+requirements on anyone wishing to build from the just-checked-out sources.
+Specific tools and versions will be checked for and listed by the
+bootstrap script shown below, and will include:
 
 - Automake <http://www.gnu.org/software/automake/>
 - Autoconf <http://www.gnu.org/software/autoconf/>
 - Gettext <http://www.gnu.org/software/gettext/>
+- Git <http://git.or.cz/>
 - Gzip <http://www.gnu.org/software/gzip/>
+- Perl <http://www.cpan.org/>
+- Rsync <http://samba.anu.edu.au/rsync/>
 - Libtool <http://www.gnu.org/software/libtool/>
 - Pkg-config <http://pkg-config.freedesktop.org/>
 - Tar <http://www.gnu.org/software/tar/>
 - Uuid-devel <http://e2fsprogs.sourceforge.net/>
      (Debian: uuid-dev, Red Hat: uuid-devel)
-- Wget <http://www.gnu.org/software/wget/>
+
+Only building the initial full source tree will be a bit painful.
+Later, a plain `git pull && make' should be sufficient.
+
+- Valgrind
 
 Valgrind <http://valgrind.org/> is also highly recommended, if
 Valgrind supports your architecture.
 
-Only building the initial full source tree will be a bit painful.
-Later, a plain `git-pull && make' should be sufficient.
+- XZ utils (successor to LZMA)
+
+This package's build procedure uses XZ to create a compressed
+distribution tarball.  Using this feature of Automake requires
+version 1.10a or newer, as well as the xz program itself.
+Make sure you have the latest version of the XZ Utils from
+<http://tukaani.org/lzma/download>.
 
 * First GIT checkout
 
-Obviously, if you are reading these notes, you did manage to check out
-this package from GIT.  The next step is to get other files needed to
-build, which are extracted from other source packages:
+You can get a copy of the source repository like this:
 
-	$ ./bootstrap
+        $ git clone git://git.debian.org/git/parted/parted.git
+        $ cd parted
+
+The next step is to get and check other files needed to build,
+which are extracted from other source packages:
+
+        $ ./bootstrap
 
 And there you are!  Just
 
-	$ ./configure
-	$ make
-	$ make check
+        $ ./configure #[--enable-gcc-warnings]
+        $ make
+        $ make check
 
 At this point, there should be no difference between your local copy,
 and the GIT master copy:
 
-	$ git-diff
+        $ git-diff
 
 should output no difference.
 
@@ -51,12 +69,12 @@ Enjoy!
 
 -----
 
-Copyright (C) 2002-2007 Free Software Foundation, Inc.
+Copyright (C) 2002-2009 Free Software Foundation, Inc.
 
-This program is free software; you can redistribute it and/or modify
+This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -65,3 +83,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Local Variables:
+indent-tabs-mode: nil
+End:
