@@ -317,3 +317,32 @@ elif ( cmp --version < /dev/null 2>&1 | grep GNU ) 2>&1 > /dev/null; then
 else
   compare() { cmp "$@"; }
 fi
+
+require_mdadm_()
+{
+  ( mdadm --version ) > /dev/null 2>&1 ||
+    {
+      say "skipping $0: could not find mdadm executable"
+      test_done
+      exit
+    }
+}
+
+# Will look for an md number that is not in use and create a md device with
+# that number.  If the system has more than 9 md devices, it will fail.
+mdadm_create_linear_device_()
+{
+  lo_dev=$1
+  mdd=$G_dev_/md0
+  for i in 0 1 2 3 4 5 6 7 8 9 ; do
+    mdd=$G_dev_/md$i
+    mdadm  --create --force $mdd --level=linear --raid-devices=1 $lo_dev \
+	> /dev/null 2>&1 \
+      && break
+
+    if [ $i -eq 9 ]; then echo $mdd ; return 1 ; fi
+  done
+
+  echo $mdd
+  return 0
+}
