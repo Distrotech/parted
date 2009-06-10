@@ -1,6 +1,6 @@
 /*
     parted - a frontend to libparted
-    Copyright (C) 1999-2003, 2005-2008 Free Software Foundation, Inc.
+    Copyright (C) 1999-2003, 2005-2009 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -595,12 +595,15 @@ static int
 do_mklabel (PedDevice** dev)
 {
         PedDisk*                disk;
-        const PedDiskType*      type = ped_disk_probe (*dev);
+        const PedDiskType*      type = NULL;
 
         ped_exception_fetch_all ();
         disk = ped_disk_new (*dev);
         if (!disk) ped_exception_catch ();
         ped_exception_leave_all ();
+
+        if (!command_line_get_disk_type (_("New disk label type?"), &type))
+                goto error;
 
         if (disk) {
                 if (!_disk_warn_busy (disk))
@@ -610,9 +613,6 @@ do_mklabel (PedDevice** dev)
 
                 ped_disk_destroy (disk);
         }
-
-        if (!command_line_get_disk_type (_("New disk label type?"), &type))
-                goto error;
 
         disk = ped_disk_new_fresh (*dev, type);
         if (!disk)

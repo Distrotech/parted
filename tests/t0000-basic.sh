@@ -64,7 +64,7 @@ test_expect_success \
     'check its "interactive" output' \
     'compare out exp 1>&2'
 
-test_expect_success 'create interactive input' 'printf "y\n\n" > in'
+test_expect_success 'create interactive input' 'printf "y\n" > in'
 
 # Now that there's a label, rerunning the same command is interactive.
 test_expect_success \
@@ -84,9 +84,7 @@ fail=0
 cat <<EOF >> exp || fail=1
 Warning: The existing disk label on DEVICE will be destroyed and all\
  data on this disk will be lost. Do you want to continue?
-parted: invalid token: msdos
 Yes/No? y
-New disk label type?  [msdos]?
 EOF
 test_expect_success \
     'create expected output file' \
