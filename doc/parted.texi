@@ -673,7 +673,7 @@ Make a @var{fat32} file system on partition 2.
 @cindex mkpart, command description
 @cindex command description, mkpart
 
-@deffn Command mkpart @var{part-type} [@var{fs-type}] @var{start} @var{end}
+@deffn Command mkpart [@var{part-type} @var{fs-type} @var{name}] @var{start} @var{end}
 
 Creates a new partition, @emph{without} creating a new file system on
 that partition.  This is useful for creating partitions for file systems
@@ -684,10 +684,13 @@ partitions (i.e., non-extended partitions).  @var{start} and @var{end}
 are the offset from the beginning of the disk, that is, the ``distance''
 from the start of the disk.
 
-@var{part-type} is one of: primary, extended, logical.  Extended and
-logical are only used for msdos and dvh disk labels.
+@var{part-type} is one of @samp{primary}, @samp{extended} or @samp{logical},
+and may be specified only with @samp{msdos} or @samp{dvh} partition tables.
+A @var{name} must be specified for a @samp{gpt} partition table.
+Neither @var{part-type} nor @var{name} may be used with a @samp{sun}
+partition table.
 
-@var{fs-type} must be on of these supported file systems:
+@var{fs-type} must be one of these supported file systems:
 @itemize @bullet
 @item ext2
 @item fat16, fat32
