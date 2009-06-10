@@ -19,6 +19,7 @@ TESTS = \
   t4200-partprobe.sh \
   t5000-tags.sh \
   t6000-dm.sh \
+  t6001-dm-ignoremd.sh \
   t7000-scripting.sh \
   t8000-loop.sh
 
