@@ -9,7 +9,7 @@ else
 S390_SRCS =
 endif
 
-partedincludedir      =	-I$(top_srcdir)/include
+partedincludedir      =	-I$(top_srcdir)/lib -I$(top_srcdir)/include
 noinst_LTLIBRARIES    =	liblabels.la
 
 liblabels_la_SOURCES = \

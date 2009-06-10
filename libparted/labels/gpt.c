@@ -38,6 +38,7 @@
 #include <unistd.h>
 #include <uuid/uuid.h>
 #include <stdbool.h>
+#include "xalloc.h"
 
 #if ENABLE_NLS
 #  include <libintl.h>
@@ -603,6 +604,14 @@ _header_is_valid (const PedDevice* dev, GuidPartitionTableHeader_t* gpt)
 	    || PED_LE32_TO_CPU (gpt->HeaderSize) > dev->sector_size)
 		return 0;
 
+	/*
+	 * the SizeOfPartitionEntry must be a multiple of 8 and
+	 * no smaller than the size of the PartitionEntry structure.
+	 */
+	uint32_t sope = gpt->SizeOfPartitionEntry;
+	if (sope % 8 != 0 || sope < sizeof(GuidPartitionEntry_t) )
+		return 0;
+
 	origcrc = gpt->HeaderCRC32;
 	gpt->HeaderCRC32 = 0;
 	crc = pth_crc32 (dev, gpt);
@@ -807,8 +816,8 @@ gpt_read (PedDisk * disk)
 {
 	GPTDiskData *gpt_disk_data = disk->disk_specific;
 	GuidPartitionTableHeader_t* gpt;
-	GuidPartitionEntry_t* ptes;
-	int ptes_size;
+	void* ptes;
+	size_t ptes_sectors;
 	int i;
 #ifndef DISCOVER_ONLY
 	int write_back = 0;
@@ -902,22 +911,30 @@ gpt_read (PedDisk * disk)
 	if (!_parse_header (disk, gpt, &write_back))
 		goto error_free_gpt;
 
+	ptes_sectors = ped_div_round_up (gpt->SizeOfPartitionEntry
+					 * gpt_disk_data->entry_count,
+					 disk->dev->sector_size);
 
-	ptes_size = sizeof (GuidPartitionEntry_t) * gpt_disk_data->entry_count;
-	ptes = (GuidPartitionEntry_t*) ped_malloc (ptes_size);
+	if (xalloc_oversized (ptes_sectors, disk->dev->sector_size))
+		goto error_free_gpt;
+	ptes = ped_malloc (ptes_sectors * disk->dev->sector_size);
+
 	if (!ped_device_read (disk->dev, ptes,
 			      PED_LE64_TO_CPU(gpt->PartitionEntryLBA),
-			      ptes_size / disk->dev->sector_size))
+			      ptes_sectors))
 		goto error_free_ptes;
 
 	for (i = 0; i < gpt_disk_data->entry_count; i++) {
+		GuidPartitionEntry_t* pte
+		  = (GuidPartitionEntry_t*) ((char *)ptes + i
+					     * gpt->SizeOfPartitionEntry);
 		PedPartition* part;
 		PedConstraint* constraint_exact;
 
-		if (!guid_cmp (ptes[i].PartitionTypeGuid, UNUSED_ENTRY_GUID))
+		if (!guid_cmp (pte->PartitionTypeGuid, UNUSED_ENTRY_GUID))
 			continue;
 
-		part = _parse_part_entry (disk, &ptes[i]);
+		part = _parse_part_entry (disk, pte);
 		if (!part)
 			goto error_delete_all;
 
