@@ -1994,6 +1994,7 @@ _skip_entry (const char *name)
 		{ ".",		sizeof (".") - 1	},
 		{ "..",		sizeof ("..") - 1	},
 		{ "dm-",	sizeof ("dm-") - 1	},
+		{ "md",		sizeof ("md") - 1	},
 		{ "loop",	sizeof ("loop") - 1	},
 		{ "ram",	sizeof ("ram") - 1	},
 		{ 0, 0 },
