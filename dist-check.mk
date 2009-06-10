@@ -46,7 +46,7 @@ define install-transform-check
     && rm -rf $(pfx)					\
     && $(MAKE) program_transform_name='s/.*/zyx/'	\
       prefix=$(pfx) install				\
-    && test "$$(echo $(pfx)/bin/*)" = "$(pfx)/bin/zyx"	\
+    && test "$$(echo $(pfx)/sbin/*)" = "$(pfx)/sbin/zyx"	\
     && test "$$(find $(pfx)/share/man -type f|sed 's,.*/,,;s,\..*,,')" = "zyx"
 endef
 
