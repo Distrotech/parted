@@ -62,7 +62,7 @@ PedSector
 fat_max_cluster_size (FatType fat_type) {
 	switch (fat_type) {
 		case FAT_TYPE_FAT12: return 1;	/* dunno... who cares? */
-		case FAT_TYPE_FAT16: return 32768/512;
+		case FAT_TYPE_FAT16: return 65536/512;
 		case FAT_TYPE_FAT32: return 65536/512;
 	}
 	return 0;
