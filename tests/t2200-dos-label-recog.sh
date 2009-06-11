@@ -40,7 +40,7 @@ test_expect_success \
     'create two partition' \
     '
     parted -s $dev mkpart primary  1s 40s > out 2>&1 &&
-    parted -s $dev mkpart primary 41s 80s > out 2>&1
+    parted -s $dev mkpart primary 41s 80s >> out 2>&1
 
     '
 test_expect_success 'expect no output' 'compare out /dev/null'
