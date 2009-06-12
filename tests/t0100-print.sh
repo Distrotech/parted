@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (C) 2007 Free Software Foundation, Inc.
+# Copyright (C) 2007, 2009 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ test_description="the most basic 'print' test"
 
 : ${srcdir=.}
 . $srcdir/test-lib.sh
+ss=$sector_size_
 
 dev=loop-file
 
@@ -30,11 +31,11 @@ msdos_magic='\125\252'
 # on linux-2.6.8 that's probably related to opening with O_DIRECT.
 # Note that the minimum number of appended zero bytes required to avoid
 # the failure was 3465.  Here, we append a little more to make the resulting
-# file have a total size of exactly 4kB.
+# file have a total size of exactly 8 sectors.
 test_expect_success \
     "setup: create the most basic partition table, manually" \
-    '{ dd if=/dev/zero  bs=510 count=1; printf "$msdos_magic"
-       dd if=/dev/zero bs=3584 count=1; } > $dev'
+    "{ dd if=/dev/zero  bs=510 count=1; printf '$msdos_magic'
+       dd if=/dev/zero bs=$(expr 8 '*' $ss - 510) count=1; } > $dev"
 
 test_expect_success \
     'print the empty table' \
@@ -47,7 +48,7 @@ fail=0
   cat <<EOF
 Model:  (file)
 Disk .../$dev: 8s
-Sector size (logical/physical): 512B/512B
+Sector size (logical/physical): ${ss}B/${ss}B
 Partition Table: msdos
 
 Number  Start  End  Size  Type  File system  Flags
@@ -59,7 +60,7 @@ test_expect_success \
     'prepare actual and expected output' \
     'test $fail = 0 &&
      mv out o2 &&
-     sed "s,^Disk .*/$dev:,Disk .../$dev:,;s,2048B/,512B/," o2 > out'
+     sed "s,^Disk .*/$dev:,Disk .../$dev:," o2 > out'
 
 test_expect_success 'check for expected output' 'compare out exp'
 
