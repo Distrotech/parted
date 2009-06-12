@@ -19,6 +19,7 @@ test_description='Consistency in msdos free space starting sector.'
 
 : ${srcdir=.}
 . $srcdir/test-lib.sh
+ss=$sector_size_
 
 ######################################################################
 # parted 1.8.8.1 and earlier was inconsistent when calculating the
@@ -26,11 +27,11 @@ test_description='Consistency in msdos free space starting sector.'
 # consistent in the use of metadata padding for msdos labels.
 ######################################################################
 
-N=100
+N=200 # number of sectors
 dev=loop-file
 test_expect_success \
     'create a file to simulate the underlying device' \
-    'dd if=/dev/zero of=$dev bs=1K count=$N 2> /dev/null'
+    'dd if=/dev/zero of=$dev bs=${ss}c count=$N 2> /dev/null'
 
 test_expect_success \
     'label the test disk' \
@@ -41,7 +42,7 @@ test_expect_success 'expect no output' 'compare out /dev/null'
 fail=0
 cat <<EOF > exp || fail=1
 BYT;
-path:200s:file:512:512:msdos:;
+path:${N}s:file:$ss:$ss:msdos:;
 1:32s:127s:96s:free;
 EOF
 
@@ -60,16 +61,16 @@ test_expect_success \
 fail=0
 cat <<EOF > exp || fail=1
 BYT;
-path:200s:file:512:512:msdos:;
-1:32s:96s:65s:free;
-1:97s:195s:99s:::;
+path:${N}s:file:$ss:$ss:msdos:;
+1:32s:50s:19s:free;
+1:51s:199s:149s:::;
 EOF
 
 test_expect_success 'create expected output file' 'test $fail = 0'
 
 test_expect_success \
     'create a partition at the end of the label' \
-    'parted -s $dev mkpart primary 50K 100K'
+    'parted -s $dev mkpart primary 51s 199s'
 
 test_expect_success \
     'display output of label with partition' \
