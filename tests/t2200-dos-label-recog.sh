@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (C) 2008 Free Software Foundation, Inc.
+# Copyright (C) 2008-2009 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ test_description='improved MSDOS partition-table recognition'
 # parted 1.8.8.1.29 and earlier would fail to recognize a DOS
 # partition table.
 ######################################################################
-N=100k
+N=10M
 dev=loop-file
 test_expect_success \
     'create a file to simulate the underlying device' \
