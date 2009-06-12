@@ -261,7 +261,7 @@ msdos_clobber (PedDevice* dev)
 	if (!ptt_read_sector (dev, 0, &label))
 		return 0;
 
-	DosRawTable *table = (DosRawTable *) label;
+	DosRawTable *table = label;
 	table->magic = 0;
         int write_ok = ped_device_write (dev, (void*) table, 0, 1);
         free (label);
@@ -1115,7 +1115,7 @@ msdos_write (const PedDisk* disk)
 	PED_ASSERT (disk != NULL, return 0);
 	PED_ASSERT (disk->dev != NULL, return 0);
 
-	void *s0 = NULL;
+	void *s0;
 	if (!ptt_read_sector (disk->dev, 0, &s0))
 		return 0;
 	DosRawTable *table = (DosRawTable *) s0;
