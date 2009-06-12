@@ -44,7 +44,10 @@ init.sh: Makefile.in
 	chmod a-w $@-t
 	mv $@-t $@
 
-TESTS_ENVIRONMENT =	\
-  srcdir='$(srcdir)'	\
-  CONFIG_HEADER='$(abs_top_builddir)/lib/config.h' \
-  ENABLE_DEVICE_MAPPER=$(ENABLE_DEVICE_MAPPER)
+TESTS_ENVIRONMENT =					\
+  exec 9>&2;						\
+  export						\
+  srcdir='$(srcdir)'					\
+  CONFIG_HEADER='$(abs_top_builddir)/lib/config.h'	\
+  ENABLE_DEVICE_MAPPER=$(ENABLE_DEVICE_MAPPER)		\
+  ; $(SHELL)

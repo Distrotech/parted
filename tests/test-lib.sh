@@ -24,6 +24,13 @@ unset TERM
 # '
 # . ./test-lib.sh
 
+skip_test_()
+{
+  echo "$0: skipping test: $@" | head -1 1>&9
+  echo "$0: skipping test: $@" 1>&2
+  exit 77
+}
+
 require_512_byte_sector_size_()
 {
   test $sector_size_ = 512 \
