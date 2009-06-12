@@ -1,7 +1,7 @@
 #!/bin/sh
 # Exercise an EXT2-resizing bug.
 
-# Copyright (C) 2007 Free Software Foundation, Inc.
+# Copyright (C) 2007, 2009 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,6 +20,8 @@ test_description='Exercise an EXT2-resize bug in at least 1.8.7'
 
 : ${srcdir=.}
 . $srcdir/test-lib.sh
+
+require_512_byte_sector_size_
 
 dev=loop-file
 # The "device size", $N, must be larger than $NEW_SIZE.

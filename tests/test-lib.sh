@@ -24,6 +24,12 @@ unset TERM
 # '
 # . ./test-lib.sh
 
+require_512_byte_sector_size_()
+{
+  test $sector_size_ = 512 \
+      || skip_test_ FS test with sector size != 512
+}
+
 error () {
 	echo "* error: $*"
 	trap - exit

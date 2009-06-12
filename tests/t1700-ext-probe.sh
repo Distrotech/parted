@@ -20,6 +20,8 @@ test_description='Probe Ext2, Ext3 and Ext4 file systems.'
 : ${srcdir=.}
 . $srcdir/test-lib.sh
 
+require_512_byte_sector_size_
+
 dev=loop-file
 
 for type in ext2 ext3 ext4; do
