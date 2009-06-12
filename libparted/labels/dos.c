@@ -307,8 +307,7 @@ chs_to_sector (const PedDevice* dev, const PedCHSGeometry *bios_geom,
 		return 0;
 	if (s < 0)
 		return 0;
-	return ((c * bios_geom->heads + h) * bios_geom->sectors + s)
-		* (dev->sector_size / 512);
+	return (c * bios_geom->heads + h) * bios_geom->sectors + s;
 }
 
 static void
@@ -322,8 +321,6 @@ sector_to_chs (const PedDevice* dev, const PedCHSGeometry* bios_geom,
 
 	if (!bios_geom)
 		bios_geom = &dev->bios_geom;
-
-	sector /= (dev->sector_size / 512);
 
 	real_c = sector / (bios_geom->heads * bios_geom->sectors);
 	real_h = (sector / bios_geom->sectors) % bios_geom->heads;
@@ -367,9 +364,7 @@ linear_start (const PedDisk* disk, const DosRawPartition* raw_part,
 	PED_ASSERT (disk != NULL, return 0);
 	PED_ASSERT (raw_part != NULL, return 0);
 
-	return offset
-	       + PED_LE32_TO_CPU (raw_part->start)
-	       	 	* (disk->dev->sector_size / 512);
+	return offset + PED_LE32_TO_CPU (raw_part->start);
 }
 
 static PedSector
@@ -379,9 +374,8 @@ linear_end (const PedDisk* disk, const DosRawPartition* raw_part,
 	PED_ASSERT (disk != NULL, return 0);
 	PED_ASSERT (raw_part != NULL, return 0);
 
-	return linear_start (disk, raw_part, offset)
-	       + (PED_LE32_TO_CPU (raw_part->length) - 1)
-	       	 	* (disk->dev->sector_size / 512);
+	return (linear_start (disk, raw_part, offset)
+                + (PED_LE32_TO_CPU (raw_part->length) - 1));
 }
 
 #ifndef DISCOVER_ONLY
@@ -988,10 +982,8 @@ fill_raw_part (DosRawPartition* raw_part,
 
 	raw_part->boot_ind = 0x80 * dos_data->boot;
 	raw_part->type = dos_data->system;
-	raw_part->start = PED_CPU_TO_LE32 ((part->geom.start - offset)
-				/ (part->disk->dev->sector_size / 512));
-	raw_part->length = PED_CPU_TO_LE32 (part->geom.length
-				/ (part->disk->dev->sector_size / 512));
+	raw_part->start = PED_CPU_TO_LE32 (part->geom.start - offset);
+	raw_part->length = PED_CPU_TO_LE32 (part->geom.length);
 
 	sector_to_chs (part->disk->dev, &bios_geom, part->geom.start,
 		       &raw_part->chs_start);
@@ -1020,10 +1012,8 @@ fill_ext_raw_part_geom (DosRawPartition* raw_part,
 
 	raw_part->boot_ind = 0;
 	raw_part->type = PARTITION_DOS_EXT;
-	raw_part->start = PED_CPU_TO_LE32 ((geom->start - offset)
-				/ (geom->dev->sector_size / 512));
-	raw_part->length = PED_CPU_TO_LE32 (geom->length
-				/ (geom->dev->sector_size / 512));
+	raw_part->start = PED_CPU_TO_LE32 (geom->start - offset);
+	raw_part->length = PED_CPU_TO_LE32 (geom->length);
 
 	sector_to_chs (geom->dev, bios_geom, geom->start, &raw_part->chs_start);
 	sector_to_chs (geom->dev, bios_geom, geom->start + geom->length - 1,
