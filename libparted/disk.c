@@ -1,6 +1,6 @@
  /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1999, 2000, 2001, 2002, 2003, 2005, 2007, 2008
+    Copyright (C) 1999, 2000, 2001, 2002, 2003, 2005, 2007, 2008, 2009
                   Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
@@ -352,6 +352,9 @@ ped_disk_new_fresh (PedDevice* dev, const PedDiskType* type)
 	PED_ASSERT (dev != NULL, return NULL);
 	PED_ASSERT (type != NULL, return NULL);
 	PED_ASSERT (type->ops->alloc != NULL, return NULL);
+	PedCHSGeometry*	bios_geom = &dev->bios_geom;
+	PED_ASSERT (bios_geom->sectors != 0, return NULL);
+	PED_ASSERT (bios_geom->heads != 0, return NULL);
 
 	disk = type->ops->alloc (dev);
 	if (!disk)
