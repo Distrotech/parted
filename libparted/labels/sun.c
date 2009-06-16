@@ -35,7 +35,7 @@
 
 #include "misc.h"
 #include "pt-tools.h"
-#include "verify.h" // FIXME
+#include "verify.h"
 
 /* Most of this came from util-linux's sun support, which was mostly done
    by Jakub Jelinek.  */
@@ -332,7 +332,7 @@ sun_read (PedDisk* disk)
 		goto error;
 
 	SunRawLabel *label = &disk_data->raw_label;
-	verify (sizeof (*label) == 512); // FIXME
+	verify (sizeof (*label) == 512);
 	memcpy (label, s0, sizeof (*label));
 	free (s0);
 
