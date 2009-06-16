@@ -19,6 +19,11 @@ test_description='Make sure the scripting option works (-s) properly.'
 
 : ${srcdir=.}
 . $srcdir/test-lib.sh
+ss=$sector_size_
+N=100 # number of sectors
+
+: ${abs_top_builddir=$(cd ../..; pwd)}
+: ${CONFIG_HEADER="$abs_top_builddir/lib/config.h"}
 
 config_h=$abs_top_srcdir
 grep '^#define HAVE_LIBREADLINE 1' $CONFIG_HEADER > /dev/null ||
@@ -41,11 +46,13 @@ normalize_part_diag_ errS || fail=1
   printf 'Is this still acceptable to you?\nYes/No?'; } >> errI || fail=1
 
 for mkpart in mkpart mkpartfs; do
+  # With larger sector size, skip FS-related use of mkpartfs.
+  test $sector_size_ -gt 512 && test $mkpart = mkpartfs && continue
 
   # Test for mkpart/mkpartfs in scripting mode
   test_expect_success \
       'Create the test file' \
-      'dd if=/dev/zero of=testfile bs=512 count=100 2> /dev/null'
+      'dd if=/dev/zero of=testfile bs=${ss}c count=$N 2> /dev/null'
 
   test_expect_failure \
       "Test the scripting mode of $mkpart" \
@@ -62,8 +69,8 @@ for mkpart in mkpart mkpartfs; do
   test_expect_success \
       'Create the test file' \
       '
-      rm testfile ;
-      dd if=/dev/zero of=testfile bs=512 count=100 2> /dev/null
+      rm -f testfile
+      dd if=/dev/zero of=testfile bs=${ss}c count=$N 2> /dev/null
       '
   test_expect_failure \
       "Test the interactive mode of $mkpart" \
