@@ -27,6 +27,7 @@ test_description='create linux-swap partitions'
 ######################################################################
 N=1M
 dev=loop-file
+dev2=loop-file-2
 test_expect_success \
     'create a file to simulate the underlying device' \
     'dd if=/dev/null of=$dev bs=1 seek=$N 2> /dev/null'
@@ -51,5 +52,47 @@ test_expect_success \
     'extract byte 451 (fs-type)' \
     'od -t x1 -An -j450 -N1 $dev > out && echo " 82" > exp'
 test_expect_success 'expect it to be 82, not 83' 'compare out exp'
+
+test_expect_success \
+    'create another file to simulate the underlying device' \
+    'dd if=/dev/null of=$dev2 bs=1 seek=$N 2> /dev/null'
+
+test_expect_success \
+    'label another test disk' \
+    'parted -s $dev2 mklabel msdos > out 2>&1'
+test_expect_success 'expect no output' 'compare out /dev/null'
+
+test_expect_success \
+    'create another partition' \
+    'parted -s $dev2 mkpart primary 0 1 > out 2>&1'
+test_expect_success 'expect no output' 'compare out /dev/null'
+
+test_expect_success \
+    'create another linux-swap file system' \
+    'parted -s $dev2 mkfs 1 "linux-swap(new)" > out 2>&1'
+test_expect_success 'expect no output' 'compare out /dev/null'
+
+# partition starts at offset 16384; swap UUID is 1036 bytes in
+test_expect_success \
+    'extract UUID 1' \
+    'od -t x1 -An -j17420 -N16 $dev > uuid1'
+test_expect_success \
+    'extract UUID 2' \
+    'od -t x1 -An -j17420 -N16 $dev2 > uuid2'
+test_expect_failure \
+    'two linux-swap file systems have different UUIDs' \
+    'compare uuid1 uuid2'
+
+test_expect_success \
+    'check linux-swap file system' \
+    'parted -s $dev2 check 1 > out 2>&1'
+test_expect_success 'expect no output' 'compare out /dev/null'
+
+test_expect_success \
+    'extract new UUID 2' \
+    'od -t x1 -An -j17420 -N16 $dev2 > uuid2-new'
+test_expect_success \
+    'check preserves linux-swap UUID' \
+    'compare uuid2 uuid2-new'
 
 test_done

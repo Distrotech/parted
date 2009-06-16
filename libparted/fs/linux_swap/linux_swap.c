@@ -31,6 +31,7 @@
 #endif /* ENABLE_NLS */
 
 #include <unistd.h>
+#include <uuid/uuid.h>
 
 #define SWAP_SPECIFIC(fs) ((SwapSpecific*) (fs->type_specific))
 #define BUFFER_SIZE 128
@@ -178,7 +179,14 @@ swap_init (PedFileSystem* fs, int fresh)
 					- sizeof (SwapNewHeader)) / 4;
 
 	if (fresh) {
+		uuid_t uuid_dat;
+
 		memset (fs_info->header, 0, getpagesize());
+
+		/* version is always 1 here */
+		uuid_generate (uuid_dat);
+		memcpy (fs_info->header->new.sws_uuid, uuid_dat,
+			sizeof (fs_info->header->new.sws_uuid));
                 return 1;
         }
 	else
