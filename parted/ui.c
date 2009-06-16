@@ -842,8 +842,12 @@ command_line_prompt_words (const char* prompt, const char* def,
                 real_prompt = _construct_prompt (prompt, _def, possibilities);
                 line = _readline (real_prompt, possibilities);
                 free (real_prompt);
-                if (!line)
+                if (!line) {
+                        /* readline returns NULL to indicate EOF.
+                           Treat that like an interrupt.  */
+                        got_ctrl_c = 1;
                         break;
+                }
 
                 if (!strlen (line)) {
                         if (_def)
