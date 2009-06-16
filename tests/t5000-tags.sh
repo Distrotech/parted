@@ -19,15 +19,22 @@ test_description="test bios_grub flag in gpt labels"
 
 : ${srcdir=.}
 . $srcdir/test-lib.sh
+ss=$sector_size_
 
 dev=loop-file
+N=300 # number of sectors
 
-nb=1024
-n_sectors=$(expr $nb '*' 512 / $sector_size_)
+part_sectors=128
+start_sector=60
+end_sector=$(expr $start_sector + $part_sectors - 1)
+
+test_expect_success \
+    "setup: reasonable params" \
+    'test $end_sector -lt $N'
 
 test_expect_success \
     "setup: create zeroed device" \
-    'dd if=/dev/zero bs=512 count=$nb of=$dev'
+    'dd if=/dev/zero of=$dev bs=${ss}c count=$N 2> /dev/null'
 
 test_expect_success \
     'create gpt label' \
@@ -43,15 +50,12 @@ test_expect_success \
 
 test_expect_success \
     'check for expected output' \
-    'printf "BYT;\n$dev:${n_sectors}s:file:$sector_size_:$sector_size_:gpt:;\n" > exp &&
+    'printf "BYT;\n$dev:${N}s:file:$ss:$ss:gpt:;\n" > exp &&
      compare exp out'
 
-part_sectors=128
-start_sector=60
-end_sector=$(expr $start_sector + $part_sectors - 1)
 test_expect_success \
     'add a partition' \
-    'parted -s $dev mkpart primary ${start_sector}s ${end_sector}s >out 2>&1'
+    'parted -s $dev u s mkpart primary ${start_sector} ${end_sector} >out 2>&1'
 
 test_expect_success \
     'print the table (before manual modification)' \
@@ -64,7 +68,7 @@ test_expect_success \
 # dash's builtin printf doesn't recognize such \xHH hexadecimal escapes.
 bios_boot_magic='\110\141\150\41\111\144\157\156\164\116\145\145\144\105\106\111'
 
-printf "$bios_boot_magic" | dd of=$dev bs=$sector_size_ seek=2 conv=notrunc
+printf "$bios_boot_magic" | dd of=$dev bs=$ss seek=2 conv=notrunc
 
 test_expect_success \
     'print the table (after manual modification)' \
@@ -77,10 +81,10 @@ gen_exp()
 {
   cat <<EOF
 BYT;
-$dev:${n_sectors}s:file:$sector_size_:$sector_size_:gpt:;
+$dev:${N}s:file:$ss:$ss:gpt:;
 1:${start_sector}s:${end_sector}s:${part_sectors}s::primary:;
 BYT;
-$dev:${n_sectors}s:file:$sector_size_:$sector_size_:gpt:;
+$dev:${N}s:file:$ss:$ss:gpt:;
 1:${start_sector}s:${end_sector}s:${part_sectors}s::primary:bios_grub;
 EOF
 }
