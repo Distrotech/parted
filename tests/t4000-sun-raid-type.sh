@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (C) 2008 Free Software Foundation, Inc.
+# Copyright (C) 2008-2009 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,13 +22,14 @@ test_description="RAID support on sun disk type"
 
 : ${srcdir=.}
 . $srcdir/test-lib.sh
+ss=$sector_size_
 
-N=10M
+N=2000 # number of sectors
 dev=sun-disk-file
-exp="BYT;\n---:20480s:file:512:512:sun:;\n1:0s:50s:51s"
+exp="BYT;\n---:${N}s:file:$ss:$ss:sun:;\n1:0s:50s:51s"
 test_expect_success \
     'create an empty file as a test disk' \
-    'dd if=/dev/null of=$dev bs=1 seek=$N 2> /dev/null'
+    'dd if=/dev/zero of=$dev bs=${ss}c count=$N 2> /dev/null'
 
 test_expect_success \
     'label the test disk as a sun disk' \
