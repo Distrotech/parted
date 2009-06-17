@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2000, 2007, 2008 Free Software Foundation, Inc.
+    Copyright (C) 2000, 2007, 2008, 2009 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ const PedAlignment* ped_alignment_none = NULL;
  * is all about adding or subtracting N, and we like our remainders
  * to be between 0 and N - 1.
  */
-PedSector
+static PedSector
 abs_mod (PedSector a, PedSector b)
 {
 	if (a < 0)
@@ -196,7 +196,7 @@ ped_alignment_duplicate (const PedAlignment* align)
  * 	gcd = greatest common divisor of a and b
  * 	gcd = x*a + y*b
  */
-EuclidTriple
+static EuclidTriple
 extended_euclid (int a, int b)
 {
 	EuclidTriple	result;
@@ -479,4 +479,3 @@ ped_alignment_is_aligned (const PedAlignment* align, const PedGeometry* geom,
 /**
  * @}
  */
-

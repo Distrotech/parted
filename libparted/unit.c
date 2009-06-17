@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 2005, 2007 Free Software Foundation, Inc.
+    Copyright (C) 2005, 2007, 2009 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -237,7 +237,7 @@ ped_unit_format_custom_byte (const PedDevice* dev, PedSector byte, PedUnit unit)
 	/* but 101.5 has to be rounded to 102... so we multiply by 1+E. */
 	/* This just divide by 2 the natural IEEE754 extended precision */
 	/* and won't cause any trouble before 1000 TB */
-	d = ((double)byte / (double)ped_unit_get_size (dev, unit))
+	d = ((double)byte / ped_unit_get_size (dev, unit))
 	    * (1. + DBL_EPSILON);
 	w = d + ( (d < 10. ) ? 0.005 :
 		  (d < 100.) ? 0.05  :

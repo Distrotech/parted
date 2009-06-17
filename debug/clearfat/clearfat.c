@@ -55,7 +55,7 @@
 #define AUTHORS \
   "<http://parted.alioth.debian.org/cgi-bin/trac.cgi/browser/AUTHORS>"
 
-void
+static void
 usage (int status)
 {
   if (status != EXIT_SUCCESS)
