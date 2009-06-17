@@ -973,23 +973,18 @@ error:
 static int
 _write_pmbr (PedDevice * dev)
 {
-	size_t buf_len = pth_get_size (dev);
-	LegacyMBR_t *pmbr = ped_malloc (buf_len);
-
-#if 0
 	/* The UEFI spec is not clear about what to do with the following
 	   elements of the Protective MBR (pmbr): BootCode (0-440B),
 	   UniqueMBRSignature (440B-444B) and Unknown (444B-446B).
 	   With this in mind, we try not to modify these elements.  */
-	if (ped_device_read (dev, &pmbr, 0, GPT_PMBR_SECTORS) < GPT_PMBR_SECTORS)
-		memset (&pmbr, 0, sizeof(pmbr));
+	void *s0;
+	if (!ptt_read_sector (dev, 0, &s0))
+		return 0;
+	LegacyMBR_t *pmbr = s0;
 
-	/* Zero out all the legacy partitions.
-	   There are 4 PartitionRecords.  */
-	memset (pmbr.PartitionRecord, 0, sizeof pmbr.PartitionRecord);
-#endif
+	/* Zero out the legacy partitions.  */
+	memset (pmbr->PartitionRecord, 0, sizeof pmbr->PartitionRecord);
 
-	memset(pmbr, 0, buf_len);
 	pmbr->Signature = PED_CPU_TO_LE16(MSDOS_MBR_SIGNATURE);
 	pmbr->PartitionRecord[0].OSType      = EFI_PMBR_OSTYPE_EFI;
 	pmbr->PartitionRecord[0].StartSector = 1;
@@ -1004,7 +999,7 @@ _write_pmbr (PedDevice * dev)
 
         int write_ok = ped_device_write (dev, pmbr, GPT_PMBR_LBA,
                                          GPT_PMBR_SECTORS);
-        free (pmbr);
+        free (s0);
 	return write_ok;
 }
 
