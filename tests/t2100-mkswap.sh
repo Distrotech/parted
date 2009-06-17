@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (C) 2007 Free Software Foundation, Inc.
+# Copyright (C) 2007, 2009 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,6 +19,8 @@ test_description='create linux-swap partitions'
 
 : ${srcdir=.}
 . $srcdir/test-lib.sh
+
+require_512_byte_sector_size_
 
 ######################################################################
 # When creating a partition of type linux-swap(v1) in a DOS partition
