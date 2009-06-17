@@ -49,8 +49,5 @@ priority than fixing more serious problems involving stack smashing,
 used-uninitialized, using-freed, etc.  and generally getting the basic
 partition-related tests to pass.
 
-Note that I've been making almost no effort to make _file system_-
-related tests pass with >512 sector sizes.
-
-Before long, I expect to adjust or skip FS-related tests that fail
-when sector size is larger than 512.
+I am making no effort to make _file system_-related tests pass
+with >512-byte sector sizes.

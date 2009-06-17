@@ -62,10 +62,10 @@ new-abi-baseline:
 # 'check-abi' to test for changes against that file.
 check-abi: baseline_symbols current_symbols.txt
 	@diff -u ${baseline_file} ./current_symbols.txt 2>&1 \
-         | tee libparted.abi-diff
+	 | tee libparted.abi-diff
 	@test `wc -l < libparted.abi-diff` -eq 0 && exit 0 \
-         || echo "ABI has changed. Please, update you ABI package version." \
-         && exit 1
+	 || echo "ABI has changed. Please, update you ABI package version." \
+	 && exit 1
 
 MOSTLYCLEANDIRS = m4
 
@@ -75,6 +75,16 @@ MAINTAINERCLEANFILES += \
   INSTALL       \
   aclocal.m4    \
   configure
+
+# Run the regression test suite with different settings,
+# to ensure it works with simulated partition sizes > 512.
+.PHONY: check-other-sector_sizes
+check-other-sector_sizes:
+	PARTED_SECTOR_SIZE=1024 $(MAKE) check-recursive
+	PARTED_SECTOR_SIZE=2048 $(MAKE) check-recursive
+	PARTED_SECTOR_SIZE=4096 $(MAKE) check-recursive
+
+check: check-other-sector_sizes
 
 # Arrange so that .tarball-version appears only in the distribution
 # tarball, and never in a checked-out repository.
