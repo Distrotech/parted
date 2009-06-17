@@ -1,5 +1,6 @@
 sbin_PROGRAMS = parted
 
+AM_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
 partedincludedir      = -I$(top_srcdir)/lib -I$(top_srcdir)/include
 
 parted_SOURCES = command.c	\

@@ -13,6 +13,8 @@ if BUILD_LINUX
 ARCH_SOURCE += arch/$(OS).h
 endif
 
+AM_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
+
 SUBDIRS       = labels fs . $(SUBDIRS_CHECK)
 
 

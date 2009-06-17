@@ -1,5 +1,6 @@
 partedincludedir      = -I$(top_srcdir)/lib -I$(top_srcdir)/include
 
+AM_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
 sbin_PROGRAMS = partprobe
 
 partprobe_SOURCES = partprobe.c

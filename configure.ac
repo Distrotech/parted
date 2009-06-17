@@ -191,6 +191,87 @@ AC_SYS_LARGEFILE
 
 gl_INIT
 
+AC_ARG_ENABLE([gcc-warnings],
+  [AS_HELP_STRING([--enable-gcc-warnings],
+		  [turn on lots of GCC warnings (for developers)])],
+  [case $enableval in
+     yes|no) ;;
+     *)      AC_MSG_ERROR([bad value $enableval for gcc-warnings option]) ;;
+   esac
+   gl_gcc_warnings=$enableval],
+  [gl_gcc_warnings=no]
+)
+
+if test "$gl_gcc_warnings" = yes; then
+  gl_WARN_ADD([-Werror], [WERROR_CFLAGS])
+  AC_SUBST([WERROR_CFLAGS])
+
+  nw=
+  # This, $nw, is the list of warnings we disable.
+  nw="$nw -Wdeclaration-after-statement" # too useful to forbid
+  nw="$nw -Waggregate-return"       # anachronistic
+  nw="$nw -Wlong-long"              # C90 is anachronistic (lib/gethrxtime.h)
+  nw="$nw -Wc++-compat"             # We don't care about C++ compilers
+  nw="$nw -Wundef"                  # Warns on '#if GNULIB_FOO' etc in gnulib
+  nw="$nw -Wtraditional"            # Warns on #elif which we use often
+  nw="$nw -Wcast-qual"              # Too many warnings for now
+  nw="$nw -Wconversion"             # Too many warnings for now
+  nw="$nw -Wsystem-headers"         # Don't let system headers trigger warnings
+  nw="$nw -Wsign-conversion"        # Too many warnings for now
+  nw="$nw -Wtraditional-conversion" # Too many warnings for now
+  nw="$nw -Wunreachable-code"       # Too many warnings for now
+  nw="$nw -Wpadded"                 # Our structs are not padded
+  nw="$nw -Wredundant-decls"        # openat.h declares e.g., mkdirat
+  nw="$nw -Wlogical-op"             # any use of fwrite provokes this
+  nw="$nw -Wformat-nonliteral"      # who.c and pinky.c strftime uses
+  nw="$nw -Wvla"                    # warnings in gettext.h
+  nw="$nw -Wnested-externs"         # use of XARGMATCH/verify_function__
+  nw="$nw -Wswitch-enum"            # Too many warnings for now
+  nw="$nw -Wswitch-default"         # Too many warnings for now
+  # Too many warnings for now
+  nw="$nw -Wattributes"
+  nw="$nw -Wstrict-prototypes"
+  nw="$nw -Wold-style-definition"
+  nw="$nw -Wpacked"
+  nw="$nw -Wmissing-prototypes"
+  nw="$nw -Wmissing-declarations"
+  nw="$nw -Wmissing-noreturn"
+  # things I might fix soon:
+  nw="$nw -Wfloat-equal"            # sort.c, seq.c
+  nw="$nw -Wmissing-format-attribute" # copy.c
+  nw="$nw -Wunsafe-loop-optimizations" # a few src/*.c
+  nw="$nw -Winline"                 # system.h's readdir_ignoring_dot_and_dotdot
+  nw="$nw -Wstrict-overflow"        # expr.c, pr.c, tr.c, factor.c
+  nw="$nw -Wstack-protector"        # libparted/label/gpt.c
+  # ?? -Wstrict-overflow
+
+  gl_MANYWARN_ALL_GCC([ws])
+  gl_MANYWARN_COMPLEMENT([ws], [$ws], [$nw])
+  for w in $ws; do
+    gl_WARN_ADD([$w])
+  done
+  gl_WARN_ADD([-Wno-missing-field-initializers]) # We need this one
+  gl_WARN_ADD([-Wno-sign-compare])     # Too many warnings for now
+  gl_WARN_ADD([-Wno-pointer-sign])     # Too many warnings for now
+  gl_WARN_ADD([-Wno-unused-parameter]) # Too many warnings for now
+  gl_WARN_ADD([-Wno-unused-macros]) # Too many warnings for now
+
+  # In spite of excluding -Wlogical-op above, it is enabled, as of
+  # gcc 4.5.0 20090517, and it provokes warnings in cat.c, dd.c, truncate.c
+  gl_WARN_ADD([-Wno-logical-op])
+
+  gl_WARN_ADD([-fdiagnostics-show-option])
+
+  AC_SUBST([WARN_CFLAGS])
+
+  AC_DEFINE([lint], [1], [Define to 1 if the compiler is checking for lint.])
+  AC_DEFINE([_FORTIFY_SOURCE], [2],
+    [enable compile-time and run-time bounds-checking, and some warnings])
+  AC_DEFINE([GNULIB_PORTCHECK], [1], [enable some gnulib portability checks])
+fi
+
+
+
 AC_CHECK_SIZEOF([off_t], [64], [
 	#include <stdio.h>
 	#include <sys/types.h>

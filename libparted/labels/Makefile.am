@@ -9,6 +9,8 @@ else
 S390_SRCS =
 endif
 
+AM_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
+
 partedincludedir = \
   -I$(top_srcdir)/lib -I$(top_srcdir)/include -I$(top_srcdir)/libparted
 noinst_LTLIBRARIES    =	liblabels.la
