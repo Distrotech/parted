@@ -384,23 +384,18 @@ sun_read (PedDisk* disk)
 
 #ifndef DISCOVER_ONLY
 static int
-_probe_and_use_old_info (const PedDisk* disk)
+_use_old_info (const PedDisk* disk, const void *sector_0)
 {
-	void *s0;
-	if (!ptt_read_sector (disk->dev, 0, &s0))
-		return 0;
-
-	SunRawLabel const *old_label = (void const *) s0;
+	SunRawLabel const *old_label = sector_0;
 
 	if (old_label->info[0]
 	    && PED_BE16_TO_CPU (old_label->magic) == SUN_DISK_MAGIC) {
 		SunDiskData *sun_specific = disk->disk_specific;
-		memcpy (&sun_specific->raw_label, s0,
+		memcpy (&sun_specific->raw_label, sector_0,
                         sizeof (sun_specific->raw_label));
-                verify (sizeof (sun_specific->raw_label) == 512); // FIXME
+                verify (sizeof (sun_specific->raw_label) == 512);
 	}
 
-	free (s0);
 	return 1;
 }
 
@@ -416,8 +411,17 @@ sun_write (const PedDisk* disk)
 	PED_ASSERT (disk != NULL, return 0);
 	PED_ASSERT (disk->dev != NULL, return 0);
 
-	if (!_probe_and_use_old_info (disk))
+	void *s0;
+	if (!ptt_read_sector (disk->dev, 0, &s0))
 		return 0;
+
+	/* Calling _use_old_info here in sun_write
+	   above seems wrong, because it modifies *DISK.
+	   FIXME: maybe later.  */
+	if (!_use_old_info (disk, s0)) {
+                free (s0);
+		return 0;
+        }
 
 	disk_data = (SunDiskData*) disk->disk_specific;
 	label = &disk_data->raw_label;
@@ -478,11 +482,14 @@ sun_write (const PedDisk* disk)
 
 	sun_compute_checksum (label);
 
-	if (!ped_device_write (disk->dev, label, 0, 1))
-		goto error;
-	return ped_device_sync (disk->dev);
+        verify (sizeof *label == 512);
+        memcpy (s0, label, sizeof *label);
+	bool write_ok = ped_device_write (disk->dev, s0, 0, 1);
+	free (s0);
 
-error:
+	if (write_ok)
+		return ped_device_sync (disk->dev);
+
 	return 0;
 }
 #endif /* !DISCOVER_ONLY */
