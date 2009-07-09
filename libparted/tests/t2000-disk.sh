@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (C) 2007-2008 Free Software Foundation, Inc.
+# Copyright (C) 2007-2009 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ test_description='run the disk unit tests in a directory supporting O_DIRECT'
 # in which one can open a file with the O_DIRECT flag.
 
 : ${top_srcdir=../..}
-. $top_srcdir/tests/test-lib.sh
+. "$top_srcdir/tests/test-lib.sh"
 
 test_expect_success \
     'run the actual tests' 'disk'

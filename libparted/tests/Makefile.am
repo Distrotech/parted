@@ -25,9 +25,9 @@ CLEANFILES = init.sh
 all: init.sh
 init.sh: Makefile.in
 	rm -f $@-t $@
-	echo 'PARTED_USABLE_TEST_DIR=$(PARTED_USABLE_TEST_DIR)' > $@-t
-	echo 'abs_top_srcdir=$(abs_top_srcdir)' >> $@-t
-	echo 'PATH=$(abs_builddir)$(PATH_SEPARATOR)$$PATH; export PATH' >> $@-t
+	echo 'PARTED_USABLE_TEST_DIR="$(PARTED_USABLE_TEST_DIR)"' > $@-t
+	echo 'abs_top_srcdir="$(abs_top_srcdir)"' >> $@-t
+	echo 'PATH="$(abs_builddir)$(PATH_SEPARATOR)$$PATH"; export PATH' >> $@-t
 	chmod a-w $@-t
 	mv $@-t $@
 

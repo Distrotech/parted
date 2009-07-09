@@ -35,9 +35,9 @@ CLEANFILES = init.sh
 all: init.sh
 init.sh: Makefile.in
 	rm -f $@-t $@
-	echo 'PARTED_USABLE_TEST_DIR=$(PARTED_USABLE_TEST_DIR)' > $@-t
-	echo 'abs_top_srcdir=$(abs_top_srcdir)' >> $@-t
-	echo 'PATH=$(parted_dir)$(sep)$(pp_dir)$(sep)$$PATH' >> $@-t
+	echo 'PARTED_USABLE_TEST_DIR="$(PARTED_USABLE_TEST_DIR)"' > $@-t
+	echo 'abs_top_srcdir="$(abs_top_srcdir)"' >> $@-t
+	echo 'PATH="$(parted_dir)$(sep)$(pp_dir)$(sep)$$PATH"' >> $@-t
 	echo 'export PATH' >> $@-t
 	chmod a-w $@-t
 	mv $@-t $@
