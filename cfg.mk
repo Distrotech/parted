@@ -36,6 +36,7 @@ local-checks-to-skip = \
   sc_prohibit_strcmp \
   sc_changelog \
   sc_prohibit_atoi_atof \
+  sc_require_test_exit_idiom \
   sc_system_h_headers \
   sc_space_tab \
   sc_tight_scope \
