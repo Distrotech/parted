@@ -1026,7 +1026,6 @@ static int
 write_ext_table (const PedDisk* disk,
                  PedSector sector, const PedPartition* logical)
 {
-	DosRawTable		table;
 	PedPartition*		part;
 	PedSector		lba_offset;
 
@@ -1036,10 +1035,13 @@ write_ext_table (const PedDisk* disk,
 
 	lba_offset = ped_disk_extended_partition (disk)->geom.start;
 
-	memset (&table, 0, sizeof (DosRawTable));
-	table.magic = PED_CPU_TO_LE16 (MSDOS_MAGIC);
+	void *s = ped_calloc (disk->dev->sector_size);
+	if (s == NULL)
+		return 0;
+	DosRawTable *table = s;
+	table->magic = PED_CPU_TO_LE16 (MSDOS_MAGIC);
 
-	if (!fill_raw_part (&table.partitions[0], logical, sector))
+	if (!fill_raw_part (&table->partitions[0], logical, sector))
 		return 0;
 
 	part = ped_disk_get_partition (disk, logical->num + 1);
@@ -1052,7 +1054,7 @@ write_ext_table (const PedDisk* disk,
 		if (!geom)
 			return 0;
 		partition_probe_bios_geometry (part, &bios_geom);
-		fill_ext_raw_part_geom (&table.partitions[1], &bios_geom,
+		fill_ext_raw_part_geom (&table->partitions[1], &bios_geom,
 				        geom, lba_offset);
 		ped_geometry_destroy (geom);
 
@@ -1060,7 +1062,9 @@ write_ext_table (const PedDisk* disk,
 			return 0;
 	}
 
-	return ped_device_write (disk->dev, (void*) &table, sector, 1);
+	int ok = ped_device_write (disk->dev, table, sector, 1);
+	free (s);
+	return ok;
 }
 
 static int
