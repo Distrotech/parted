@@ -18,7 +18,7 @@
 
 /* Return nonzero if FS_TYPE_NAME starts with "linux-swap".
    This must match the NUL-terminated "linux-swap" as well
-   as "linux-swap(old)" and "linux-swap(new)".  */
+   as "linux-swap(v0)" and "linux-swap(v1)".  */
 static inline int
 is_linux_swap (char const *fs_type_name)
 {

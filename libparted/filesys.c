@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1999, 2000, 2001, 2007 Free Software Foundation, Inc.
+    Copyright (C) 1999, 2000, 2001, 2007, 2009 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -41,6 +41,7 @@
 #define BUFFER_SIZE	4096		/* in sectors */
 
 static PedFileSystemType*	fs_types = NULL;
+static PedFileSystemAlias*	fs_aliases = NULL;
 
 void
 ped_file_system_type_register (PedFileSystemType* fs_type)
@@ -72,6 +73,49 @@ ped_file_system_type_unregister (PedFileSystemType* fs_type)
 		fs_types = fs_type->next;
 }
 
+void
+ped_file_system_alias_register (PedFileSystemType* fs_type, const char* alias,
+				int deprecated)
+{
+	PedFileSystemAlias*	fs_alias;
+
+	PED_ASSERT (fs_type != NULL, return);
+	PED_ASSERT (alias != NULL, return);
+
+	fs_alias = ped_malloc (sizeof *fs_alias);
+	if (!fs_alias)
+		return;
+
+	fs_alias->next = fs_aliases;
+	fs_alias->fs_type = fs_type;
+	fs_alias->alias = alias;
+	fs_alias->deprecated = deprecated;
+	fs_aliases = fs_alias;
+}
+
+void
+ped_file_system_alias_unregister (PedFileSystemType* fs_type,
+				  const char* alias)
+{
+	PedFileSystemAlias*	walk;
+	PedFileSystemAlias*	last = NULL;
+
+	PED_ASSERT (fs_aliases != NULL, return);
+	PED_ASSERT (fs_type != NULL, return);
+	PED_ASSERT (alias != NULL, return);
+
+	for (walk = fs_aliases; walk; last = walk, walk = walk->next) {
+		if (walk->fs_type == fs_type && !strcmp (walk->alias, alias))
+			break;
+	}
+
+	PED_ASSERT (walk != NULL, return);
+	if (last)
+		last->next = walk->next;
+	else
+		fs_aliases = walk->next;
+}
+
 /**
  * Get a PedFileSystemType by its @p name.
  *
@@ -81,6 +125,7 @@ PedFileSystemType*
 ped_file_system_type_get (const char* name)
 {
 	PedFileSystemType*	walk;
+	PedFileSystemAlias*	alias_walk;
 
 	PED_ASSERT (name != NULL, return NULL);
 
@@ -88,7 +133,22 @@ ped_file_system_type_get (const char* name)
 		if (!strcasecmp (walk->name, name))
 			break;
 	}
-	return walk;
+	if (walk != NULL)
+		return walk;
+
+	for (alias_walk = fs_aliases; alias_walk != NULL;
+	     alias_walk = alias_walk->next) {
+		if (!strcasecmp (alias_walk->alias, name))
+			break;
+	}
+	if (alias_walk != NULL) {
+		if (alias_walk->deprecated)
+			PED_DEBUG (0, "File system alias %s is deprecated",
+				   name);
+		return alias_walk->fs_type;
+	}
+
+	return NULL;
 }
 
 /**
@@ -103,6 +163,20 @@ ped_file_system_type_get_next (const PedFileSystemType* fs_type)
 		return fs_type->next;
 	else
 		return fs_types;
+}
+
+/**
+ * Get the next PedFileSystemAlias after @p fs_alias.
+ *
+ * @return @c NULL if @p fs_alias is the last item in the list.
+ */
+PedFileSystemAlias*
+ped_file_system_alias_get_next (const PedFileSystemAlias* fs_alias)
+{
+	if (fs_alias)
+		return fs_alias->next;
+	else
+		return fs_aliases;
 }
 
 /**

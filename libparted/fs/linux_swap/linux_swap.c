@@ -69,12 +69,12 @@ typedef struct {
 	unsigned int	max_bad_pages;
 } SwapSpecific;
 
+static PedFileSystemType _swap_v0_type;
 static PedFileSystemType _swap_v1_type;
-static PedFileSystemType _swap_v2_type;
 static PedFileSystemType _swap_swsusp_type;
 
+static PedFileSystem* _swap_v0_open (PedGeometry* geom);
 static PedFileSystem* _swap_v1_open (PedGeometry* geom);
-static PedFileSystem* _swap_v2_open (PedGeometry* geom);
 static PedFileSystem* _swap_swsusp_open (PedGeometry* geom);
 static int swap_close (PedFileSystem* fs);
 
@@ -89,11 +89,11 @@ _generic_swap_probe (PedGeometry* geom, int kind)
         switch (kind) {
         /* Check for old style swap partitions. */
                 case 0:
-                        fs = _swap_v1_open(geom);
+                        fs = _swap_v0_open(geom);
                         break;
         /* Check for new style swap partitions. */
                 case 1:
-                        fs = _swap_v2_open(geom);
+                        fs = _swap_v1_open(geom);
                         break;
         /* Check for swap partitions containing swsusp data. */
                 case -1:
@@ -135,11 +135,11 @@ _generic_swap_clobber (PedGeometry* geom, int kind)
         switch (kind) {
         /* Check for old style swap partitions. */
                 case 0:
-                        fs = _swap_v1_open(geom);
+                        fs = _swap_v0_open(geom);
                         break;
         /* Check for new style swap partitions. */
                 case 1:
-                        fs = _swap_v2_open(geom);
+                        fs = _swap_v1_open(geom);
                         break;
         /* Check for swap partitions containing swsusp data. */
                 case -1:
@@ -222,7 +222,7 @@ swap_alloc (PedGeometry* geom)
 	fs->geom = ped_geometry_duplicate (geom);
 	if (!fs->geom)
 		goto error_free_buffer;
-	fs->type = &_swap_v2_type;
+	fs->type = &_swap_v1_type;
 	return fs;
 
 error_free_buffer:
@@ -251,7 +251,7 @@ swap_free (PedFileSystem* fs)
 }
 
 static PedFileSystem*
-_swap_v1_open (PedGeometry* geom)
+_swap_v0_open (PedGeometry* geom)
 {
 	PedFileSystem*		fs;
 	SwapSpecific*		fs_info;
@@ -293,7 +293,7 @@ error:
 }
 
 static PedFileSystem*
-_swap_v2_open (PedGeometry* geom)
+_swap_v1_open (PedGeometry* geom)
 {
 	PedFileSystem*		fs;
 	SwapSpecific*		fs_info;
@@ -565,7 +565,7 @@ error:
 static PedFileSystem*
 swap_copy (const PedFileSystem* fs, PedGeometry* geom, PedTimer* timer)
 {
-	return ped_file_system_create (geom, &_swap_v2_type, timer);
+	return ped_file_system_create (geom, &_swap_v1_type, timer);
 }
 
 static int
@@ -602,12 +602,12 @@ swap_get_copy_constraint (const PedFileSystem* fs, const PedDevice* dev)
 #endif /* !DISCOVER_ONLY */
 
 static PedGeometry*
-_swap_v1_probe (PedGeometry* geom) {
+_swap_v0_probe (PedGeometry* geom) {
         return _generic_swap_probe (geom, 0);
 }
 
 static PedGeometry*
-_swap_v2_probe (PedGeometry* geom) {
+_swap_v1_probe (PedGeometry* geom) {
         return _generic_swap_probe (geom, 1);
 }
 
@@ -617,12 +617,12 @@ _swap_swsusp_probe (PedGeometry* geom) {
 }
 
 static int
-_swap_v1_clobber (PedGeometry* geom) {
+_swap_v0_clobber (PedGeometry* geom) {
         return _generic_swap_clobber (geom, 0);
 }
 
 static int
-_swap_v2_clobber (PedGeometry* geom) {
+_swap_v1_clobber (PedGeometry* geom) {
         return _generic_swap_clobber (geom, 1);
 }
 
@@ -631,11 +631,11 @@ _swap_swsusp_clobber (PedGeometry* geom) {
         return _generic_swap_clobber (geom, -1);
 }
 
-static PedFileSystemOps _swap_v1_ops = {
-	probe:		_swap_v1_probe,
+static PedFileSystemOps _swap_v0_ops = {
+	probe:		_swap_v0_probe,
 #ifndef DISCOVER_ONLY
-	clobber:	_swap_v1_clobber,
-	open:		_swap_v1_open,
+	clobber:	_swap_v0_clobber,
+	open:		_swap_v0_open,
 	create:		swap_create,
 	close:		swap_close,
 	check:		swap_check,
@@ -658,11 +658,11 @@ static PedFileSystemOps _swap_v1_ops = {
 #endif /* !DISCOVER_ONLY */
 };
 
-static PedFileSystemOps _swap_v2_ops = {
-	probe:		_swap_v2_probe,
+static PedFileSystemOps _swap_v1_ops = {
+	probe:		_swap_v1_probe,
 #ifndef DISCOVER_ONLY
-	clobber:	_swap_v2_clobber,
-	open:		_swap_v2_open,
+	clobber:	_swap_v1_clobber,
+	open:		_swap_v1_open,
 	create:		swap_create,
 	close:		swap_close,
 	check:		swap_check,
@@ -712,17 +712,17 @@ static PedFileSystemOps _swap_swsusp_ops = {
 #endif /* !DISCOVER_ONLY */
 };
 
-static PedFileSystemType _swap_v1_type = {
+static PedFileSystemType _swap_v0_type = {
 	next:	NULL,
-	ops:	&_swap_v1_ops,
-	name:	"linux-swap(old)",
+	ops:	&_swap_v0_ops,
+	name:	"linux-swap(v0)",
 	block_sizes: LINUXSWAP_BLOCK_SIZES
 };
 
-static PedFileSystemType _swap_v2_type = {
+static PedFileSystemType _swap_v1_type = {
 	next:	NULL,
-	ops:	&_swap_v2_ops,
-	name:	"linux-swap(new)",
+	ops:	&_swap_v1_ops,
+	name:	"linux-swap(v1)",
 	block_sizes: LINUXSWAP_BLOCK_SIZES
 };
 
@@ -736,15 +736,23 @@ static PedFileSystemType _swap_swsusp_type = {
 void
 ped_file_system_linux_swap_init ()
 {
+	ped_file_system_type_register (&_swap_v0_type);
 	ped_file_system_type_register (&_swap_v1_type);
-	ped_file_system_type_register (&_swap_v2_type);
 	ped_file_system_type_register (&_swap_swsusp_type);
+
+	ped_file_system_alias_register (&_swap_v0_type, "linux-swap(old)", 1);
+	ped_file_system_alias_register (&_swap_v1_type, "linux-swap(new)", 1);
+	ped_file_system_alias_register (&_swap_v1_type, "linux-swap", 0);
 }
 
 void
 ped_file_system_linux_swap_done ()
 {
+	ped_file_system_alias_unregister (&_swap_v0_type, "linux-swap(old)");
+	ped_file_system_alias_unregister (&_swap_v1_type, "linux-swap(new)");
+	ped_file_system_alias_unregister (&_swap_v1_type, "linux-swap");
+
+	ped_file_system_type_unregister (&_swap_v0_type);
 	ped_file_system_type_unregister (&_swap_v1_type);
-	ped_file_system_type_unregister (&_swap_v2_type);
 	ped_file_system_type_unregister (&_swap_swsusp_type);
 }

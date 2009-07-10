@@ -21,7 +21,7 @@ test_description='create linux-swap partitions'
 . $srcdir/test-lib.sh
 
 ######################################################################
-# When creating a partition of type linux-swap(new) in a DOS partition
+# When creating a partition of type linux-swap(v1) in a DOS partition
 # table, ensure that the proper file system type (0x82) is used.
 # Some releases, e.g. parted-1.8.8 would mistakenly use 0x83.
 ######################################################################
@@ -44,7 +44,7 @@ test_expect_success 'expect no output' 'compare out /dev/null'
 
 test_expect_success \
     'create a linux-swap file system' \
-    'parted -s $dev mkfs 1 "linux-swap(new)" > out 2>&1'
+    'parted -s $dev mkfs 1 "linux-swap(v1)" > out 2>&1'
 test_expect_success 'expect no output' 'compare out /dev/null'
 
 # Extract the byte at offset 451.  It must be 0x82, not 0x83.
@@ -69,7 +69,7 @@ test_expect_success 'expect no output' 'compare out /dev/null'
 
 test_expect_success \
     'create another linux-swap file system' \
-    'parted -s $dev2 mkfs 1 "linux-swap(new)" > out 2>&1'
+    'parted -s $dev2 mkfs 1 "linux-swap(v1)" > out 2>&1'
 test_expect_success 'expect no output' 'compare out /dev/null'
 
 # partition starts at offset 16384; swap UUID is 1036 bytes in
@@ -94,5 +94,10 @@ test_expect_success \
 test_expect_success \
     'check preserves linux-swap UUID' \
     'compare uuid2 uuid2-new'
+
+test_expect_success \
+    'create a linux-swap file system via alias' \
+    'parted -s $dev mkfs 1 linux-swap > out 2>&1'
+test_expect_success 'expect no output' 'compare out /dev/null'
 
 test_done

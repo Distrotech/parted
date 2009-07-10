@@ -28,6 +28,7 @@
 
 typedef struct _PedFileSystem		PedFileSystem;
 typedef struct _PedFileSystemType	PedFileSystemType;
+typedef struct _PedFileSystemAlias	PedFileSystemAlias;
 typedef const struct _PedFileSystemOps	PedFileSystemOps;
 
 #include <parted/geom.h>
@@ -62,6 +63,18 @@ struct _PedFileSystemType {
 	PedFileSystemOps* const	ops;
 };
 
+/**
+ * Structure describing a file system alias. This is separate from
+ * PedFileSystemType because probing only looks through the list of types,
+ * and does not probe aliases separately.
+ */
+struct _PedFileSystemAlias {
+	PedFileSystemAlias*	next;
+	PedFileSystemType*	fs_type;
+	const char*		alias;
+	int			deprecated;
+};
+
 
 /**
  * Structure describing file system
@@ -79,9 +92,17 @@ struct _PedFileSystem {
 extern void ped_file_system_type_register (PedFileSystemType* type);
 extern void ped_file_system_type_unregister (PedFileSystemType* type);
 
+extern void ped_file_system_alias_register (PedFileSystemType* type,
+					    const char* alias, int deprecated);
+extern void ped_file_system_alias_unregister (PedFileSystemType* type,
+					      const char* alias);
+
 extern PedFileSystemType* ped_file_system_type_get (const char* name);
 extern PedFileSystemType*
 ped_file_system_type_get_next (const PedFileSystemType* fs_type);
+
+extern PedFileSystemAlias*
+ped_file_system_alias_get_next (const PedFileSystemAlias* fs_alias);
 
 extern PedFileSystemType* ped_file_system_probe (PedGeometry* geom);
 extern PedGeometry* ped_file_system_probe_specific (

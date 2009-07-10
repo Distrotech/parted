@@ -2,6 +2,13 @@ GNU parted NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release 1.9.0 (????-??-??) [stable]
 
+libparted:
+* The linux-swap "filesystem" types are now called "linux-swap(v0)" and
+  "linux-swap(v1)" rather than "linux-swap(old)" and "linux-swap(new)"
+  as in parted 1.8, or "linux-swap" as in older versions; "old" and
+  "new" generally make poor names, and v1 is the only format supported
+  by current Linux kernels. Aliases for all previous names are
+  available.
 
 * Noteworthy changes in release 1.8.8.1 (2007-12-17) [stable]
 

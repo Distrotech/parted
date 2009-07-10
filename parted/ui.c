@@ -1347,6 +1347,7 @@ static int
 init_fs_type_str ()
 {
         PedFileSystemType*    walk;
+        PedFileSystemAlias*   alias_walk;
 
         fs_type_list = NULL;
 
@@ -1354,6 +1355,14 @@ init_fs_type_str ()
              walk = ped_file_system_type_get_next (walk))
         {
                 fs_type_list = str_list_insert (fs_type_list, walk->name);
+                if (!fs_type_list)
+                        return 0;
+        }
+        for (alias_walk = ped_file_system_alias_get_next (NULL); alias_walk;
+             alias_walk = ped_file_system_alias_get_next (alias_walk))
+        {
+                fs_type_list = str_list_insert (fs_type_list,
+                                                alias_walk->alias);
                 if (!fs_type_list)
                         return 0;
         }
