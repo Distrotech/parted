@@ -1041,8 +1041,9 @@ write_ext_table (const PedDisk* disk,
 	DosRawTable *table = s;
 	table->magic = PED_CPU_TO_LE16 (MSDOS_MAGIC);
 
+	int ok = 0;
 	if (!fill_raw_part (&table->partitions[0], logical, sector))
-		return 0;
+		goto cleanup;
 
 	part = ped_disk_get_partition (disk, logical->num + 1);
 	if (part) {
@@ -1052,17 +1053,18 @@ write_ext_table (const PedDisk* disk,
 		geom = ped_geometry_new (disk->dev, part->prev->geom.start,
 				part->geom.end - part->prev->geom.start + 1);
 		if (!geom)
-			return 0;
+			goto cleanup;
 		partition_probe_bios_geometry (part, &bios_geom);
 		fill_ext_raw_part_geom (&table->partitions[1], &bios_geom,
 				        geom, lba_offset);
 		ped_geometry_destroy (geom);
 
 		if (!write_ext_table (disk, part->prev->geom.start, part))
-			return 0;
+			goto cleanup;
 	}
 
-	int ok = ped_device_write (disk->dev, table, sector, 1);
+	ok = ped_device_write (disk->dev, table, sector, 1);
+ cleanup:
 	free (s);
 	return ok;
 }
