@@ -2,13 +2,54 @@ GNU parted NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release 1.9.0 (????-??-??) [stable]
 
-libparted:
-* The linux-swap "filesystem" types are now called "linux-swap(v0)" and
-  "linux-swap(v1)" rather than "linux-swap(old)" and "linux-swap(new)"
-  as in parted 1.8, or "linux-swap" as in older versions; "old" and
-  "new" generally make poor names, and v1 is the only format supported
-  by current Linux kernels. Aliases for all previous names are
-  available.
+** Bug fixes
+
+  parted now preserves the protective MBR (PMBR) in GPT type labels.
+  http://lists.alioth.debian.org/pipermail/parted-devel/2008-December/\
+    002473.html
+  http://lists.gnu.org/archive/html/bug-parted/2008-12/msg00015.html
+
+  gpt_read now uses SizeOfPartitionEntry instead of the size of
+  GuidPartitionEntry_t.  This ensures that *all* of the partition
+  entries are correctly read.
+  http://lists.alioth.debian.org/pipermail/parted-devel/2008-December/\
+    002465.html
+  http://lists.alioth.debian.org/pipermail/parted-devel/attachments/\
+    20081202/b7c0528d/attachment.txt
+
+  mklabel (interactive mode) now correctly asks for confirmation, when
+  replacing an existent label, without outputting an error message.
+  http://lists.alioth.debian.org/pipermail/parted-devel/2009-January/\
+    002739.html
+
+  resize now handles FAT16 file systems with a 64k cluster.  This
+  configuration is not common, but it is possible.
+  http://parted.alioth.debian.org/cgi-bin/trac.cgi/ticket/207
+
+  parted now ignores devices of the type /dev/md* when probing.  These
+  types of devices should be handled by the device-mapper capabilities
+  of parted.
+  http://lists.alioth.debian.org/pipermail/parted-devel/2009-April/\
+    002781.html
+
+  The parted documentation now describes the differences in the options
+  passed to mkpart for the label types.
+  http://lists.alioth.debian.org/pipermail/parted-devel/2009-April/\
+    002782.html
+
+** Changes in behavior
+
+  include/parted/beos.h, include/parted/gnu.h and include/parted/linux.h
+  have been removed.  The symbols contained in these files (GNUSpecific,
+  ped_device_new_from_store, BEOSSpecific, LinuxSpecific,  LINUX_SPECIFIC)
+  were moved to the individual files that need them.
+
+  In libparted, the linux-swap "filesystem" types are now called
+  "linux-swap(v0)" and "linux-swap(v1)" rather than "linux-swap(old)"
+  and "linux-swap(new)" as in parted 1.8, or "linux-swap" as in older
+  versions; "old" and "new" generally make poor names, and v1 is the
+  only format supported by current Linux kernels. Aliases for all
+  previous names are available.
 
 * Noteworthy changes in release 1.8.8.1 (2007-12-17) [stable]
 
