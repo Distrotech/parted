@@ -1,0 +1,27 @@
+Here is most of the steps we (maintainers) follow when making a release.
+
+1. Execute build-aux/parted-release.  `parted-release --help` contains
+   additional information.
+
+2. Test the tarball.  Copy it to a few odd-ball systems and ensure that it
+   builds and passes all tests.
+
+3. Write the release announcement that will be posted to the mailing lists.
+   There is a template generated at /tmp/announce-parted-$VERSION.
+
+4. Run the gnupload command that was suggested by the release script.  You can
+   find this at the end of release.log.
+
+5. Wait a few minutes (maybe up to 30?) and then use the release URLs to
+   download all tarball/signature pairs and use gpg --verify to ensure that
+   they're all valid.  You will also need to verify these URLs in the
+   announcement mail.
+
+6. Push the new tag with the following command:
+     git push origin tag v$v
+
+7. Send the gpg-signed announcement mail, e.g.,
+     To: info-gnu@gnu.org, parted-devel@lists.alioth.debian.org
+     Cc: coordinator@translationproject.org, bug-parted@gnu.org
+     Subject: parted-$v released [stable]
+
