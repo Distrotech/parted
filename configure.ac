@@ -213,14 +213,14 @@ AM_PROG_LIBTOOL
 AM_GNU_GETTEXT_VERSION([0.15])
 AM_GNU_GETTEXT([external])
 if test "$USE_INCLUDED_LIBINTL" = "yes"; then
-	AC_MSG_ERROR(
+	AC_MSG_ERROR([
 GNU Parted requires gettext to be installed for compilation -
 if native language support is desired.  Either disable native language support
 with:
 	$ ./configure --disable-nls
 Or install gettext.  GNU gettext is available from
 	http://ftp.gnu.org/gnu/gettext
-)
+])
 fi
 
 dnl Check for libdl, if we are doing dynamic loading
@@ -240,16 +240,15 @@ AC_SUBST([DL_LIBS])
 dnl Check for libuuid
 UUID_LIBS=""
 AC_CHECK_LIB([uuid], [uuid_generate], [UUID_LIBS="-luuid"],
-	AC_MSG_ERROR(
-GNU Parted requires libuuid - a part of the e2fsprogs package (but
+	[AC_MSG_ERROR(dnl
+[GNU Parted requires libuuid - a part of the e2fsprogs package (but
 sometimes distributed separately in uuid-devel or similar)
 This can probably be found on your distribution's CD or FTP site or at:
          http://web.mit.edu/tytso/www/linux/e2fsprogs.html
 Note: if you are using precompiled packages you will also need the development
 package as well (which may be called e2fsprogs-devel or something similar).
 If you compile e2fsprogs yourself then you need to do 'make install' and
-'make install-libs'.
-	)
+'make install-libs'.])]
 )
 AC_SUBST([UUID_LIBS])
 
@@ -258,14 +257,14 @@ DM_LIBS=
 if test $ENABLE_DEVICE_MAPPER = yes; then
   AC_CHECK_LIB([devmapper], [dm_task_create],
     [DM_LIBS=-ldevmapper],
-    [AC_MSG_ERROR(
-libdevmapper could not be found, but is required for the
+    [AC_MSG_ERROR(dnl
+[libdevmapper could not be found, but is required for the
 --enable-device-mapper option, which is enabled by default.  Either disable
 device-mapper support with --disable-device-mapper or download and install
 device-mapper from:
 	http://sources.redhat.com/dm/
 Note: if you are using precompiled packages you will need the development
-package as well (it may be called device-mapper-devel or something similar).
+package as well (it may be called device-mapper-devel or something similar).]
     )]
   )
 fi
@@ -301,18 +300,16 @@ if test "$with_readline" = yes; then
 	OLD_LIBS="$LIBS"
 	LIBS=""
 	AC_SEARCH_LIBS([tgetent], [tinfo ncurses curses termcap termlib],
-		PARTED_LIBS="$PARTED_LIBS $LIBS",
-		AC_MSG_ERROR(
-termcap could not be found which is required for the
+		[PARTED_LIBS="$PARTED_LIBS $LIBS"],
+		[AC_MSG_ERROR(dnl
+[termcap could not be found which is required for the
 --with-readline option (which is enabled by default).  Either disable readline
 support with --without-readline or download and install termcap from:
 	ftp.gnu.org/gnu/termcap
 Note: if you are using precompiled packages you will also need the development
   package as well (which may be called termcap-devel or something similar).
 Note: (n)curses also seems to work as a substitute for termcap.  This was
-  not found either - but you could try installing that as well.
-)
-	)
+  not found either - but you could try installing that as well.])])
 	LIBS="$OLD_LIBS"
 fi
 
@@ -327,13 +324,13 @@ if test "$with_readline" = yes; then
 	AC_CHECK_LIB([readline], [readline],
 		found_working_libreadline=yes,
 		AC_MSG_ERROR(
-GNU Readline could not be found which is required for the
+[GNU Readline could not be found which is required for the
 --with-readline (which is enabled by default).  Either disable readline support with
 --without-readline or downloaded and install it from:
         ftp.gnu.org/gnu/readline
 Note: if you are using precompiled packages you will also need the development
 package as well (which may be called readline-devel or something similar).
-)
+])
 		,
 		$PARTED_LIBS
 	)
@@ -362,8 +359,8 @@ package as well (which may be called readline-devel or something similar).
 	AC_CHECK_LIB([readline], [rl_variable_value],
 		     ,
 		     AC_MSG_ERROR(
-Your version of libreadline is too old to be used.
-Consider upgrading to version 5.2 or newer.)
+[Your version of libreadline is too old to be used.
+Consider upgrading to version 5.2 or newer.])
 		     found_working_libreadline=no,
 		     $PARTED_LIBS)
 
@@ -384,8 +381,8 @@ dnl libshouldbeinlibc
 	AC_CHECK_LIB([shouldbeinlibc], [vm_deallocate],
 		OS_LIBS="$OS_LIBS -lshouldbeinlibc",
 		AC_MSG_ERROR(
-GNU Parted requires libshouldbeinlibc when running on
-GNU/Hurd systems.  It is a standard part of a GNU/Hurd system.
+[GNU Parted requires libshouldbeinlibc when running on
+GNU/Hurd systems.  It is a standard part of a GNU/Hurd system.]
 		)
 	)
 
@@ -400,8 +397,8 @@ dnl libstore
 	AC_CHECK_LIB([store], [store_open],
 		OS_LIBS="$OS_LIBS -lstore",
 		AC_MSG_ERROR(
-GNU Parted requires libstore when running on GNU/Hurd
-systems.  It is a standard part of a GNU/Hurd system.
+[GNU Parted requires libstore when running on GNU/Hurd
+systems.  It is a standard part of a GNU/Hurd system.]
 		)
 		,
 		$OS_LIBS $UUID_LIBS $DM_LIBS $LIBS
@@ -428,13 +425,12 @@ AC_SUBST([INTLINCS])
 
 dnl Checks for header files.
 AC_CHECK_HEADER([uuid/uuid.h], ,
-	AC_MSG_ERROR(
-GNU Parted requires libuuid - a part of the e2fsprogs package.
+	[AC_MSG_ERROR(
+[GNU Parted requires libuuid - a part of the e2fsprogs package.
 You seem to have the library installed but not the headers.  These are usually
 found in a corresponding development package (usually called e2fsprogs-devel).
 If you can't find one try:
-        http://web.mit.edu/tytso/www/linux/e2fsprogs.html
-)
+        http://web.mit.edu/tytso/www/linux/e2fsprogs.html])]
 )
 
 AC_CHECK_HEADERS([getopt.h])
@@ -446,15 +442,14 @@ fi
 
 if test "$with_readline" = yes; then
 	AC_CHECK_HEADERS([readline/readline.h readline/history.h], ,
-		AC_MSG_ERROR(
-The headers for GNU Readline could not be found which
+		[AC_MSG_ERROR(
+[The headers for GNU Readline could not be found which
 are required for the --with-readline option.  You seem to have the GNU readline
 library installed but not the headers.  These are usually found in a
 corresponding development package (usually called readline-devel).  If you can't
 find one try:
         ftp.gnu.org/gnu/readline
-Alternatively you can disable readline support with --without-readline
-)
+Alternatively you can disable readline support with --without-readline])]
 	)
 fi
 
@@ -462,13 +457,12 @@ AC_CHECK_HEADERS([termcap.h])
 
 if test "$USE_NLS" = yes; then
 	AC_CHECK_HEADERS([wctype.h], ,
-		AC_MSG_ERROR(
-One or more of the header files that are required for
+		[AC_MSG_ERROR(
+[One or more of the header files that are required for
 native language support (wctype.h) could not be found.  Either get a newer
 version of GNU libc and its headers - which can be obtained from:
 	ftp.gnu.org/gnu/glibc
-Or disable native language support with the --disable-nls option
-)
+Or disable native language support with the --disable-nls option])]
 	)
 fi
 
