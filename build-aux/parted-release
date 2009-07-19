@@ -1,0 +1,149 @@
+#!/bin/bash
+
+v=""
+date=$(date +%F)
+logfile="release.log"
+parted_dir=""
+key_string=""
+key_id=""
+stage_dir="$(pwd)/parted_release-$$"
+
+usage()
+{
+  echo "Script for releasing parted."
+  echo
+  echo "$0 --version VERSION [--key-id KEYID --stage-dir DIR]"
+  echo
+  echo "  --version VERSION   The version of parted to be released"
+  echo "  --key-id KEYID    Your GPG key id.  If not given, -s argument"
+  echo "            of gpg will be used"
+  echo "  --stage-dir       The directory that will be used to stage the"
+  echo "            release process"
+}
+
+# Get all the input values
+while [ $# -gt 0 ] ; do
+  case $1 in
+
+    --key-id)
+      key_string="-u $2"
+      key_id="$2"
+      shift; shift
+    ;;
+
+    # The version that is to be released
+    --version)
+      v="$2"
+      shift; shift
+    ;;
+
+    --stage-dir)
+      stage_dir="$2"
+      shift; shift
+    ;;
+
+    --help)
+      usage
+      exit 0
+    ;;
+
+    # The default
+    *)
+      usage
+      exit 1
+    ;;
+
+  esac
+done
+
+if [ "x$v" = "x" ] ; then
+  usage
+  exit 1
+fi
+
+if [ "x$key_string" = "x" -o "x$key_id" = "x" ] ; then
+  key_string="-s"
+  key_id="FIXME: YOUR_KEY"
+fi
+
+_do_git_clone()
+{
+  git clone git://git.debian.org/git/parted/parted.git || return 1
+  parted_dir="parted"
+}
+
+_require_git()
+{
+  ( git --version ) > /dev/null 2>&1 ||
+  {
+    echo "Could not find git. Please install from http://git-scm.com/download."
+    exit 1
+  }
+}
+
+_do_sanity_check()
+{
+  (cd $parted_dir
+    ./bootstrap && \
+    ./configure && \
+    make && \
+    make check && \
+    sudo make check RUN_VERY_EXPENSIVE_TESTS=yes RUN_EXPENSIVE_TESTS=yes && \
+    make distcheck && \
+    make maintainer-clean && \
+    return 0
+  ) >> $logfile 2>&1 || return 1
+}
+
+_do_release()
+{
+  (cd $parted_dir
+    news_line="* Noteworthy changes in release $v ($date) [stable]"
+    commit_message="version $v\n\n* NEWS: Record release date.\n"
+    sed -e "s/^.*in release.* (????-??-??) .*/$news_line/" -i NEWS && \
+    git commit NEWS --message="$commit_message" && \
+    git tag $key_string -m "parted $v" v$v HEAD && \
+    ./bootstrap && \
+    ./configure && \
+    make && \
+    make major && \
+    return 0
+  ) >> $logfile 2>&1 || return 1
+}
+
+_do_success()
+{
+  echo "\
+The release process has finished successfully.  You are encouraged to follow
+these steps:"
+  cat $parted_dir/README-release
+  exit 0
+}
+
+_do_fail()
+{
+  echo "\
+The process has returned an error please check the $logfile for more
+information.  Also check your global git configuration and network
+configuration for possible overlooked issues.
+"
+  exit 1
+}
+
+_require_git
+echo "git is installed..."
+
+mkdir -p "$stage_dir" || exit 1
+cd "$stage_dir"
+
+echo "Cloning parted (this might take a few minutes)..."
+_do_git_clone || _do_fail
+echo "parted cloned..."
+
+echo "Sanity checking..."
+_do_sanity_check || _do_fail
+
+echo "Creating the release..."
+_do_release || _do_fail
+
+_do_success
