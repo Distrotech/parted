@@ -1,18 +1,16 @@
 # This file is part of GNU Parted
-# Copyright (C) 1999, 2000, 2001, 2007, 2009 Free Software Foundation, Inc.
+# Copyright (C) 1999-2001, 2007, 2009 Free Software Foundation, Inc.
 #
 # This file may be modified and/or distributed without restriction.
 
+SUBDIRS_CHECK =
 if HAVE_CHECK
 SUBDIRS_CHECK = tests
-else
-SUBDIRS_CHECK =
 endif
 
-if BUILD_LINUX
-ARCH_SOURCE = arch/$(OS).c arch/$(OS).h
-else
 ARCH_SOURCE = arch/$(OS).c
+if BUILD_LINUX
+ARCH_SOURCE += arch/$(OS).h
 endif
 
 SUBDIRS       = labels fs . $(SUBDIRS_CHECK)
@@ -39,9 +37,9 @@ libparted_la_SOURCES  = debug.c			\
 			$(ARCH_SOURCE)
 
 
-EXTRA_libparted_la_SOURCES    = arch/linux.c		\
+EXTRA_libparted_la_SOURCES    = arch/linux.c	\
 				arch/linux.h	\
-				arch/gnu.c \
+				arch/gnu.c	\
 				arch/beos.c
 
 libparted_la_LIBADD =	\
