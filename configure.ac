@@ -474,6 +474,7 @@ AC_CHECK_HEADER([execinfo.h], [
 ])
 
 AM_CONDITIONAL([COMPILE_FOR_S390], [test "$host_cpu" = s390 || test "$host_cpu" = s390x])
+AM_CONDITIONAL([BUILD_LINUX], [test "$OS" = linux])
 
 dnl check for "check", unit testing library/header
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.3], have_check=yes, have_check=no)

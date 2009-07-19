@@ -38,7 +38,7 @@
 
 #include <parted/vtoc.h>
 #include <parted/fdasd.h>
-#include <parted/linux.h>
+#include <arch/linux.h>
 
 #include <libintl.h>
 #if ENABLE_NLS
@@ -242,7 +242,7 @@ dasd_probe (const PedDevice *dev)
  error_cleanup:
 	fdasd_cleanup(&anchor);
 	ped_exception_throw(PED_EXCEPTION_ERROR,PED_EXCEPTION_IGNORE_CANCEL,
-			    "Error while probing device %s.", dev->name);
+			    "Error while probing device %s.", dev->path);
 
 	return 0;
 }

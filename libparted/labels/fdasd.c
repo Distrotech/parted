@@ -17,6 +17,7 @@
  */
 
 #include <config.h>
+#include <arch/linux.h>
 #include <parted/vtoc.h>
 #include <parted/fdasd.h>
 
@@ -773,7 +774,6 @@ fdasd_get_geometry (fdasd_anchor_t *anc, int f)
 	PDEBUG
 	int blksize = 0;
 	dasd_information_t dasd_info;
-	char s[LINE_LENGTH];
 
 	if (ioctl(f, HDIO_GETGEO, &anc->geo) != 0)
 		fdasd_error(anc, unable_to_ioctl,

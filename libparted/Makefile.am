@@ -9,6 +9,12 @@ else
 SUBDIRS_CHECK =
 endif
 
+if BUILD_LINUX
+ARCH_SOURCE = arch/$(OS).c arch/$(OS).h
+else
+ARCH_SOURCE = arch/$(OS).c
+endif
+
 SUBDIRS       = labels fs . $(SUBDIRS_CHECK)
 
 
@@ -30,9 +36,11 @@ libparted_la_SOURCES  = debug.c			\
 			cs/constraint.c		\
 			cs/natmath.c		\
 			arch/blkpg.h		\
-			arch/$(OS).c
+			$(ARCH_SOURCE)
+
 
 EXTRA_libparted_la_SOURCES    = arch/linux.c		\
+				arch/linux.h	\
 				arch/gnu.c \
 				arch/beos.c
 

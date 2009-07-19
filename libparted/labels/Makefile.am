@@ -1,5 +1,5 @@
 # This file is part of GNU Parted
-# Copyright (C) 1999, 2000, 2001, 2007 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2001, 2007, 2009 Free Software Foundation, Inc.
 #
 # This file may be modified and/or distributed without restriction.
 
@@ -9,7 +9,7 @@ else
 S390_SRCS =
 endif
 
-partedincludedir      =	-I$(top_srcdir)/lib -I$(top_srcdir)/include
+partedincludedir      =	-I$(top_srcdir)/lib -I$(top_srcdir)/include -I$(top_srcdir)/libparted
 noinst_LTLIBRARIES    =	liblabels.la
 
 liblabels_la_SOURCES = \
