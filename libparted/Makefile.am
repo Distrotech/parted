@@ -5,7 +5,7 @@
 
 SUBDIRS_CHECK =
 if HAVE_CHECK
-SUBDIRS_CHECK = tests
+SUBDIRS_CHECK += tests
 endif
 
 ARCH_SOURCE = arch/$(OS).c
