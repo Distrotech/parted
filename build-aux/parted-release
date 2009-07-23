@@ -101,7 +101,7 @@ _do_release()
     news_line="* Noteworthy changes in release $v ($date) [stable]"
     commit_message="version $v\n\n* NEWS: Record release date.\n"
     sed -e "s/^.*in release.* (????-??-??) .*/$news_line/" -i NEWS && \
-    git commit NEWS --message="$commit_message" && \
+    printf "$commit_message" | git commit NEWS -F - && \
     git tag $key_string -m "parted $v" v$v HEAD && \
     ./bootstrap && \
     ./configure && \

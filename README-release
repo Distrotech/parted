@@ -14,11 +14,10 @@ Here is most of the steps we (maintainers) follow when making a release.
 
 5. Wait a few minutes (maybe up to 30?) and then use the release URLs to
    download all tarball/signature pairs and use gpg --verify to ensure that
-   they're all valid.  You will also need to verify these URLs in the
-   announcement mail.
+   they're all valid.  You will also need these URLs in the announcement mail.
 
 6. Push the new tag with the following command:
-     git push origin tag v$v
+     git push origin tag v$VERSION
 
 7. Send the gpg-signed announcement mail, e.g.,
      To: info-gnu@gnu.org, parted-devel@lists.alioth.debian.org
