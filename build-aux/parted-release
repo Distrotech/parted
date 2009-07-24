@@ -4,7 +4,6 @@ v=""
 date=$(date +%F)
 logfile="release.log"
 parted_dir=""
-key_string=""
 key_id=""
 stage_dir="$(pwd)/parted_release-$$"
 
@@ -26,7 +25,6 @@ while [ $# -gt 0 ] ; do
   case $1 in
 
     --key-id)
-      key_string="-u $2"
       key_id="$2"
       shift; shift
     ;;
@@ -56,15 +54,52 @@ while [ $# -gt 0 ] ; do
   esac
 done
 
-if [ "x$v" = "x" ] ; then
-  usage
-  exit 1
-fi
+_find_signingkey()
+{
+  # If its already set, return.
+  if [ "x$key_id" != "x" ] ; then
+      return 0
+  fi
 
-if [ "x$key_string" = "x" -o "x$key_id" = "x" ] ; then
-  key_string="-s"
-  key_id="FIXME: YOUR_KEY"
-fi
+  # Maybe the global git config has the key :)
+  key_id=$(git config user.signingkey)
+  if [ "x$key_id" != "x" ] ; then
+    return 0
+  fi
+
+  # Lets ask gpg using git config user.email.  We will choose the first
+  # one in case of multiple keys with the same email.
+  git_uemail=$(git config user.email)
+  if [ "x$git_uemail" != "x" ] ; then
+      key_id=$(gpg --list-keys --with-colons --fixed-list "$git_uemail" |
+               grep pub |
+               head -n 1 |
+               awk -F ':' '{print $5}' |
+               cut -c 9-)
+    if [ "x$key_id" != "x" ] ; then
+      return 0
+    fi
+  fi
+
+  # Lets try with the name.
+  git_uname=$(git config user.name)
+  if [ "x$git_uname" != "x" ] ; then
+      key_id=$(gpg --list-keys --with-colons --fixed-list "$git_uname" |
+               grep pub |
+               head -n 1 |
+               awk -F ':' '{print $5}' |
+               cut -c 9-)
+    if [ "x$key_id" != "x" ] ; then
+      return 0
+    fi
+  fi
+
+  # Don't know where else to look.
+  echo "There was an error finding the key needed to sing the release tag."
+  echo "Please use the --key-id argument when you execute $0 or set the"
+  echo "user.signingkey value in your ~/.gitconfig"
+  exit 1
+}
 
 _do_git_clone()
 {
@@ -102,11 +137,11 @@ _do_release()
     commit_message="version $v\n\n* NEWS: Record release date.\n"
     sed -e "s/^.*in release.* (????-??-??) .*/$news_line/" -i NEWS && \
     printf "$commit_message" | git commit NEWS -F - && \
-    git tag $key_string -m "parted $v" v$v HEAD && \
+    git tag -u $key_id -m "parted $v" v$v HEAD && \
     ./bootstrap && \
     ./configure && \
     make && \
-    make major && \
+    make major gpg_key_ID=$key_id && \
     return 0
   ) >> $logfile 2>&1 || return 1
 }
@@ -129,6 +164,15 @@ configuration for possible overlooked issues.
 "
   exit 1
 }
+
+if [ "x$v" = "x" ] ; then
+  usage
+  exit 1
+fi
+
+if [ "x$key_id" = "x" ] ; then
+  _find_signingkey
+fi
 
 _require_git
 echo "git is installed..."
