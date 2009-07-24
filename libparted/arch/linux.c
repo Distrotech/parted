@@ -1985,7 +1985,6 @@ _skip_entry (const char *name)
 		{ ".",		sizeof (".") - 1	},
 		{ "..",		sizeof ("..") - 1	},
 		{ "dm-",	sizeof ("dm-") - 1	},
-		{ "md",		sizeof ("md") - 1	},
 		{ "loop",	sizeof ("loop") - 1	},
 		{ "ram",	sizeof ("ram") - 1	},
 		{ 0, 0 },
@@ -2180,6 +2179,18 @@ _partition_is_mounted (const PedPartition *part)
 }
 
 static int
+_has_partitions (const PedDisk* disk)
+{
+        PED_ASSERT(disk != NULL, return 0);
+
+        /* Some devices can't be partitioned. */
+        if (!strcmp (disk->type->name, "loop"))
+                return 0;
+
+        return 1;
+}
+
+static int
 linux_partition_is_busy (const PedPartition* part)
 {
         PedPartition*   walk;
@@ -2221,6 +2232,9 @@ _blkpg_add_partition (PedDisk* disk, const PedPartition *part)
         PED_ASSERT(disk != NULL, return 0);
         PED_ASSERT(disk->dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0,
                    return 0);
+
+        if (!_has_partitions (disk))
+                return 0;
 
         if (ped_disk_type_check_feature (disk->type,
                                          PED_DISK_TYPE_PARTITION_NAME))
@@ -2269,6 +2283,9 @@ static int
 _blkpg_remove_partition (PedDisk* disk, int n)
 {
         struct blkpg_partition  linux_part;
+
+        if (!_has_partitions (disk))
+                return 0;
 
         memset (&linux_part, 0, sizeof (linux_part));
         linux_part.pno = n;
@@ -2503,6 +2520,9 @@ _dm_add_partition (PedDisk* disk, PedPartition* part)
         char*           dev_name = NULL;
         char*           params = NULL;
 
+        if (!_has_partitions(disk))
+                return 0;
+
         dev_name = _device_get_part_path (disk->dev, part->num);
         if (!dev_name)
                 return 0;
@@ -2624,6 +2644,9 @@ _have_blkpg ()
 static int
 linux_disk_commit (PedDisk* disk)
 {
+       if (!_has_partitions (disk))
+               return 1;
+
 #ifdef ENABLE_DEVICE_MAPPER
         if (disk->dev->type == PED_DEVICE_DM)
                 return _dm_reread_part_table (disk);
