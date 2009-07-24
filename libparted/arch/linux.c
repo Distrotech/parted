@@ -66,15 +66,9 @@
 #define HDIO_GETGEO             0x0301  /* get device geometry */
 #define HDIO_GET_IDENTITY       0x030d  /* get IDE identification info */
 
-#if defined(O_DIRECT) && !(defined(__s390__) || defined(__s390x__))
-#define RD_MODE (O_RDONLY | O_DIRECT)
-#define WR_MODE (O_WRONLY | O_DIRECT)
-#define RW_MODE (O_RDWR | O_DIRECT)
-#else
 #define RD_MODE (O_RDONLY)
 #define WR_MODE (O_WRONLY)
 #define RW_MODE (O_RDWR)
-#endif
 
 struct hd_geometry {
         unsigned char heads;
@@ -1408,7 +1402,16 @@ _flush_cache (PedDevice* dev)
                         fd = open (name, WR_MODE, 0);
                         if (fd > 0) {
                                 ioctl (fd, BLKFLSBUF);
-                                close (fd);
+retry:
+                                if (fsync (fd) < 0 || close (fd) < 0)
+					if (ped_exception_throw (
+						PED_EXCEPTION_WARNING,
+						PED_EXCEPTION_RETRY +
+							PED_EXCEPTION_IGNORE,
+						_("Error fsyncing/closing %s: %s"),
+						name, strerror (errno))
+							== PED_EXCEPTION_RETRY)
+						goto retry;
                         }
                 }
                 free (name);
@@ -1470,7 +1473,15 @@ linux_close (PedDevice* dev)
 
         if (dev->dirty)
                 _flush_cache (dev);
-        close (arch_specific->fd);
+retry:
+        if (fsync (arch_specific->fd) < 0 || close (arch_specific->fd) < 0)
+		if (ped_exception_throw (
+			PED_EXCEPTION_WARNING,
+			PED_EXCEPTION_RETRY + PED_EXCEPTION_IGNORE,
+			_("Error fsyncing/closing %s: %s"),
+			dev->path, strerror (errno))
+				== PED_EXCEPTION_RETRY)
+			goto retry;
         return 1;
 }
 
