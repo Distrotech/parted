@@ -56,7 +56,220 @@ GNU parted NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release 1.8.8.1 (2007-12-17) [stable]
 
-FIXME: fill in details
+** FIXME: fill in details
+
+* Noteworthy changes in release 1.8.8 (2007-08-09) [stable]
+
+** GNU parted is now licensed under the GNU General Public License version 3
+   or higher.  See the COPYING file for more details.
+
+** libparted:
+  - Add compute_block_counts() to improve ext2fs support.
+  - Properly detect 'ext2 fs too small' cases.
+  - Move formatting commands out of translatable strings.
+  - Read an msdos partition table from a device with 2K sectors.
+  - Remove always-false "Unable to open" diagnostic in ped_disk_new(),
+    leave the "unrecognized disk label" diagnostic.
+  - Don't leak partition table buffer in amiga_read().
+  - Don't read/write initialized memory with DEBUG turned on off for
+    'mklabel bsd' and 'mklabel amiga' command calls.
+  - Turn off DEBUG in libparted.c to avoid initializing all allocated
+    memory to '1' bits.
+  - Correct handling of HeaderSize field in GPT labels.
+  - Fix block number used when checking for ext2 fs state.
+  - Add detection support for Xen virtual block devices (/dev/xvd*).
+  - When reading DASD labels, check the filesystem type as well as
+    partition flags to determine what's on the partition.
+  - Add _dm_probe_all() from Debian to probe for all device-mapper
+    devices.
+
+** parted:
+  - Fixed exception handling in mkpart and mkpartfs commands.
+  - Add the --dry-run option to the partprobe command.
+  - Update docs: cannot specify 'primary' for a partition on a loop
+    device.
+  - Remove unused functions (get_spaces).
+  - Fix off-by-one error in str_list_print_wrap().
+  - Use xmalloc() and xrealloc() to check return values.
+  - Fix invalid command line argument handling.
+  - Close memory leaks in parted.c and table.c.
+  - Fix warnings when compiling with translation support enabled.
+  - Use a consistent prompt when asking for a file system type.
+  - Update docs: don't reference old versions of gzip.
+
+** misc:
+  - Improve the testing framework in the tests/ subdirectory.  Build out
+    more of the testing scripts so we can start using that to ensure we
+    don't introduce regressions in releases.
+  - Support testing with tmpfs filesystems on Linux.
+  - Work around inadequate libreadline in the configure script.
+  - Don't include config.h from internal headers.
+
+* Noteworthy changes in release 1.8.7 (2007-05-09) [stable]
+
+** libparted:
+  - Prevent compilation of DASD code on GNU Hurd systems.
+  - Integrate new unit testing framework for parted and libparted.
+  - Fix primary partition cylinder alignment error for DOS disk labels.
+  - Use PED_PARTITION_NORMAL in place of PED_PARTITION_PRIMARY.
+  - Avoid segfault due to a double free on reiserfs support.
+
+** parted:
+  - Fix script mode (-s) for mkfs command in parted.
+  - Suppress "you are not superuser..." warning in script mode.
+  - Fix off-by-one bug in parted when displaying information about the
+    disk.
+  - Do not translate partition names in the 'parted print' command.
+    This causes problems for non-Latin-based character sets.
+  - Send errors to stderr rather than stdout.
+  - Handle command line options independent of the order.
+  - Abort on any invalid option and handle -v and -h first.
+  - Only display the update /etc/fstab message when there has been a
+    change to the disk (a shorter and more direct message too).
+
+* Noteworthy changes in release 1.8.6 (2007-03-20) [stable]
+
+** Revert the implementation of the linux-swap(new) and linux-swap(old) types.
+   The type is 'linux-swap' for v1, v2, and s1suspend swap partitions on Linux.
+
+* Noteworthy changes in release 1.8.5 (2007-03-20) [stable]
+
+** Another minor update.  Both versions 1.8.3 and 1.8.4 lacked po translation
+   files.  These are included with version 1.8.5.
+
+* Noteworthy changes in release 1.8.4 (2007-03-19) [stable]
+
+** Minor bug fix release for 1.8.3 to fix build issues on various
+   platforms:
+  - Use 'uname -m' to determine if we build on System Z or not.
+  - Include <parted/vtoc.h> in <parted/fdasd.h> for format1_label_t
+    definition.
+  - Remove unused variables in libparted/arch/linux.c (-Werror).
+  - Check return values on fgets() and asprint() in libparted/arch/linux.c
+    (-Werror).
+  - Check for tgetent() in libtinfo in the configure script.
+  - Move some macro definitions in <parted/disk.h> to fix a compile
+    problem with gcc-4.1.2 as indicated here:
+    http://lists.gnu.org/archive/html/bug-parted/2007-03/msg00008.html
+
+* Noteworthy changes in release 1.8.3 (2007-03-16) [stable]
+
+** libparted:
+  - Header file clean ups.
+  - Sync the linux-swap header according to the Linux kernel sources.
+  - Enable support for swsusp partitions and the ability to differentiate
+    between old and new versions of linux-swap partitions.
+  - Renaming PARTITION_EXT to PARTITION_DOS_EXT in the DOS disklabel
+    code (consitency with Linux kernel source).
+  - Added libparted.pc pkg-config file.
+  - Remove unused functions, ifdefs, and other code.
+  - Deprecate ped_[register|unregister]_disk_type in favor of
+    ped_disk_type_[register|unregister].
+  - Small test program fixes (in label.c and common.c).
+  - Make functions const-correct.
+  - Handle systems where libreadline is not available.
+  - Preserve starting sector for primary NTFS 3.1 partitions on DOS
+    disklabel.
+  - Handle 2048-byte logical sectors in linux_read().
+  - Use PED_SECTOR_SIZE_DEFAULT macro in place of 512.
+  - Don't assume logical sector size is <= 512B on AIX.
+  - Detect HFS write failure.
+  - Use mkstemp() in place of mktemp().
+  - Added HFS+ resize support.
+  - Don't build DASD support on non-zSeries hardware.
+
+** parted/partprobe:
+  - Use fputs() and putchar() in place for printf(), when possible.
+  - Detect/report stdout write errors.
+  - Accept the --version and --help options.
+  - Fix memory leaks in parted(8).
+
+** general:
+  - Synchronize the manual page and --help documentation.
+  - GNU autoconf and automake updates.
+  - 'gcc -Wall -Wshadow' warning cleanups.
+  - Don't define _GNU_SOURCE manually.
+  - Documentation updates and cleanups (AUTHORS, copyright notices,
+    etc).
+  - Use gnulib (http://www.gnu.org/software/gnulib/).
+
+* Noteworthy changes in release 1.8.2 (2007-01-12) [stable]
+
+** libparted:
+  - Add the ped_device_cache_remove() function to remove a device from
+    the cache.  This is necessary for some things that use libparted,
+    including pyparted.
+  - Fix a segfault in ped_assert() where the wrong pointer is freed in
+    the backtrace handler.
+  - Only call _disk_warn_loss(disk) in do_mklabel() if disk is not NULL.
+    Fixes a segfault when initializing new volumes.
+  - Dynamically allocate space for exception messages.
+  - Output a backtrace when catching SEGV_MAPPER or a general SIGSEGV.
+
+** parted:
+  - Destroy all objects before return when called with --list or --all
+    option.
+  - Zero sized device is shown as 0.00B and not -0.00kB.
+  - Implement 'print devices' command.
+  - Alias 'print list' to 'print all'.
+  - Alias 'mktable' to 'mklabel'.
+
+** misc:
+  - Other bug fixes, documentation updates, and translation improvements.
+  - Code and API clean-ups.
+
+* Noteworthy changes in release 1.8.1 (2006-12-04) [stable]
+
+** libparted:
+  - Rework backtrace support.
+  - Code cleanups.
+  - Added --enable-selinux configure option to enable linking libparted with
+    libselinux and libsepol.
+  - Disable ext2fs resize for now, tell user to use resize2fs.
+
+** parted:
+  - Fix loop in print_all().
+  - Introduce the -list command-line switch.
+  - Make mktable aliased to mklabel.
+  - Warn before mklabel and mkfs.
+  - Code cleanups in _partition_warn_busy(), _disk_warn_busy(),
+    _partition_warn_loss(), and _disk_warn_loss().
+  - Avoid warning about user permissions when using --version.
+  - Fix 'print' command help.
+  - Proper print when there are no extended partitions, but partition names.
+
+** misc:
+  - Generate SHA-1 digest of the archive files and upload those along with the
+    actual archive files.
+  - Update translation files.
+  - Remove automatically generated files from version control.
+
+* Noteworthy changes in release 1.8.0 (2006-11-17) [stable]
+
+** libparted:
+  - GPT fixes:
+       - Correctly handle disks with non-512 byte sector sizes
+       - Support LUN resizing (see new space, allow parted to use it)
+       - Prevent overlap of LastUsableLBA and PartitionEntryLBA in backup GPT
+  - Prevent SIGFPE when FAT sector size is 0
+  - Add ped_exception_get_handler()
+  - DASD support for IBM zSeries systems
+  - AIX disk label support
+  - Detect Promise SX8 storage devices
+  - Macintosh (ppc and x86) disk label improvements:
+       - Prevent LVM and RAID partition types from corrupting the table
+       - Fix removal of driver partition
+  - Add support binary units (MiB, KiB, GiB)
+  - In ped_register_disk_type(), handle disk_types==NULL case
+  - In ped_unregister_disk_type(), handle case where type is not registered
+  - Fix geometry read problems on 64-bit Macs (and probably other 64-bit systems)
+  - Add support for /dev/mapper devices via libdevmapper library
+  - Detect Apple_Boot partition types correctly on MacOS X 10.4 systems
+
+** parted:
+  - Various bug fixes, signal handling fixes, and spelling error fixes
+  - UI improvements to display more information about the disk and transport
+    layer
 
 ========================================================================
 
