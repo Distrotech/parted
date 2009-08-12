@@ -98,6 +98,7 @@ static int dasd_partition_align (PedPartition* part,
 								 const PedConstraint* constraint);
 static int dasd_partition_enumerate (PedPartition* part);
 static int dasd_get_max_primary_partition_count (const PedDisk* disk);
+static bool dasd_get_max_supported_partition_count (const PedDisk* disk, int *max_n);
 
 static PedDisk* dasd_alloc (const PedDevice* dev);
 static PedDisk* dasd_duplicate (const PedDisk* disk);
