@@ -1,6 +1,5 @@
 # Most of this is probably too coreutils-centric to be useful to other packages.
 
-warn_cflags = -Dlint -O -Werror -Wall -Wformat -Wshadow -Wpointer-arith
 bin=bin-$$$$
 
 write_loser = printf '\#!%s\necho $$0: bad path 1>&2; exit 1\n' '$(SHELL)'
@@ -101,9 +100,8 @@ my-distcheck: $(DIST_ARCHIVES) $(local-check)
 	mkdir -p $(t)
 	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
 	cd $(t)/$(distdir)				\
-	  && ./configure --disable-nls			\
-	  && $(MAKE) CFLAGS='$(warn_cflags)'		\
-	      AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)'	\
+	  && ./configure --enable-gcc-warnings --disable-nls \
+	  && $(MAKE) AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)' \
 	  && $(MAKE) dvi				\
 	  && $(install-transform-check)			\
 	  && $(my-instcheck)				\
