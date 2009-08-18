@@ -54,3 +54,5 @@ export VERBOSE = yes
 old_NEWS_hash = dba244ff41365956a9f702ad050262c0
 
 include $(srcdir)/dist-check.mk
+
+update-copyright-env = UPDATE_COPYRIGHT_USE_INTERVALS=1
