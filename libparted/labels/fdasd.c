@@ -967,7 +967,7 @@ fdasd_enqueue_new_partition (fdasd_anchor_t *anc)
 			anc->fspace_trk = p->start_trk - FIRST_USABLE_TRK;
 		}
 	} else {
-		/* there are partitons in front of the new one */
+		/* there are partitions in front of the new one */
 		if (p->start_trk == p->prev->end_trk + 1) {
 			/* new partition is right behind the previous one */
 			p->fspace_trk = p->prev->fspace_trk - p->len_trk;

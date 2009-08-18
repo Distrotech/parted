@@ -2182,7 +2182,7 @@ NULL),
                 do_mkfs,
                 str_list_create (
 _("mkfs NUMBER FS-TYPE                      make a FS-TYPE file "
-  "system on partititon NUMBER"),
+  "system on partition NUMBER"),
 NULL),
                 str_list_create (_(number_msg), _(mkfs_fs_type_msg), NULL), 1));
 
