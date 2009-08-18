@@ -82,7 +82,8 @@ for mkpart in mkpart mkpartfs; do
   test_expect_success \
       'normalize the actual output' \
       '
-       sed "s,   *,,;s, $,," out > o2 && mv -f o2 out &&
+       echo -n x >> out &&
+       sed "s,   *,,;s, x$,,;/ n$/ {N;s, n\nx,,}" out > o2 && mv -f o2 out &&
        normalize_part_diag_ out
       '
 
