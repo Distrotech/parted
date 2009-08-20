@@ -13,6 +13,7 @@ TESTS = \
   t2000-mkfs.sh \
   t2100-mkswap.sh \
   t2200-dos-label-recog.sh \
+  t2300-dos-label-extended-bootcode.sh \
   t3000-constraints.sh \
   t3100-resize-ext2-partion.sh \
   t4000-sun-raid-type.sh \
