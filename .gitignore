@@ -12,6 +12,7 @@ GNUmakefile
 INSTALL
 Makefile
 Makefile.in
+TAGS
 aclocal.m4
 autom4te.cache
 build-aux
@@ -30,8 +31,11 @@ lib/config.h
 lib/config.h.in
 lib/configmake.h
 libparted.pc
+libparted/tests/disk
 libparted/tests/init.sh
 libparted/tests/label
+libparted/tests/t*.sh.log
+libparted/tests/test-suite.log
 libtool
 m4
 maint.mk
@@ -44,3 +48,5 @@ partprobe/partprobe
 po/.reference
 stamp-h1
 tests/init.sh
+tests/t*.sh.log
+tests/test-suite.log
