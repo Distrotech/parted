@@ -21,14 +21,18 @@ test_description='Preserve first 446B of the Protected MBR for gpt partitions.'
 . $srcdir/test-lib.sh
 
 dev=loop-file
-test_expect_success \
-    'Create a 100k test file with random content' \
-    'dd if=/dev/urandom of=$dev bs=1c count=446 &&
-     dd if=/dev/zero of=$dev bs=1c seek=446 count=101954 > /dev/null 2>&1'
+bootcode_size=446
 
 test_expect_success \
-    'Extract the first 446 Bytes before GPT creation' \
-    'dd if=$dev of=before bs=1c count=446 > /dev/null 2>&1'
+    'Create a 100k test file with random content' \
+    'printf %0${bootcode_size}d 0 > in &&
+     dd if=in of=$dev bs=1c count=$bootcode_size &&
+     dd if=/dev/zero of=$dev bs=1c seek=$bootcode_size \
+	    count=101954 > /dev/null 2>&1'
+
+test_expect_success \
+    'Extract the first $bootcode_size Bytes before GPT creation' \
+    'dd if=$dev of=before bs=1c count=$bootcode_size > /dev/null 2>&1'
 
 test_expect_success \
     'create a GPT partition table' \
@@ -36,8 +40,8 @@ test_expect_success \
 test_expect_success 'expect no output' 'compare out /dev/null'
 
 test_expect_success \
-    'Extract the first 446 Bytes after GPT creation' \
-    'dd if=$dev of=after bs=1c count=446 > /dev/null 2>&1'
+    'Extract the first $bootcode_size Bytes after GPT creation' \
+    'dd if=$dev of=after bs=1c count=$bootcode_size > /dev/null 2>&1'
 
 test_expect_success \
     'Compare the before and after' \
