@@ -1040,7 +1040,7 @@ write_ext_table (const PedDisk* disk,
 		return 0;
 
 	DosRawTable *table = s;
-	memset(&(table->partitions), 0, 4 * sizeof(DosRawPartition));
+	memset(&(table->partitions), 0, sizeof (table->partitions));
 	table->magic = PED_CPU_TO_LE16 (MSDOS_MAGIC);
 
 	int ok = 0;
@@ -1080,10 +1080,10 @@ write_empty_table (const PedDisk* disk, PedSector sector)
 	PED_ASSERT (disk != NULL, return 0);
 
 	if (ptt_read_sector (disk->dev, sector, &table_sector)) {
-		memcpy (&table, table_sector, sizeof(DosRawTable));
+		memcpy (&table, table_sector, sizeof (table));
 		free(table_sector);
 	}
-	memset (&(table.partitions), 0, 4 * sizeof(DosRawPartition));
+	memset (&(table.partitions), 0, sizeof (table.partitions));
 	table.magic = PED_CPU_TO_LE16 (MSDOS_MAGIC);
 
 	return ped_device_write (disk->dev, (void*) &table, sector, 1);
@@ -1142,7 +1142,7 @@ msdos_write (const PedDisk* disk)
 	if (!table->mbr_signature)
 		table->mbr_signature = generate_random_id();
 
-	memset (table->partitions, 0, sizeof (DosRawPartition) * 4);
+	memset (table->partitions, 0, sizeof (table->partitions));
 	table->magic = PED_CPU_TO_LE16 (MSDOS_MAGIC);
 
 	for (i=1; i<=4; i++) {
