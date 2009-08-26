@@ -1030,8 +1030,7 @@ write_ext_table (const PedDisk* disk,
                  PedSector sector, const PedPartition* logical)
 {
 	PedPartition*		part;
-	PedSector			lba_offset;
-	void*				s;
+	PedSector		lba_offset;
 
 	PED_ASSERT (disk != NULL, return 0);
 	PED_ASSERT (ped_disk_extended_partition (disk) != NULL, return 0);
@@ -1039,6 +1038,7 @@ write_ext_table (const PedDisk* disk,
 
 	lba_offset = ped_disk_extended_partition (disk)->geom.start;
 
+	void* s;
 	if (!ptt_read_sector (disk->dev, sector, &s))
 		return 0;
 
