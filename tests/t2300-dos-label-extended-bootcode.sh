@@ -22,9 +22,8 @@ test_description='Ensure parted preserves bootcode in extended partition.'
 
 require_512_byte_sector_size_
 
-# Note: the bootcode size is 440B
-
 dev=loop-file
+bootcode_size=446
 
 test_expect_success \
   'Create the test file' \
@@ -47,12 +46,13 @@ test_expect_success 'Expect no output' 'compare out /dev/null'
 
 test_expect_success \
   'Install fake bootcode' \
-  'dd if=/dev/urandom of=$dev bs=1c seek=16384 count=400 \
-    conv=notrunc > /dev/null 2>&1'
+  'printf %0${bootcode_size}d 0 > in &&
+   dd if=in of=$dev bs=1c seek=16384 count=$bootcode_size \
+      conv=notrunc > /dev/null 2>&1'
 
 test_expect_success \
   'Save fake bootcode for later comparison' \
-  'dd if=$dev of=before bs=1 skip=16384 count=440 > /dev/null 2>&1'
+  'dd if=$dev of=before bs=1 skip=16384 count=$bootcode_size > /dev/null 2>&1'
 
 test_expect_success \
   'Do something to the label' \
@@ -61,7 +61,7 @@ test_expect_success 'Expect no output' 'compare out /dev/null'
 
 test_expect_success \
   'Extract the bootcode for comparison' \
-  'dd if=$dev of=after bs=1 skip=16384 count=440 > /dev/null 2>&1'
+  'dd if=$dev of=after bs=1 skip=16384 count=$bootcode_size > /dev/null 2>&1'
 
 test_expect_success \
   'Expect bootcode has not changed' \
