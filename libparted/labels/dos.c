@@ -55,6 +55,9 @@ static const char MBR_BOOT_CODE[] = {
 #define MSDOS_MAGIC		0xAA55
 #define PARTITION_MAGIC_MAGIC	0xf6f6
 
+/* The maximum number of DOS primary partitions.  */
+#define DOS_N_PRI_PARTITIONS	4
+
 #define PARTITION_EMPTY		0x00
 #define PARTITION_FAT12		0x01
 #define PARTITION_FAT16_SM	0x04
@@ -126,7 +129,7 @@ struct _DosRawTable {
 	char			boot_code [440];
 	uint32_t                mbr_signature;	/* really a unique ID */
 	uint16_t                Unknown;
-	DosRawPartition		partitions [4];
+	DosRawPartition		partitions [DOS_N_PRI_PARTITIONS];
 	uint16_t		magic;
 } __attribute__((packed));
 
@@ -181,14 +184,14 @@ msdos_probe (const PedDevice *dev)
 	 * and ensure that each partition has a boot indicator that is
 	 * either 0 or 0x80.
 	 */
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < DOS_N_PRI_PARTITIONS; i++) {
 		if (part_table->partitions[i].boot_ind != 0
 		    && part_table->partitions[i].boot_ind != 0x80)
 			goto probe_fail;
 	}
 
 	/* If this is a GPT disk, fail here */
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < DOS_N_PRI_PARTITIONS; i++) {
 		if (part_table->partitions[i].type == PARTITION_GPT)
 			goto probe_fail;
 	}
@@ -849,7 +852,7 @@ read_table (PedDisk* disk, PedSector sector, int is_extended_table)
 #endif
 
 	/* parse the partitions from this table */
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < DOS_N_PRI_PARTITIONS; i++) {
 		raw_part = &table->partitions [i];
 		if (raw_part->type == PARTITION_EMPTY || !raw_part->length)
 			continue;
@@ -903,7 +906,7 @@ read_table (PedDisk* disk, PedSector sector, int is_extended_table)
 
 	if (is_extended_table) {
 		/* process the nested extended partitions */
-		for (i = 0; i < 4; i++) {
+		for (i = 0; i < DOS_N_PRI_PARTITIONS; i++) {
 			PedSector part_start;
 
 			raw_part = &table->partitions [i];
@@ -1145,7 +1148,7 @@ msdos_write (const PedDisk* disk)
 	memset (table->partitions, 0, sizeof (table->partitions));
 	table->magic = PED_CPU_TO_LE16 (MSDOS_MAGIC);
 
-	for (i=1; i<=4; i++) {
+	for (i=1; i<=DOS_N_PRI_PARTITIONS; i++) {
 		part = ped_disk_get_partition (disk, i);
 		if (!part)
 			continue;
@@ -2223,7 +2226,7 @@ static int
 next_primary (const PedDisk* disk)
 {
 	int	i;
-	for (i=1; i<=4; i++) {
+	for (i=1; i<=DOS_N_PRI_PARTITIONS; i++) {
 		if (!ped_disk_get_partition (disk, i))
 			return i;
 	}
@@ -2247,7 +2250,7 @@ msdos_partition_enumerate (PedPartition* part)
 	PED_ASSERT (part->disk != NULL, return 0);
 
 	/* don't re-number a primary partition */
-	if (part->num != -1 && part->num <= 4)
+	if (part->num != -1 && part->num <= DOS_N_PRI_PARTITIONS)
 		return 1;
 
 	part->num = -1;
@@ -2263,7 +2266,7 @@ msdos_partition_enumerate (PedPartition* part)
 static int
 msdos_get_max_primary_partition_count (const PedDisk* disk)
 {
-	return 4;
+	return DOS_N_PRI_PARTITIONS;
 }
 
 static bool
