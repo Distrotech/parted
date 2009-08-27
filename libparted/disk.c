@@ -499,9 +499,25 @@ error:
 int
 ped_disk_commit (PedDisk* disk)
 {
+        /* Open the device here, so that the underlying fd is not closed
+           between commit_to_dev and commit_to_os (closing causes unwanted
+           udev events to be sent under Linux). */
+	if (!ped_device_open (disk->dev))
+		goto error;
+
 	if (!ped_disk_commit_to_dev (disk))
-		return 0;
-	return ped_disk_commit_to_os (disk);
+		goto error_close_dev;
+
+	if (!ped_disk_commit_to_os (disk))
+		goto error_close_dev;
+
+	ped_device_close (disk->dev);
+	return 1;
+
+error_close_dev:
+	ped_device_close (disk->dev);
+error:
+	return 0;
 }
 
 /**
