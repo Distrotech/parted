@@ -40,9 +40,11 @@ emit_expected_diagnostic()
       'Warning: The kernel was unable to re-read the partition table on'
 }
 
-test_expect_success \
-    "setup: create loop devices" \
-    'f1=$(pwd)/1 && d1=$(loop_setup_ "$f1")'
+f1=$(pwd)/1; d1=$(loop_setup_ "$f1") || {
+    say "skipping $0: is this partition mounted with 'nodev'?"
+    test_done
+    exit
+}
 
 test_expect_success \
     'run parted -s "$d1" mklabel msdos' \

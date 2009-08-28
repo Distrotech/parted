@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (C) 2008 Free Software Foundation, Inc.
+# Copyright (C) 2008-2009 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -44,10 +44,15 @@ cleanup_() {
     rm -f "$f1" "$f2" "$f3";
 }
 
+f1=$(pwd)/1; d1=$(loop_setup_ "$f1") || {
+    say "skipping $0: is this partition mounted with 'nodev'?"
+    test_done
+    exit
+}
+
 test_expect_success \
     "setup: create loop devices" \
-    'f1=$(pwd)/1 && d1=$(loop_setup_ "$f1") && \
-     f2=$(pwd)/2 && d2=$(loop_setup_ "$f2") && \
+    'f2=$(pwd)/2 && d2=$(loop_setup_ "$f2") && \
      f3=$(pwd)/3 && d3=$(loop_setup_ "$f3")'
 
 #
