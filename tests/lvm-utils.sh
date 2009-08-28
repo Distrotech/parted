@@ -1,7 +1,7 @@
 # Put lvm-related utilities here.
 # This file is sourced from test-lib.sh.
 
-# Copyright (C) 2007, 2008 Red Hat, Inc. All rights reserved.
+# Copyright (C) 2007-2009 Red Hat, Inc. All rights reserved.
 #
 # This copyrighted material is made available to anyone wishing to use,
 # modify, copy, or redistribute it subject to the terms and conditions
@@ -43,7 +43,7 @@ loop_setup_()
     || { warn "loop_setup_ failed: Unable to create tmp file $file"; return 1; }
 
   # NOTE: this requires a new enough version of losetup
-  dev=$(unsafe_losetup_ "$file" 2>/dev/null) \
+  dev=$(unsafe_losetup_ "$file") \
     || { warn "loop_setup_ failed: Unable to create loopback device"; return 1; }
 
   echo "$dev"
