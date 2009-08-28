@@ -123,7 +123,7 @@ ptt_partition_max_start_len (char const *label_type, const PedPartition *part)
             ped_exception_throw (
                                  PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
                                  _("starting sector number, %jd exceeds"
-                                   " the  %s-partition-table-imposed maximum"
+                                   " the %s-partition-table-imposed maximum"
                                    " of %jd"),
                                  part->geom.start,
                                  label_type,
