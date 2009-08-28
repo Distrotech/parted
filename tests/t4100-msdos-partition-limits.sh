@@ -23,6 +23,7 @@ privileges_required_=1
 : ${srcdir=.}
 . $srcdir/test-lib.sh
 require_xfs_
+ss=$sector_size_
 
 ####################################################
 # Create and mount a file system capable of dealing with >=2TB files.
@@ -58,7 +59,7 @@ do_mkpart()
   start_sector=$1
   end_sector=$2
   # echo '********' $(echo $end_sector - $start_sector + 1 |bc)
-  dd if=/dev/zero of=$dev bs=1b count=2k seek=$end_sector 2> /dev/null &&
+  dd if=/dev/zero of=$dev bs=$ss count=2k seek=$end_sector 2> /dev/null &&
   parted -s $dev mklabel $table_type &&
   parted -s $dev mkpart p xfs ${start_sector}s ${end_sector}s
 }
@@ -136,7 +137,7 @@ test_expect_success \
 cat > exp <<EOF
 Model:  (file)
 Disk: 4294970342s
-Sector size (logical/physical): 512B/512B
+Sector size (logical/physical): ${ss}B/${ss}B
 Partition Table: $table_type
 
 Number  Start        End          Size   Type     File system  Flags
