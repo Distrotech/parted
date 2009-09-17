@@ -23,12 +23,10 @@ TESTS = \
   t1100-busy-label.sh \
   t1101-busy-partition.sh \
   t1700-probe-fs.sh \
-  t2100-mkswap.sh \
   t2200-dos-label-recog.sh \
   t2300-dos-label-extended-bootcode.sh \
   t2310-dos-extended-2-sector-min-offset.sh \
   t2400-dos-hfs-partition-type.sh \
-  t3000-resize-fs.sh \
   t3200-type-change.sh \
   t3300-palo-prep.sh \
   t3310-flags.sh \
