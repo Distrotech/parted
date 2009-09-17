@@ -153,8 +153,6 @@ static const char* start_end_msg =    N_("START and END are disk locations, such
 static const char* state_msg =        N_("STATE is one of: on, off\n");
 static const char* device_msg =       N_("DEVICE is usually /dev/hda or /dev/sda\n");
 static const char* name_msg =         N_("NAME is any word you want\n");
-static const char* resize_msg_start = N_("The partition must have one of the "
-                                   "following FS-TYPEs: ");
 
 static const char* copyright_msg = N_(
 "Copyright (C) 1998 - 2006 Free Software Foundation, Inc.\n"
@@ -169,9 +167,7 @@ static char* label_type_msg;
 static char* flag_msg;
 static char* unit_msg;
 
-static char* mkfs_fs_type_msg;
 static char* mkpart_fs_type_msg;
-static char* resize_fs_type_msg;
 
 static Command* commands [256] = {NULL};
 static PedTimer* g_timer;
@@ -246,18 +242,6 @@ _disk_warn_busy (PedDisk* disk)
                         disk->dev->path) == PED_EXCEPTION_IGNORE;
 
         return 1;
-}
-
-static int
-_partition_warn_loss ()
-{
-        return ped_exception_throw (
-                PED_EXCEPTION_WARNING,
-                PED_EXCEPTION_YES_NO,
-                _("The existing file system will be destroyed and "
-                  "all data on the partition will be lost. Do "
-                  "you want to continue?"),
-                NULL) == PED_EXCEPTION_YES;
 }
 
 static int
@@ -456,15 +440,6 @@ constraint_from_start_end (PedDevice* dev, PedGeometry* range_start,
                 range_start, range_end, 1, dev->length);
 }
 
-static PedConstraint*
-constraint_intersect_and_destroy (PedConstraint* a, PedConstraint* b)
-{
-        PedConstraint* result = ped_constraint_intersect (a, b);
-        ped_constraint_destroy (a);
-        ped_constraint_destroy (b);
-        return result;
-}
-
 void
 help_on (char* topic)
 {
@@ -474,133 +449,6 @@ help_on (char* topic)
         if (!cmd) return;
 
         command_print_help (cmd);
-}
-
-/* Issue a warning about upcoming removal of FS support.  */
-static void
-issue_fs_op_warning (char const *op)
-{
-  if (getenv ("PARTED_SUPPRESS_FILE_SYSTEM_MANIPULATION_WARNING"))
-    return;
-  fprintf (stderr,
- _("WARNING: you are attempting to use %s to operate on (%s) a file system.\n"
-   "%s's file system manipulation code is not as robust as what you'll find in\n"
-   "dedicated, file-system-specific packages like e2fsprogs.  We recommend\n"
-   "you use %s only to manipulate partition tables, whenever possible.\n"
-   "Support for performing most operations on most types of file systems\n"
-   "will be removed in an upcoming release.\n"),
-   program_name, op, program_name, program_name);
-}
-
-static int
-do_check (PedDevice** dev)
-{
-        issue_fs_op_warning ("check");
-        PedDisk*        disk;
-        PedFileSystem*  fs;
-        PedPartition*   part = NULL;
-
-        disk = ped_disk_new (*dev);
-        if (!disk)
-                goto error;
-
-        if (!command_line_get_partition (_("Partition number?"), disk, &part))
-                goto error_destroy_disk;
-        if (!_partition_warn_busy (part))
-                goto error_destroy_disk;
-
-        if (!ped_disk_check (disk))
-                goto error_destroy_disk;
-
-        fs = ped_file_system_open (&part->geom);
-        if (!fs)
-                goto error_destroy_disk;
-        if (!ped_file_system_check (fs, g_timer))
-                goto error_close_fs;
-        ped_file_system_close (fs);
-        ped_disk_destroy (disk);
-        return 1;
-
-error_close_fs:
-        ped_file_system_close (fs);
-error_destroy_disk:
-        ped_disk_destroy (disk);
-error:
-        return 0;
-}
-
-static int
-do_cp (PedDevice** dev)
-{
-        issue_fs_op_warning ("cp");
-        PedDisk*                src_disk;
-        PedDisk*                dst_disk;
-        PedPartition*           src = NULL;
-        PedPartition*           dst = NULL;
-        PedFileSystem*          src_fs;
-        PedFileSystem*          dst_fs;
-        PedFileSystemType*      dst_fs_type;
-
-        dst_disk = ped_disk_new (*dev);
-        if (!dst_disk)
-                goto error;
-
-        src_disk = dst_disk;
-        if (!command_line_is_integer ()) {
-                if (!command_line_get_disk (_("Source device?"), &src_disk))
-                        goto error_destroy_disk;
-        }
-
-        if (!command_line_get_partition (_("Source partition number?"),
-                                         src_disk, &src))
-                goto error_destroy_disk;
-        if (src->type == PED_PARTITION_EXTENDED) {
-                ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
-                        _("Can't copy an extended partition."));
-                goto error_destroy_disk;
-        }
-        if (!_partition_warn_busy (src))
-                goto error_destroy_disk;
-
-        if (!command_line_get_partition (_("Destination partition number?"),
-                                         dst_disk, &dst))
-                goto error_destroy_disk;
-        if (!_partition_warn_busy (dst))
-                goto error_destroy_disk;
-
-/* do the copy */
-        src_fs = ped_file_system_open (&src->geom);
-        if (!src_fs)
-                goto error_destroy_disk;
-        dst_fs = ped_file_system_copy (src_fs, &dst->geom, g_timer);
-        if (!dst_fs)
-                goto error_close_src_fs;
-        dst_fs_type = dst_fs->type;     /* may be different to src_fs->type */
-        ped_file_system_close (src_fs);
-        ped_file_system_close (dst_fs);
-
-/* update the partition table, close disks */
-        if (!ped_partition_set_system (dst, dst_fs_type))
-                goto error_destroy_disk;
-        if (!ped_disk_commit (dst_disk))
-                goto error_destroy_disk;
-        if (src_disk != dst_disk)
-                ped_disk_destroy (src_disk);
-        ped_disk_destroy (dst_disk);
-
-        if ((*dev)->type != PED_DEVICE_FILE)
-                disk_is_modified = 1;
-
-        return 1;
-
-error_close_src_fs:
-        ped_file_system_close (src_fs);
-error_destroy_disk:
-        if (src_disk && src_disk != dst_disk)
-                ped_disk_destroy (src_disk);
-        ped_disk_destroy (dst_disk);
-error:
-        return 0;
 }
 
 void
@@ -667,53 +515,6 @@ do_mklabel (PedDevice** dev)
         if (!disk)
                 goto error;
 
-        if (!ped_disk_commit (disk))
-                goto error_destroy_disk;
-        ped_disk_destroy (disk);
-
-        if ((*dev)->type != PED_DEVICE_FILE)
-                disk_is_modified = 1;
-
-        return 1;
-
-error_destroy_disk:
-        ped_disk_destroy (disk);
-error:
-        return 0;
-}
-
-static int
-do_mkfs (PedDevice** dev)
-{
-        issue_fs_op_warning ("mkfs");
-        PedDisk*                disk;
-        PedPartition*           part = NULL;
-        const PedFileSystemType* type = ped_file_system_type_get ("ext2");
-        PedFileSystem*          fs;
-
-        disk = ped_disk_new (*dev);
-        if (!disk)
-                goto error;
-
-        if  (!opt_script_mode && !_partition_warn_loss())
-                goto error_destroy_disk;
-
-        if (!command_line_get_partition (_("Partition number?"), disk, &part))
-                goto error_destroy_disk;
-        if (!_partition_warn_busy (part))
-                goto error_destroy_disk;
-        if (!command_line_get_fs_type (_("File system type?"), &type))
-                goto error_destroy_disk;
-
-        fs = ped_file_system_create (&part->geom, type, g_timer);
-        if (!fs)
-                goto error_destroy_disk;
-        ped_file_system_close (fs);
-
-        if (!ped_partition_set_system (part, type))
-                goto error_destroy_disk;
-        if (ped_partition_is_flag_available (part, PED_PARTITION_LBA))
-                ped_partition_set_flag (part, PED_PARTITION_LBA, 1);
         if (!ped_disk_commit (disk))
                 goto error_destroy_disk;
         ped_disk_destroy (disk);
@@ -848,8 +649,7 @@ do_mkpart (PedDevice** dev)
 
                         /* In script mode failure to use specified values is fatal.
                          * However, in interactive mode, it merely elicits a warning
-                         * and a prompt for whether to proceed.  The same appies for
-                         * do_mkpartfs function.
+                         * and a prompt for whether to proceed.
                          */
                         switch (ped_exception_throw (
                                 (opt_script_mode
@@ -946,305 +746,6 @@ error:
         free (start_sol);
         free (end_sol);
 
-        return 0;
-}
-
-static int
-do_mkpartfs (PedDevice** dev)
-{
-        issue_fs_op_warning ("mkpartfs");
-        PedDisk*            disk;
-        PedPartition*       part;
-        PedPartitionType    part_type;
-        const PedFileSystemType* fs_type = ped_file_system_type_get ("ext2");
-        PedSector           start = 0, end = 0;
-        PedGeometry         *range_start = NULL, *range_end = NULL;
-        PedConstraint*      user_constraint;
-        PedConstraint*      dev_constraint;
-        PedConstraint*      final_constraint;
-        PedFileSystem*      fs;
-        char*               part_name = NULL;
-        char                *start_usr = NULL, *end_usr = NULL;
-        char                *start_sol = NULL, *end_sol = NULL;
-
-        disk = ped_disk_new (*dev);
-        if (!disk)
-                goto error;
-
-        if (ped_disk_is_flag_available(disk, PED_DISK_CYLINDER_ALIGNMENT))
-                if (!ped_disk_set_flag(disk, PED_DISK_CYLINDER_ALIGNMENT,
-                                       alignment == ALIGNMENT_CYLINDER))
-                        goto error_destroy_disk;
-
-        if (!ped_disk_type_check_feature (disk->type, PED_DISK_TYPE_EXTENDED)) {
-                part_type = PED_PARTITION_NORMAL;
-        } else {
-                if (!command_line_get_part_type (_("Partition type?"),
-                                                disk, &part_type))
-                        goto error_destroy_disk;
-        }
-
-        if (ped_disk_type_check_feature (disk->type,
-                                         PED_DISK_TYPE_PARTITION_NAME))
-                part_name = command_line_get_word (_("Partition name?"),
-                                                   "", NULL, 1);
-
-        if (part_type == PED_PARTITION_EXTENDED) {
-                ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
-                        _("An extended partition cannot hold a file system.  "
-                          "Did you want mkpart?"));
-                goto error_destroy_disk;
-        }
-
-        if (!command_line_get_fs_type (_("File system type?"), &fs_type))
-                goto error_destroy_disk;
-        if (!command_line_get_sector (_("Start?"), *dev, &start,
-                                      &range_start))
-                goto error_destroy_disk;
-        if (!command_line_get_sector (_("End?"), *dev, &end, &range_end))
-                goto error_destroy_disk;
-
-        /* attempt to create the partition now */
-        part = ped_partition_new (disk, part_type, fs_type, start, end);
-        if (!part)
-                goto error_destroy_disk;
-
-        snap_to_boundaries (&part->geom, NULL, disk, range_start, range_end);
-
-        /* create constraints */
-        user_constraint = constraint_from_start_end (*dev, range_start,
-                                                                range_end);
-        PED_ASSERT (user_constraint != NULL);
-
-        if (alignment == ALIGNMENT_OPTIMAL)
-                dev_constraint =
-                        ped_device_get_optimal_aligned_constraint(*dev);
-        else if (alignment == ALIGNMENT_MINIMAL)
-                dev_constraint =
-                        ped_device_get_minimal_aligned_constraint(*dev);
-        else
-                dev_constraint = ped_device_get_constraint(*dev);
-        PED_ASSERT (dev_constraint != NULL);
-
-        final_constraint = ped_constraint_intersect (user_constraint,
-                                                     dev_constraint);
-        ped_constraint_destroy (user_constraint);
-        ped_constraint_destroy (dev_constraint);
-        if (!final_constraint)
-                goto error_destroy_simple_constraints;
-
-        /* subject to partition constraint */
-        ped_exception_fetch_all();
-	bool added_ok = ped_disk_add_partition (disk, part, final_constraint);
-        ped_constraint_destroy (final_constraint);
-        if (!added_ok) {
-                ped_exception_leave_all();
-
-                PedConstraint *constraint_any = ped_constraint_any (*dev);
-                bool add_ok = ped_disk_add_partition (disk, part,
-                                                        constraint_any);
-                ped_constraint_destroy (constraint_any);
-
-                if (!add_ok)
-                        goto error_remove_part;
-
-                if (!ped_geometry_test_sector_inside(range_start, part->geom.start) ||
-                    !ped_geometry_test_sector_inside(range_end, part->geom.end)) {
-                        start_usr = ped_unit_format (*dev, start);
-                        end_usr   = ped_unit_format (*dev, end);
-                        start_sol = ped_unit_format (*dev, part->geom.start);
-                        end_sol   = ped_unit_format (*dev, part->geom.end);
-
-                        switch (ped_exception_throw (
-                                (opt_script_mode
-                                 ? PED_EXCEPTION_ERROR
-                                 : PED_EXCEPTION_WARNING),
-                                (opt_script_mode
-                                 ? PED_EXCEPTION_CANCEL
-                                 : PED_EXCEPTION_YES_NO),
-                                _("You requested a partition from %s to %s.\n"
-                                  "The closest location we can manage is "
-                                  "%s to %s.%s"),
-                                start_usr, end_usr, start_sol, end_sol,
-                                (opt_script_mode ? ""
-                                 : _("\nIs this still acceptable to you?"))))
-                        {
-                                case PED_EXCEPTION_YES:
-                                        /* all is well in this state */
-                                        break;
-                                case PED_EXCEPTION_NO:
-                                case PED_EXCEPTION_UNHANDLED:
-                                default:
-                                        /* undo partition addition */
-                                        goto error_remove_part;
-                        }
-                }
-
-                if ((alignment == ALIGNMENT_OPTIMAL &&
-                     !partition_align_check(disk, part, PA_OPTIMUM)) ||
-                    (alignment == ALIGNMENT_MINIMAL &&
-                     !partition_align_check(disk, part, PA_MINIMUM))) {
-                        if (ped_exception_throw(
-                                PED_EXCEPTION_WARNING,
-                                (opt_script_mode
-                                 ? PED_EXCEPTION_OK
-                                 : PED_EXCEPTION_IGNORE_CANCEL),
-                                _("The resulting partition is not properly "
-                                  "aligned for best performance.")) ==
-                            PED_EXCEPTION_CANCEL) {
-                                /* undo partition addition */
-                                goto error_remove_part;
-                        }
-                }
-        } else {
-                ped_exception_leave_all();
-        }
-        ped_exception_catch();
-
-        /* set LBA flag automatically if available */
-        if (ped_partition_is_flag_available (part, PED_PARTITION_LBA))
-                ped_partition_set_flag (part, PED_PARTITION_LBA, 1);
-
-        /* fs creation */
-        fs = ped_file_system_create (&part->geom, fs_type, g_timer);
-        if (!fs)
-                goto error_destroy_disk;
-        ped_file_system_close (fs);
-
-        if (part_name)
-                PED_ASSERT (ped_partition_set_name (part, part_name));
-        if (!ped_partition_set_system (part, fs_type))
-                goto error_destroy_disk;
-
-        if (!ped_disk_commit (disk))
-                goto error_destroy_disk;
-
-        /* clean up */
-
-        ped_disk_destroy (disk);
-
-        if (range_start != NULL)
-                ped_geometry_destroy (range_start);
-        if (range_end != NULL)
-                ped_geometry_destroy (range_end);
-
-        free (start_usr);
-        free (end_usr);
-        free (start_sol);
-        free (end_sol);
-
-        if ((*dev)->type != PED_DEVICE_FILE)
-                disk_is_modified = 1;
-
-        return 1;
-
-error_remove_part:
-        ped_disk_remove_partition (disk, part);
-error_destroy_simple_constraints:
-        ped_partition_destroy (part);
-error_destroy_disk:
-        ped_disk_destroy (disk);
-error:
-        if (range_start != NULL)
-                ped_geometry_destroy (range_start);
-        if (range_end != NULL)
-                ped_geometry_destroy (range_end);
-
-        free (start_usr);
-        free (end_usr);
-        free (start_sol);
-        free (end_sol);
-
-        return 0;
-}
-
-static int
-do_move (PedDevice** dev)
-{
-        issue_fs_op_warning ("move");
-        PedDisk*        disk;
-        PedPartition*   part = NULL;
-        PedFileSystem*  fs;
-        PedFileSystem*  fs_copy;
-        PedConstraint*  constraint;
-        PedSector       start = 0, end = 0;
-        PedGeometry     *range_start = NULL, *range_end = NULL;
-        PedGeometry     old_geom, new_geom;
-
-        disk = ped_disk_new (*dev);
-        if (!disk)
-                goto error;
-
-        if (!command_line_get_partition (_("Partition number?"), disk, &part))
-                goto error_destroy_disk;
-        if (!_partition_warn_busy (part))
-                goto error_destroy_disk;
-        if (part->type == PED_PARTITION_EXTENDED) {
-                ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
-                        _("Can't move an extended partition."));
-                goto error_destroy_disk;
-        }
-        old_geom = part->geom;
-        fs = ped_file_system_open (&old_geom);
-        if (!fs)
-                goto error_destroy_disk;
-
-        /* get new target */
-        if (!command_line_get_sector (_("Start?"), *dev, &start, &range_start))
-                goto error_close_fs;
-        end = start + old_geom.length - 1;
-        if (!command_line_get_sector (_("End?"), *dev, &end, &range_end))
-                goto error_close_fs;
-
-        /* set / test on "disk" */
-        if (!ped_geometry_init (&new_geom, *dev, start, end - start + 1))
-                goto error_close_fs;
-        snap_to_boundaries (&new_geom, NULL, disk, range_start, range_end);
-
-        constraint = constraint_intersect_and_destroy (
-                        ped_file_system_get_copy_constraint (fs, *dev),
-                        constraint_from_start_end(*dev,range_start,range_end));
-        if (!ped_disk_set_partition_geom (disk, part, constraint,
-                                          new_geom.start, new_geom.end))
-                goto error_destroy_constraint;
-        ped_constraint_destroy (constraint);
-        if (ped_geometry_test_overlap (&old_geom, &part->geom)) {
-                ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
-                        _("Can't move a partition onto itself.  Try using "
-                          "resize, perhaps?"));
-                goto error_close_fs;
-        }
-
-        /* do the move */
-        fs_copy = ped_file_system_copy (fs, &part->geom, g_timer);
-        if (!fs_copy)
-                goto error_close_fs;
-        ped_file_system_close (fs_copy);
-        ped_file_system_close (fs);
-        if (!ped_disk_commit (disk))
-                goto error_destroy_disk;
-        ped_disk_destroy (disk);
-        if (range_start != NULL)
-                ped_geometry_destroy (range_start);
-        if (range_end != NULL)
-                ped_geometry_destroy (range_end);
-
-        if ((*dev)->type != PED_DEVICE_FILE)
-                disk_is_modified = 1;
-
-        return 1;
-
-error_destroy_constraint:
-        ped_constraint_destroy (constraint);
-error_close_fs:
-        ped_file_system_close (fs);
-error_destroy_disk:
-        ped_disk_destroy (disk);
-error:
-        if (range_start != NULL)
-                ped_geometry_destroy (range_start);
-        if (range_end != NULL)
-                ped_geometry_destroy (range_end);
         return 0;
 }
 
@@ -1927,98 +1428,6 @@ error:
 }
 
 static int
-do_resize (PedDevice** dev)
-{
-        issue_fs_op_warning ("resize");
-        PedDisk                 *disk;
-        PedPartition            *part = NULL;
-        PedFileSystem           *fs;
-        PedConstraint           *constraint;
-        PedSector               start, end;
-        PedGeometry             *range_start = NULL, *range_end = NULL;
-        PedGeometry             new_geom;
-
-        disk = ped_disk_new (*dev);
-        if (!disk)
-                goto error;
-
-        if (ped_disk_is_flag_available(disk, PED_DISK_CYLINDER_ALIGNMENT))
-                if (!ped_disk_set_flag(disk, PED_DISK_CYLINDER_ALIGNMENT,
-                                       alignment == ALIGNMENT_CYLINDER))
-                        goto error_destroy_disk;
-
-        if (!command_line_get_partition (_("Partition number?"), disk, &part))
-                goto error_destroy_disk;
-        if (part->type != PED_PARTITION_EXTENDED) {
-                if (!_partition_warn_busy (part))
-                        goto error_destroy_disk;
-        }
-
-        start = part->geom.start;
-        end = part->geom.end;
-        if (!command_line_get_sector (_("Start?"), *dev, &start, &range_start))
-                goto error_destroy_disk;
-        if (!command_line_get_sector (_("End?"), *dev, &end, &range_end))
-                goto error_destroy_disk;
-
-        if (!ped_geometry_init (&new_geom, *dev, start, end - start + 1))
-                goto error_destroy_disk;
-        snap_to_boundaries (&new_geom, &part->geom, disk,
-                            range_start, range_end);
-
-        if (part->type == PED_PARTITION_EXTENDED) {
-                constraint = constraint_from_start_end (*dev,
-                                range_start, range_end);
-                if (!ped_disk_set_partition_geom (disk, part, constraint,
-                                                  new_geom.start, new_geom.end))
-                        goto error_destroy_constraint;
-                ped_partition_set_system (part, NULL);
-        } else {
-                fs = ped_file_system_open (&part->geom);
-                if (!fs)
-                        goto error_destroy_disk;
-                constraint = constraint_intersect_and_destroy (
-                                ped_file_system_get_resize_constraint (fs),
-                                constraint_from_start_end (
-                                        *dev, range_start, range_end));
-                if (!ped_disk_set_partition_geom (disk, part, constraint,
-                                                  new_geom.start, new_geom.end))
-                        goto error_close_fs;
-                if (!ped_file_system_resize (fs, &part->geom, g_timer))
-                        goto error_close_fs;
-                /* may have changed... eg fat16 -> fat32 */
-                ped_partition_set_system (part, fs->type);
-                ped_file_system_close (fs);
-        }
-
-        ped_disk_commit (disk);
-        ped_constraint_destroy (constraint);
-        ped_disk_destroy (disk);
-        if (range_start != NULL)
-                ped_geometry_destroy (range_start);
-        if (range_end != NULL)
-                ped_geometry_destroy (range_end);
-
-        if ((*dev)->type != PED_DEVICE_FILE)
-                disk_is_modified = 1;
-
-        return 1;
-
-error_close_fs:
-        ped_file_system_close (fs);
-error_destroy_constraint:
-        ped_constraint_destroy (constraint);
-error_destroy_disk:
-        ped_disk_destroy (disk);
-error:
-        if (range_start != NULL)
-                ped_geometry_destroy (range_start);
-        if (range_end != NULL)
-                ped_geometry_destroy (range_end);
-        return 0;
-}
-
-static int
 do_rm (PedDevice** dev)
 {
         PedDisk*                disk;
@@ -2311,37 +1720,6 @@ _init_messages ()
 
         mkpart_fs_type_msg = str_list_convert (list);
         str_list_destroy (list);
-
-/* resize - file system types and aliases */
-        list = str_list_create (_(resize_msg_start), NULL);
-
-        first = 1;
-        for (fs_type = ped_file_system_type_get_next (NULL);
-             fs_type; fs_type = ped_file_system_type_get_next (fs_type)) {
-                if (fs_type->ops->resize == NULL)
-                        continue;
-
-                if (first)
-                        first = 0;
-                else
-                        str_list_append (list, ", ");
-                str_list_append (list, fs_type->name);
-        }
-        for (fs_alias = ped_file_system_alias_get_next (NULL);
-             fs_alias; fs_alias = ped_file_system_alias_get_next (fs_alias)) {
-                if (fs_alias->fs_type->ops->resize == NULL)
-                        continue;
-
-                if (first)
-                        first = 0;
-                else
-                        str_list_append (list, ", ");
-                str_list_append (list, fs_alias->alias);
-        }
-        str_list_append (list, "\n");
-
-        resize_fs_type_msg = str_list_convert (list);
-        str_list_destroy (list);
 }
 
 static void
@@ -2349,9 +1727,7 @@ _done_messages ()
 {
         free (flag_msg);
         free (unit_msg);
-        free (mkfs_fs_type_msg);
         free (mkpart_fs_type_msg);
-        free (resize_fs_type_msg);
         free (label_type_msg);
 }
 
@@ -2371,24 +1747,6 @@ _init_commands ()
 		     str_list_create (_(number_msg), _(min_or_opt_msg),
 				      NULL), 1));
         command_register (commands, command_create (
-                str_list_create_unique ("check", _("check"), NULL),
-                do_check,
-                str_list_create (
-_("check NUMBER                             do a simple check on the file "
-  "system"),
-NULL),
-                str_list_create (_(number_msg), NULL), 1));
-
-        command_register (commands, command_create (
-                str_list_create_unique ("cp", _("cp"), NULL),
-                do_cp,
-                str_list_create (
-_("cp [FROM-DEVICE] FROM-NUMBER TO-NUMBER   copy file system to another "
-  "partition"),
-NULL),
-                str_list_create (_(number_msg), _(device_msg), NULL), 1));
-
-        command_register (commands, command_create (
                 str_list_create_unique ("help", _("help"), NULL),
                 do_help,
                 str_list_create (
@@ -2407,15 +1765,6 @@ NULL),
                 str_list_create (label_type_msg, NULL), 1));
 
         command_register (commands, command_create (
-                str_list_create_unique ("mkfs", _("mkfs"), NULL),
-                do_mkfs,
-                str_list_create (
-_("mkfs NUMBER FS-TYPE                      make a FS-TYPE file "
-  "system on partition NUMBER"),
-NULL),
-                str_list_create (_(number_msg), _(mkfs_fs_type_msg), NULL), 1));
-
-        command_register (commands, command_create (
                 str_list_create_unique ("mkpart", _("mkpart"), NULL),
                 do_mkpart,
                 str_list_create (
@@ -2428,23 +1777,6 @@ NULL),
 _("'mkpart' makes a partition without creating a new file system on the "
   "partition.  FS-TYPE may be specified to set an appropriate partition ID.\n"),
 NULL), 1));
-
-        command_register (commands, command_create (
-                str_list_create_unique ("mkpartfs", _("mkpartfs"), NULL),
-                do_mkpartfs,
-                str_list_create (
-_("mkpartfs PART-TYPE FS-TYPE START END     make a partition with a "
-  "file system"),
-NULL),
-        str_list_create (_(part_type_msg), _(start_end_msg), NULL), 1));
-
-command_register (commands, command_create (
-        str_list_create_unique ("move", _("move"), NULL),
-        do_move,
-        str_list_create (
-_("move NUMBER START END                    move partition NUMBER"),
-NULL),
-        str_list_create (_(number_msg), _(start_end_msg), NULL), 1));
 
 command_register (commands, command_create (
         str_list_create_unique ("name", _("name"), NULL),
@@ -2489,17 +1821,6 @@ _("rescue START END                         rescue a lost partition near "
 "START and END"),
 NULL),
         str_list_create (_(start_end_msg), NULL), 1));
-
-command_register (commands, command_create (
-        str_list_create_unique ("resize", _("resize"), NULL),
-        do_resize,
-        str_list_create (
-_("resize NUMBER START END                  resize partition NUMBER and "
-"its file system"),
-NULL),
-        str_list_create (_(number_msg),
-                         _(start_end_msg),
-                         _(resize_fs_type_msg), NULL), 1));
 
 command_register (commands, command_create (
         str_list_create_unique ("rm", _("rm"), NULL),
