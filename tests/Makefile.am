@@ -10,16 +10,11 @@ TESTS = \
   t0280-gpt-corrupt.sh \
   t0300-dos-on-gpt.sh \
   t0400-loop-clobber-infloop.sh \
-  t1000-mkpartfs.sh \
   t1100-busy-label.sh \
-  t1500-small-ext2.sh \
   t1700-ext-probe.sh \
-  t2000-mkfs.sh \
   t2100-mkswap.sh \
   t2200-dos-label-recog.sh \
   t2300-dos-label-extended-bootcode.sh \
-  t3000-constraints.sh \
-  t3100-resize-ext2-partion.sh \
   t4000-sun-raid-type.sh \
   t4100-msdos-partition-limits.sh \
   t4100-dvh-partition-limits.sh \
