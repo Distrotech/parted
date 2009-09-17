@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (C) 2007 Free Software Foundation, Inc.
+# Copyright (C) 2007-2009 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ erasable_device_required_=1
 
 : ${srcdir=.}
 . $srcdir/test-lib.sh
+require_512_byte_sector_size_
 dev=$DEVICE_TO_ERASE
 
 test_expect_success \
@@ -67,7 +68,6 @@ test_expect_failure \
 fail=0
 cat <<EOF > exp || fail=1
 Warning: Partition(s) on $dev are being used.
-parted: invalid token: msdos
 Ignore/Cancel? c
 EOF
 test_expect_success 'create expected output file' 'test $fail = 0'
