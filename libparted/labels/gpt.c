@@ -1286,7 +1286,7 @@ gpt_partition_set_system (PedPartition* part, const PedFileSystemType* fs_type)
 	if (fs_type) {
 		if (strncmp (fs_type->name, "fat", 3) == 0
 		    || strcmp (fs_type->name, "ntfs") == 0) {
-			gpt_part_data->type = PARTITION_MSFT_RESERVED_GUID;
+			gpt_part_data->type = PARTITION_BASIC_DATA_GUID;
 			return 1;
 		}
 		if (strncmp (fs_type->name, "hfs", 3) == 0) {
