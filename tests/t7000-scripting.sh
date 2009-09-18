@@ -45,11 +45,9 @@ normalize_part_diag_ errS || fail=1
   sed s/Error/Warning/ errS
   printf 'Is this still acceptable to you?\nYes/No?'; } >> errI || fail=1
 
-for mkpart in mkpart mkpartfs; do
-  # With larger sector size, skip FS-related use of mkpartfs.
-  test $sector_size_ -gt 512 && test $mkpart = mkpartfs && continue
+for mkpart in mkpart; do
 
-  # Test for mkpart/mkpartfs in scripting mode
+  # Test for mkpart in scripting mode
   test_expect_success \
       'Create the test file' \
       'dd if=/dev/zero of=testfile bs=${ss}c count=$N 2> /dev/null'
@@ -65,7 +63,7 @@ for mkpart in mkpart mkpartfs; do
        compare out errS
       '
 
-  # Test mkpart/mkpartfsin interactive mode.
+  # Test mkpart interactive mode.
   test_expect_success \
       'Create the test file' \
       '
