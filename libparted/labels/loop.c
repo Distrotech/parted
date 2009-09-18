@@ -83,8 +83,8 @@ loop_clobber (PedDevice* dev)
 
 	memset (buf, 0, dev->sector_size);
 
+	PedSector i = 0;
 	while (loop_probe (dev)) {
-		PedSector i = 0;
 		if (!ped_device_write (dev, buf, i++, 1))
 			return 0;
 	}
