@@ -5,6 +5,7 @@ TESTS = \
   t0200-gpt.sh \
   t0201-gpt.sh \
   t0202-gpt-pmbr.sh \
+  t0220-gpt-msftres.sh \
   t0250-gpt.sh \
   t0300-dos-on-gpt.sh \
   t0400-loop-clobber-infloop.sh \
