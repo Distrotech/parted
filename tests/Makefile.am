@@ -1,5 +1,6 @@
 TESTS = \
   t0000-basic.sh \
+  t0010-script-no-ctrl-chars.sh \
   t0100-print.sh \
   t0200-gpt.sh \
   t0201-gpt.sh \

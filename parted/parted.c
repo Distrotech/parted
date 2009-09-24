@@ -2459,6 +2459,9 @@ _init_commands ();
 if (!_parse_options (argc_ptr, argv_ptr))
         goto error_done_commands;
 
+if (!opt_script_mode)
+        init_readline ();
+
 #ifdef HAVE_GETUID
         if (getuid() != 0 && !opt_script_mode) {
             puts (_("WARNING: You are not superuser.  Watch out for "

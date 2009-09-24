@@ -1394,6 +1394,18 @@ init_disk_type_str ()
 }
 
 int
+init_readline (void)
+{
+#ifdef HAVE_LIBREADLINE
+  if (!opt_script_mode) {
+    rl_initialize ();
+    rl_attempted_completion_function = (CPPFunction*) complete_function;
+    readline_state.in_readline = 0;
+  }
+#endif
+}
+
+int
 init_ui ()
 {
         if (!init_ex_opt_str ()
@@ -1402,12 +1414,6 @@ init_ui ()
             || !init_disk_type_str ())
                 return 0;
         ped_exception_set_handler (exception_handler);
-
-#ifdef HAVE_LIBREADLINE
-        rl_initialize ();
-        rl_attempted_completion_function = (CPPFunction*) complete_function;
-        readline_state.in_readline = 0;
-#endif
 
 #ifdef SA_SIGINFO
         sigset_t curr;
