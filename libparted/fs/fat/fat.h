@@ -155,6 +155,4 @@ extern int fat_resize (PedFileSystem* fs, PedGeometry* geom, PedTimer* timer);
 
 extern int fat_set_frag_sectors (PedFileSystem* fs, PedSector frag_sectors);
 
-extern int fat_boot_sector_is_sane (const FatBootSector* bs);
-
 #endif /* FAT_H_INCLUDED */
