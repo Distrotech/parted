@@ -616,7 +616,6 @@ probe_partition_for_geom (const PedPartition* part, PedCHSGeometry* bios_geom)
 		head_size = ( A_ - C * cyl_size ) / H;
 	else {
 		/* should not happen because denum != 0 */
-		head_size = 0;
 		PED_ASSERT (0, return 0);
 	}
 

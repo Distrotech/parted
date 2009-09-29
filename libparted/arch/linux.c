@@ -408,7 +408,6 @@ _dm_maptype (PedDevice *dev)
 {
         LinuxSpecific*  arch_specific = LINUX_SPECIFIC (dev);
         struct dm_task *dmt;
-        void *next;
         uint64_t start, length;
         char *target_type = NULL;
         char *params;
@@ -429,8 +428,7 @@ _dm_maptype (PedDevice *dev)
         if (!dm_task_run(dmt))
                 goto bad;
 
-        next = dm_get_next_target(dmt, NULL, &start, &length,
-                                  &target_type, &params);
+        dm_get_next_target(dmt, NULL, &start, &length, &target_type, &params);
 
         arch_specific->dmtype = strdup(target_type ? target_type : "NO-TARGET");
         if (arch_specific->dmtype == NULL)
@@ -741,7 +739,6 @@ init_ide (PedDevice* dev)
 {
         LinuxSpecific*          arch_specific = LINUX_SPECIFIC (dev);
         struct stat             dev_stat;
-        int                     dev_major;
         struct hd_driveid       hdi;
         PedExceptionOption      ex_status;
         char                    hdi_buf[41];
@@ -749,8 +746,6 @@ init_ide (PedDevice* dev)
 
         if (!_device_stat (dev, &dev_stat))
                 goto error;
-
-        dev_major = major (dev_stat.st_rdev);
 
         if (!ped_device_open (dev))
                 goto error;
@@ -2146,14 +2141,13 @@ _mount_table_search (const char* file_name, dev_t dev)
         char line[512];
         char part_name[512];
         FILE* file;
-        int junk;
 
         file = fopen (file_name, "r");
         if (!file)
                 return 0;
         while (fgets (line, 512, file)) {
-                junk = sscanf (line, "%s", part_name);
-                if (stat (part_name, &part_stat) == 0) {
+                if (sscanf (line, "%s", part_name) == 1
+                    && stat (part_name, &part_stat) == 0) {
                         if (part_stat.st_rdev == dev) {
                                 fclose (file);
                                 return 1;

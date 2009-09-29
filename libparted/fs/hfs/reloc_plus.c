@@ -59,7 +59,7 @@ hfsplus_effect_move_extent (PedFileSystem *fs, unsigned int *ptr_fblock,
 	PED_ASSERT (hfsp_block != NULL, return -1);
 	PED_ASSERT (*ptr_to_fblock <= *ptr_fblock, return -1);
 	/* quiet GCC */
-	next_to_fblock = start = stop = 0;
+	start = stop = 0;
 
 /*
 	Try to fit the extent AT or _BEFORE_ the wanted place,

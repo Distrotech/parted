@@ -1569,13 +1569,9 @@ error:
 static int
 mac_alloc_metadata (PedDisk* disk)
 {
-	MacDiskData*		mac_disk_data;
-
 	PED_ASSERT (disk != NULL, return 0);
 	PED_ASSERT (disk->disk_specific != NULL, return 0);
 	PED_ASSERT (disk->dev != NULL, return 0);
-
-	mac_disk_data = disk->disk_specific;
 
 	if (!add_metadata_part (disk, 0, disk->dev->sector_size / 512 - 1))
 		return 0;

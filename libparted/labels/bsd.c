@@ -476,7 +476,6 @@ bsd_partition_set_system (PedPartition* part, const PedFileSystemType* fs_type)
 static int
 bsd_partition_set_flag (PedPartition* part, PedPartitionFlag flag, int state)
 {
-	PedDisk*			disk;
 //	PedPartition*		walk; // since -Werror, this unused variable would break build
 	BSDPartitionData*	bsd_data;
 
@@ -485,7 +484,6 @@ bsd_partition_set_flag (PedPartition* part, PedPartitionFlag flag, int state)
 	PED_ASSERT (part->disk != NULL, return 0);
 
 	bsd_data = part->disk_specific;
-	disk = part->disk;
 
 	switch (flag) {
 		case PED_PARTITION_BOOT:

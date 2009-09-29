@@ -651,7 +651,7 @@ amiga_write (const PedDisk* disk)
 	struct LinkedBlock *block;
 	struct PartitionBlock *partition;
 	PedPartition *part, *next_part;
-	PedSector cylblocks, first_hb, last_hb, last_used_hb;
+	PedSector cylblocks, first_hb, last_hb;
 	uint32_t * table;
 	uint32_t i;
 	uint32_t rdb_num, part_num, block_num, next_num;
@@ -681,7 +681,6 @@ amiga_write (const PedDisk* disk)
 		(PedSector) PED_BE32_TO_CPU (rdb->rdb_Sectors);
 	first_hb = (PedSector) PED_BE32_TO_CPU (rdb->rdb_RDBBlocksLo);
 	last_hb = (PedSector) PED_BE32_TO_CPU (rdb->rdb_RDBBlocksHi);
-	last_used_hb = (PedSector) PED_BE32_TO_CPU (rdb->rdb_HighRDSKBlock);
 
 	/* Allocate a free block table and initialize it.
 	   There must be room for at least RDB_NUM + 2 entries, since
@@ -736,8 +735,8 @@ amiga_write (const PedDisk* disk)
 		goto error_free_table;
 	}
 
-	block_num = next_num = part_num = _amiga_next_free_block(table, rdb_num+1,
-	                                                         IDNAME_PARTITION);
+	block_num = part_num = _amiga_next_free_block(table, rdb_num+1,
+                                                      IDNAME_PARTITION);
 	part = _amiga_next_real_partition(disk, NULL);
 	rdb->rdb_PartitionList = PED_CPU_TO_BE32(part ? part_num : LINK_END);
 	for (; part != NULL; part = next_part, block_num = next_num) {
