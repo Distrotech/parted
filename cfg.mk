@@ -41,12 +41,7 @@ local-checks-to-skip = \
   sc_space_tab \
   sc_tight_scope \
   sc_useless_cpp_parens \
-  changelog-check \
-  strftime-check \
-  patch-check \
-  author_mark_check \
-  sc_cast_of_argument_to_free \
-  check-AUTHORS
+  changelog-check
 
 # Now that we have better (check.mk) tests, make this the default.
 export VERBOSE = yes

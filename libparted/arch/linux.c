@@ -1337,7 +1337,8 @@ error:
 static void
 linux_destroy (PedDevice* dev)
 {
-        free (((LinuxSpecific*)dev->arch_specific)->dmtype);
+        void *p = ((LinuxSpecific*)dev->arch_specific)->dmtype;
+        free (p);
         free (dev->arch_specific);
         free (dev->path);
         free (dev->model);

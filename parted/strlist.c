@@ -226,7 +226,8 @@ str_list_destroy (StrList* list)
 void
 str_list_destroy_node (StrList* list)
 {
-	free ((wchar_t*) list->str);
+	void *p = (char *) (list->str); /* discard const */
+	free (p);
 	free (list);
 }
 
