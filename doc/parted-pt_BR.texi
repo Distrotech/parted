@@ -22,7 +22,7 @@
 This file documents the use of GNU Parted, a program for creating,
 resising, checking and copy partitions, and file systems on them.
 
-Copyright 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+Copyright 1999-2002, 2009 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.1 or
