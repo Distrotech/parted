@@ -369,10 +369,9 @@ parse_chs (const char* str, const PedDevice* dev, PedSector* sector,
 		PedGeometry** range)
 {
 	PedSector cyl_size = dev->bios_geom.heads * dev->bios_geom.sectors;
-	char* copy = ped_strdup (str);
 	PedCHSGeometry chs;
 
-	copy = ped_strdup (str);
+	char* copy = ped_strdup (str);
 	if (!copy)
 		return 0;
 	strip_string (copy);

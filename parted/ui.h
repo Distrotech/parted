@@ -49,7 +49,8 @@ extern int command_line_get_sector (const char* prompt, PedDevice* dev,
 				    PedSector* value, PedGeometry** range);
 extern int command_line_get_state (const char* prompt, int* value);
 extern int command_line_get_device (const char* prompt, PedDevice** value);
-extern int command_line_get_disk (const char* prompt, PedDisk** value);
+extern int command_line_get_disk (const char* prompt, PedDisk** value)
+  __attribute__((__nonnull__(2)));
 extern int command_line_get_partition (const char* prompt, PedDisk* disk,
 				       PedPartition** value);
 extern int command_line_get_fs_type (const char* prompt,

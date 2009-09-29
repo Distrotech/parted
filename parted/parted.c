@@ -346,7 +346,6 @@ snap_to_boundaries (PedGeometry* new_geom, PedGeometry* old_geom,
         EMoves          start_allow, end_allow, start_want, end_want;
         int             adjacent;
 
-        start_want = end_want = MOVE_NO;
         start_allow = end_allow = MOVE_STILL | MOVE_UP | MOVE_DOWN;
 
         start_part = ped_disk_get_partition_by_sector (disk, start);
@@ -987,6 +986,8 @@ do_mkpartfs (PedDevice** dev)
                 goto error_destroy_disk;
         ped_file_system_close (fs);
 
+        if (part_name)
+                PED_ASSERT (ped_partition_set_name (part, part_name), return 0);
         if (!ped_partition_set_system (part, fs_type))
                 goto error_destroy_disk;
 

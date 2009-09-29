@@ -76,7 +76,6 @@ hfsplus_btree_search (HfsPPrivateFile* b_tree_file, HfsPPrivateGenericKey* key,
 	uint8_t			node_1[PED_SECTOR_SIZE_DEFAULT];
 	uint8_t*		node;
 	HfsPHeaderRecord*	header;
-	HfsPNodeDescriptor*	desc = (HfsPNodeDescriptor*) node_1;
 	HfsPPrivateGenericKey*	record_key = NULL;
 	unsigned int		node_number, record_number, size, bsize;
 	int			i;
@@ -96,7 +95,7 @@ hfsplus_btree_search (HfsPPrivateFile* b_tree_file, HfsPPrivateGenericKey* key,
 	node = (uint8_t*) ped_malloc (bsize);
 	if (!node)
 		return 0;
-	desc = (HfsPNodeDescriptor*) node;
+	HfsPNodeDescriptor *desc = (HfsPNodeDescriptor*) node;
 
 	/* Read the root node */
 	if (!hfsplus_file_read (b_tree_file, node,

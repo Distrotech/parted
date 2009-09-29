@@ -313,6 +313,7 @@ static int ext2_mkfs_create_lost_and_found_inode(struct ext2_fs *fs)
 			     11, ".", EXT2_FT_DIR);
 	offset = _set_dirent(bh->data, offset, fs->blocksize, 1,
 			     EXT2_ROOT_INO, "..", EXT2_FT_DIR);
+	(void) offset;
 	bh->dirty = 1;
 	ext2_brelse(bh, 1);
 

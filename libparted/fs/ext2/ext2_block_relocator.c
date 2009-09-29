@@ -826,14 +826,7 @@ static int ext2_block_relocate_grow(struct ext2_fs *fs, struct ext2_block_reloca
 
 static int ext2_block_relocate_shrink(struct ext2_fs *fs, struct ext2_block_relocator_state *state, blk_t newsize)
 {
-	int diff;
 	int i;
-
-	diff = ped_div_round_up (newsize - EXT2_SUPER_FIRST_DATA_BLOCK(fs->sb),
-		       EXT2_SUPER_BLOCKS_PER_GROUP(fs->sb));
-	diff = ped_div_round_up (diff * sizeof(struct ext2_group_desc),
-                        fs->blocksize);
-	diff = fs->gdblocks - diff;
 
 	state->newallocoffset = fs->itoffset + fs->inodeblocks;
 
