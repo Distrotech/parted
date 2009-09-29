@@ -81,7 +81,7 @@ init_disk_types ()
 {
 	ped_disk_loop_init ();	/* must be last in the probe list */
 
-#if defined(__s390__) || defined(__s390x__)
+#if defined __s390__ || defined __s390x__
 	ped_disk_dasd_init();
 #endif
 
@@ -141,7 +141,7 @@ extern void ped_disk_dasd_done ();
 static void
 done_disk_types ()
 {
-#if defined(__s390__) || (__s390x__)
+#if defined __s390__ || __s390x__
 	ped_disk_dasd_done ();
 #endif
 	ped_disk_sun_done ();

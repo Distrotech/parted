@@ -33,7 +33,7 @@ extern void ped_debug ( const int level, const char* file, int line,
 extern int ped_assert ( int cond, const char* cond_text,
 	                const char* file, int line, const char* function );
 
-#if defined(__GNUC__) && !defined(__JSFTRACE__)
+#if defined __GNUC__ && !defined __JSFTRACE__
 
 #define PED_DEBUG(level, ...) \
         ped_debug ( level, __FILE__, __LINE__, __PRETTY_FUNCTION__, \
@@ -86,4 +86,3 @@ static void PED_DEBUG (int level, ...)
 #endif /* DEBUG */
 
 #endif /* PED_DEBUG_H_INCLUDED */
-

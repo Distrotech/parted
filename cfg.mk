@@ -34,14 +34,9 @@ gpg_key_ID = B9AB9A16
 local-checks-to-skip = \
   sc_file_system \
   sc_prohibit_strcmp \
-  sc_changelog \
   sc_prohibit_atoi_atof \
   sc_require_test_exit_idiom \
-  sc_system_h_headers \
-  sc_space_tab \
-  sc_tight_scope \
-  sc_useless_cpp_parens \
-  changelog-check
+  sc_space_tab
 
 # Now that we have better (check.mk) tests, make this the default.
 export VERBOSE = yes

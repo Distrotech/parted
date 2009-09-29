@@ -18,7 +18,7 @@
 #ifndef PED_ARCH_LINUX_H_INCLUDED
 #define PED_ARCH_LINUX_H_INCLUDED
 
-#if defined(__s390__) || defined(__s390x__)
+#if defined __s390__ || defined__s390x__
 #  include <parted/fdasd.h>
 #endif
 
@@ -29,7 +29,7 @@ typedef	struct _LinuxSpecific	LinuxSpecific;
 struct _LinuxSpecific {
 	int	fd;
 	char*	dmtype;         /**< device map target type */
-#if defined(__s390__) || defined(__s390x__)
+#if defined __s390__ || defined __s390x__
 	unsigned int real_sector_size;
 	/* IBM internal dasd structure (i guess ;), required. */
 	struct fdasd_anchor *anchor;
