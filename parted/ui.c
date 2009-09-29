@@ -1402,6 +1402,7 @@ init_readline (void)
     readline_state.in_readline = 0;
   }
 #endif
+  return 0;
 }
 
 int
