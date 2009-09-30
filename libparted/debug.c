@@ -82,14 +82,9 @@ void ped_debug_set_handler ( PedDebugHandler* handler )
  * Check an assertion.
  * Do not call this directly -- use PED_ASSERT() instead.
  */
-int ped_assert (int cond, const char* cond_text,
-                const char* file, int line, const char* function)
+void ped_assert (const char* cond_text,
+                 const char* file, int line, const char* function)
 {
-        PedExceptionOption opt;
-
-        if (cond)
-                return 1;
-
 #if HAVE_BACKTRACE
         /* Print backtrace stack */
         void *stack[20];
@@ -108,14 +103,12 @@ int ped_assert (int cond, const char* cond_text,
 #endif
 
         /* Throw the exception */
-        opt = ped_exception_throw (
+        ped_exception_throw (
                 PED_EXCEPTION_BUG,
-                PED_EXCEPTION_IGNORE_CANCEL,
+                PED_EXCEPTION_FATAL,
                 _("Assertion (%s) at %s:%d in function %s() failed."),
                 cond_text, file, line, function);
-
-        return (opt == PED_EXCEPTION_IGNORE);
+        abort ();
 }
 
 #endif /* DEBUG */
-

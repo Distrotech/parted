@@ -30,8 +30,9 @@ extern void ped_debug_set_handler (PedDebugHandler* handler);
 extern void ped_debug ( const int level, const char* file, int line,
                         const char* function, const char* msg, ... );
 
-extern int ped_assert ( int cond, const char* cond_text,
-	                const char* file, int line, const char* function );
+extern void __attribute__((__noreturn__))
+ped_assert ( const char* cond_text,
+                         const char* file, int line, const char* function );
 
 #if defined __GNUC__ && !defined __JSFTRACE__
 
@@ -41,14 +42,13 @@ extern int ped_assert ( int cond, const char* cond_text,
 
 #define PED_ASSERT(cond, action)				\
 	do {							\
-	if (!ped_assert ( cond,			                \
+		if (!(cond)) {					\
+			ped_assert (				\
 			  #cond,				\
 			  __FILE__,				\
 			  __LINE__,				\
-			  __PRETTY_FUNCTION__ ))		\
-	{							\
-		action;						\
-	}							\
+			  __PRETTY_FUNCTION__ );		\
+		}						\
 	} while (0)
 
 #else /* !__GNUC__ */
@@ -65,14 +65,13 @@ static void PED_DEBUG (int level, ...)
 
 #define PED_ASSERT(cond, action)				\
 	do {							\
-	if (!ped_assert ( cond,                     		\
+		if (!(cond)) {					\
+			ped_assert (				\
 			  #cond,				\
 			  "unknown",				\
 			  0,					\
-			  "unknown" )) 		        	\
-	{			 				\
-		action;						\
-	}							\
+			  "unknown");				\
+		}						\
 	} while (0)
 
 #endif /* __GNUC__ */

@@ -359,13 +359,11 @@ ped_disk_new_fresh (PedDevice* dev, const PedDiskType* type)
 	if (!disk)
        		goto error;
 	_disk_pop_update_mode (disk);
-	PED_ASSERT (disk->update_mode == 0, goto error_destroy_disk);
+	PED_ASSERT (disk->update_mode == 0, ignored);
 
 	disk->needs_clobber = 1;
 	return disk;
 
-error_destroy_disk:
-	ped_disk_destroy (disk);
 error:
 	return NULL;
 }
@@ -1849,15 +1847,11 @@ ped_disk_remove_partition (PedDisk* disk, PedPartition* part)
 	PED_ASSERT (part != NULL, return 0);
 
 	_disk_push_update_mode (disk);
-	PED_ASSERT (part->part_list == NULL, goto error);
+	PED_ASSERT (part->part_list == NULL, ignored);
 	_disk_raw_remove (disk, part);
 	_disk_pop_update_mode (disk);
 	ped_disk_enumerate_partitions (disk);
 	return 1;
-
-error:
-	_disk_pop_update_mode (disk);
-	return 0;
 }
 
 static int
