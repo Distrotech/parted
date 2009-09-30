@@ -28,6 +28,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <setjmp.h>
+#include <assert.h>
 
 #include "command.h"
 #include "strlist.h"
@@ -983,15 +984,12 @@ command_line_get_state (const char* prompt, int* value)
 int
 command_line_get_device (const char* prompt, PedDevice** value)
 {
-        char*         def_dev_name = *value ? (*value)->path : NULL;
-        char*         dev_name;
-        PedDevice*    dev;
-
-        dev_name = command_line_get_word (prompt, def_dev_name, NULL, 1);
+        char *def_dev_name = *value ? (*value)->path : NULL;
+        char *dev_name = command_line_get_word (prompt, def_dev_name, NULL, 1);
         if (!dev_name)
                 return 0;
 
-        dev = ped_device_get (dev_name);
+        PedDevice *dev = ped_device_get (dev_name);
         free (dev_name);
         if (!dev)
                 return 0;
@@ -1008,6 +1006,7 @@ command_line_get_disk (const char* prompt, PedDisk** value)
         if (!command_line_get_device (prompt, &dev))
                 return 0;
 
+        assert (*value);
         if (dev != (*value)->dev) {
                 PedDisk*    new_disk = ped_disk_new (dev);
                 if (!new_disk)
