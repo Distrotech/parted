@@ -444,9 +444,26 @@ help_on (char* topic)
         command_print_help (cmd);
 }
 
+/* Issue a warning about upcoming removal of FS support.  */
+static void
+issue_fs_op_warning (char const *op)
+{
+  if (getenv ("PARTED_SUPPRESS_FILE_SYSTEM_MANIPULATION_WARNING"))
+    return;
+  fprintf (stderr,
+ _("WARNING: you are attempting to use %s to operate on (%s) a file system.\n"
+   "%s's file system manipulation code is not as robust as what you'll find in\n"
+   "dedicated, file-system-specific packages like e2fsprogs.  We recommend\n"
+   "you use %s only to manipulate partition tables, whenever possible.\n"
+   "Support for performing most types and operations on most types of file\n"
+   "systems will be removed in an upcoming release.\n"),
+   program_name, op, program_name, program_name);
+}
+
 static int
 do_check (PedDevice** dev)
 {
+        issue_fs_op_warning ("check");
         PedDisk*        disk;
         PedFileSystem*  fs;
         PedPartition*   part = NULL;
@@ -483,6 +500,7 @@ error:
 static int
 do_cp (PedDevice** dev)
 {
+        issue_fs_op_warning ("cp");
         PedDisk*                src_disk;
         PedDisk*                dst_disk;
         PedPartition*           src = NULL;
@@ -635,6 +653,7 @@ error:
 static int
 do_mkfs (PedDevice** dev)
 {
+        issue_fs_op_warning ("mkfs");
         PedDisk*                disk;
         PedPartition*           part = NULL;
         const PedFileSystemType* type = ped_file_system_type_get ("ext2");
@@ -863,6 +882,7 @@ error:
 static int
 do_mkpartfs (PedDevice** dev)
 {
+        issue_fs_op_warning ("mkpartfs");
         PedDisk*            disk;
         PedPartition*       part;
         PedPartitionType    part_type;
@@ -1036,6 +1056,7 @@ error:
 static int
 do_move (PedDevice** dev)
 {
+        issue_fs_op_warning ("move");
         PedDisk*        disk;
         PedPartition*   part = NULL;
         PedFileSystem*  fs;
@@ -1778,6 +1799,7 @@ error:
 static int
 do_resize (PedDevice** dev)
 {
+        issue_fs_op_warning ("resize");
         PedDisk                 *disk;
         PedPartition            *part = NULL;
         PedFileSystem           *fs;

@@ -7,6 +7,7 @@ LANG=C
 LC_ALL=C
 TZ=UTC
 export LANG LC_ALL TZ
+export PARTED_SUPPRESS_FILE_SYSTEM_MANIPULATION_WARNING=1
 
 . ./init.sh || { echo >&2 you must run make first; exit 1; }
 
