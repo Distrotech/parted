@@ -2,6 +2,8 @@ GNU parted NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Improvements
+
   Parted now supports disks with sector size larger than 512 bytes.
   Before this release, Parted could operate only on disks with a sector
   size of 512 bytes.  However, disk manufacturers are already making disks
@@ -13,6 +15,12 @@ GNU parted NEWS                                    -*- outline -*-
     amiga, bsd, aix, pc98
   "bsd" and "amiga" are mostly done, but had a few minor problems,
   so may remain disabled until someone requests that they be revived.
+
+** Bug fixes
+
+  Partitions in a GPT table are no longer assigned the "microsoft
+  reserved partition" type.  Before this change, each partition would
+  be listed with a type of "msftres" by default.
 
 
 * Noteworthy changes in release 1.9.0 (2009-07-23) [stable]
