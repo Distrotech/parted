@@ -268,19 +268,19 @@ hfs_get_empty_end (const PedFileSystem *fs)
 	HfsPrivateFSData* 	priv_data = (HfsPrivateFSData*)
 						fs->type_specific;
 	HfsMasterDirectoryBlock* mdb = priv_data->mdb;
-	HfsPrivateLinkExtent*	link;
 	unsigned int		block, last_bad, end_free_blocks;
 
 	/* find the next block to the last bad block of the volume */
 	if (!hfs_read_bad_blocks (fs))
 		return 0;
 
+	HfsPrivateLinkExtent*	l;
 	last_bad = 0;
-	for (link = priv_data->bad_blocks_xtent_list; link; link = link->next) {
-		if ((unsigned int) PED_BE16_TO_CPU (link->extent.start_block)
-		    + PED_BE16_TO_CPU (link->extent.block_count) > last_bad)
-			last_bad = PED_BE16_TO_CPU (link->extent.start_block)
-			           + PED_BE16_TO_CPU (link->extent.block_count);
+	for (l = priv_data->bad_blocks_xtent_list; l; l = l->next) {
+		if ((unsigned int) PED_BE16_TO_CPU (l->extent.start_block)
+		    + PED_BE16_TO_CPU (l->extent.block_count) > last_bad)
+			last_bad = PED_BE16_TO_CPU (l->extent.start_block)
+			           + PED_BE16_TO_CPU (l->extent.block_count);
 	}
 
 	/* Count the free blocks from last_bad to the end of the volume */
