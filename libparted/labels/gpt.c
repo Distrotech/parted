@@ -608,8 +608,10 @@ _header_is_valid (const PedDevice* dev, GuidPartitionTableHeader_t* gpt)
 	 * the SizeOfPartitionEntry must be a multiple of 8 and
 	 * no smaller than the size of the PartitionEntry structure.
 	 */
-	uint32_t sope = gpt->SizeOfPartitionEntry;
-	if (sope % 8 != 0 || sope < sizeof(GuidPartitionEntry_t) )
+	uint32_t sope = PED_LE32_TO_CPU (gpt->SizeOfPartitionEntry);
+	if (sope % 8 != 0
+            || sope < sizeof (GuidPartitionEntry_t)
+            || (UINT32_MAX >> 4) < sope)
 		return 0;
 
 	origcrc = gpt->HeaderCRC32;
@@ -911,7 +913,8 @@ gpt_read (PedDisk * disk)
 	if (!_parse_header (disk, gpt, &write_back))
 		goto error_free_gpt;
 
-	ptes_sectors = ped_div_round_up (gpt->SizeOfPartitionEntry
+	uint32_t p_ent_size = PED_LE32_TO_CPU (gpt->SizeOfPartitionEntry);
+	ptes_sectors = ped_div_round_up (p_ent_size
 					 * gpt_disk_data->entry_count,
 					 disk->dev->sector_size);
 
@@ -926,8 +929,7 @@ gpt_read (PedDisk * disk)
 
 	for (i = 0; i < gpt_disk_data->entry_count; i++) {
 		GuidPartitionEntry_t* pte
-		  = (GuidPartitionEntry_t*) ((char *)ptes + i
-					     * gpt->SizeOfPartitionEntry);
+		  = (GuidPartitionEntry_t*) ((char *)ptes + i * p_ent_size);
 		PedPartition* part;
 		PedConstraint* constraint_exact;
 
