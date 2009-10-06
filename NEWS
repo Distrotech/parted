@@ -18,6 +18,10 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  ped_partition_is_busy no longer calls libparted's exception handler,
+  since doing so caused trouble with anaconda/pyparted when operating on
+  dmraid devices.
+
   Partitions in a GPT table are no longer assigned the "microsoft
   reserved partition" type.  Before this change, each partition would
   be listed with a type of "msftres" by default.

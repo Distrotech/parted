@@ -2127,7 +2127,7 @@ _partition_get_part_dev (const PedPartition* part)
         struct stat dev_stat;
         int dev_major, dev_minor;
 
-        if (!_device_stat (part->disk->dev, &dev_stat))
+        if (stat (part->disk->dev->path, &dev_stat))
                 return (dev_t)0;
         dev_major = major (dev_stat.st_rdev);
         dev_minor = minor (dev_stat.st_rdev);
@@ -2184,6 +2184,8 @@ _partition_is_mounted (const PedPartition *part)
         if (!ped_partition_is_active (part))
                 return 0;
         dev = _partition_get_part_dev (part);
+        if (!dev)
+                return 0;
         return _partition_is_mounted_by_dev (dev);
 }
 
