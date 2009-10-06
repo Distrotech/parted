@@ -23,6 +23,10 @@ will be removed from an upcoming release of Parted.  Thus, you should
 now avoid using the following commands: mkpartfs, mkfs, cp, move, check
 since support for them will be removed.
 
+
+See the file NEWS for a list of major changes in the current release.
+
+
  * documentation is in the doc/ directory.  The User's documentation is in
 texinfo format, and is built into a format viewable by info/pinfo when
 you run make.  To view the distributed texinfo documentation, run this:
