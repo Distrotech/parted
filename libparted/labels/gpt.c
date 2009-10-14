@@ -819,7 +819,6 @@ gpt_read (PedDisk * disk)
 	GPTDiskData *gpt_disk_data = disk->disk_specific;
 	GuidPartitionTableHeader_t* gpt;
 	void* ptes;
-	size_t ptes_sectors;
 	int i;
 #ifndef DISCOVER_ONLY
 	int write_back = 0;
@@ -914,9 +913,9 @@ gpt_read (PedDisk * disk)
 		goto error_free_gpt;
 
 	uint32_t p_ent_size = PED_LE32_TO_CPU (gpt->SizeOfPartitionEntry);
-	ptes_sectors = ped_div_round_up (p_ent_size
-					 * gpt_disk_data->entry_count,
-					 disk->dev->sector_size);
+	size_t ptes_bytes = p_ent_size * gpt_disk_data->entry_count;
+	size_t ptes_sectors = ped_div_round_up (ptes_bytes,
+						disk->dev->sector_size);
 
 	if (xalloc_oversized (ptes_sectors, disk->dev->sector_size))
 		goto error_free_gpt;
@@ -926,6 +925,15 @@ gpt_read (PedDisk * disk)
 			      PED_LE64_TO_CPU(gpt->PartitionEntryLBA),
 			      ptes_sectors))
 		goto error_free_ptes;
+
+	uint32_t ptes_crc = efi_crc32 (ptes, ptes_bytes);
+	if (ptes_crc != gpt->PartitionEntryArrayCRC32) {
+		ped_exception_throw (
+			PED_EXCEPTION_ERROR,
+			PED_EXCEPTION_CANCEL,
+			_("partition table array (FIXME:which?) CRC mismatch"));
+		goto error_free_ptes;
+        }
 
 	for (i = 0; i < gpt_disk_data->entry_count; i++) {
 		GuidPartitionEntry_t* pte
