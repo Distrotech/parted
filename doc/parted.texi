@@ -1012,6 +1012,11 @@ either ``on'' or ``off''.  Some or all of these flags will be available,
 depending on what disk label you are using:
 
 @table @samp
+
+@item bios_grub
+(GPT) - Enable this to record that the selected partition is a
+GRUB BIOS partition.
+
 @item boot
 (Mac, MS-DOS, PC98) - should be enabled if you want to boot off the
 partition.  The semantics vary between disk labels.  For MS-DOS disk
