@@ -55,23 +55,21 @@ test_expect_success \
 
 test_expect_success \
     'add a partition' \
-    'parted -s $dev u s mkpart primary ${start_sector} ${end_sector} >out 2>&1'
+    'parted -s $dev u s mkpart name1 ${start_sector} ${end_sector} >out 2>&1'
 
 test_expect_success \
-    'print the table (before manual modification)' \
+    'print the table before modification' \
     '
      parted -m -s $dev unit s print > t 2>&1 &&
      sed 's,.*/$dev:,$dev:,' t >> out
     '
 
-# Using bios_boot_magic='\x48\x61' looks nicer, but isn't portable.
-# dash's builtin printf doesn't recognize such \xHH hexadecimal escapes.
-bios_boot_magic='\110\141\150\41\111\144\157\156\164\116\145\145\144\105\106\111'
-
-printf "$bios_boot_magic" | dd of=$dev bs=$ss seek=2 conv=notrunc
+test_expect_success \
+    'set the new bios_grub attribute' \
+    'parted -m -s $dev set 1 bios_grub on'
 
 test_expect_success \
-    'print the table (after manual modification)' \
+    'print the table after modification' \
     '
      parted -m -s $dev unit s print > t 2>&1
      sed 's,.*/$dev:,$dev:,' t >> out
@@ -82,10 +80,10 @@ gen_exp()
   cat <<EOF
 BYT;
 $dev:${N}s:file:$ss:$ss:gpt:;
-1:${start_sector}s:${end_sector}s:${part_sectors}s::primary:;
+1:${start_sector}s:${end_sector}s:${part_sectors}s::name1:;
 BYT;
 $dev:${N}s:file:$ss:$ss:gpt:;
-1:${start_sector}s:${end_sector}s:${part_sectors}s::primary:bios_grub;
+1:${start_sector}s:${end_sector}s:${part_sectors}s::name1:bios_grub;
 EOF
 }
 
