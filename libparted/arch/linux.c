@@ -2450,12 +2450,10 @@ _kernel_reread_part_table (PedDevice* dev)
                         ped_exception_throw (
                                 PED_EXCEPTION_WARNING,
                                 PED_EXCEPTION_IGNORE,
-                        _("The kernel was unable to re-read the partition "
-                          "table on %s (%s).  This means Linux won't know "
-                          "anything about the modifications you made "
-                          "until you reboot.  You should reboot your computer "
-                          "before doing anything with %s."),
-                                dev->path, strerror (errno), dev->path);
+                        _("WARNING: the kernel failed to re-read the partition "
+                          "table on %s (%s).  As a result, it may not "
+                          "reflect all of your changes until after reboot."),
+                                dev->path, strerror (errno));
                         return 0;
                 }
         }
