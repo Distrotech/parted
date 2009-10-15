@@ -52,6 +52,10 @@
 #  define _(String) (String)
 #endif /* ENABLE_NLS */
 
+#if HAVE_BLKID_BLKID_H
+# include <blkid/blkid.h>
+#endif
+
 #define KERNEL_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + (c))
 
 #ifndef __NR__llseek
@@ -592,6 +596,48 @@ _have_kern26 ()
         return have_kern26 = kver >= KERNEL_VERSION (2,6,0) ? 1 : 0;
 }
 
+/* Use libblkid to determine the kernel's idea of the
+   minimum_io_size for the device on which FD is open.
+   Upon success, store that value in *SZ and return 0.
+   Otherwise, don't modify *SZ, set errno and return -1.  */
+static int
+get_minimum_io_size (int fd, unsigned long *sz)
+{
+        int ret = -1;
+
+#if USE_BLKID
+        blkid_probe pr = blkid_new_probe ();
+        if (!pr)
+                goto free_and_return;
+
+        int saved_errno;
+        if (blkid_probe_set_device (pr, fd, 0, 0)) {
+                saved_errno = errno;
+                blkid_free_probe (pr);
+                goto free_and_return;
+        }
+
+        blkid_topology tp = blkid_probe_get_topology (pr);
+        if (!tp) {
+                saved_errno = errno;
+                goto free_and_return;
+        }
+
+        *sz = blkid_topology_get_minimum_io_size (tp);
+        ret = 0;
+
+free_and_return:
+
+        blkid_free_probe (pr);
+        if (ret)
+                errno = saved_errno;
+#else
+        errno = ENOSYS;
+#endif
+
+        return ret;
+}
+
 static void
 _device_set_sector_size (PedDevice* dev)
 {
@@ -618,6 +664,20 @@ _device_set_sector_size (PedDevice* dev)
         } else {
                 dev->sector_size = (long long)sector_size;
         }
+
+        unsigned long min_io_size;
+        int err = get_minimum_io_size (arch_specific->fd, &min_io_size);
+
+        if (err) {
+                ped_exception_throw (
+                        PED_EXCEPTION_WARNING,
+                        PED_EXCEPTION_OK,
+                        _("Could not determine minimum io size for %s: %s.\n"
+                          "Using the default size (%lld)."),
+                        dev->path, strerror (errno), PED_SECTOR_SIZE_DEFAULT);
+                min_io_size = PED_SECTOR_SIZE_DEFAULT;
+        }
+        dev->phys_sector_size = min_io_size;
 
         /* Return PED_SECTOR_SIZE_DEFAULT for DASDs. */
         if (dev->type == PED_DEVICE_DASD) {

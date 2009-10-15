@@ -603,6 +603,18 @@ HOST=$(hostname)
 BUILDINFO="$USER@$HOST, $DATE"
 AC_SUBST([BUILDINFO])
 
+LIB_BLKID=
+AC_SUBST([LIB_BLKID])
+pe_saved_libs=$LIBS
+  AC_SEARCH_LIBS([blkid_probe_get_topology], [blkid],
+    [test "$ac_cv_search_blkid_probe_get_topology" = "none required" \
+     || LIB_BLKID=$ac_cv_search_blkid_probe_get_topology])
+  AC_CHECK_FUNC([blkid_probe_get_topology], [use_blkid=1], [use_blkid=0])
+LIBS=$pe_saved_libs
+AC_DEFINE_UNQUOTED([USE_BLKID], [$use_blkid],
+  [Define if you have sufficient blkid support.])
+AC_CHECK_HEADERS_ONCE([blkid/blkid.h])
+
 AC_OUTPUT([
 Makefile
 lib/Makefile
