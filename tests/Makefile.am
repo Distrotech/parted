@@ -27,7 +27,8 @@ TESTS = \
   t5000-tags.sh \
   t6000-dm.sh \
   t7000-scripting.sh \
-  t8000-loop.sh
+  t8000-loop.sh \
+  t9010-big-sector.sh
 
 EXTRA_DIST = \
   $(TESTS) test-lib.sh t-lib.sh lvm-utils.sh
