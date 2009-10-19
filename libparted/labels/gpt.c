@@ -604,10 +604,10 @@ _header_is_valid (const PedDevice* dev, GuidPartitionTableHeader_t* gpt)
 	    || PED_LE32_TO_CPU (gpt->HeaderSize) > dev->sector_size)
 		return 0;
 
-	/*
-	 * the SizeOfPartitionEntry must be a multiple of 8 and
-	 * no smaller than the size of the PartitionEntry structure.
-	 */
+	/* The SizeOfPartitionEntry must be a multiple of 8 and
+	   no smaller than the size of the PartitionEntry structure.
+	   We also require that be no larger than 1/16th of UINT32_MAX,
+	   as an additional sanity check.  */
 	uint32_t sope = PED_LE32_TO_CPU (gpt->SizeOfPartitionEntry);
 	if (sope % 8 != 0
             || sope < sizeof (GuidPartitionEntry_t)
