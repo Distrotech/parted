@@ -83,13 +83,51 @@ test_expect_success \
     'poke $dev $pte_offset "$new_byte"'
 
 test_expect_success \
-    'try to print the table' \
+    'printing the table must fail' \
     'parted -s $dev print > err 2>&1;
      test $? = 1'
 
 test_expect_success \
     'check for expected diagnostic' \
     'echo "Error: primary partition table array CRC mismatch" > exp &&
+     compare exp err'
+
+# ----------------------------------------------------------
+# Now, restore things, and corrupt the MyLBA in the alternate GUID table.
+
+orig_byte=s
+test_expect_success \
+    'Restore original byte' \
+    'poke $dev $pte_offset "$orig_byte"'
+
+test_expect_success \
+    'print the table' \
+    'parted -s $dev print > out 2> err'
+test_expect_success 'expect no output' 'compare /dev/null err'
+
+# The MyLBA member of the alternate table is in the last sector,
+# $n_sectors, 8-byte field starting at offset 24.
+alt_my_lba_offset=$(expr $n_sectors \* $ss - $ss + 24)
+test_expect_success \
+    'get the first byte of MyLBA' \
+    'byte=$(peek $dev $alt_my_lba_offset)'
+
+# Perturb it.
+test x"$byte" = xA && new_byte=B || new_byte=A
+
+# Insert the bad byte.
+test_expect_success \
+    'Replace with a different byte' \
+    'poke $dev $alt_my_lba_offset "$new_byte"'
+
+test_expect_success \
+    'printing the table must fail' \
+    'parted -s $dev print > err 2>&1;
+     test $? = 1'
+
+test_expect_success \
+    'check for expected diagnostic' \
+    'echo "Error: alternate partition table CRC mismatch" > exp &&
      compare exp err'
 
 test_done
