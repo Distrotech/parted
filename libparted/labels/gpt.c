@@ -1616,44 +1616,44 @@ gpt_partition_check (const PedPartition *part)
   return true;
 }
 
-static PedDiskOps gpt_disk_ops = {
-	probe:		gpt_probe,
-#ifndef DISCOVER_ONLY
-	clobber:	gpt_clobber,
+#ifdef DISCOVER_ONLY
+# define NULL_IF_DISCOVER_ONLY(val) NULL
 #else
-	clobber:	NULL,
+# define NULL_IF_DISCOVER_ONLY(val) val
 #endif
-	alloc:		gpt_alloc,
-	duplicate:	gpt_duplicate,
-	free:		gpt_free,
-	read:		gpt_read,
-#ifndef DISCOVER_ONLY
-	write:		gpt_write,
-#else
-	write:		NULL,
-#endif
-	partition_new:			gpt_partition_new,
-	partition_duplicate:		gpt_partition_duplicate,
-	partition_destroy:		gpt_partition_destroy,
-	partition_set_system:		gpt_partition_set_system,
-	partition_set_flag:		gpt_partition_set_flag,
-	partition_get_flag:		gpt_partition_get_flag,
-	partition_is_flag_available:	gpt_partition_is_flag_available,
-	partition_set_name:		gpt_partition_set_name,
-	partition_get_name:		gpt_partition_get_name,
-	partition_align:		gpt_partition_align,
-	partition_enumerate:		gpt_partition_enumerate,
-	partition_check:		gpt_partition_check,
-	alloc_metadata:			gpt_alloc_metadata,
-	get_max_primary_partition_count: gpt_get_max_primary_partition_count,
-	get_max_supported_partition_count: gpt_get_max_supported_partition_count
+
+static PedDiskOps gpt_disk_ops =
+{
+  probe:			gpt_probe,
+  clobber:			NULL_IF_DISCOVER_ONLY (gpt_clobber),
+  alloc:			gpt_alloc,
+  duplicate:			gpt_duplicate,
+  free:				gpt_free,
+  read:				gpt_read,
+  write:			NULL_IF_DISCOVER_ONLY (gpt_write),
+  partition_new:		gpt_partition_new,
+  partition_duplicate:		gpt_partition_duplicate,
+  partition_destroy:		gpt_partition_destroy,
+  partition_set_system:		gpt_partition_set_system,
+  partition_set_flag:		gpt_partition_set_flag,
+  partition_get_flag:		gpt_partition_get_flag,
+  partition_is_flag_available:	gpt_partition_is_flag_available,
+  partition_set_name:		gpt_partition_set_name,
+  partition_get_name:		gpt_partition_get_name,
+  partition_align:		gpt_partition_align,
+  partition_enumerate:		gpt_partition_enumerate,
+  partition_check:		gpt_partition_check,
+  alloc_metadata:		gpt_alloc_metadata,
+  get_max_primary_partition_count: gpt_get_max_primary_partition_count,
+  get_max_supported_partition_count: gpt_get_max_supported_partition_count
 };
 
-static PedDiskType gpt_disk_type = {
-	next:		NULL,
-	name:		"gpt",
-	ops:		&gpt_disk_ops,
-	features:	PED_DISK_TYPE_PARTITION_NAME
+static PedDiskType gpt_disk_type =
+{
+  next:		NULL,
+  name:		"gpt",
+  ops:		&gpt_disk_ops,
+  features:	PED_DISK_TYPE_PARTITION_NAME
 };
 
 void
