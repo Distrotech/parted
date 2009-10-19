@@ -591,7 +591,8 @@ gpt_free (PedDisk *disk)
 }
 
 static int
-_header_is_valid (const PedDevice *dev, GuidPartitionTableHeader_t *gpt)
+_header_is_valid (const PedDevice *dev, GuidPartitionTableHeader_t *gpt,
+                  PedSector my_lba)
 {
   uint32_t crc, origcrc;
 
@@ -615,6 +616,9 @@ _header_is_valid (const PedDevice *dev, GuidPartitionTableHeader_t *gpt)
       || sope < sizeof (GuidPartitionEntry_t) || (UINT32_MAX >> 4) < sope)
     return 0;
 
+  if (PED_LE64_TO_CPU (gpt->MyLBA) != my_lba)
+    return 0;
+
   origcrc = gpt->HeaderCRC32;
   gpt->HeaderCRC32 = 0;
   crc = pth_crc32 (dev, gpt);
@@ -625,13 +629,13 @@ _header_is_valid (const PedDevice *dev, GuidPartitionTableHeader_t *gpt)
 
 static int
 _read_header (const PedDevice *dev, GuidPartitionTableHeader_t **gpt,
-              PedSector where)
+              PedSector my_lba)
 {
   uint8_t *pth_raw = ped_malloc (pth_get_size (dev));
 
   PED_ASSERT (dev != NULL, return 0);
 
-  if (!ped_device_read (dev, pth_raw, where, GPT_HEADER_SECTORS))
+  if (!ped_device_read (dev, pth_raw, my_lba, GPT_HEADER_SECTORS))
     {
       free (pth_raw);
       return 0;
@@ -641,7 +645,7 @@ _read_header (const PedDevice *dev, GuidPartitionTableHeader_t **gpt,
 
   free (pth_raw);
 
-  if (_header_is_valid (dev, *gpt))
+  if (_header_is_valid (dev, *gpt, my_lba))
     return 1;
 
   pth_free (*gpt);
@@ -658,7 +662,7 @@ _parse_header (PedDisk *disk, GuidPartitionTableHeader_t *gpt,
   PedSector last_usable_if_grown, last_usable_min_default;
   static int asked_already;
 
-  PED_ASSERT (_header_is_valid (disk->dev, gpt), return 0);
+  // PED_ASSERT (_header_is_valid (disk->dev, gpt), return 0);
 
 #ifndef DISCOVER_ONLY
   if (PED_LE32_TO_CPU (gpt->Revision) > GPT_HEADER_REVISION_V1_02)
