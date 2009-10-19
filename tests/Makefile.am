@@ -7,6 +7,7 @@ TESTS = \
   t0202-gpt-pmbr.sh \
   t0220-gpt-msftres.sh \
   t0250-gpt.sh \
+  t0280-gpt-corrupt.sh \
   t0300-dos-on-gpt.sh \
   t0400-loop-clobber-infloop.sh \
   t1000-mkpartfs.sh \

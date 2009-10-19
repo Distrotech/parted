@@ -89,7 +89,7 @@ test_expect_success \
 
 test_expect_success \
     'check for expected diagnostic' \
-    'echo "Error: partition table array CRC mismatch" > exp &&
+    'echo "Error: primary partition table array CRC mismatch" > exp &&
      compare exp err'
 
 test_done

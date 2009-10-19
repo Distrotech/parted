@@ -940,7 +940,7 @@ gpt_read (PedDisk *disk)
       ped_exception_throw
         (PED_EXCEPTION_ERROR,
          PED_EXCEPTION_CANCEL,
-         _("partition table array (FIXME:which?) CRC mismatch"));
+         _("primary partition table array CRC mismatch"));
       goto error_free_ptes;
     }
 
