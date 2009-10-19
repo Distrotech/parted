@@ -30,7 +30,7 @@ TESTS = \
   t8000-loop.sh
 
 EXTRA_DIST = \
-  $(TESTS) test-lib.sh lvm-utils.sh
+  $(TESTS) test-lib.sh t-lib.sh lvm-utils.sh
 
 parted_dir = $(abs_top_builddir)/parted
 pp_dir = $(abs_top_builddir)/partprobe
@@ -47,10 +47,45 @@ init.sh: Makefile.in
 	chmod a-w $@-t
 	mv $@-t $@
 
-TESTS_ENVIRONMENT =					\
-  exec 9>&2;						\
-  export						\
-  srcdir='$(srcdir)'					\
-  CONFIG_HEADER='$(abs_top_builddir)/lib/config.h'	\
-  ENABLE_DEVICE_MAPPER=$(ENABLE_DEVICE_MAPPER)		\
-  ; $(SHELL)
+# Note that the first lines are statements.  They ensure that environment
+# variables that can perturb tests are unset or set to expected values.
+# The rest are envvar settings that propagate build-related Makefile
+# variables to test scripts.
+TESTS_ENVIRONMENT =				\
+  tmp__=$$TMPDIR; test -d "$$tmp__" || tmp__=.;	\
+  TMPDIR=$$tmp__; export TMPDIR;		\
+  exec 9>&2;					\
+  shell_or_perl_() {				\
+    if grep '^\#!/usr/bin/perl' "$$1" > /dev/null; then			\
+      if $(PERL) -e 'use warnings' > /dev/null 2>&1; then		\
+	grep '^\#!/usr/bin/perl -T' "$$1" > /dev/null && T_=T || T_=;	\
+        $(PERL) -w$$T_ -I$(srcdir) -MCoreutils				\
+	      -M"CuTmpdir qw($$f)" -- "$$1";	\
+      else					\
+	echo 1>&2 "$$tst: configure did not find a usable version of Perl," \
+	  "so skipping this test";		\
+	(exit 77);				\
+      fi;					\
+    else					\
+      $(SHELL) "$$1";				\
+    fi;						\
+  };						\
+  export					\
+  abs_top_builddir='$(abs_top_builddir)'	\
+  abs_top_srcdir='$(abs_top_srcdir)'		\
+  abs_srcdir='$(abs_srcdir)'			\
+  srcdir='$(srcdir)'				\
+  top_srcdir='$(top_srcdir)'			\
+  CC='$(CC)'					\
+  MAKE=$(MAKE)					\
+  PACKAGE_BUGREPORT='$(PACKAGE_BUGREPORT)'	\
+  PACKAGE_VERSION=$(PACKAGE_VERSION)		\
+  CONFIG_HEADER='$(abs_top_builddir)/lib/config.h' \
+  ENABLE_DEVICE_MAPPER=$(ENABLE_DEVICE_MAPPER)	\
+  PERL='$(PERL)'				\
+  PREFERABLY_POSIX_SHELL='$(PREFERABLY_POSIX_SHELL)' \
+  REPLACE_GETCWD=$(REPLACE_GETCWD)		\
+  PATH='$(abs_top_builddir)/parted$(PATH_SEPARATOR)'"$$PATH" \
+  ; shell_or_perl_
+
+VERBOSE = yes
