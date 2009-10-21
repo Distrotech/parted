@@ -324,7 +324,8 @@ pth_new_from_raw (const PedDevice *dev, const uint8_t *pth_raw)
 static void
 pth_free (GuidPartitionTableHeader_t *pth)
 {
-  PED_ASSERT (pth != NULL, return);
+  if (pth == NULL)
+    return;
   PED_ASSERT (pth->Reserved2 != NULL, return);
 
   free (pth->Reserved2);
@@ -447,7 +448,7 @@ gpt_probe (const PedDevice *dev)
   free (pth_raw);
 
   if (gpt)
-    pth_free (gpt);
+    pth_free (gpt); // FIXME: now that pth_free works on NULL, remove the "if"
 
   if (!gpt_sig_found)
     return 0;
@@ -632,31 +633,6 @@ _header_is_valid (const PedDevice *dev, GuidPartitionTableHeader_t *gpt,
 }
 
 static int
-_read_header (const PedDevice *dev, GuidPartitionTableHeader_t **gpt,
-              PedSector my_lba)
-{
-  uint8_t *pth_raw = ped_malloc (pth_get_size (dev));
-
-  PED_ASSERT (dev != NULL, return 0);
-
-  if (!ped_device_read (dev, pth_raw, my_lba, GPT_HEADER_SECTORS))
-    {
-      free (pth_raw);
-      return 0;
-    }
-
-  *gpt = pth_new_from_raw (dev, pth_raw);
-
-  free (pth_raw);
-
-  if (_header_is_valid (dev, *gpt, my_lba))
-    return 1;
-
-  pth_free (*gpt);
-  return 0;
-}
-
-static int
 _parse_header (PedDisk *disk, GuidPartitionTableHeader_t *gpt,
                int *update_needed)
 {
@@ -796,6 +772,60 @@ _parse_part_entry (PedDisk *disk, GuidPartitionEntry_t *pte)
   return part;
 }
 
+/* Read the primary GPT at sector 1 of DEV.
+   Verify its CRC and that of its partition entry array.
+   If they are valid, read the backup GPT specified by AlternateLBA.
+   If not, read the backup GPT in the last sector of the disk.
+   Return 1 if any read fails.
+   Upon successful verification of the primary GPT, set *PRIMARY_GPT, else NULL.
+   Upon successful verification of the backup GPT, set *BACKUP_GPT, else NULL.
+   If we've set *BACKUP_GPT to non-NULL, set *BACKUP_LBA to the sector
+   number in which it was found.  */
+static int
+gpt_read_headers (PedDevice *dev,
+                  GuidPartitionTableHeader_t **primary_gpt,
+                  GuidPartitionTableHeader_t **backup_gpt,
+                  PedSector *backup_sector_num_p)
+{
+  *primary_gpt = NULL;
+  *backup_gpt = NULL;
+
+  void *s1;
+  if (!ptt_read_sector (dev, 1, &s1))
+    return 1;
+
+  GuidPartitionTableHeader_t *t = pth_new_from_raw (dev, s1);
+  free (s1);
+  if (t == NULL)
+    return 1;
+  GuidPartitionTableHeader_t *pri = t;
+
+  bool valid_primary = _header_is_valid (dev, pri, 1);
+  if (valid_primary)
+    *primary_gpt = pri;
+
+  PedSector backup_sector_num =
+    (valid_primary
+     ? PED_LE64_TO_CPU (pri->AlternateLBA)
+     : dev->length - 1);
+
+  void *s_bak;
+  if (!ptt_read_sector (dev, backup_sector_num, &s_bak))
+    return 1;
+  t = pth_new_from_raw (dev, s_bak);
+  if (t == NULL)
+    return 1;
+
+  GuidPartitionTableHeader_t *bak = t;
+  if (_header_is_valid (dev, bak, backup_sector_num))
+    {
+      *backup_gpt = bak;
+      *backup_sector_num_p = backup_sector_num;
+    }
+
+  return 0;
+}
+
 /************************************************************
  *  Intel is changing the EFI Spec. (after v1.02) to say that a
  *  disk is considered to have a GPT label only if the GPT
@@ -822,11 +852,10 @@ static int
 gpt_read (PedDisk *disk)
 {
   GPTDiskData *gpt_disk_data = disk->disk_specific;
-  GuidPartitionTableHeader_t *gpt;
   void *ptes;
   int i;
 #ifndef DISCOVER_ONLY
-  int write_back = 0;
+  int write_back = 1;
 #endif
 
   ped_disk_delete_all (disk);
@@ -836,25 +865,37 @@ gpt_read (PedDisk *disk)
   if (!gpt_probe (disk->dev))
     goto error;
 
-  if (_read_header (disk->dev, &gpt, 1))
+  GuidPartitionTableHeader_t *gpt = NULL;
+  GuidPartitionTableHeader_t *primary_gpt;
+  GuidPartitionTableHeader_t *backup_gpt;
+  PedSector backup_sector_num;
+  int read_failure = gpt_read_headers (disk->dev, &primary_gpt, &backup_gpt,
+                                       &backup_sector_num);
+  if (read_failure)
     {
-      /* There used to be a GPT partition table here, with an
-         alternate LBA that extended beyond the current
-         end-of-device.  Treat it as a non-match.   */
-      if ((PedSector) PED_LE64_TO_CPU (gpt->AlternateLBA)
-          > disk->dev->length - 1)
-        goto error_free_gpt;
+      /* This includes the case in which there used to be a GPT partition
+         table here, with an alternate LBA that extended beyond the current
+         end-of-device.  It's treated as a non-match.  */
 
-      if ((PedSector) PED_LE64_TO_CPU (gpt->AlternateLBA)
-          < disk->dev->length - 1)
+      /* Another possibility:
+         The primary header is ok, but backup is corrupt.
+         In the UEFI spec, this means the primary GUID table
+         is officially invalid.  */
+      pth_free (backup_gpt);
+      pth_free (primary_gpt);
+      return 0;
+    }
+
+  if (primary_gpt && backup_gpt)
+    {
+      /* Both are valid.  */
+      if (PED_LE64_TO_CPU (primary_gpt->AlternateLBA) < disk->dev->length - 1)
         {
-
 #ifndef DISCOVER_ONLY
           switch (ped_exception_throw
                   (PED_EXCEPTION_ERROR,
-                   PED_EXCEPTION_FIX |
-                   PED_EXCEPTION_CANCEL |
-                   PED_EXCEPTION_IGNORE,
+                   (PED_EXCEPTION_FIX | PED_EXCEPTION_CANCEL
+                    | PED_EXCEPTION_IGNORE),
                    _("The backup GPT table is not at the end of the disk, as it "
                      "should be.  This might mean that another operating system "
                      "believes the disk is smaller.  Fix, by moving the backup "
@@ -865,61 +906,60 @@ gpt_read (PedDisk *disk)
             case PED_EXCEPTION_FIX:
               {
                 char *zeros = ped_malloc (pth_get_size (disk->dev));
-                write_back = 1;
                 memset (zeros, 0, disk->dev->sector_size);
                 ped_device_write (disk->dev, zeros,
-                                  PED_LE64_TO_CPU (gpt->AlternateLBA), 1);
+                                  PED_LE64_TO_CPU (primary_gpt->AlternateLBA), 1);
                 free (zeros);
+                /* FIXME: Replace the above with this:
+                   ptt_clear_sectors (disk-.dev,
+                       PED_LE64_TO_CPU (primary_gpt->AlternateLBA), 1); */
               }
               break;
             default:
+              write_back = 0;
               break;
             }
-
 #endif /* !DISCOVER_ONLY */
         }
+      gpt = primary_gpt;
+      pth_free (backup_gpt);
     }
-  else
-    {				/* primary GPT *not* ok */
-      int alternate_ok = 0;
-
-#ifndef DISCOVER_ONLY
-      write_back = 1;
-#endif
-
-      if ((PedSector) PED_LE64_TO_CPU (gpt->AlternateLBA)
-          < disk->dev->length - 1)
-        {
-          alternate_ok = _read_header (disk->dev, &gpt,
-                                       PED_LE64_TO_CPU (gpt->AlternateLBA));
-        }
-      if (!alternate_ok)
-        {
-          alternate_ok = _read_header (disk->dev, &gpt,
-                                       disk->dev->length - 1);
-        }
-
-      if (alternate_ok)
-        {
-          if (ped_exception_throw
-              (PED_EXCEPTION_ERROR,
-               PED_EXCEPTION_OK_CANCEL,
-               _("The primary GPT table is corrupt, but the "
-                 "backup appears OK, so that will be used."))
-              == PED_EXCEPTION_CANCEL)
-            goto error_free_gpt;
-        }
-      else
-        {
-          ped_exception_throw (PED_EXCEPTION_ERROR,
-                               PED_EXCEPTION_CANCEL,
-                               _("Both the primary and backup GPT tables "
-                                 "are corrupt.  Try making a fresh table, "
-                                 "and using Parted's rescue feature to "
-                                 "recover partitions."));
-          goto error;
-        }
+  else if (!primary_gpt && !backup_gpt)
+    {
+      /* Both are corrupt.  */
+      ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
+                           _("Both the primary and backup GPT tables "
+                             "are corrupt.  Try making a fresh table, "
+                             "and using Parted's rescue feature to "
+                             "recover partitions."));
+      goto error;
     }
+  else if (primary_gpt && !backup_gpt)
+    {
+      /* The primary header is ok, but backup is corrupt.  */
+      if (ped_exception_throw
+          (PED_EXCEPTION_ERROR, PED_EXCEPTION_OK_CANCEL,
+           _("The backup GPT table is corrupt, but the "
+             "primary appears OK, so that will be used."))
+          == PED_EXCEPTION_CANCEL)
+        goto error_free_gpt;
+
+      gpt = primary_gpt;
+    }
+  else /* !primary_gpt && backup_gpt */
+    {
+      /* primary GPT corrupt, backup is ok.  */
+      if (ped_exception_throw
+          (PED_EXCEPTION_ERROR, PED_EXCEPTION_OK_CANCEL,
+           _("The primary GPT table is corrupt, but the "
+             "backup appears OK, so that will be used."))
+          == PED_EXCEPTION_CANCEL)
+        goto error_free_gpt;
+
+      gpt = backup_gpt;
+    }
+  backup_gpt = NULL;
+  primary_gpt = NULL;
 
   if (!_parse_header (disk, gpt, &write_back))
     goto error_free_gpt;
@@ -988,6 +1028,8 @@ error_delete_all:
 error_free_ptes:
   free (ptes);
 error_free_gpt:
+  pth_free (primary_gpt);
+  pth_free (backup_gpt);
   pth_free (gpt);
 error:
   return 0;
