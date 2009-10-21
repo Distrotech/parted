@@ -121,13 +121,22 @@ test_expect_success \
     'poke $dev $alt_my_lba_offset "$new_byte"'
 
 test_expect_success \
-    'printing the table must fail' \
-    'parted -s $dev print > err 2>&1;
-     test $? = 1'
+    'attempting to set partition name must print a diagnostic' \
+    'parted -m -s $dev name 1 foo > err 2>&1'
 
 test_expect_success \
     'check for expected diagnostic' \
-    'echo "Error: alternate partition table CRC mismatch" > exp &&
+    'echo "Error: The backup GPT table is corrupt, but the primary appears OK, so that will be used." > exp &&
      compare exp err'
+
+test_expect_success \
+    'corruption is fixed; printing the table now elicits no diagnostic' \
+    'parted -m -s $dev u s print > out 2>&1'
+
+test_expect_success \
+    'check for expected output' \
+    'printf "BYT;\nfile\n1:60s:100s:41s::foo:;\n" > exp &&
+     sed "s/.*gpt:;/file/" out > k && mv k out &&
+     compare exp out'
 
 test_done
