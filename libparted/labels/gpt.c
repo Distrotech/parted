@@ -335,11 +335,13 @@ pth_free (GuidPartitionTableHeader_t *pth)
 static uint8_t *
 pth_get_raw (const PedDevice *dev, const GuidPartitionTableHeader_t *pth)
 {
-  uint8_t *pth_raw = ped_malloc (pth_get_size (dev));
-  int size_static = pth_get_size_static (dev);
-
   PED_ASSERT (pth != NULL, return 0);
   PED_ASSERT (pth->Reserved2 != NULL, return 0);
+
+  int size_static = pth_get_size_static (dev);
+  uint8_t *pth_raw = ped_malloc (pth_get_size (dev));
+  if (pth_raw == NULL)
+    return NULL;
 
   memcpy (pth_raw, pth, size_static);
   memcpy (pth_raw + size_static, pth->Reserved2, pth_get_size_rsv2 (dev));
@@ -391,11 +393,10 @@ efi_crc32 (const void *buf, unsigned long len)
 static inline uint32_t
 pth_crc32 (const PedDevice *dev, const GuidPartitionTableHeader_t *pth)
 {
-  uint8_t *pth_raw = pth_get_raw (dev, pth);
-
   PED_ASSERT (dev != NULL, return 0);
   PED_ASSERT (pth != NULL, return 0);
 
+  uint8_t *pth_raw = pth_get_raw (dev, pth);
   uint32_t crc32 = efi_crc32 (pth_raw, PED_LE32_TO_CPU (pth->HeaderSize));
 
   free (pth_raw);
