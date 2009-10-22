@@ -38,6 +38,7 @@
 #include <unistd.h>
 #include <uuid/uuid.h>
 #include <stdbool.h>
+#include <errno.h>
 #include "xalloc.h"
 
 #include "pt-tools.h"
@@ -592,6 +593,41 @@ gpt_free (PedDisk *disk)
   _ped_disk_free (disk);
 }
 
+/* Given GUID Partition table header, GPT, read its partition array
+   entries from DISK into malloc'd storage.  Set *PTES_BYTES to the
+   number of bytes required.  Upon success, return a pointer to the
+   resulting buffer.  Otherwise, set errno and return NULL.  */
+static void *
+gpt_read_PE_array (PedDisk const *disk, GuidPartitionTableHeader_t const *gpt,
+                   size_t *ptes_bytes)
+{
+  GPTDiskData *gpt_disk_data = disk->disk_specific;
+  uint32_t p_ent_size = PED_LE32_TO_CPU (gpt->SizeOfPartitionEntry);
+  *ptes_bytes = p_ent_size * gpt_disk_data->entry_count;
+  size_t ptes_sectors = ped_div_round_up (*ptes_bytes,
+                                          disk->dev->sector_size);
+
+  if (xalloc_oversized (ptes_sectors, disk->dev->sector_size))
+    {
+      errno = ENOMEM;
+      return NULL;
+    }
+  void *ptes = ped_malloc (ptes_sectors * disk->dev->sector_size);
+  if (ptes == NULL)
+    return NULL;
+
+  if (!ped_device_read (disk->dev, ptes,
+                        PED_LE64_TO_CPU (gpt->PartitionEntryLBA), ptes_sectors))
+    {
+      int saved_errno = errno;
+      free (ptes);
+      errno = saved_errno;
+      return NULL;
+    }
+
+  return ptes;
+}
+
 static int
 _header_is_valid (const PedDevice *dev, GuidPartitionTableHeader_t *gpt,
                   PedSector my_lba)
@@ -858,7 +894,6 @@ static int
 gpt_read (PedDisk *disk)
 {
   GPTDiskData *gpt_disk_data = disk->disk_specific;
-  void *ptes;
   int i;
 #ifndef DISCOVER_ONLY
   int write_back = 1;
@@ -962,21 +997,10 @@ gpt_read (PedDisk *disk)
   if (!_parse_header (disk, gpt, &write_back))
     goto error_free_gpt;
 
-  uint32_t p_ent_size = PED_LE32_TO_CPU (gpt->SizeOfPartitionEntry);
-  size_t ptes_bytes = p_ent_size * gpt_disk_data->entry_count;
-  size_t ptes_sectors = ped_div_round_up (ptes_bytes,
-                                          disk->dev->sector_size);
-
-  if (xalloc_oversized (ptes_sectors, disk->dev->sector_size))
-    goto error_free_gpt;
-  ptes = ped_malloc (ptes_sectors * disk->dev->sector_size);
+  size_t ptes_bytes;
+  void *ptes = gpt_read_PE_array (disk, gpt, &ptes_bytes);
   if (ptes == NULL)
     goto error_free_gpt;
-
-  if (!ped_device_read (disk->dev, ptes,
-                        PED_LE64_TO_CPU (gpt->PartitionEntryLBA),
-                        ptes_sectors))
-    goto error_free_ptes;
 
   uint32_t ptes_crc = efi_crc32 (ptes, ptes_bytes);
   if (ptes_crc != gpt->PartitionEntryArrayCRC32)
@@ -988,6 +1012,7 @@ gpt_read (PedDisk *disk)
       goto error_free_ptes;
     }
 
+  uint32_t p_ent_size = PED_LE32_TO_CPU (gpt->SizeOfPartitionEntry);
   for (i = 0; i < gpt_disk_data->entry_count; i++)
     {
       GuidPartitionEntry_t *pte
