@@ -620,8 +620,13 @@ _header_is_valid (const PedDevice *dev, GuidPartitionTableHeader_t *gpt,
   if (PED_LE64_TO_CPU (gpt->MyLBA) != my_lba)
     return 0;
 
+  PedSector alt_lba = PED_LE64_TO_CPU (gpt->AlternateLBA);
   /* The backup table's AlternateLBA must be 1.  */
-  if (my_lba != 1 && PED_LE64_TO_CPU (gpt->AlternateLBA) != 1)
+  if (my_lba != 1 && alt_lba != 1)
+    return 0;
+
+  /* The alt_lba must never be the same as my_lba.  */
+  if (alt_lba == my_lba)
     return 0;
 
   origcrc = gpt->HeaderCRC32;
