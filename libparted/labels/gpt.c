@@ -397,6 +397,8 @@ pth_crc32 (const PedDevice *dev, const GuidPartitionTableHeader_t *pth)
   PED_ASSERT (pth != NULL, return 0);
 
   uint8_t *pth_raw = pth_get_raw (dev, pth);
+  if (pth_raw == NULL)
+    return 0;
   uint32_t crc32 = efi_crc32 (pth_raw, PED_LE32_TO_CPU (pth->HeaderSize));
 
   free (pth_raw);
@@ -968,6 +970,8 @@ gpt_read (PedDisk *disk)
   if (xalloc_oversized (ptes_sectors, disk->dev->sector_size))
     goto error_free_gpt;
   ptes = ped_malloc (ptes_sectors * disk->dev->sector_size);
+  if (ptes == NULL)
+    goto error_free_gpt;
 
   if (!ped_device_read (disk->dev, ptes,
                         PED_LE64_TO_CPU (gpt->PartitionEntryLBA),
@@ -1172,7 +1176,8 @@ gpt_write (const PedDisk *disk)
 
   /* Write PTH and PTEs */
   _generate_header (disk, 0, ptes_crc, &gpt);
-  pth_raw = pth_get_raw (disk->dev, gpt);
+  if ((pth_raw = pth_get_raw (disk->dev, gpt)) == NULL)
+    goto error_free_ptes;
   pth_free (gpt);
   bool write_ok = ped_device_write (disk->dev, pth_raw, 1, 1);
   free (pth_raw);
@@ -1184,7 +1189,8 @@ gpt_write (const PedDisk *disk)
 
   /* Write Alternate PTH & PTEs */
   _generate_header (disk, 1, ptes_crc, &gpt);
-  pth_raw = pth_get_raw (disk->dev, gpt);
+  if ((pth_raw = pth_get_raw (disk->dev, gpt)) == NULL)
+    goto error_free_ptes;
   pth_free (gpt);
   write_ok = ped_device_write (disk->dev, pth_raw, disk->dev->length - 1, 1);
   free (pth_raw);
