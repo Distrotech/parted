@@ -381,6 +381,8 @@ remove_tmp_()
   cd "$test_dir_" && chmod -R u+rwx "$t_" && rm -rf "$t_" && exit $__st
 }
 
+. $srcdir/t-local.sh
+
 # Run each test from within a temporary sub-directory named after the
 # test itself, and arrange to remove it upon exception or normal exit.
 trap remove_tmp_ 0
