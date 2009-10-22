@@ -637,7 +637,7 @@ _header_is_valid (const PedDevice *dev, GuidPartitionTableHeader_t *gpt,
 }
 
 static int
-_parse_header (PedDisk *disk, GuidPartitionTableHeader_t *gpt,
+_parse_header (PedDisk *disk, const GuidPartitionTableHeader_t *gpt,
                int *update_needed)
 {
   GPTDiskData *gpt_disk_data = disk->disk_specific;
