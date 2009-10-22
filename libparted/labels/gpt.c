@@ -392,12 +392,11 @@ static inline uint32_t
 pth_crc32 (const PedDevice *dev, const GuidPartitionTableHeader_t *pth)
 {
   uint8_t *pth_raw = pth_get_raw (dev, pth);
-  uint32_t crc32 = 0;
 
   PED_ASSERT (dev != NULL, return 0);
   PED_ASSERT (pth != NULL, return 0);
 
-  crc32 = efi_crc32 (pth_raw, PED_LE32_TO_CPU (pth->HeaderSize));
+  uint32_t crc32 = efi_crc32 (pth_raw, PED_LE32_TO_CPU (pth->HeaderSize));
 
   free (pth_raw);
 
