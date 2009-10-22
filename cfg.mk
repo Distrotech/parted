@@ -46,3 +46,6 @@ old_NEWS_hash = 5d0c8961833d95e7fb0d467596a8613f
 include $(srcdir)/dist-check.mk
 
 update-copyright-env = UPDATE_COPYRIGHT_USE_INTERVALS=1
+
+useless_free_options = \
+  --name=pth_free

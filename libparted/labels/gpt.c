@@ -447,8 +447,7 @@ gpt_probe (const PedDevice *dev)
 
   free (pth_raw);
 
-  if (gpt)
-    pth_free (gpt); // FIXME: now that pth_free works on NULL, remove the "if"
+  pth_free (gpt);
 
   if (!gpt_sig_found)
     return 0;
@@ -909,16 +908,8 @@ gpt_read (PedDisk *disk)
             case PED_EXCEPTION_CANCEL:
               goto error_free_gpt;
             case PED_EXCEPTION_FIX:
-              {
-                char *zeros = ped_malloc (pth_get_size (disk->dev));
-                memset (zeros, 0, disk->dev->sector_size);
-                ped_device_write (disk->dev, zeros,
-                                  PED_LE64_TO_CPU (primary_gpt->AlternateLBA), 1);
-                free (zeros);
-                /* FIXME: Replace the above with this:
-                   ptt_clear_sectors (disk-.dev,
-                       PED_LE64_TO_CPU (primary_gpt->AlternateLBA), 1); */
-              }
+              ptt_clear_sectors (disk->dev,
+                                 PED_LE64_TO_CPU (primary_gpt->AlternateLBA), 1);
               break;
             default:
               write_back = 0;
