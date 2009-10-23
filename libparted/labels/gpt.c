@@ -633,10 +633,11 @@ gpt_read_PE_array (PedDisk const *disk, GuidPartitionTableHeader_t const *gpt,
 }
 
 static int
-_header_is_valid (const PedDevice *dev, GuidPartitionTableHeader_t *gpt,
+_header_is_valid (PedDisk const *disk, GuidPartitionTableHeader_t *gpt,
                   PedSector my_lba)
 {
   uint32_t crc, origcrc;
+  PedDevice const *dev = disk->dev;
 
   if (PED_LE64_TO_CPU (gpt->Signature) != GPT_HEADER_SIGNATURE)
     return 0;
@@ -688,8 +689,6 @@ _parse_header (PedDisk *disk, const GuidPartitionTableHeader_t *gpt,
   PedSector last_usable;
   PedSector last_usable_if_grown, last_usable_min_default;
   static int asked_already;
-
-  // PED_ASSERT (_header_is_valid (disk->dev, gpt), return 0);
 
 #ifndef DISCOVER_ONLY
   if (PED_LE32_TO_CPU (gpt->Revision) > GPT_HEADER_REVISION_V1_02)
@@ -829,13 +828,14 @@ _parse_part_entry (PedDisk *disk, GuidPartitionEntry_t *pte)
    If we've set *BACKUP_GPT to non-NULL, set *BACKUP_LBA to the sector
    number in which it was found.  */
 static int
-gpt_read_headers (PedDevice *dev,
+gpt_read_headers (PedDisk const *disk,
                   GuidPartitionTableHeader_t **primary_gpt,
                   GuidPartitionTableHeader_t **backup_gpt,
                   PedSector *backup_sector_num_p)
 {
   *primary_gpt = NULL;
   *backup_gpt = NULL;
+  PedDevice const *dev = disk->dev;
 
   void *s1;
   if (!ptt_read_sector (dev, 1, &s1))
@@ -847,7 +847,7 @@ gpt_read_headers (PedDevice *dev,
     return 1;
   GuidPartitionTableHeader_t *pri = t;
 
-  bool valid_primary = _header_is_valid (dev, pri, 1);
+  bool valid_primary = _header_is_valid (disk, pri, 1);
   if (valid_primary)
     *primary_gpt = pri;
 
@@ -864,7 +864,7 @@ gpt_read_headers (PedDevice *dev,
     return 1;
 
   GuidPartitionTableHeader_t *bak = t;
-  if (_header_is_valid (dev, bak, backup_sector_num))
+  if (_header_is_valid (disk, bak, backup_sector_num))
     {
       *backup_gpt = bak;
       *backup_sector_num_p = backup_sector_num;
@@ -915,7 +915,7 @@ gpt_read (PedDisk *disk)
   GuidPartitionTableHeader_t *primary_gpt;
   GuidPartitionTableHeader_t *backup_gpt;
   PedSector backup_sector_num;
-  int read_failure = gpt_read_headers (disk->dev, &primary_gpt, &backup_gpt,
+  int read_failure = gpt_read_headers (disk, &primary_gpt, &backup_gpt,
                                        &backup_sector_num);
   if (read_failure)
     {
