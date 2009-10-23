@@ -391,20 +391,24 @@ efi_crc32 (const void *buf, unsigned long len)
   return (__efi_crc32 (buf, len, ~0L) ^ ~0L);
 }
 
-static inline uint32_t
-pth_crc32 (const PedDevice *dev, const GuidPartitionTableHeader_t *pth)
+/* Compute the crc32 checksum of the partition table header
+   and store it in *CRC32.  Return 0 upon success.  Return 1
+   upon failure to allocate space.  */
+static int
+pth_crc32 (const PedDevice *dev, const GuidPartitionTableHeader_t *pth,
+           uint32_t *crc32)
 {
   PED_ASSERT (dev != NULL, return 0);
   PED_ASSERT (pth != NULL, return 0);
 
   uint8_t *pth_raw = pth_get_raw (dev, pth);
   if (pth_raw == NULL)
-    return 0;
-  uint32_t crc32 = efi_crc32 (pth_raw, PED_LE32_TO_CPU (pth->HeaderSize));
+    return 1;
 
+  *crc32 = efi_crc32 (pth_raw, PED_LE32_TO_CPU (pth->HeaderSize));
   free (pth_raw);
 
-  return crc32;
+  return 0;
 }
 
 static inline int
@@ -668,7 +672,8 @@ _header_is_valid (const PedDevice *dev, GuidPartitionTableHeader_t *gpt,
 
   origcrc = gpt->HeaderCRC32;
   gpt->HeaderCRC32 = 0;
-  crc = pth_crc32 (dev, gpt);
+  if (pth_crc32 (dev, gpt, &crc) != 0)
+    return 0;
   gpt->HeaderCRC32 = origcrc;
 
   return crc == PED_LE32_TO_CPU (origcrc);
@@ -1095,7 +1100,7 @@ _write_pmbr (PedDevice *dev)
   return write_ok;
 }
 
-static void
+static int
 _generate_header (const PedDisk *disk, int alternate, uint32_t ptes_crc,
                   GuidPartitionTableHeader_t **gpt_p)
 {
@@ -1138,7 +1143,13 @@ _generate_header (const PedDisk *disk, int alternate, uint32_t ptes_crc,
     = PED_CPU_TO_LE32 (gpt_disk_data->entry_count);
   gpt->SizeOfPartitionEntry = PED_CPU_TO_LE32 (sizeof (GuidPartitionEntry_t));
   gpt->PartitionEntryArrayCRC32 = PED_CPU_TO_LE32 (ptes_crc);
-  gpt->HeaderCRC32 = PED_CPU_TO_LE32 (pth_crc32 (disk->dev, gpt));
+
+  uint32_t crc;
+  if (pth_crc32 (disk->dev, gpt, &crc) != 0)
+    return 1;
+
+  gpt->HeaderCRC32 = PED_CPU_TO_LE32 (crc);
+  return 0;
 }
 
 static void
@@ -1200,7 +1211,8 @@ gpt_write (const PedDisk *disk)
     goto error_free_ptes;
 
   /* Write PTH and PTEs */
-  _generate_header (disk, 0, ptes_crc, &gpt);
+  if (_generate_header (disk, 0, ptes_crc, &gpt) != 0)
+    goto error_free_ptes;
   if ((pth_raw = pth_get_raw (disk->dev, gpt)) == NULL)
     goto error_free_ptes;
   pth_free (gpt);
@@ -1213,7 +1225,8 @@ gpt_write (const PedDisk *disk)
     goto error_free_ptes;
 
   /* Write Alternate PTH & PTEs */
-  _generate_header (disk, 1, ptes_crc, &gpt);
+  if (_generate_header (disk, 1, ptes_crc, &gpt) != 0)
+    goto error_free_ptes;
   if ((pth_raw = pth_get_raw (disk->dev, gpt)) == NULL)
     goto error_free_ptes;
   pth_free (gpt);
