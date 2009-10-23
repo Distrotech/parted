@@ -633,6 +633,21 @@ gpt_read_PE_array (PedDisk const *disk, GuidPartitionTableHeader_t const *gpt,
 }
 
 static int
+check_PE_array_CRC (PedDisk const *disk,
+                    GuidPartitionTableHeader_t const *gpt, bool *valid)
+{
+  size_t ptes_bytes;
+  void *ptes = gpt_read_PE_array (disk, gpt, &ptes_bytes);
+  if (ptes == NULL)
+    return 1;
+
+  uint32_t ptes_crc = efi_crc32 (ptes, ptes_bytes);
+  *valid = (ptes_crc == gpt->PartitionEntryArrayCRC32);
+  free (ptes);
+  return 0;
+}
+
+static int
 _header_is_valid (PedDisk const *disk, GuidPartitionTableHeader_t *gpt,
                   PedSector my_lba)
 {
@@ -669,6 +684,10 @@ _header_is_valid (PedDisk const *disk, GuidPartitionTableHeader_t *gpt,
 
   /* The alt_lba must never be the same as my_lba.  */
   if (alt_lba == my_lba)
+    return 0;
+
+  bool crc_match;
+  if (check_PE_array_CRC (disk, gpt, &crc_match) != 0 || !crc_match)
     return 0;
 
   origcrc = gpt->HeaderCRC32;

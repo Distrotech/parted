@@ -79,11 +79,13 @@ test x"$pte_byte" = xA && new_byte=B || new_byte=A
 # Replace with a different byte
 poke $dev $pte_offset "$new_byte" || fail=1
 
-# printing the table must fail
-parted -s $dev print > err 2>&1 && fail=1
+# printing the table must succeed, but with a scary diagnostic.
+parted -s $dev print > err 2>&1 || fail=1
+grep Error: err > k && mv k err || fail=1
 
 # check for expected diagnostic
-echo "Error: primary partition table array CRC mismatch" > exp || fail=1
+echo 'Error: The primary GPT table is corrupt, but the backup appears OK,' \
+    'so that will be used.' > exp || fail=1
 compare exp err || fail=1
 
 # ----------------------------------------------------------
