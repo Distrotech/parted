@@ -2,6 +2,16 @@ GNU parted NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  improved >512-byte sector support: for example, printing a table on a
+  4k-sector disk would show "Sector size (logical/physical): 4096B/512B",
+  when the sizes should have been "4096B/4096B".
+
+  gpt tables are more rigorously checked; before, partition entry array CRCs
+  were not checked, and we would mistakenly use the AlternateLBA member of a
+  known-corrupt primary table.
+
 
 * Noteworthy changes in release 2.0 (2009-10-06) [beta]
 
