@@ -787,8 +787,11 @@ do_mkpart (PedDevice** dev)
         if (!added_ok) {
                 ped_exception_leave_all();
 
-                if (ped_disk_add_partition (disk, part,
-                                        ped_constraint_any (*dev))) {
+                PedConstraint *constraint_any = ped_constraint_any (*dev);
+                bool added_ok = ped_disk_add_partition (disk, part,
+                                                        constraint_any);
+                ped_constraint_destroy (constraint_any);
+                if (added_ok) {
                         start_usr = ped_unit_format (*dev, start);
                         end_usr   = ped_unit_format (*dev, end);
                         start_sol = ped_unit_format (*dev, part->geom.start);
