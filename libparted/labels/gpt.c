@@ -879,6 +879,7 @@ gpt_read_headers (PedDisk const *disk,
   if (!ptt_read_sector (dev, backup_sector_num, &s_bak))
     return 1;
   t = pth_new_from_raw (dev, s_bak);
+  free (s_bak);
   if (t == NULL)
     return 1;
 
