@@ -1197,16 +1197,14 @@ partition_print_flags (PedPartition* part)
                                 first_flag = 0;
                         else {
                                 _res = res;
-                                ped_realloc (&_res, strlen (res)
-                                                           + 1 + 2);
+                                ped_realloc (&_res, strlen (res) + 1 + 2);
                                 res = _res;
                                 strncat (res, ", ", 2);
                         }
 
                         name = _(ped_partition_flag_get_name (flag));
                         _res = res;
-                        ped_realloc (&_res, strlen (res) + 1
-                                                   + strlen (name));
+                        ped_realloc (&_res, strlen (res) + 1 + strlen (name));
                         res = _res;
                         strncat (res, name, 21);
                 }
@@ -1572,7 +1570,9 @@ do_print (PedDevice** dev)
                     else
                         putchar (':');
 
-                    printf ("%s;\n", partition_print_flags (part));
+                    char *flags = partition_print_flags (part);
+                    printf ("%s;\n", flags);
+                    free (flags);
 
                 } else {
                     puts ("free;");
