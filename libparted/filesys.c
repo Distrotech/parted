@@ -114,6 +114,7 @@ ped_file_system_alias_unregister (PedFileSystemType* fs_type,
 		last->next = walk->next;
 	else
 		fs_aliases = walk->next;
+	free (walk);
 }
 
 /**
