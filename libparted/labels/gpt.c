@@ -869,6 +869,8 @@ gpt_read_headers (PedDisk const *disk,
   bool valid_primary = _header_is_valid (disk, pri, 1);
   if (valid_primary)
     *primary_gpt = pri;
+  else
+    pth_free (pri);
 
   PedSector backup_sector_num =
     (valid_primary
@@ -889,6 +891,8 @@ gpt_read_headers (PedDisk const *disk,
       *backup_gpt = bak;
       *backup_sector_num_p = backup_sector_num;
     }
+  else
+    pth_free (bak);
 
   return 0;
 }
