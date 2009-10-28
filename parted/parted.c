@@ -836,6 +836,7 @@ do_mkpart (PedDevice** dev)
         /* set minor attributes */
         if (part_name)
                 PED_ASSERT (ped_partition_set_name (part, part_name), return 0);
+        free (part_name);
         if (!ped_partition_set_system (part, fs_type))
                 goto error_destroy_disk;
         if (ped_partition_is_flag_available (part, PED_PARTITION_LBA))
@@ -867,6 +868,7 @@ error_remove_part:
 error_destroy_simple_constraints:
         ped_partition_destroy (part);
 error_destroy_disk:
+        free (part_name);
         ped_disk_destroy (disk);
 error:
         if (range_start != NULL)
@@ -1311,16 +1313,19 @@ do_print (PedDevice** dev)
         peek_word = command_line_peek_word ();
         if (peek_word) {
                 if (strncmp (peek_word, "devices", 7) == 0) {
-                        command_line_pop_word();
+                        char *w = command_line_pop_word();
+                        free (w);
                         has_devices_arg = 1;
                 }
                 else if (strncmp (peek_word, "free", 4) == 0) {
-                        command_line_pop_word ();
+                        char *w = command_line_pop_word ();
+                        free (w);
                         has_free_arg = 1;
                 }
                 else if (strncmp (peek_word, "list", 4) == 0 ||
                          strncmp (peek_word, "all", 3) == 0) {
-                        command_line_pop_word();
+                        char *w = command_line_pop_word();
+                        free (w);
                         has_list_arg = 1;
                 }
                 else
