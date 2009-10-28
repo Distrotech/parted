@@ -78,14 +78,10 @@ static int
 loop_clobber (PedDevice* dev)
 {
 	PED_ASSERT (dev != NULL, return 0);
-	char *buf = ped_malloc (dev->sector_size);
-	PED_ASSERT (buf != NULL, return 0);
-
-	memset (buf, 0, dev->sector_size);
 
 	PedSector i = 0;
 	while (loop_probe (dev)) {
-		if (!ped_device_write (dev, buf, i++, 1))
+		if (!ptt_clear_sectors (dev, i++, 1))
 			return 0;
 	}
 	return 1;
