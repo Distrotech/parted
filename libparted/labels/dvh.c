@@ -351,7 +351,6 @@ dvh_read (PedDisk* disk)
 	/* normal partitions */
 	for (i = 0; i < NPARTAB; i++) {
 		PedPartition* part;
-		PedConstraint* constraint_exact;
 
 		if (!vh.vh_pt[i].pt_nblks)
 			continue;
@@ -371,12 +370,14 @@ dvh_read (PedDisk* disk)
 		if (PED_BE16_TO_CPU (vh.vh_swappt) == i)
 			ped_partition_set_flag (part, PED_PARTITION_SWAP, 1);
 
-		constraint_exact = ped_constraint_exact (&part->geom);
-		if (!ped_disk_add_partition(disk, part, constraint_exact)) {
+		PedConstraint *constraint_exact
+		  = ped_constraint_exact (&part->geom);
+		bool ok = ped_disk_add_partition (disk, part, constraint_exact);
+		ped_constraint_destroy (constraint_exact);
+		if (!ok) {
 			ped_partition_destroy (part);
 			goto error_delete_all;
 		}
-		ped_constraint_destroy (constraint_exact);
 	}
 
 	if (!ped_disk_extended_partition (disk)) {
@@ -400,7 +401,6 @@ dvh_read (PedDisk* disk)
 	/* boot partitions */
 	for (i = 0; i < NVDIR; i++) {
 		PedPartition* part;
-		PedConstraint* constraint_exact;
 
 		if (!vh.vh_vd[i].vd_nbytes)
 			continue;
@@ -415,12 +415,14 @@ dvh_read (PedDisk* disk)
 		if (!strcmp (boot_name, ped_partition_get_name (part)))
 			ped_partition_set_flag (part, PED_PARTITION_BOOT, 1);
 
-		constraint_exact = ped_constraint_exact (&part->geom);
-		if (!ped_disk_add_partition(disk, part, constraint_exact)) {
+		PedConstraint *constraint_exact
+		  = ped_constraint_exact (&part->geom);
+		bool ok = ped_disk_add_partition (disk, part, constraint_exact);
+		ped_constraint_destroy (constraint_exact);
+		if (!ok) {
 			ped_partition_destroy (part);
 			goto error_delete_all;
 		}
-		ped_constraint_destroy (constraint_exact);
 	}
 #ifndef DISCOVER_ONLY
 	if (write_back)
@@ -862,7 +864,6 @@ dvh_alloc_metadata (PedDisk* disk)
 {
 	PedPartition* part;
 	PedPartition* extended_part;
-	PedConstraint* constraint_exact;
 	PedPartitionType metadata_type;
 	PED_ASSERT(disk != NULL, return 0);
 
@@ -879,14 +880,13 @@ dvh_alloc_metadata (PedDisk* disk)
 	if (!part)
 		goto error;
 
-	constraint_exact = ped_constraint_exact (&part->geom);
-	if (!ped_disk_add_partition (disk, part, constraint_exact))
-		goto error_destroy_part;
+	PedConstraint *constraint_exact
+	  = ped_constraint_exact (&part->geom);
+	bool ok = ped_disk_add_partition (disk, part, constraint_exact);
 	ped_constraint_destroy (constraint_exact);
-	return 1;
+	if (ok)
+		return 1;
 
-	ped_constraint_destroy (constraint_exact);
-error_destroy_part:
 	ped_partition_destroy (part);
 error:
 	return 0;
