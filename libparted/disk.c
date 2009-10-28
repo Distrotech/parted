@@ -593,12 +593,14 @@ ped_disk_check (const PedDisk* disk)
 
 		length_error = abs (walk->geom.length - geom->length);
 		max_length_error = PED_MAX (4096, walk->geom.length / 100);
-		if (!ped_geometry_test_inside (&walk->geom, geom)
-		    || length_error > max_length_error) {
-			char* part_size = ped_unit_format (disk->dev, walk->geom.length);
-			char* fs_size = ped_unit_format (disk->dev, geom->length);
+                bool ok = (ped_geometry_test_inside (&walk->geom, geom)
+                           && length_error <= max_length_error);
+                char* fs_size = ped_unit_format (disk->dev, geom->length);
+                ped_geometry_destroy (geom);
+                if (!ok) {
+			char* part_size = ped_unit_format (disk->dev,
+                                                           walk->geom.length);
 			PedExceptionOption choice;
-
 			choice = ped_exception_throw (
 				PED_EXCEPTION_WARNING,
 				PED_EXCEPTION_IGNORE_CANCEL,
