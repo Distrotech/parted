@@ -1813,6 +1813,12 @@ ped_disk_add_partition (PedDisk* disk, PedPartition* part,
 		if (!_partition_align (part, constraints))
 			goto error;
 	}
+        /* FIXME: when _check_partition fails, we end up leaking PART
+           at least for DVH partition tables.  Simply calling
+           ped_partition_destroy(part) here fixes it for DVH, but
+           causes trouble for other partition types.  Similarly,
+           reordering these two checks, putting _check_partition after
+           _disk_raw_add induces an infinite loop.  */
 	if (!_check_partition (disk, part))
 		goto error;
 	if (!_disk_raw_add (disk, part))
