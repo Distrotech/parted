@@ -33,6 +33,8 @@ grep '^#define HAVE_LIBREADLINE 1' $CONFIG_HEADER > /dev/null ||
     exit
   }
 
+fail=0
+
 # The failure messages.
 cat << EOF > errS || fail=1
 Error: You requested a partition from 512B to 50.7kB.
