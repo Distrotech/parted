@@ -1,5 +1,5 @@
 #!/bin/sh
-
+# very basic GPT table
 # Copyright (C) 2008-2009 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
@@ -15,36 +15,36 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test_description="very basic GPT table"
+if test "$VERBOSE" = yes; then
+  set -x
+  parted --version
+fi
 
 : ${srcdir=.}
-. $srcdir/test-lib.sh
+. $srcdir/t-lib.sh
 
 dev=loop-file
-
 nb=512
 n_sectors=$(expr $nb '*' 512 / $sector_size_)
 
-test_expect_success \
-    "setup: create zeroed device" \
-    'dd if=/dev/zero bs=512 count=$nb of=$dev'
+fail=0
 
-test_expect_success \
-    'create gpt label' \
-    'parted -s $dev mklabel gpt > empty 2>&1'
+# create zeroed device
+dd if=/dev/zero bs=512 count=$nb of=$dev || fail=1
 
-test_expect_success 'ensure there was no output' \
-    'compare /dev/null empty'
+# create gpt label
+parted -s $dev mklabel gpt > empty 2>&1 || fail=1
 
-test_expect_success \
-    'print the empty table' \
-    'parted -m -s $dev unit s print > t 2>&1 &&
-     sed 's,.*/$dev:,$dev:,' t > out'
+# ensure there was no output
+compare /dev/null empty || fail=1
 
-test_expect_success \
-    'check for expected output' \
-    'printf "BYT;\n$dev:${n_sectors}s:file:$sector_size_:$sector_size_:gpt:;\n"\
-       > exp &&
-     compare exp out'
+# print the empty table
+parted -m -s $dev unit s print > t 2>&1 || fail=1
+sed "s,.*/$dev:,$dev:," t > out || fail=1
 
-test_done
+# check for expected output
+printf "BYT;\n$dev:${n_sectors}s:file:$sector_size_:$sector_size_:gpt:;\n" \
+  > exp || fail=1
+compare exp out || fail=1
+
+Exit $fail

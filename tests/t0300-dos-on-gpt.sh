@@ -1,4 +1,5 @@
 #!/bin/sh
+# avoid segfault creating a dos PT on top of a gpt one
 
 # Copyright (C) 2009 Free Software Foundation, Inc.
 
@@ -15,27 +16,31 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test_description='avoid segfault creating a dos PT on top of a gpt one'
+if test "$VERBOSE" = yes; then
+  set -x
+  parted --version
+fi
+
+: ${srcdir=.}
+. $srcdir/t-lib.sh
 
 PARTED_SECTOR_SIZE=4096
 export PARTED_SECTOR_SIZE
 
-: ${srcdir=.}
-. $srcdir/test-lib.sh
+fail=0
 
 dev=loop-file
-test_expect_success \
-    'create a backing file large enough for a GPT partition table' \
-    'dd if=/dev/null of=$dev seek=4001 2> /dev/null'
+# create a backing file large enough for a GPT partition table
+dd if=/dev/null of=$dev seek=4001 2> /dev/null || framework_failure
 
-test_expect_success \
-    'create a GPT partition table' \
-    'parted -s $dev mklabel gpt > out 2>&1'
-test_expect_success 'expect no output' 'compare out /dev/null'
+# create a GPT partition table
+parted -s $dev mklabel gpt > out 2>&1 || fail=1
+# expect no output
+compare out /dev/null || fail=1
 
-test_expect_success \
-    'create a DOS partition table on top of it' \
-    'parted -s $dev mklabel msdos > out 2>&1'
-test_expect_success 'expect no output' 'compare out /dev/null'
+# create a DOS partition table on top of it
+parted -s $dev mklabel msdos > out 2>&1 || fail=1
+# expect no output
+compare out /dev/null || fail=1
 
-test_done
+Exit $fail

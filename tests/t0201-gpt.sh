@@ -1,4 +1,6 @@
 #!/bin/sh
+# avoid failed assertion when creating a GPT on top of an old one for a
+# larger device
 
 # Copyright (C) 2009 Free Software Foundation, Inc.
 
@@ -15,28 +17,31 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test_description='avoid failed assertion when creating a GPT on top of an old one for a larger device'
+if test "$VERBOSE" = yes; then
+  set -x
+  parted --version
+fi
 
 : ${srcdir=.}
-. $srcdir/test-lib.sh
+. $srcdir/t-lib.sh
+
+fail=0
 
 dev=loop-file
-test_expect_success \
-    'create a backing file large enough for a GPT partition table' \
-    'dd if=/dev/null of=$dev seek=4001 2> /dev/null'
+# create a backing file large enough for a GPT partition table
+dd if=/dev/null of=$dev seek=4001 2> /dev/null || fail=1
 
-test_expect_success \
-    'create a GPT partition table' \
-    'parted -s $dev mklabel gpt > out 2>&1'
-test_expect_success 'expect no output' 'compare out /dev/null'
+# create a GPT partition table
+parted -s $dev mklabel gpt > out 2>&1 || fail=1
+# expect no output
+compare out /dev/null || fail=1
 
-test_expect_success \
-    'shrink the backing file' \
-    'dd if=/dev/null of=$dev seek=4000 2> /dev/null'
+# shrink the backing file
+dd if=/dev/null of=$dev seek=4000 2> /dev/null || fail=1
 
-test_expect_success \
-    'create a new GPT table on top of the shrunken backing file' \
-    'parted -s $dev mklabel gpt > out 2>&1'
-test_expect_success 'expect no output' 'compare out /dev/null'
+# create a new GPT table on top of the shrunken backing file
+parted -s $dev mklabel gpt > out 2>&1 || fail=1
+# expect no output
+compare out /dev/null || fail=1
 
-test_done
+Exit $fail
