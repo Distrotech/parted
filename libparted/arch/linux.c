@@ -2521,6 +2521,34 @@ linux_disk_commit (PedDisk* disk)
         return 1;
 }
 
+#if USE_BLKID
+PedAlignment*
+linux_get_minimum_alignment(const PedDevice *dev)
+{
+        blkid_topology tp = LINUX_SPECIFIC(dev)->topology;
+
+        if (!tp || blkid_topology_get_minimum_io_size(tp) == 0)
+                return NULL; /* ped_alignment_none */
+
+        return ped_alignment_new(
+                blkid_topology_get_alignment_offset(tp) / dev->sector_size,
+                blkid_topology_get_minimum_io_size(tp) / dev->sector_size);
+}
+
+PedAlignment*
+linux_get_optimum_alignment(const PedDevice *dev)
+{
+        blkid_topology tp = LINUX_SPECIFIC(dev)->topology;
+
+        if (!tp || blkid_topology_get_optimal_io_size(tp) == 0)
+                return NULL; /* ped_alignment_none */
+
+        return ped_alignment_new(
+                blkid_topology_get_alignment_offset(tp) / dev->sector_size,
+                blkid_topology_get_optimal_io_size(tp) / dev->sector_size);
+}
+#endif
+
 static PedDeviceArchOps linux_dev_ops = {
         _new:           linux_new,
         destroy:        linux_destroy,
@@ -2534,7 +2562,11 @@ static PedDeviceArchOps linux_dev_ops = {
         check:          linux_check,
         sync:           linux_sync,
         sync_fast:      linux_sync_fast,
-        probe_all:      linux_probe_all
+        probe_all:      linux_probe_all,
+#if USE_BLKID
+        get_minimum_alignment:	linux_get_minimum_alignment,
+        get_optimum_alignment:	linux_get_optimum_alignment,
+#endif
 };
 
 PedDiskArchOps linux_disk_ops =  {
