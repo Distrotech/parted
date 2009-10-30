@@ -92,6 +92,8 @@ struct _PedDevice {
         void*           arch_specific;
 };
 
+#include <parted/natmath.h>
+
 /**
  * List of functions implementing architecture-specific operations.
  */
@@ -112,6 +114,9 @@ struct _PedDeviceArchOps {
         PedSector (*check) (PedDevice* dev, void* buffer,
                             PedSector start, PedSector count);
         void (*probe_all) ();
+        /* These functions are optional */
+        PedAlignment *(*get_minimum_alignment)(const PedDevice *dev);
+        PedAlignment *(*get_optimum_alignment)(const PedDevice *dev);
 };
 
 #include <parted/constraint.h>
@@ -140,6 +145,9 @@ extern int ped_device_sync_fast (PedDevice* dev);
 extern PedSector ped_device_check (PedDevice* dev, void* buffer,
                                    PedSector start, PedSector count);
 extern PedConstraint* ped_device_get_constraint (PedDevice* dev);
+
+extern PedAlignment *ped_device_get_minimum_alignment(const PedDevice *dev);
+extern PedAlignment *ped_device_get_optimum_alignment(const PedDevice *dev);
 
 /* private stuff ;-) */
 

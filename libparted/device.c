@@ -444,5 +444,48 @@ ped_device_get_constraint (PedDevice* dev)
         return c;
 }
 
+/**
+ * Get an alignment that represents minimum hardware requirements on alignment.
+ * When for example using media that has a physical sector size that is a
+ * multiple of the logical sector size, it is desirable to have disk accesses
+ * (and thus partitions) properly aligned. Having partitions not aligned to
+ * the minimum hardware requirements may lead to a performance penalty.
+ *
+ * The returned alignment describes the alignment for the start sector of the
+ * partition, the end sector should be aligned too, to get the end sector
+ * alignment decrease the returned alignment's offset by 1.
+ *
+ * \return the minimum alignment of partition start sectors, or NULL if this
+ *         information is not available.
+ */
+PedAlignment*
+ped_device_get_minimum_alignment(const PedDevice *dev)
+{
+        if (ped_architecture->dev_ops->get_minimum_alignment)
+                return ped_architecture->dev_ops->get_minimum_alignment(dev);
+
+        return NULL; /* ped_alignment_none */
+}
+
+/**
+ * Get an alignment that represents the hardware requirements for optimal
+ * performance.
+ *
+ * The returned alignment describes the alignment for the start sector of the
+ * partition, the end sector should be aligned too, to get the end sector
+ * alignment decrease the returned alignment's offset by 1.
+ *
+ * \return the optimal alignment of partition start sectors, or NULL if this
+ *         information is not available.
+ */
+PedAlignment*
+ped_device_get_optimum_alignment(const PedDevice *dev)
+{
+        if (ped_architecture->dev_ops->get_optimum_alignment)
+                return ped_architecture->dev_ops->get_optimum_alignment(dev);
+
+        return NULL; /* ped_alignment_none */
+}
+
 /** @} */
 
