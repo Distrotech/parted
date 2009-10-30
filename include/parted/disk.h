@@ -214,6 +214,7 @@ struct _PedDiskOps {
         int (*get_max_primary_partition_count) (const PedDisk* disk);
         bool (*get_max_supported_partition_count) (const PedDisk* disk,
                                                    int* supported);
+        PedAlignment *(*get_partition_alignment)(const PedDisk *disk);
 };
 
 struct _PedDiskType {
@@ -263,6 +264,7 @@ extern int ped_disk_get_last_partition_num (const PedDisk* disk);
 extern int ped_disk_get_max_primary_partition_count (const PedDisk* disk);
 extern bool ped_disk_get_max_supported_partition_count(const PedDisk* disk,
                                                        int* supported);
+extern PedAlignment *ped_disk_get_partition_alignment(const PedDisk *disk);
 
 /** @} */
 

@@ -689,6 +689,26 @@ ped_disk_get_max_supported_partition_count(const PedDisk* disk, int* supported)
 }
 
 /**
+ * Get the alignment needed for partition boundaries on this disk.
+ * The returned alignment describes the alignment for the start sector of the
+ * partition, for all disklabel types which require alignment, except Sun
+ * disklabels, the end sector must be aligned too. To get the end sector
+ * alignment decrease the PedAlignment offset by 1.
+ *
+ * \return NULL on error, otherwise a pointer to a dynamically allocated
+ *         alignment.
+ */
+PedAlignment*
+ped_disk_get_partition_alignment(const PedDisk *disk)
+{
+        /* disklabel handlers which don't need alignment don't define this */
+        if (!disk->type->ops->get_partition_alignment)
+                return ped_alignment_duplicate(ped_alignment_any);
+
+        return disk->type->ops->get_partition_alignment(disk);
+}
+
+/**
  * Get the maximum number of (primary) partitions the disk label supports.
  *
  * For example, MacIntosh partition maps can have different sizes,
