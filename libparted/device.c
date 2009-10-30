@@ -445,6 +445,75 @@ ped_device_get_constraint (PedDevice* dev)
         return c;
 }
 
+static PedConstraint*
+_ped_device_get_aligned_constraint(const PedDevice *dev,
+                                   PedAlignment* start_align)
+{
+        PedAlignment *end_align = NULL;
+        PedGeometry *whole_dev_geom = NULL;
+        PedConstraint *c = NULL;
+
+        if (start_align) {
+                end_align = ped_alignment_new(start_align->offset - 1,
+                                              start_align->grain_size);
+                if (!end_align)
+                        goto free_start_align;
+        }
+
+        whole_dev_geom = ped_geometry_new (dev, 0, dev->length);
+
+        if (start_align)
+                c =  ped_constraint_new (start_align, end_align,
+                                         whole_dev_geom, whole_dev_geom,
+                                         1, dev->length);
+        else
+                c =  ped_constraint_new (ped_alignment_any, ped_alignment_any,
+                                         whole_dev_geom, whole_dev_geom,
+                                         1, dev->length);
+
+        free (whole_dev_geom);
+        free (end_align);
+free_start_align:
+        free (start_align);
+        return c;
+}
+
+/**
+ * Get a constraint that represents hardware requirements on geometry and
+ * alignment.
+ *
+ * This function will return a constraint representing the limits imposed
+ * by the size of the disk and the minimal alignment requirements for proper
+ * performance of the disk.
+ *
+ * \return NULL on error, otherwise a pointer to a dynamically allocated
+ *         constraint.
+ */
+PedConstraint*
+ped_device_get_minimal_aligned_constraint(const PedDevice *dev)
+{
+        return _ped_device_get_aligned_constraint(dev,
+                                         ped_device_get_minimum_alignment(dev));
+}
+
+/**
+ * Get a constraint that represents hardware requirements on geometry and
+ * alignment.
+ *
+ * This function will return a constraint representing the limits imposed
+ * by the size of the disk and the alignment requirements for optimal
+ * performance of the disk.
+ *
+ * \return NULL on error, otherwise a pointer to a dynamically allocated
+ *         constraint.
+ */
+PedConstraint*
+ped_device_get_optimal_aligned_constraint(const PedDevice *dev)
+{
+        return _ped_device_get_aligned_constraint(dev,
+                                         ped_device_get_optimum_alignment(dev));
+}
+
 /**
  * Get an alignment that represents minimum hardware requirements on alignment.
  * When for example using media that has a physical sector size that is a

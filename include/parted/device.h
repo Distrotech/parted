@@ -146,6 +146,11 @@ extern PedSector ped_device_check (PedDevice* dev, void* buffer,
                                    PedSector start, PedSector count);
 extern PedConstraint* ped_device_get_constraint (PedDevice* dev);
 
+extern PedConstraint *ped_device_get_minimal_aligned_constraint(
+                                                         const PedDevice *dev);
+extern PedConstraint *ped_device_get_optimal_aligned_constraint(
+                                                         const PedDevice *dev);
+
 extern PedAlignment *ped_device_get_minimum_alignment(const PedDevice *dev);
 extern PedAlignment *ped_device_get_optimum_alignment(const PedDevice *dev);
 
