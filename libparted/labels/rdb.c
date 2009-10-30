@@ -1027,6 +1027,15 @@ amiga_partition_get_name (const PedPartition* part)
 	return _amiga_get_bstr(partition->pb_DriveName);
 }
 
+static PedAlignment*
+amiga_get_partition_alignment(const PedDisk *disk)
+{
+	PedSector cylinder_size =
+		disk->dev->hw_geom.sectors * disk->dev->hw_geom.heads;
+
+        return ped_alignment_new(0, cylinder_size);
+}
+
 static PedConstraint*
 _amiga_get_constraint (const PedDisk *disk)
 {
@@ -1175,7 +1184,8 @@ static PedDiskOps amiga_disk_ops = {
 	get_max_primary_partition_count:
 				amiga_get_max_primary_partition_count,
 	get_max_supported_partition_count:
-				amiga_get_max_supported_partition_count
+				amiga_get_max_supported_partition_count,
+	get_partition_alignment: amiga_get_partition_alignment,
 };
 
 static PedDiskType amiga_disk_type = {

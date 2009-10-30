@@ -1425,6 +1425,14 @@ mac_partition_get_name (const PedPartition* part)
 	return mac_data->volume_name;
 }
 
+static PedAlignment*
+mac_get_partition_alignment(const PedDisk *disk)
+{
+        PedSector sector_size = disk->dev->sector_size / 512;
+
+        return ped_alignment_new(0, sector_size);
+}
+
 static PedConstraint*
 _primary_constraint (PedDisk* disk)
 {
@@ -1659,7 +1667,8 @@ static PedDiskOps mac_disk_ops = {
 	get_max_primary_partition_count:
 				mac_get_max_primary_partition_count,
 	get_max_supported_partition_count:
-				mac_get_max_supported_partition_count
+				mac_get_max_supported_partition_count,
+	get_partition_alignment: mac_get_partition_alignment,
 };
 
 static PedDiskType mac_disk_type = {

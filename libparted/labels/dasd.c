@@ -99,6 +99,7 @@ static int dasd_partition_align (PedPartition* part,
 static int dasd_partition_enumerate (PedPartition* part);
 static int dasd_get_max_primary_partition_count (const PedDisk* disk);
 static bool dasd_get_max_supported_partition_count (const PedDisk* disk, int *max_n);
+static PedAlignment *dasd_get_partition_alignment(const PedDisk *disk);
 
 static PedDisk* dasd_alloc (const PedDevice* dev);
 static PedDisk* dasd_duplicate (const PedDisk* disk);
@@ -131,6 +132,7 @@ static PedDiskOps dasd_disk_ops = {
 	alloc_metadata: dasd_alloc_metadata,
 	get_max_primary_partition_count: dasd_get_max_primary_partition_count,
 	get_max_supported_partition_count: dasd_get_max_supported_partition_count,
+	get_partition_alignment: dasd_get_partition_alignment,
 
 	partition_duplicate: NULL
 };
@@ -721,6 +723,16 @@ dasd_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 {
 	*max_n = dasd_get_max_primary_partition_count(disk);
 	return true;
+}
+
+static PedAlignment*
+dasd_get_partition_alignment(const PedDisk *disk)
+{
+        DasdDiskSpecific* disk_specific = disk->disk_specific;
+        PedSector sector_size =
+                disk_specific->real_sector_size / disk->dev->sector_size;
+
+        return ped_alignment_new(0, disk->dev->hw_geom.sectors * sector_size);
 }
 
 static PedConstraint*

@@ -720,6 +720,15 @@ pc98_partition_get_name (const PedPartition* part)
 	return pc98_data->name;
 }
 
+static PedAlignment*
+pc98_get_partition_alignment(const PedDisk *disk)
+{
+	PedSector cylinder_size =
+		disk->dev->hw_geom.sectors * disk->dev->hw_geom.heads;
+
+        return ped_alignment_new(0, cylinder_size);
+}
+
 static PedConstraint*
 _primary_constraint (PedDisk* disk)
 {
@@ -879,7 +888,8 @@ static PedDiskOps pc98_disk_ops = {
 	get_max_primary_partition_count:
 				pc98_get_max_primary_partition_count,
 	get_max_supported_partition_count:
-				pc98_get_max_supported_partition_count
+				pc98_get_max_supported_partition_count,
+	get_partition_alignment: pc98_get_partition_alignment,
 };
 
 static PedDiskType pc98_disk_type = {

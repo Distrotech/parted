@@ -707,6 +707,15 @@ sun_get_max_primary_partition_count (const PedDisk* disk)
 	return SUN_DISK_MAXPARTITIONS;
 }
 
+static PedAlignment*
+sun_get_partition_alignment(const PedDisk *disk)
+{
+	PedSector block =
+		disk->dev->hw_geom.sectors * disk->dev->hw_geom.heads;
+
+        return ped_alignment_new(0, block);
+}
+
 static PedConstraint*
 _get_strict_constraint (PedDisk* disk)
 {
@@ -904,6 +913,7 @@ static PedDiskOps sun_disk_ops = {
 				sun_get_max_primary_partition_count,
 	get_max_supported_partition_count:
 				sun_get_max_supported_partition_count,
+	get_partition_alignment: sun_get_partition_alignment,
 
 	partition_set_name:		NULL,
 	partition_get_name:		NULL,
