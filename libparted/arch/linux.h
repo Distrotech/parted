@@ -22,6 +22,10 @@
 #  include <parted/fdasd.h>
 #endif
 
+#if HAVE_BLKID_BLKID_H
+#  include <blkid/blkid.h>
+#endif
+
 #define LINUX_SPECIFIC(dev)	((LinuxSpecific*) (dev)->arch_specific)
 
 typedef	struct _LinuxSpecific	LinuxSpecific;
@@ -33,6 +37,10 @@ struct _LinuxSpecific {
 	unsigned int real_sector_size;
 	/* IBM internal dasd structure (i guess ;), required. */
 	struct fdasd_anchor *anchor;
+#endif
+#if USE_BLKID
+        blkid_probe probe;
+        blkid_topology topology;
 #endif
 };
 
