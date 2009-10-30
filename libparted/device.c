@@ -416,31 +416,32 @@ ped_device_sync_fast (PedDevice* dev)
 }
 
 /**
- * Get a constraint that represents hardware requirements on alignment and
- * geometry.
- * This is, for example, important for media that have a physical sector
- * size that is a multiple of the logical sector size.
+ * Get a constraint that represents hardware requirements on geometry.
+ * This function will return a constraint representing the limits imposed
+ * by the size of the disk, it will *not* provide any alignment constraints.
  *
- * \warning This function is experimental for physical sector sizes not equal to
- *          2^9.
+ * Alignment constraints may be desirable when using media that have a physical
+ * sector size that is a multiple of the logical sector size, as in this case
+ * proper partition alignment can benefit disk performance signigicantly.
+ * When you want a constraint with alignment info, use
+ * ped_device_get_minimal_aligned_constraint() or
+ * ped_device_get_optimal_aligned_constraint().
+ *
+ * \return NULL on error, otherwise a pointer to a dynamically allocated
+ *         constraint.
  */
 PedConstraint*
 ped_device_get_constraint (PedDevice* dev)
 {
-        int multiplier = dev->phys_sector_size / dev->sector_size;
-
-        PedAlignment* start_align = ped_alignment_new (multiplier, multiplier);
-
         PedGeometry *s, *e;
         PedConstraint* c = ped_constraint_new (
-                                start_align, ped_alignment_any,
+                                ped_alignment_any, ped_alignment_any,
                                 s = ped_geometry_new (dev, 0, dev->length),
                                 e = ped_geometry_new (dev, 0, dev->length),
                                 1, dev->length);
 
         free (s);
         free (e);
-        free (start_align);
         return c;
 }
 
