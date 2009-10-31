@@ -29,6 +29,14 @@ TESTS = \
 EXTRA_DIST = \
   $(TESTS) test-lib.sh t-lib.sh lvm-utils.sh
 
+check_PROGRAMS = print-align
+LDADD = \
+  $(top_builddir)/libparted/libparted.la
+AM_CPPFLAGS = \
+  -I$(top_srcdir)/lib \
+  -I$(top_srcdir)/include
+AM_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
+
 parted_dir = $(abs_top_builddir)/parted
 pp_dir = $(abs_top_builddir)/partprobe
 sep = $(PATH_SEPARATOR)
