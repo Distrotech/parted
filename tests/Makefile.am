@@ -24,7 +24,8 @@ TESTS = \
   t6000-dm.sh \
   t7000-scripting.sh \
   t8000-loop.sh \
-  t9010-big-sector.sh
+  t9010-big-sector.sh \
+  t9020-alignment.sh
 
 EXTRA_DIST = \
   $(TESTS) test-lib.sh t-lib.sh lvm-utils.sh
