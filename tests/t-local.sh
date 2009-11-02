@@ -2,6 +2,8 @@
 # This file is sourced from near the end of t-lib.sh.
 sector_size_=${PARTED_SECTOR_SIZE:-512}
 
+scsi_debug_lock_file_="$abs_srcdir/scsi_debug.lock"
+
 require_scsi_debug_module_()
 {
   # check for scsi_debug module
@@ -38,12 +40,22 @@ wait_for_dev_to_appear_()
   return 1
 }
 
+# Tests that uses "modprobe scsi_debug ..." must not be run in parallel.
+scsi_debug_acquire_lock_()
+{
+  local retries=20
+  local lock_timeout_seconds=120
+  lockfile -1 -r $retries -l $lock_timeout_seconds $scsi_debug_lock_file_
+}
+
 print_sd_names_() { (cd /sys/block && printf '%s\n' sd*); }
 
 # Create a device using the scsi_debug module with the options passed to
 # this function as arguments.  Upon success, print the name of the new device.
 scsi_debug_setup_()
 {
+  scsi_debug_acquire_lock_
+
   # It is not trivial to determine the name of the device we're creating.
   # Record the names of all /sys/block/sd* devices *before* probing:
   print_sd_names_ > before
