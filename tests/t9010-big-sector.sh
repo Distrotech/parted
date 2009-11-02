@@ -26,15 +26,22 @@ fi
 
 require_root_
 
-dev=
-cleanup_() {
-  # Remove the module only if this script added it.
-  test -z "$dev" && return
+scsi_dev=
+cleanup_() { scsi_debug_cleanup_; }
 
-  # We have to insist.  Otherwise, a single rmmod usually fails to remove it.
+scsi_debug_cleanup_() {
+  # Remove the module only if this script added it.
+  test -z "$scsi_dev" && return
+
+  # We have to insist.  Otherwise, a single rmmod usually fails to remove it,
+  # due either to "Resource temporarily unavailable" or to
+  # "Module scsi_debug is in use".
   for i in 1 2 3; do rmmod scsi_debug && break; sleep .2 || sleep 1; done
 }
 
+# Helper function: wait 2s (via .1s increments) for FILE to appear.
+# Usage: wait_for_dev_to_appear_ /dev/sdg
+# Return 0 upon success, 1 upon failure.
 wait_for_dev_to_appear_()
 {
   local file=$1
@@ -50,21 +57,38 @@ wait_for_dev_to_appear_()
 
 print_sd_names_() { (cd /sys/block && printf '%s\n' sd*); }
 
+# Create a device using the scsi_debug module with the options passed to
+# this function as arguments.  Upon success, print the name of the new device.
 scsi_debug_setup_()
 {
-  local new_dev
+  # It is not trivial to determine the name of the device we're creating.
+  # Record the names of all /sys/block/sd* devices *before* probing:
   print_sd_names_ > before
-  modprobe scsi_debug dev_size_mb=513 sector_size=4096
+  modprobe scsi_debug "$@" || { rm -f before; return 1; }
+
+  # Wait up to 2s (via .1s increments) for the list of devices to change.
+  # Sleeping for a fraction of a second requires GNU sleep, so fall
+  # back on sleeping 2x1s if that fails.
+  # FIXME-portability: using "cmp - ..." probably requires GNU cmp.
   local incr=1
-  i=0
+  local i=0
   while print_sd_names_ | cmp -s - before; do
     sleep .1 2>/dev/null || { sleep 1; incr=10; }
     i=$(expr $i + $incr); test $i = 20 && break
   done
+
+  # Record the names of all /sys/block/sd* devices *after* probe+wait.
   print_sd_names_ > after
-  new_dev=$(comm -3 before after | tr -d '\011\012')
+
+  # Determine which device names (if any) are new.
+  # There could be more than one new device, and there have been a removal.
+  local new_dev=$(comm -13 before after)
   rm -f before after
-  test -z "$new_dev" && return 1
+  case $new_dev in
+    sd[a-z]) ;;
+    sd[a-z][a-z]) ;;
+    *) return 1 ;;
+  esac
   local t=/dev/$new_dev
   wait_for_dev_to_appear_ $t
   echo $t
@@ -81,13 +105,13 @@ grep '^#define USE_BLKID 1' "$CONFIG_HEADER" > /dev/null ||
 echo 'Sector size (logical/physical): 4096B/4096B' > exp || framework_failure
 
 # create memory-backed device
-dev=$(scsi_debug_setup_) ||
+scsi_dev=$(scsi_debug_setup_ dev_size_mb=8 sector_size=4096) ||
   skip_test_ 'failed to create scsi_debug device'
 
 fail=0
 
 # create partition table and print
-parted -s $dev mklabel gpt print > out 2>&1 || fail=1
+parted -s $scsi_dev mklabel gpt print > out 2>&1 || fail=1
 grep '^Sector' out > k 2>&1 || fail=1
 mv k out || fail=1
 
