@@ -2,6 +2,13 @@
 # This file is sourced from near the end of t-lib.sh.
 sector_size_=${PARTED_SECTOR_SIZE:-512}
 
+require_scsi_debug_module_()
+{
+  # check for scsi_debug module
+  modprobe -n scsi_debug ||
+    skip_test_ "you lack the scsi_debug kernel module"
+}
+
 scsi_debug_modprobe_succeeded_=
 cleanup_eval_="$cleanup_eval_; scsi_debug_cleanup_"
 scsi_debug_cleanup_()

@@ -25,10 +25,7 @@ fi
 . $srcdir/t-lib.sh
 
 require_root_
-
-# check for scsi_debug module
-modprobe -n scsi_debug ||
-  skip_test_ "you lack the scsi_debug kernel module"
+require_scsi_debug_module_
 
 grep '^#define USE_BLKID 1' "$CONFIG_HEADER" > /dev/null ||
   skip_test_ 'this system lacks a new-enough libblkid'
