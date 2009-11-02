@@ -2,8 +2,13 @@
 # This file is sourced from near the end of t-lib.sh.
 sector_size_=${PARTED_SECTOR_SIZE:-512}
 
+scsi_debug_modprobe_succeeded_=
+cleanup_eval_="$cleanup_eval_; scsi_debug_cleanup_"
 scsi_debug_cleanup_()
 {
+  rm -f $scsi_debug_lock_file_
+  test -z "$scsi_debug_modprobe_succeeded_" && return
+
   # We have to insist.  Otherwise, a single rmmod usually fails to remove it,
   # due either to "Resource temporarily unavailable" or to
   # "Module scsi_debug is in use".
@@ -36,6 +41,7 @@ scsi_debug_setup_()
   # Record the names of all /sys/block/sd* devices *before* probing:
   print_sd_names_ > before
   modprobe scsi_debug "$@" || { rm -f before; return 1; }
+  scsi_debug_modprobe_succeeded_=1
 
   # Wait up to 2s (via .1s increments) for the list of devices to change.
   # Sleeping for a fraction of a second requires GNU sleep, so fall

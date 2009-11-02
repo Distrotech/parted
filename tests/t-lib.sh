@@ -374,10 +374,16 @@ cleanup_() { :; }
 t_=$(mktemp -d --tmp="$test_dir_" gz-$this_test.XXXXXXXXXX)\
     || error_ "failed to create temporary directory in $test_dir_"
 
+# Eval the following upon cleanup.
+# This is useful if you have more than than one cleanup function,
+# and for encapsulated cleanup functions; append any addition.
+cleanup_eval_=':'
+
 remove_tmp_()
 {
   __st=$?
   cleanup_
+  test -n "$cleanup_eval_" && eval "$cleanup_eval_"
   cd "$test_dir_" && chmod -R u+rwx "$t_" && rm -rf "$t_" && exit $__st
 }
 

@@ -26,13 +26,6 @@ fi
 
 require_root_
 
-scsi_dev=
-cleanup_()
-{
-  # Remove the module only if this script added it.
-  test -n "$scsi_dev" && scsi_debug_cleanup_
-}
-
 # check for scsi_debug module
 modprobe -n scsi_debug ||
   skip_test_ "you lack the scsi_debug kernel module"
