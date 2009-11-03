@@ -28,7 +28,7 @@ TESTS = \
   t9020-alignment.sh
 
 EXTRA_DIST = \
-  $(TESTS) test-lib.sh t-lib.sh lvm-utils.sh
+  $(TESTS) test-lib.sh t-lib.sh lvm-utils.sh t-local.sh t-lvm.sh
 
 check_PROGRAMS = print-align
 LDADD = \
