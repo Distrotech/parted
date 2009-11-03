@@ -50,40 +50,86 @@ loop_setup_()
   return 0;
 }
 
-compare_vg_field_()
+compare_two_fields_()
 {
+    local cmd1=$1;
+    local obj1=$2;
+    local field1=$3;
+    local cmd2=$4;
+    local obj2=$5;
+    local field2=$6;
+    local val1;
+    local val2;
+
+    val1=$($cmd1 --noheadings -o $field1 $obj1)
+    val2=$($cmd2 --noheadings -o $field2 $obj2)
 if test "$verbose" = "t"
 then
-  echo "compare_vg_field_ VG1: `vgs --noheadings -o $3 $1` VG2: `vgs --noheadings -o $3 $2`"
+  echo "compare_two_fields_ $obj1($field1): $val1 $obj2($field2): $val2"
 fi
-  return $(test $(vgs --noheadings -o $3 $1) == $(vgs --noheadings -o $3 $2) )
+  test $val1 = $val2
+}
+
+compare_vg_field_()
+{
+    local vg1=$1;
+    local vg2=$2;
+    local field=$3;
+    local val1;
+    local val2;
+
+    val1=$(vgs --noheadings -o $field $vg1)
+    val2=$(vgs --noheadings -o $field $vg2)
+if test "$verbose" = "t"
+then
+  echo "compare_vg_field_ VG1: $val1 VG2: $val2"
+fi
+  test $val1 = $val2
 }
 
 check_vg_field_()
 {
+    local vg=$1;
+    local field=$2;
+    local expected=$3;
+    local actual;
+
+    actual=$(vgs --noheadings -o $field $vg)
 if test "$verbose" = "t"
 then
-  echo "check_vg_field_ VG=$1, field=$2, actual=`vgs --noheadings -o $2 $1`, expected=$3"
+  echo "check_vg_field_ VG=$vg, field=$field, actual=$actual, expected=$expected"
 fi
-  return $(test $(vgs --noheadings -o $2 $1) == $3)
+  test $actual = $expected
 }
 
 check_pv_field_()
 {
+    local pv=$1;
+    local field=$2;
+    local expected=$3;
+    local actual;
+
+    actual=$(pvs --noheadings -o $field $pv)
 if test "$verbose" = "t"
 then
-  echo "check_pv_field_ PV=$1, field=$2, actual=`pvs --noheadings -o $2 $1`, expected=$3"
+  echo "check_pv_field_ PV=$pv, field=$field, actual=$actual, expected=$expected"
 fi
-  return $(test $(pvs --noheadings -o $2 $1) == $3)
+    test $actual = $expected
 }
 
 check_lv_field_()
 {
+    local lv=$1;
+    local field=$2;
+    local expected=$3;
+    local actual;
+
+    actual=$(lvs --noheadings -o $field $lv)
 if test "$verbose" = "t"
 then
-  echo "check_lv_field_ LV=$1, field=$2, actual=`lvs --noheadings -o $2 $1`, expected=$3"
+  echo "check_lv_field_ LV=$lv, field=$field, actual=$actual, expected=$expected"
 fi
-  return $(test $(lvs --noheadings -o $2 $1) == $3)
+  test $actual = $expected
 }
 
 vg_validate_pvlv_counts_()
@@ -122,9 +168,19 @@ init_root_dir_()
   export DM_DEV_DIR=$G_dev_
 
   # Only the first caller does anything.
-  mkdir -p $G_root_/etc $G_dev_ $G_dev_/mapper
+  mkdir -p $G_root_/etc $G_dev_ $G_dev_/mapper $G_root_/lib
   for i in 0 1 2 3 4 5 6 7; do
     mknod $G_root_/dev/loop$i b 7 $i
+  done
+  for i in $abs_top_builddir/dmeventd/mirror/*.so $abs_top_builddir/dmeventd/snapshot/*.so
+  do
+    # NOTE: This check is necessary because the loop above will give us the value
+    # "$abs_top_builddir/dmeventd/mirror/*.so" if no files ending in 'so' exist.
+    # This is the best way I could quickly determine to skip over this bogus value.
+    if [ -f $i ]; then
+      echo Setting up symlink from $i to $G_root_/lib
+      ln -s $i $G_root_/lib
+    fi
   done
   cat > $G_root_/etc/lvm.conf <<-EOF
   devices {
@@ -134,9 +190,19 @@ init_root_dir_()
     cache_dir = "$G_root_/etc"
     sysfs_scan = 0
   }
+  log {
+    verbose = $verboselevel
+    syslog = 0
+    indent = 1
+  }
+  backup {
+    backup = 0
+    archive = 0
+  }
+  global {
+    library_dir = "$G_root_/lib"
+  }
 EOF
 }
 
-if test $(this_test_) != 000-basic; then
-  init_root_dir_
-fi
+init_root_dir_
