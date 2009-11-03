@@ -160,6 +160,9 @@ dasd_alloc (const PedDevice* dev)
 		return NULL;
 	}
 
+	/* CDL format, newer */
+	disk_specific->format_type = 2;
+
 	return disk;
 }
 
