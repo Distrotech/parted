@@ -1,4 +1,5 @@
 #!/bin/sh
+# Test usage of loop devices
 
 # Copyright (C) 2008-2009 Free Software Foundation, Inc.
 
@@ -15,48 +16,46 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test_description='Test usage of loop devices'
-
-privileges_required_=1
-device_mapper_required_=1
+if test "$VERBOSE" = yes; then
+  set -x
+  parted --version
+fi
 
 : ${srcdir=.}
-. $srcdir/test-lib.sh
+. $srcdir/t-lib.sh
 
-# Stop immediately, upon failure.
-# Otherwise, subsequent tests would fail,
-# too and just obscure the earlier failure.
-immediate=1
+require_root_
+lvm_init_root_dir_
 
-cleanup_() {
-    test -n "$d1" && losetup -d "$d1"
-    rm -f "$f1";
-}
-
-emit_expected_diagnostic()
+d1=
+cleanup_()
 {
-    printf '%s\n' \
-      'Error: Error informing the kernel about modifications to partiti' \
-      'Warning: The kernel was unable to re-read the partition table on'
+  test -n "$d1" && losetup -d "$d1"
+  rm -f "$f1";
 }
 
-f1=$(pwd)/1; d1=$(loop_setup_ "$f1") || {
-    say "skipping $0: is this partition mounted with 'nodev'?"
-    test_done
-    exit
-}
+f1=$(pwd)/1; d1=$(loop_setup_ "$f1") \
+  || skip_test_ "is this partition mounted with 'nodev'?"
 
-test_expect_success \
-    'run parted -s "$d1" mklabel msdos' \
-    'parted -s $d1 mklabel msdos > out 2>&1'
-test_expect_success 'check for empty output' 'compare out /dev/null'
+printf '%s\n' \
+    'Warning: WARNING: the kernel failed to re-read the partition table on' \
+  > exp || framework_failure
 
-test_expect_failure \
-    'run parted -s "$d1" mkpart primary 1 10' \
-    'parted -s $d1 mkpart primary 1 10 > out 2>&1'
-test_expect_success 'prepare actual/expected output' \
-    'emit_expected_diagnostic > exp &&
-     cut -b1-64 out > k && mv k out'
-test_expect_success 'check for expected output' 'compare exp out'
+fail=0
 
-test_done
+# Expect this to exit with status of 1.
+parted -s $d1 mklabel msdos > err 2>&1
+test $? = 1 || fail=1
+sed 's/^\(Warn.*table on\).*/\1/' err > k && mv k err || fail=1
+
+compare exp err || fail=1
+
+# Create a partition; expect to exit 1
+parted -s $d1 mkpart primary 1 10 > err 2>&1
+test $? = 1 || fail=1
+sed 's/^\(Warn.*table on\).*/\1/' err > k && mv k err || fail=1
+
+# check for expected output
+compare exp err || fail=1
+
+Exit $fail
