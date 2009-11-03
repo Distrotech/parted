@@ -652,10 +652,13 @@ _device_set_sector_size (PedDevice* dev)
         }
 #endif
 
+#if defined __s390__ || defined __s390x__
         /* Return PED_SECTOR_SIZE_DEFAULT for DASDs. */
         if (dev->type == PED_DEVICE_DASD) {
+                arch_specific->real_sector_size = dev->sector_size;
                 dev->sector_size = PED_SECTOR_SIZE_DEFAULT;
         }
+#endif
 
         if (dev->sector_size != PED_SECTOR_SIZE_DEFAULT) {
                 ped_exception_throw (
@@ -1079,6 +1082,7 @@ error:
         return 0;
 }
 
+#if defined __s390__ || defined __s390x__
 static int
 init_dasd (PedDevice* dev, const char* model_name)
 {
@@ -1134,6 +1138,7 @@ error_close_dev:
 error:
         return 0;
 }
+#endif
 
 static int
 init_generic (PedDevice* dev, const char* model_name)
@@ -1280,10 +1285,12 @@ linux_new (const char* path)
                         goto error_free_arch_specific;
                 break;
 
+#if defined __s390__ || defined __s390x__
         case PED_DEVICE_DASD:
                 if (!init_dasd (dev, _("IBM S390 DASD drive")))
                         goto error_free_arch_specific;
                 break;
+#endif
 
         case PED_DEVICE_VIODASD:
                 if (!init_generic (dev, _("IBM iSeries Virtual DASD")))

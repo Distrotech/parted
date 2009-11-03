@@ -69,7 +69,6 @@ typedef struct {
 } DasdPartitionData;
 
 typedef struct {
-	unsigned int real_sector_size;
 	unsigned int format_type;
 } DasdDiskSpecific;
 
@@ -158,18 +157,6 @@ dasd_alloc (const PedDevice* dev)
 	disk->disk_specific = disk_specific = ped_malloc(sizeof(DasdDiskSpecific));
 	if (!disk->disk_specific) {
 		free (disk);
-		return NULL;
-	}
-
-	/* because we lie to parted we have to compensate with the
-	   real sector size.  Record that now. */
-	if (ioctl(arch_specific->fd, BLKSSZGET,
-			  &disk_specific->real_sector_size) == -1) {
-		ped_exception_throw(PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
-							_("Unable to determine the block "
-							  "size of this dasd"));
-		free(disk_specific);
-		free(disk);
 		return NULL;
 	}
 
@@ -320,7 +307,7 @@ dasd_read (PedDisk* disk)
 		end = (long long)(long long) anchor.geo.cylinders
 		      * (long long)anchor.geo.heads
 		      * (long long)disk->dev->hw_geom.sectors
-		      * (long long)disk_specific->real_sector_size
+		      * (long long)arch_specific->real_sector_size
 		      / (long long)disk->dev->sector_size - 1;
 		part = ped_partition_new (disk, PED_PARTITION_PROTECTED, NULL, start, end);
 		if (!part)
@@ -359,11 +346,11 @@ dasd_read (PedDisk* disk)
 
 		start = (long long)(long long) p->start_trk
 				* (long long) disk->dev->hw_geom.sectors
-				* (long long) disk_specific->real_sector_size
+				* (long long) arch_specific->real_sector_size
 				/ (long long) disk->dev->sector_size;
 		end   = (long long)((long long) p->end_trk + 1)
 				* (long long) disk->dev->hw_geom.sectors
-				* (long long) disk_specific->real_sector_size
+				* (long long) arch_specific->real_sector_size
 				/ (long long) disk->dev->sector_size - 1;
 		part = ped_partition_new(disk, PED_PARTITION_NORMAL, NULL,
                                          start, end);
@@ -423,11 +410,11 @@ dasd_read (PedDisk* disk)
 		if (p->fspace_trk > 0) {
 			start = (long long)((long long) p->end_trk + 1)
 					* (long long) disk->dev->hw_geom.sectors
-					* (long long) disk_specific->real_sector_size
+					* (long long) arch_specific->real_sector_size
 					/ (long long) disk->dev->sector_size;
 			end   = (long long)((long long) p->end_trk + 1 + p->fspace_trk)
 					* (long long) disk->dev->hw_geom.sectors
-					* (long long) disk_specific->real_sector_size
+					* (long long) arch_specific->real_sector_size
 					/ (long long) disk->dev->sector_size - 1;
 			part = ped_partition_new (disk, PED_PARTITION_NORMAL,
                                                   NULL, start, end);
@@ -586,9 +573,9 @@ dasd_write (const PedDisk* disk)
 		PDEBUG;
 
 		start = part->geom.start * disk->dev->sector_size
-				/ disk_specific->real_sector_size / disk->dev->hw_geom.sectors;
+				/ arch_specific->real_sector_size / disk->dev->hw_geom.sectors;
 		stop = (part->geom.end + 1)
-			   * disk->dev->sector_size / disk_specific->real_sector_size
+			   * disk->dev->sector_size / arch_specific->real_sector_size
 			   / disk->dev->hw_geom.sectors - 1;
 
 		PDEBUG;
@@ -734,8 +721,9 @@ static PedAlignment*
 dasd_get_partition_alignment(const PedDisk *disk)
 {
         DasdDiskSpecific* disk_specific = disk->disk_specific;
+        LinuxSpecific *arch_specific = LINUX_SPECIFIC(disk->dev);
         PedSector sector_size =
-                disk_specific->real_sector_size / disk->dev->sector_size;
+                arch_specific->real_sector_size / disk->dev->sector_size;
 
         return ped_alignment_new(0, disk->dev->hw_geom.sectors * sector_size);
 }
@@ -754,7 +742,7 @@ _primary_constraint (PedDisk* disk)
 
 	arch_specific = LINUX_SPECIFIC (disk->dev);
 	disk_specific = disk->disk_specific;
-	sector_size = disk_specific->real_sector_size / disk->dev->sector_size;
+	sector_size = arch_specific->real_sector_size / disk->dev->sector_size;
 
 	if (!ped_alignment_init (&start_align, 0,
 							 disk->dev->hw_geom.sectors * sector_size))
@@ -880,7 +868,7 @@ dasd_alloc_metadata (PedDisk* disk)
 	else
         /* Mark the start of the disk as metadata. */
 		vtoc_end = (FIRST_USABLE_TRK * (long long) disk->dev->hw_geom.sectors
-				   * (long long) disk_specific->real_sector_size
+				   * (long long) arch_specific->real_sector_size
 				   / (long long) disk->dev->sector_size) - 1;
 
 	new_part = ped_partition_new (disk,PED_PARTITION_METADATA,NULL,0,vtoc_end);
