@@ -371,7 +371,7 @@ this_test=$(this_test_)
 # a partition, or to undo any other global state changes.
 cleanup_() { :; }
 
-t_=$(mktemp -d --tmp="$test_dir_" gz-$this_test.XXXXXXXXXX)\
+t_=$(mktemp -d --tmp="$test_dir_" pe-$this_test.XXXXXXXXXX)\
     || error_ "failed to create temporary directory in $test_dir_"
 
 # Eval the following upon cleanup.
