@@ -66,7 +66,6 @@ typedef struct {
 	int system;
 	int	raid;
 	int	lvm;
-	void *part_info;
 } DasdPartitionData;
 
 typedef struct {
@@ -337,7 +336,7 @@ dasd_read (PedDisk* disk)
 		if (!ped_disk_add_partition (disk, part, NULL))
 			goto error_close_dev;
 
-        	fdasd_cleanup(&anchor);
+		fdasd_cleanup(&anchor);
 
 		return 1;
 	}
@@ -410,7 +409,6 @@ dasd_read (PedDisk* disk)
 
 		vtoc_ebcdic_enc(p->f1->DS1DSNAM, p->f1->DS1DSNAM, 44);
 
-		dasd_data->part_info = (void *) p;
 		dasd_data->type = 0;
 
 		constraint_exact = ped_constraint_exact (&part->geom);
@@ -464,7 +462,8 @@ error_close_dev:
 }
 
 static int
-dasd_update_type (const PedDisk* disk, struct fdasd_anchor *anchor)
+dasd_update_type (const PedDisk* disk, struct fdasd_anchor *anchor,
+		  partition_info_t *part_info[USABLE_PARTITIONS])
 {
 	PedPartition* part;
 	LinuxSpecific* arch_specific;
@@ -475,22 +474,22 @@ dasd_update_type (const PedDisk* disk, struct fdasd_anchor *anchor)
 
 	PDEBUG;
 
-	for (part = ped_disk_next_partition(disk, NULL); part;
-	     part = ped_disk_next_partition(disk, part)) {
+	unsigned int i;
+	for (i = 1; i <= USABLE_PARTITIONS; i++) {
 		partition_info_t *p;
 		char *ch = NULL;
 		DasdPartitionData* dasd_data;
 
 		PDEBUG;
 
-		if (part->type & PED_PARTITION_FREESPACE
-			|| part->type & PED_PARTITION_METADATA)
+		part = ped_disk_get_partition(disk, i);
+		if (!part)
 			continue;
 
 		PDEBUG;
 
 		dasd_data = part->disk_specific;
-		p = dasd_data->part_info;
+		p = part_info[i - 1];
 
 		if (!p ) {
 			PDEBUG;
@@ -549,6 +548,7 @@ dasd_write (const PedDisk* disk)
 	LinuxSpecific* arch_specific;
 	DasdDiskSpecific* disk_specific;
 	struct fdasd_anchor anchor;
+	partition_info_t *part_info[USABLE_PARTITIONS];
 
 	PED_ASSERT(disk != NULL, return 0);
 	PED_ASSERT(disk->dev != NULL, return 0);
@@ -577,7 +577,6 @@ dasd_write (const PedDisk* disk)
 
 	for (i = 1; i <= USABLE_PARTITIONS; i++) {
 		unsigned int start, stop;
-		int type;
 
 		PDEBUG;
 		part = ped_disk_get_partition(disk, i);
@@ -595,15 +594,12 @@ dasd_write (const PedDisk* disk)
 		PDEBUG;
 		dasd_data = part->disk_specific;
 
-		type = dasd_data->type;
-		PDEBUG;
-
 		p = fdasd_add_partition(&anchor, start, stop);
 		if (!p) {
 			PDEBUG;
 			goto error;
 		}
-		dasd_data->part_info = (void *) p;
+		part_info[i - 1] = p;
 		p->type = dasd_data->system;
 	}
 
@@ -612,7 +608,7 @@ dasd_write (const PedDisk* disk)
 	if (!fdasd_prepare_labels(&anchor, arch_specific->fd))
 		goto error;
 
-	dasd_update_type(disk, &anchor);
+	dasd_update_type(disk, &anchor, part_info);
 	PDEBUG;
 
 	if (!fdasd_write_labels(&anchor, arch_specific->fd))
