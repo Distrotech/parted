@@ -32,7 +32,17 @@ main (int argc, char **argv)
     printf ("optimal: - -\n");
   free (pa_opt);
 
-  ped_device_destroy (dev);
+  PedDisk *disk = ped_disk_new (dev);
+  if (disk == NULL)
+    return EXIT_FAILURE;
 
+  PedAlignment *part_align = ped_disk_get_partition_alignment (disk);
+  if (part_align == NULL)
+    return EXIT_FAILURE;
+
+  printf ("partition alignment: %lld %lld\n",
+	  part_align->offset, part_align->grain_size);
+
+  ped_device_destroy (dev);
   return EXIT_SUCCESS;
 }

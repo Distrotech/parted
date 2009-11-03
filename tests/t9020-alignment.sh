@@ -37,6 +37,7 @@ grep '^#define USE_BLKID 1' "$CONFIG_HEADER" > /dev/null ||
 cat <<EOF > exp || framework_failure
 minimum: 7 8
 optimal: 7 64
+partition alignment: 0 1
 EOF
 
 # create memory-backed device
