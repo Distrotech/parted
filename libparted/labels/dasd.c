@@ -82,6 +82,7 @@ static PedPartition* dasd_partition_new (const PedDisk* disk,
 										 const PedFileSystemType* fs_type,
 										 PedSector start,
 										 PedSector end);
+static PedPartition* dasd_partition_duplicate (const PedPartition *part);
 static void dasd_partition_destroy (PedPartition* part);
 static int dasd_partition_set_flag (PedPartition* part,
 									PedPartitionFlag flag,
@@ -116,6 +117,7 @@ static PedDiskOps dasd_disk_ops = {
 	partition_set_system: dasd_partition_set_system,
 
 	partition_new: dasd_partition_new,
+	partition_duplicate: dasd_partition_duplicate,
 	partition_destroy: dasd_partition_destroy,
 	partition_set_flag:	dasd_partition_set_flag,
 	partition_get_flag:	dasd_partition_get_flag,
@@ -129,8 +131,6 @@ static PedDiskOps dasd_disk_ops = {
 	get_max_primary_partition_count: dasd_get_max_primary_partition_count,
 	get_max_supported_partition_count: dasd_get_max_supported_partition_count,
 	get_partition_alignment: dasd_get_partition_alignment,
-
-	partition_duplicate: NULL
 };
 
 static PedDiskType dasd_disk_type = {
@@ -176,7 +176,8 @@ dasd_duplicate (const PedDisk* disk)
 	if (!new_disk)
 		return NULL;
 
-	new_disk->disk_specific = NULL;
+	memcpy(new_disk->disk_specific, disk->disk_specific,
+	       sizeof(DasdDiskSpecific));
 
 	return new_disk;
 }
@@ -629,6 +630,23 @@ dasd_partition_new (const PedDisk* disk, PedPartitionType part_type,
 
 error:
 	return 0;
+}
+
+static PedPartition*
+dasd_partition_duplicate (const PedPartition *part)
+{
+	PedPartition *new_part;
+
+	new_part = ped_partition_new (part->disk, part->type, part->fs_type,
+				      part->geom.start, part->geom.end);
+	if (!new_part)
+		return NULL;
+	new_part->num = part->num;
+
+	memcpy(new_part->disk_specific, part->disk_specific,
+	       sizeof(DasdPartitionData));
+
+	return new_part;
 }
 
 static void
