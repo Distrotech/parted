@@ -72,8 +72,6 @@ typedef struct {
 typedef struct {
 	unsigned int real_sector_size;
 	unsigned int format_type;
-	/* IBM internal dasd structure (i guess ;), required. */
-	struct fdasd_anchor *anchor;
 } DasdDiskSpecific;
 
 static int dasd_probe (const PedDevice *dev);
@@ -266,6 +264,8 @@ dasd_clobber (PedDevice* dev)
 	fdasd_recreate_vtoc(&anchor);
 	fdasd_write_labels(&anchor, arch_specific->fd);
 
+	fdasd_cleanup(&anchor);
+
 	return 1;
 }
 
@@ -282,6 +282,7 @@ dasd_read (PedDisk* disk)
 	partition_info_t *p;
 	LinuxSpecific* arch_specific;
 	DasdDiskSpecific* disk_specific;
+	struct fdasd_anchor anchor;
 
 	PDEBUG;
 
@@ -295,33 +296,30 @@ dasd_read (PedDisk* disk)
 	arch_specific = LINUX_SPECIFIC(dev);
 	disk_specific = disk->disk_specific;
 
-	disk_specific->anchor = ped_malloc(sizeof(fdasd_anchor_t));
-
 	PDEBUG;
 
-	fdasd_initialize_anchor(disk_specific->anchor);
+	fdasd_initialize_anchor(&anchor);
 
-	fdasd_get_geometry(disk_specific->anchor, arch_specific->fd);
+	fdasd_get_geometry(&anchor, arch_specific->fd);
 
 	/* check dasd for labels and vtoc */
-	if (fdasd_check_volume(disk_specific->anchor, arch_specific->fd))
+	if (fdasd_check_volume(&anchor, arch_specific->fd))
 		goto error_close_dev;
 
-	if ((disk_specific->anchor->geo.cylinders
-		* disk_specific->anchor->geo.heads) > BIG_DISK_SIZE)
-		disk_specific->anchor->big_disk++;
+	if ((anchor.geo.cylinders * anchor.geo.heads) > BIG_DISK_SIZE)
+		anchor.big_disk++;
 
 	ped_disk_delete_all (disk);
 
-	if (strncmp(disk_specific->anchor->vlabel->volkey,
+	if (strncmp(anchor.vlabel->volkey,
 				vtoc_ebcdic_enc ("LNX1", str, 4), 4) == 0) {
 		DasdPartitionData* dasd_data;
 
 		/* LDL format, old one */
 		disk_specific->format_type = 1;
 		start = 24;
-		end = (long long)(long long) disk_specific->anchor->geo.cylinders
-		      * (long long)disk_specific->anchor->geo.heads
+		end = (long long)(long long) anchor.geo.cylinders
+		      * (long long)anchor.geo.heads
 		      * (long long)disk->dev->hw_geom.sectors
 		      * (long long)disk_specific->real_sector_size
 		      / (long long)disk->dev->sector_size - 1;
@@ -339,13 +337,15 @@ dasd_read (PedDisk* disk)
 		if (!ped_disk_add_partition (disk, part, NULL))
 			goto error_close_dev;
 
+        	fdasd_cleanup(&anchor);
+
 		return 1;
 	}
 
 	/* CDL format, newer */
 	disk_specific->format_type = 2;
 
-	p = disk_specific->anchor->first;
+	p = anchor.first;
 	PDEBUG;
 
 	for (i = 1 ; i <= USABLE_PARTITIONS; i++) {
@@ -416,8 +416,10 @@ dasd_read (PedDisk* disk)
 		constraint_exact = ped_constraint_exact (&part->geom);
 		if (!constraint_exact)
 			goto error_close_dev;
-		if (!ped_disk_add_partition(disk, part, constraint_exact))
+		if (!ped_disk_add_partition(disk, part, constraint_exact)) {
+			ped_constraint_destroy(constraint_exact);
 			goto error_close_dev;
+		}
 		ped_constraint_destroy(constraint_exact);
 
 		if (p->fspace_trk > 0) {
@@ -440,8 +442,10 @@ dasd_read (PedDisk* disk)
 
 			if (!constraint_exact)
 				goto error_close_dev;
-			if (!ped_disk_add_partition(disk, part, constraint_exact))
+			if (!ped_disk_add_partition(disk, part, constraint_exact)) {
+				ped_constraint_destroy(constraint_exact);
 				goto error_close_dev;
+			}
 
 			ped_constraint_destroy (constraint_exact);
 		}
@@ -450,15 +454,17 @@ dasd_read (PedDisk* disk)
 	}
 
 	PDEBUG;
+	fdasd_cleanup(&anchor);
 	return 1;
 
 error_close_dev:
 	PDEBUG;
+	fdasd_cleanup(&anchor);
 	return 0;
 }
 
 static int
-dasd_update_type (const PedDisk* disk)
+dasd_update_type (const PedDisk* disk, struct fdasd_anchor *anchor)
 {
 	PedPartition* part;
 	LinuxSpecific* arch_specific;
@@ -526,7 +532,7 @@ dasd_update_type (const PedDisk* disk)
 				break;
 		}
 
-		disk_specific->anchor->vtoc_changed++;
+		anchor->vtoc_changed++;
 		vtoc_ebcdic_enc(p->f1->DS1DSNAM, p->f1->DS1DSNAM, 44);
 	}
 
@@ -542,6 +548,8 @@ dasd_write (const PedDisk* disk)
 	partition_info_t *p;
 	LinuxSpecific* arch_specific;
 	DasdDiskSpecific* disk_specific;
+	struct fdasd_anchor anchor;
+
 	PED_ASSERT(disk != NULL, return 0);
 	PED_ASSERT(disk->dev != NULL, return 0);
 
@@ -554,19 +562,18 @@ dasd_write (const PedDisk* disk)
 	if (disk_specific->format_type == 1)
 		return 1;
 
-	/* XXX re-initialize anchor? */
-	fdasd_initialize_anchor(disk_specific->anchor);
-	fdasd_get_geometry(disk_specific->anchor, arch_specific->fd);
+	/* initialize the anchor */
+	fdasd_initialize_anchor(&anchor);
+	fdasd_get_geometry(&anchor, arch_specific->fd);
 
 	/* check dasd for labels and vtoc */
-	if (fdasd_check_volume(disk_specific->anchor, arch_specific->fd))
+	if (fdasd_check_volume(&anchor, arch_specific->fd))
 		goto error;
 
-	if ((disk_specific->anchor->geo.cylinders
-		* disk_specific->anchor->geo.heads) > BIG_DISK_SIZE)
-		disk_specific->anchor->big_disk++;
+	if ((anchor.geo.cylinders * anchor.geo.heads) > BIG_DISK_SIZE)
+		anchor.big_disk++;
 
-	fdasd_recreate_vtoc(disk_specific->anchor);
+	fdasd_recreate_vtoc(&anchor);
 
 	for (i = 1; i <= USABLE_PARTITIONS; i++) {
 		unsigned int start, stop;
@@ -591,10 +598,10 @@ dasd_write (const PedDisk* disk)
 		type = dasd_data->type;
 		PDEBUG;
 
-		p = fdasd_add_partition(disk_specific->anchor, start, stop);
+		p = fdasd_add_partition(&anchor, start, stop);
 		if (!p) {
 			PDEBUG;
-			return 0;
+			goto error;
 		}
 		dasd_data->part_info = (void *) p;
 		p->type = dasd_data->system;
@@ -602,19 +609,21 @@ dasd_write (const PedDisk* disk)
 
 	PDEBUG;
 
-	if (!fdasd_prepare_labels(disk_specific->anchor, arch_specific->fd))
-		return 0;
+	if (!fdasd_prepare_labels(&anchor, arch_specific->fd))
+		goto error;
 
-	dasd_update_type(disk);
+	dasd_update_type(disk, &anchor);
 	PDEBUG;
 
-	if (!fdasd_write_labels(disk_specific->anchor, arch_specific->fd))
-		return 0;
+	if (!fdasd_write_labels(&anchor, arch_specific->fd))
+		goto error;
 
+	fdasd_cleanup(&anchor);
 	return 1;
 
 error:
 	PDEBUG;
+	fdasd_cleanup(&anchor);
 	return 0;
 }
 
