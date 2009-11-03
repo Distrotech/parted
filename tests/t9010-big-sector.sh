@@ -33,8 +33,9 @@ grep '^#define USE_BLKID 1' "$CONFIG_HEADER" > /dev/null ||
 echo 'Sector size (logical/physical): 4096B/4096B' > exp || framework_failure
 
 # create memory-backed device
-scsi_dev=$(scsi_debug_setup_ dev_size_mb=8 sector_size=4096) ||
+scsi_debug_setup_ dev_size_mb=8 sector_size=4096 > dev-name ||
   skip_test_ 'failed to create scsi_debug device'
+scsi_dev=$(cat dev-name)
 
 fail=0
 

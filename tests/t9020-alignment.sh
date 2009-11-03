@@ -41,8 +41,9 @@ partition alignment: 0 1
 EOF
 
 # create memory-backed device
-scsi_dev=$(scsi_debug_setup_ physblk_exp=3 lowest_aligned=7 num_parts=4) ||
+scsi_debug_setup_ physblk_exp=3 lowest_aligned=7 num_parts=4 > dev-name ||
   skip_test_ 'failed to create scsi_debug device'
+scsi_dev=$(cat dev-name)
 
 fail=0
 
