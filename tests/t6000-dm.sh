@@ -1,4 +1,5 @@
 #!/bin/sh
+# ensure that parted can distinguish device map types: linear, multipath
 
 # Copyright (C) 2008-2009 Free Software Foundation, Inc.
 
@@ -15,26 +16,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test_description='determine type of devicemaps.'
-
-privileges_required_=1
-device_mapper_required_=1
+if test "$VERBOSE" = yes; then
+  set -x
+  parted --version
+fi
 
 : ${srcdir=.}
-. $srcdir/test-lib.sh
+. $srcdir/t-lib.sh
 
-test "x$ENABLE_DEVICE_MAPPER" = xyes ||
-  {
-    say "skipping $0: no device-mapper support"
-    test_done
-    exit
-  }
+require_root_
+lvm_init_root_dir_
+
+test "x$ENABLE_DEVICE_MAPPER" = xyes \
+  || skip_test_ "no device-mapper support"
 
 # Device maps names - should be random to not conflict with existing ones on
 # the system
-linear_=plinear
-mpath_=mpath
+linear_=plinear-$$
+mpath_=mpath-$$
 
+d1= d2= d3=
+f1= f2= f3=
 cleanup_() {
     dmsetup remove $linear_
     dmsetup remove $mpath_
@@ -44,40 +46,44 @@ cleanup_() {
     rm -f "$f1" "$f2" "$f3";
 }
 
-f1=$(pwd)/1; d1=$(loop_setup_ "$f1") || {
-    say "skipping $0: is this partition mounted with 'nodev'?"
-    test_done
-    exit
-}
+f1=$(pwd)/1; d1=$(loop_setup_ "$f1") \
+  || skip_test_ "is this partition mounted with 'nodev'?"
 
-test_expect_success \
-    "setup: create loop devices" \
-    'f2=$(pwd)/2 && d2=$(loop_setup_ "$f2") && \
-     f3=$(pwd)/3 && d3=$(loop_setup_ "$f3")'
-
-#
-# Linear Map
-#
-
-test_expect_success \
-    "setup: create a linear mapping" \
-    'echo 0 1024 linear "$d1" 0 | dmsetup create "$linear_" &&
-     dev="$DM_DEV_DIR"/mapper/"$linear_"'
-
-test_expect_success \
-    'run parted -s "$dev" mklabel msdos' \
-    'parted -s $dev mklabel msdos > out 2>&1'
-test_expect_success 'check for empty output' 'compare out /dev/null'
-
-test_expect_success \
-    "determine the map type" \
-    'parted -s "$dev" print > out 2>&1'
-
-# Create expected output file.
 fail=0
-{ emit_superuser_warning > exp; } || fail=1
-cat <<EOF >> exp || fail=1
-Model: Linux device-mapper (linear) (dm)
+
+# setup: create loop devices
+f2=$(pwd)/2 && d2=$(loop_setup_ "$f2") || fail=1
+f3=$(pwd)/3 && d3=$(loop_setup_ "$f3") || fail=1
+
+# This loop used to include "multipath", but lvm2 changed
+# in such a way that that no longer works with loop devices.
+# FIXME: use two scsi_debug devices instead.
+for type in linear ; do
+
+  case $type in
+    linear)
+      type_kwd=$linear_
+      dmsetup_cmd="0 1024 linear $d1 0"
+      ;;
+    *)
+      type_kwd=$mpath_
+      dmsetup_cmd="0 1024 multipath 0 0 1 1 round-robin 0 2 0 $d2 $d3"
+      ;;
+  esac
+
+  # setup: create a mapping
+  echo "$dmsetup_cmd" | dmsetup create "$type_kwd" || fail=1
+  dev="$DM_DEV_DIR/mapper/$type_kwd"
+
+  # Create msdos partition table
+  parted -s $dev mklabel msdos > out 2>&1 || fail=1
+  compare out /dev/null || fail=1
+
+  parted -s "$dev" print > out 2>&1 || fail=1
+
+  # Create expected output file.
+  cat <<EOF >> exp || fail=1
+Model: Linux device-mapper ($type) (dm)
 Disk $dev: 524kB
 Sector size (logical/physical): 512B/512B
 Partition Table: msdos
@@ -85,51 +91,8 @@ Partition Table: msdos
 Number  Start  End  Size  Type  File system  Flags
 
 EOF
-test_expect_success \
-    'create expected output file' \
-    'test $fail = 0'
 
-test_expect_success \
-    'check its output' \
-    'compare out exp'
+  compare out exp || fail=1
+done
 
-#
-# Multipath Map
-#
-
-test_expect_success \
-    "setup: create a multipath mapping" \
-    'echo 0 1024 multipath 0 0 1 1 round-robin 0 2 0 "$d2" "$d3" \
-            | dmsetup create "$mpath_" &&
-     dev="$DM_DEV_DIR"/mapper/"$mpath_"'
-
-test_expect_success \
-    'run parted -s "$dev" mklabel msdos' \
-    'parted -s $dev mklabel msdos > out 2>&1'
-test_expect_success 'check for empty output' 'compare out /dev/null'
-
-test_expect_success \
-    "determine the map type" \
-    'parted -s "$dev" print > out 2>&1'
-
-# Create expected output file.
-fail=0
-{ emit_superuser_warning > exp; } || fail=1
-cat <<EOF >> exp || fail=1
-Model: Linux device-mapper (multipath) (dm)
-Disk $dev: 524kB
-Sector size (logical/physical): 512B/512B
-Partition Table: msdos
-
-Number  Start  End  Size  Type  File system  Flags
-
-EOF
-test_expect_success \
-    'create expected output file' \
-    'test $fail = 0'
-
-test_expect_success \
-    'check its output' \
-    'compare out exp'
-
-test_done
+Exit $fail
