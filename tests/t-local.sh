@@ -90,3 +90,5 @@ scsi_debug_setup_()
   echo $t
   return 0
 }
+
+. $srcdir/t-lvm.sh
