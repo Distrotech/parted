@@ -455,8 +455,8 @@ issue_fs_op_warning (char const *op)
    "%s's file system manipulation code is not as robust as what you'll find in\n"
    "dedicated, file-system-specific packages like e2fsprogs.  We recommend\n"
    "you use %s only to manipulate partition tables, whenever possible.\n"
-   "Support for performing most types and operations on most types of file\n"
-   "systems will be removed in an upcoming release.\n"),
+   "Support for performing most operations on most types of file systems\n"
+   "will be removed in an upcoming release.\n"),
    program_name, op, program_name, program_name);
 }
 
