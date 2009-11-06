@@ -741,7 +741,6 @@ dasd_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 static PedAlignment*
 dasd_get_partition_alignment(const PedDisk *disk)
 {
-        DasdDiskSpecific* disk_specific = disk->disk_specific;
         LinuxSpecific *arch_specific = LINUX_SPECIFIC(disk->dev);
         PedSector sector_size =
                 arch_specific->real_sector_size / disk->dev->sector_size;
