@@ -2400,36 +2400,38 @@ err:
 static int
 _dm_add_partition (PedDisk* disk, PedPartition* part)
 {
-        struct stat     dev_stat;
         struct dm_task* task = NULL;
         int             rc;
         char*           vol_name = NULL;
-        char*           dev_name = NULL;
+        const char*     dev_name = NULL;
         char*           params = NULL;
+        LinuxSpecific*  arch_specific = LINUX_SPECIFIC (disk->dev);
 
         if (!_has_partitions(disk))
                 return 0;
 
-        dev_name = _device_get_part_path (disk->dev, part->num);
-        if (!dev_name)
-                return 0;
-
-        vol_name = strrchr (dev_name, '/');
-        if (vol_name && *vol_name && *(++vol_name))
-                vol_name = strdup (vol_name);
-        else
-                vol_name = strdup (dev_name);
-        if (!vol_name)
-                return 0;
-
-        if (!_device_stat (disk->dev, &dev_stat))
+        /* Get map name from devicemapper */
+        task = dm_task_create (DM_DEVICE_INFO);
+        if (!task)
                 goto err;
 
-        if (asprintf (&params, "%d:%d %lld", major (dev_stat.st_rdev),
-                      minor (dev_stat.st_rdev), part->geom.start) == -1)
+        if (!dm_task_set_major_minor (task, arch_specific->major,
+                                      arch_specific->minor, 0))
                 goto err;
 
-        if (!params)
+        rc = dm_task_run(task);
+        if (rc < 0)
+                goto err;
+
+        dev_name = dm_task_get_name (task);
+        dm_task_destroy (task);
+        task = NULL;
+
+        if (asprintf (&vol_name, "%sp%d", dev_name, part->num) == -1)
+                goto err;
+
+        if (asprintf (&params, "%d:%d %lld", arch_specific->major,
+                      arch_specific->minor, part->geom.start) == -1)
                 goto err;
 
         task = dm_task_create (DM_DEVICE_CREATE);
@@ -2439,7 +2441,7 @@ _dm_add_partition (PedDisk* disk, PedPartition* part)
         dm_task_set_name (task, vol_name);
         dm_task_add_target (task, 0, part->geom.length,
                 "linear", params);
-        rc = dm_task_run(task);
+        rc = dm_task_run (task);
         if (rc >= 0) {
                 //printf("0 %ld linear %s\n", part->geom.length, params);
                 dm_task_update_nodes();
