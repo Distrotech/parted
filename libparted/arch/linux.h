@@ -28,6 +28,8 @@ typedef	struct _LinuxSpecific	LinuxSpecific;
 
 struct _LinuxSpecific {
 	int	fd;
+	int	major;
+	int	minor;
 	char*	dmtype;         /**< device map target type */
 #if defined __s390__ || defined __s390x__
 	unsigned int real_sector_size;

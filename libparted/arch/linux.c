@@ -420,7 +420,8 @@ _dm_maptype (PedDevice *dev)
         if (!(dmt = dm_task_create(DM_DEVICE_TABLE)))
                 return r;
 
-        if (!dm_task_set_name(dmt, dev->path))
+        if (!dm_task_set_major_minor(dmt, arch_specific->major,
+                                     arch_specific->minor, 0))
                 goto bad;
 
         dm_task_no_open_count(dmt);
@@ -502,6 +503,7 @@ _device_probe_type (PedDevice* dev)
         struct stat             dev_stat;
         int                     dev_major;
         int                     dev_minor;
+        LinuxSpecific*          arch_specific = LINUX_SPECIFIC (dev);
 
         if (!_device_stat (dev, &dev_stat))
                 return 0;
@@ -511,8 +513,8 @@ _device_probe_type (PedDevice* dev)
                 return 1;
         }
 
-        dev_major = major (dev_stat.st_rdev);
-        dev_minor = minor (dev_stat.st_rdev);
+        arch_specific->major = dev_major = major (dev_stat.st_rdev);
+        arch_specific->minor = dev_minor = minor (dev_stat.st_rdev);
 
         if (SCSI_BLK_MAJOR (dev_major) && (dev_minor % 0x10 == 0)) {
                 dev->type = PED_DEVICE_SCSI;
