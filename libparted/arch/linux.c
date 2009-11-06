@@ -2340,22 +2340,20 @@ err:
 static int
 _dm_remove_parts (PedDevice* dev)
 {
-        struct stat             dev_stat;
         struct dm_task*         task = NULL;
         struct dm_info*         info = alloca(sizeof *info);
         struct dm_names*        names = NULL;
         unsigned int            next = 0;
         int                     rc;
-
-        if (!_device_stat (dev, &dev_stat))
-                goto err;
+        LinuxSpecific*          arch_specific = LINUX_SPECIFIC (dev);
 
         task = dm_task_create(DM_DEVICE_LIST);
         if (!task)
                 goto err;
 
-        dm_task_set_major (task, major (dev_stat.st_rdev));
-        dm_task_set_minor (task, minor (dev_stat.st_rdev));
+        if (!dm_task_set_major_minor (task, arch_specific->major,
+                                      arch_specific->minor, 0))
+                goto err;
 
         rc = dm_task_run(task);
         if (rc < 0)
