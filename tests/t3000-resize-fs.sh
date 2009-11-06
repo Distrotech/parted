@@ -1,4 +1,5 @@
 #!/bin/sh
+# exercise the resize sub-command; FAT and HFS only
 
 # Copyright (C) 2009 Free Software Foundation, Inc.
 
@@ -15,42 +16,59 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test_description='exercise the resize sub-command; FAT and HFS only'
+if test "$VERBOSE" = yes; then
+  set -x
+  parted --version
+fi
 
 : ${srcdir=.}
-. $srcdir/test-lib.sh
+. $srcdir/t-lib.sh
 
+require_root_
+require_scsi_debug_module_
 require_512_byte_sector_size_
-dev=$DEVICE_TO_ERASE
-sz=$DEVICE_TO_ERASE_SIZE
+
+cat <<EOF > exp-warning || framework_failure
+WARNING: you are attempting to use parted to operate on (resize) a file system.
+parted's file system manipulation code is not as robust as what you'll find in
+dedicated, file-system-specific packages like e2fsprogs.  We recommend
+you use parted only to manipulate partition tables, whenever possible.
+Support for performing most operations on most types of file systems
+will be removed in an upcoming release.
+EOF
+
 ss=$sector_size_
 
 start=63s
 default_end=546147s
     new_end=530144s
 
+# create memory-backed device
+scsi_debug_setup_ dev_size_mb=550 > dev-name ||
+  skip_test_ 'failed to create scsi_debug device'
+dev=$(cat dev-name)
+
+fail=0
+
+parted -s $dev mklabel gpt > out 2>&1 || fail=1
+# expect no output
+compare out /dev/null || fail=1
+
 # ensure that the disk is large enough
 dev_n_sectors=$(parted -s $dev u s p|sed -n '2s/.* \([0-9]*\)s$/\1/p')
 device_sectors_required=$(echo $default_end | sed 's/s$//')
-test_expect_success \
-  "whether $dev is large enough for this test" \
-  'test $device_sectors_required -le $dev_n_sectors'
+# Ensure that $dev is large enough for this test
+test $device_sectors_required -le $dev_n_sectors || fail=1
 
 for fs_type in hfs+ fat32; do
 
-  test_expect_success \
-      'create a partition table' \
-      'parted -s $dev mklabel gpt > out 2>&1'
-  test_expect_success 'expect no output' 'compare out /dev/null'
+  # create an empty $fs_type partition, cylinder aligned, size > 256 MB
+  parted -s $dev mkpart primary $fs_type $start $default_end > out 2>&1 || fail=1
+  # expect no output
+  compare out /dev/null || fail=1
 
-  test_expect_success \
-      "create an empty $fs_type partition, cylinder aligned, size > 256 MB" \
-      'parted -s $dev mkpart primary $fs_type $start $default_end > out 2>&1'
-  test_expect_success 'expect no output' 'compare out /dev/null'
-
-  test_expect_success \
-      'print partition table' \
-      'parted -m -s $dev u s p > out 2>&1'
+  # print partition table
+  parted -m -s $dev u s p > out 2>&1 || fail=1
 
   # FIXME: check expected output
 
@@ -58,11 +76,15 @@ for fs_type in hfs+ fat32; do
   # device, ${dev}1 (i.e., /dev/sde1) is not created immediately, and
   # without some delay, this mount command would fail.  Using a flash card
   # as $dev, the loop below typically iterates 7-20 times.
-  test_expect_success \
-      'wait for new partition device to appear' \
-      'i=0; while :; do
-	      test -e "${dev}1" && break; test $i = 90 && break;
-	      i=$(expr $i + 1); done; test $i != 90'
+
+  # wait for new partition device to appear
+  i=0
+  while :; do
+    test -e "${dev}1" && break; test $i = 90 && break;
+    i=$(expr $i + 1)
+    sleep .01 2>/dev/null || sleep 1
+  done
+  test $i = 90 && fail=1
 
   case $fs_type in
     fat32) mkfs_cmd='mkfs.vfat -F 32';;
@@ -70,26 +92,29 @@ for fs_type in hfs+ fat32; do
     *) error "internal error: unhandled fs type: $fs_type";;
   esac
 
-  test_expect_success \
-      'create the file system' \
-      '$mkfs_cmd ${dev}1'
+  # create the file system
+  $mkfs_cmd ${dev}1 || fail=1
 
   # NOTE: shrinking is the only type of resizing that works.
-  test_expect_success \
-      'resize that file system to be one cylinder (8MiB) smaller' \
-      'parted -s $dev resize 1 $start $new_end > out 2>&1'
-  test_expect_success 'expect no output' 'compare out /dev/null'
+  # resize that file system to be one cylinder (8MiB) smaller
+  parted -s $dev resize 1 $start $new_end > out 2> err || fail=1
+  # expect no output
+  compare out /dev/null || fail=1
+  compare err exp-warning || fail=1
 
-  test_expect_success \
-      'print partition table' \
-      'parted -m -s $dev u s p > out 2>&1'
+  # print partition table
+  parted -m -s $dev u s p > out 2>&1 || fail=1
 
-  test_expect_success \
-      'compare against expected output' \
-      'sed -n 3p out > k && mv k out &&
-       printf "1:$start:$new_end:530082s:$fs_type:primary:$ms;\n" > exp &&
-       compare out exp'
+  # compare against expected output
+  sed -n 3p out > k && mv k out || fail=1
+  printf "1:$start:$new_end:530082s:$fs_type:primary:$ms;\n" > exp || fail=1
+  compare out exp || fail=1
+
+  # Create a clean partition table for the next iteration.
+  parted -s $dev mklabel gpt > out 2>&1 || fail=1
+  # expect no output
+  compare out /dev/null || fail=1
 
 done
 
-test_done
+Exit $fail

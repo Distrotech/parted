@@ -1,4 +1,5 @@
 #!/bin/sh
+# do not infloop in loop_clobber
 
 # Copyright (C) 2009 Free Software Foundation, Inc.
 
@@ -15,25 +16,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test_description='do not infloop in loop_clobber'
+if test "$VERBOSE" = yes; then
+  set -x
+  parted --version
+fi
 
 : ${srcdir=.}
-. $srcdir/test-lib.sh
+. $srcdir/t-lib.sh
 
 N=1M
 dev=loop-file
-test_expect_success \
-    'create a file large enough to hold a partition table' \
-    'dd if=/dev/null of=$dev bs=1 seek=$N 2> /dev/null'
+fail=0
+dd if=/dev/null of=$dev bs=1 seek=$N || fail=1
 
-test_expect_success \
-    'create a swap partition in the entire device' \
-    'mkswap $dev'
+mkswap $dev || fail=1
 
 # There was a small interval (no release) during which this would infloop.
-test_expect_success \
-    'create a dos partition table' \
-    'parted -s $dev mklabel msdos > out 2>&1'
-test_expect_success 'expect no output' 'compare out /dev/null'
+# create a dos partition table
+parted -s $dev mklabel msdos > out 2>&1 || fail=1
 
-test_done
+compare out /dev/null || fail=1
+
+Exit $fail

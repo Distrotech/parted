@@ -91,4 +91,10 @@ scsi_debug_setup_()
   return 0
 }
 
+require_512_byte_sector_size_()
+{
+  test $sector_size_ = 512 \
+      || skip_test_ FS test with sector size != 512
+}
+
 . $srcdir/t-lvm.sh

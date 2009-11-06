@@ -16,35 +16,31 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test_description='--script does no readline initialization'
+if test "$VERBOSE" = yes; then
+  set -x
+  parted --version
+fi
 
 : ${srcdir=.}
-. $srcdir/test-lib.sh
+. $srcdir/t-lib.sh
 
 ss=$sector_size_
 n_sectors=5000
 dev=loop-file
 
-test_expect_success \
-    'create the test file' \
-    'dd if=/dev/null of=$dev bs=$ss seek=$n_sectors'
+fail=0
+dd if=/dev/null of=$dev bs=$ss seek=$n_sectors || fail=1
 
-test_expect_success \
-    'run parted -s FILE mklabel msdos' \
-    'parted -s $dev mklabel msdos > out 2>&1'
-test_expect_success 'expect no output' 'compare out /dev/null'
+parted -s $dev mklabel msdos > out 2>&1 || fail=1
+# expect no output
+compare out /dev/null || fail=1
 
-test_expect_success \
-    'print partition table in --script mode' \
-    'TERM=xterm parted -m -s $dev u s p > out 2>&1'
+# print partition table in --script mode
+TERM=xterm parted -m -s $dev u s p > out 2>&1 || fail=1
 
-ok=0
-sed "s,.*/$dev:,$dev:," out > k && mv k out &&
-printf "BYT;\n$dev:${n_sectors}s:file:$ss:$ss:msdos:;\n" > exp &&
-  ok=1
+sed "s,.*/$dev:,$dev:," out > k && mv k out || fail=1
+printf "BYT;\n$dev:${n_sectors}s:file:$ss:$ss:msdos:;\n" > exp || fail=1
 
-test_expect_success \
-    'match against expected output' \
-    'test $ok = 1 && compare out exp'
+compare out exp || fail=1
 
-test_done
+Exit $fail
