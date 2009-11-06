@@ -15,6 +15,7 @@ TESTS = \
   t2100-mkswap.sh \
   t2200-dos-label-recog.sh \
   t2300-dos-label-extended-bootcode.sh \
+  t3000-resize-fs.sh \
   t4000-sun-raid-type.sh \
   t4100-msdos-partition-limits.sh \
   t4100-dvh-partition-limits.sh \
