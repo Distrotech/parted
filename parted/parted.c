@@ -1616,7 +1616,7 @@ static int
 do_quit (PedDevice** dev)
 {
         _done (*dev);
-        exit (0);
+        exit (EXIT_SUCCESS);
 }
 
 static PedPartitionType

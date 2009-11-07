@@ -300,7 +300,7 @@ fat_table_get (const FatTable* ft, FatCluster cluster)
 				     _("fat_table_get: cluster %ld outside "
 				       "file system"),
 				     (long) cluster);
-		exit (1);	/* FIXME */
+		exit (EXIT_FAILURE);	/* FIXME */
 	}
 
 	switch (ft->fat_type) {

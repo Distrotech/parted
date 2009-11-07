@@ -73,10 +73,10 @@ int main ()
 	const char	*version;
 
 	if ( !(version = ped_get_version ()) )
-		exit(1);
+		exit(EXIT_FAILURE);
 	if (sscanf(version, "%d.%d.%d", &major, &minor, &micro) != 3) {
 		printf("%s, bad version string\n", version);
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 
 	if ((major > $parted_config_major_version) ||

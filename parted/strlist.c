@@ -128,7 +128,7 @@ gettext_to_wchar (const char* str)
 
 error:
 	printf ("Error during translation: %s\n", strerror (errno));
-	exit (1);
+	exit (EXIT_FAILURE);
 }
 
 #else /* ENABLE_NLS */
@@ -177,7 +177,7 @@ wchar_to_str (const wchar_t* str, size_t count)
 
 error:
 	printf ("Error during translation: %s\n", strerror (errno));
-	exit (1);
+	exit (EXIT_FAILURE);
 }
 
 #else /* ENABLE_NLS */

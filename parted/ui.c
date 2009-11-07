@@ -314,7 +314,7 @@ reset_env (int quit)
         if (in_readline) {
                 putchar ('\n');
                 if (quit)
-                        exit (0);
+                        exit (EXIT_SUCCESS);
 
                 siglongjmp (readline_state.jmp_state, 1);
         }
@@ -1471,7 +1471,7 @@ help_msg ()
         fputs (_("COMMANDs:"), stdout);
         putchar ('\n');
         print_commands_help ();
-        exit (0);
+        exit (EXIT_SUCCESS);
 }
 
 void
@@ -1553,7 +1553,7 @@ non_interactive_mode (PedDevice** dev, Command* cmd_list[],
                 if (!(cmd->non_interactive)) {
                         fputs(_("This command does not make sense in "
                                 "non-interactive mode.\n"), stdout);
-                        exit(1);
+                        exit(EXIT_FAILURE);
                         goto error;
                 }
 

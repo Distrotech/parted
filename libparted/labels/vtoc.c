@@ -732,7 +732,7 @@ vtoc_update_format5_label_add (format5_label_t *f5, int verbose, int cyl,
 		{
 			puts ("BUG: overlapping free space extents "
 			      "in FMT5 DSCB!\nexiting...");
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
 
 		if ((ext->t + ext->fc + ext->ft) == 0x0000) {
@@ -749,7 +749,7 @@ vtoc_update_format5_label_add (format5_label_t *f5, int verbose, int cyl,
 	if (tmp == NULL) {
 		/* BUG: no free extent found */
 		puts ("BUG: no free FMT5 DSCB extent found!\nexiting...");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 
 	for (i=0; i<26; i++) {
@@ -895,7 +895,7 @@ vtoc_update_format5_label_del (format5_label_t *f5, int verbose, int cyl,
 			puts ("BUG: corresponding free space extent "
 			      "doesn't match free space currently shown "
 			      "in FMT5 DSCB!\nexiting...");
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
 
 		if ((a > ext->t) && (a < ext->t + ext->fc*trk + ext->ft)
@@ -905,7 +905,7 @@ vtoc_update_format5_label_del (format5_label_t *f5, int verbose, int cyl,
 			      "deleting doesn't match free space "
 			      "currently shown in FMT5 DSCB!\n"
 			      "exiting...");
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
 	}
 
@@ -915,7 +915,7 @@ vtoc_update_format5_label_del (format5_label_t *f5, int verbose, int cyl,
 	puts ("BUG: specified free space extent for "
 	      "deleting not found in FMT5 DSCB!\n"
 	      "exiting...");
-	exit(1);
+	exit(EXIT_FAILURE);
 }
 
 /*
@@ -976,7 +976,7 @@ vtoc_update_format7_label_add (format7_label_t *f7, int verbose,
 		{
 			puts ("BUG: overlapping free space extents "
 			      "in FMT7 DSCB!\nexiting...");
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
 
 		if ((ext->a + ext->b) == 0x00000000) {
@@ -994,7 +994,7 @@ vtoc_update_format7_label_add (format7_label_t *f7, int verbose,
 	if (tmp == NULL) {
 		/* BUG: no free extent found */
 		puts ("BUG: no free FMT7 DSCB extent found!\nexiting...");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 
 	for (i=0; i<16; i++) {
@@ -1102,7 +1102,7 @@ vtoc_update_format7_label_del (format7_label_t *f7, int verbose,
                               "doesn't match free space currently shown in "
                               "FMT7 DSCB!\nexiting...");
 			printf ("%d %d %d %d\n", a, b, ext->a, ext->b);
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
 	}
 
@@ -1112,7 +1112,7 @@ vtoc_update_format7_label_del (format7_label_t *f7, int verbose,
 	puts ("BUG: specified free space extent for "
 	      "deleting not found in FMT7 DSCB!\n"
 	      "exiting...");
-	exit(1);
+	exit(EXIT_FAILURE);
 }
 
 void
