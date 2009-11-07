@@ -283,7 +283,14 @@ _read_fd (int fd, char **buf)
                         break;
                 filesize += s;
                 size += s;
-                *buf = realloc (*buf, size);
+                char *new_buf = realloc (*buf, size);
+                if (new_buf == NULL) {
+                        int saved_errno = errno;
+                        free (*buf);
+                        errno = saved_errno;
+                        return -1;
+                }
+                *buf = new_buf;
         } while (1);
 
         if (filesize == 0 && s < 0) {
@@ -291,8 +298,14 @@ _read_fd (int fd, char **buf)
                 *buf = NULL;
                 return -1;
         } else {
-                /* there is always some excess memory left unused */
-                *buf = realloc (*buf, filesize+1);
+                char *new_buf = realloc (*buf, filesize + 1);
+                if (new_buf == NULL) {
+                        int saved_errno = errno;
+                        free (*buf);
+                        errno = saved_errno;
+                        return -1;
+                }
+                *buf = new_buf;
                 (*buf)[filesize] = '\0';
         }
 
