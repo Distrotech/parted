@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1999 - 2001, 2005, 2007-2008 Free Software Foundation, Inc.
+    Copyright (C) 1999 - 2001, 2005, 2007-2009 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -42,6 +42,7 @@
 
 #include <limits.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <errno.h>
 
 #include "architecture.h"
@@ -49,37 +50,6 @@
 static PedDevice*	devices; /* legal advice says: initialized to NULL,
 				    under section 6.7.8 part 10
 				    of ISO/EIC 9899:1999 */
-
-#ifndef HAVE_CANONICALIZE_FILE_NAME
-char *
-canonicalize_file_name (const char *name)
-{
-	char *	buf;
-	int	size;
-	char *	result;
-
-#ifdef PATH_MAX
-	size = PATH_MAX;
-#else
-	/* Bigger is better; realpath has no way todo bounds checking.  */
-	size = 4096;
-#endif
-
-	/* Just in case realpath does not NULL terminate the string
-	 * or it just fits in SIZE without a NULL terminator.  */
-	buf = calloc (size + 1, sizeof(char));
-	if (! buf) {
-		errno = ENOMEM;
-		return NULL;
-	}
-
-	result = realpath (name, buf);
-	if (! result)
-		free (buf);
-
-	return result;
-}
-#endif /* !HAVE_CANONICALIZE_FILE_NAME */
 
 static void
 _device_register (PedDevice* dev)
@@ -558,4 +528,3 @@ ped_device_get_optimum_alignment(const PedDevice *dev)
 }
 
 /** @} */
-
