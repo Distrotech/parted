@@ -22,6 +22,9 @@
 
 #include <parted/parted.h>
 #include <parted/debug.h>
+#if defined __s390__ || defined __s390x__
+#include <parted/fdasd.h>
+#endif
 
 #include <ctype.h>
 #include <errno.h>
@@ -1103,7 +1106,7 @@ init_dasd (PedDevice* dev, const char* model_name)
 {
         struct stat             dev_stat;
         struct hd_geometry      geo;
-        char *errstr = 0;
+        dasd_information_t dasd_info;
 
         if (!_device_stat (dev, &dev_stat))
                 goto error;
@@ -1139,14 +1142,17 @@ init_dasd (PedDevice* dev, const char* model_name)
                 dev->hw_geom = dev->bios_geom;
         }
 
+        if (!ioctl(arch_specific->fd, BIODASDINFO, &dasd_info)) {
+                arch_specific->devno = dasd_info.devno;
+        } else {
+                arch_specific->devno = arch_specific->major * 256 +
+                                       arch_specific->minor;
+        }
+
         dev->model = strdup (model_name);
 
         ped_device_close (dev);
         return 1;
-
-        ped_exception_throw ( PED_EXCEPTION_ERROR,
-                              PED_EXCEPTION_IGNORE_CANCEL,
-                              errstr );
 
 error_close_dev:
         ped_device_close (dev);

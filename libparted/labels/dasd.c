@@ -70,6 +70,7 @@ typedef struct {
 
 typedef struct {
 	unsigned int format_type;
+	volume_label_t vlabel;
 } DasdDiskSpecific;
 
 static int dasd_probe (const PedDevice *dev);
@@ -146,6 +147,7 @@ dasd_alloc (const PedDevice* dev)
 	PedDisk* disk;
 	LinuxSpecific* arch_specific;
 	DasdDiskSpecific *disk_specific;
+	char volser[7];
 
 	PED_ASSERT (dev != NULL, return NULL);
 
@@ -162,6 +164,15 @@ dasd_alloc (const PedDevice* dev)
 
 	/* CDL format, newer */
 	disk_specific->format_type = 2;
+
+	/* Setup volume label (for fresh disks) */
+	snprintf(volser, sizeof(volser), "0X%04X", arch_specific->devno);
+	vtoc_volume_label_init(&disk_specific->vlabel);
+	vtoc_volume_label_set_key(&disk_specific->vlabel, "VOL1");
+	vtoc_volume_label_set_label(&disk_specific->vlabel, "VOL1");
+	vtoc_volume_label_set_volser(&disk_specific->vlabel, volser);
+	vtoc_set_cchhb(&disk_specific->vlabel.vtoc,
+		       VTOC_START_CC, VTOC_START_HH, 0x01);
 
 	return disk;
 }
@@ -295,6 +306,9 @@ dasd_read (PedDisk* disk)
 	/* check dasd for labels and vtoc */
 	if (fdasd_check_volume(&anchor, arch_specific->fd))
 		goto error_close_dev;
+
+	/* Save volume label (read by fdasd_check_volume) for writing */
+	memcpy(&disk_specific->vlabel, anchor.vlabel, sizeof(volume_label_t));
 
 	if ((anchor.geo.cylinders * anchor.geo.heads) > BIG_DISK_SIZE)
 		anchor.big_disk++;
@@ -556,10 +570,8 @@ dasd_write (const PedDisk* disk)
 	/* initialize the anchor */
 	fdasd_initialize_anchor(&anchor);
 	fdasd_get_geometry(&anchor, arch_specific->fd);
-
-	/* check dasd for labels and vtoc */
-	if (fdasd_check_volume(&anchor, arch_specific->fd))
-		goto error;
+	memcpy(anchor.vlabel, &disk_specific->vlabel, sizeof(volume_label_t));
+	anchor.vlabel_changed++;
 
 	if ((anchor.geo.cylinders * anchor.geo.heads) > BIG_DISK_SIZE)
 		anchor.big_disk++;

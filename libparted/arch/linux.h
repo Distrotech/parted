@@ -33,6 +33,7 @@ struct _LinuxSpecific {
 	char*	dmtype;         /**< device map target type */
 #if defined __s390__ || defined __s390x__
 	unsigned int real_sector_size;
+	unsigned int devno;
 #endif
 #if USE_BLKID
         blkid_probe probe;
