@@ -207,10 +207,8 @@ struct __attribute__ ((packed)) format7_label {
 	cchhb_t DS7PTRDS;       /* pointer to next FMT7 DSCB               */
 };
 
-char * vtoc_ebcdic_enc (char source[LINE_LENGTH], char target[LINE_LENGTH],
-                        int l);
-char * vtoc_ebcdic_dec (char source[LINE_LENGTH], char target[LINE_LENGTH],
-                        int l);
+char *vtoc_ebcdic_enc (char const *source, char *target, int l);
+char *vtoc_ebcdic_dec (char const *source, char *target, int l);
 void vtoc_set_extent (extent_t * ext, u_int8_t typeind, u_int8_t seqno,
                       cchh_t * lower, cchh_t * upper);
 void vtoc_set_cchh (cchh_t * addr, u_int16_t cc, u_int16_t hh);

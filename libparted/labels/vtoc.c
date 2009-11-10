@@ -153,7 +153,7 @@ enum failure {
 static char buffer[85];
 
 static void
-vtoc_error (enum failure why, char *s1, char *s2)
+vtoc_error (enum failure why, char const *s1, char const *s2)
 {
 	PDEBUG
 	char error[8192];
@@ -183,9 +183,7 @@ vtoc_error (enum failure why, char *s1, char *s2)
 }
 
 char *
-vtoc_ebcdic_enc (char source[LINE_LENGTH],
-                 char target[LINE_LENGTH],
-                 int l)
+vtoc_ebcdic_enc (char const *source, char *target, int l)
 {
 	PDEBUG
 	int i;
@@ -197,9 +195,7 @@ vtoc_ebcdic_enc (char source[LINE_LENGTH],
 }
 
 char *
-vtoc_ebcdic_dec (char source[LINE_LENGTH],
-                 char target[LINE_LENGTH],
-                 int l)
+vtoc_ebcdic_dec (char const *source, char *target, int l)
 {
 	PDEBUG
 	int i;

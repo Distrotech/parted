@@ -87,7 +87,7 @@ fdasd_cleanup (fdasd_anchor_t *anchor)
 }
 
 static void
-fdasd_error (fdasd_anchor_t *anc, enum fdasd_failure why, char * str)
+fdasd_error (fdasd_anchor_t *anc, enum fdasd_failure why, char const *str)
 {
 	PDEBUG
 	char error[2*LINE_LENGTH], *message = error;
