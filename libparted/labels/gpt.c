@@ -642,7 +642,7 @@ check_PE_array_CRC (PedDisk const *disk,
     return 1;
 
   uint32_t ptes_crc = efi_crc32 (ptes, ptes_bytes);
-  *valid = (ptes_crc == gpt->PartitionEntryArrayCRC32);
+  *valid = (ptes_crc == PED_LE32_TO_CPU (gpt->PartitionEntryArrayCRC32));
   free (ptes);
   return 0;
 }
@@ -1032,7 +1032,7 @@ gpt_read (PedDisk *disk)
     goto error_free_gpt;
 
   uint32_t ptes_crc = efi_crc32 (ptes, ptes_bytes);
-  if (ptes_crc != gpt->PartitionEntryArrayCRC32)
+  if (ptes_crc != PED_LE32_TO_CPU (gpt->PartitionEntryArrayCRC32))
     {
       ped_exception_throw
         (PED_EXCEPTION_ERROR,
