@@ -2,6 +2,18 @@ GNU parted NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Improvements
+
+  Add functions to libparted to get minimal and optimal alignment
+  information from devices:
+  ped_device_get_minimal_aligned_constraint()
+  ped_device_get_optimal_aligned_constraint()
+  ped_device_get_minimum_alignment()
+  ped_device_get_optimum_alignment()
+
+  Add ped_disk_get_partition_alignment() function to libparted to get
+  information about alignment enforced by the disk type.
+
 ** Bug fixes
 
   improved >512-byte sector support: for example, printing a table on a
@@ -12,6 +24,12 @@ GNU parted NEWS                                    -*- outline -*-
   were not checked, and we would mistakenly use the AlternateLBA member of a
   known-corrupt primary table.
 
+  improved dasd disk support, in previous versions calling
+  ped_disk_new_fresh() or ped_disk_duplicate() on a dasd type PedDisk
+  would fail.  This is fixed now.
+
+  handle device nodes created by lvm build with udev synchronisation enabled
+  properly.
 
 * Noteworthy changes in release 2.0 (2009-10-06) [beta]
 
