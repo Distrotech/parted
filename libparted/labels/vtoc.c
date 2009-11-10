@@ -293,7 +293,7 @@ vtoc_read_volume_label (int f, unsigned long vlabel_start,
  */
 int
 vtoc_write_volume_label (int f, unsigned long vlabel_start,
-                         volume_label_t *vlabel)
+                         volume_label_t const *vlabel)
 {
 	PDEBUG
 	int rc;
@@ -316,7 +316,7 @@ vtoc_write_volume_label (int f, unsigned long vlabel_start,
  * as volume serial to the volume label
  */
 void
-vtoc_volume_label_set_volser (volume_label_t *vlabel, char *volser)
+vtoc_volume_label_set_volser (volume_label_t *vlabel, char const *volser)
 {
 	PDEBUG
 	int j, i = strlen(volser);
@@ -358,7 +358,7 @@ vtoc_volume_label_get_volser (volume_label_t *vlabel, char *volser)
  * it has been translated to EBCDIC
  */
 void
-vtoc_volume_label_set_key (volume_label_t *vlabel, char *key)
+vtoc_volume_label_set_key (volume_label_t *vlabel, char const *key)
 {
 	PDEBUG
 	char s[4];
@@ -374,7 +374,7 @@ vtoc_volume_label_set_key (volume_label_t *vlabel, char *key)
  * after it has been translated to EBCDIC
  */
 void
-vtoc_volume_label_set_label (volume_label_t *vlabel, char *lbl)
+vtoc_volume_label_set_label (volume_label_t *vlabel, char const *lbl)
 {
 	PDEBUG
 	char s[4];
@@ -447,8 +447,11 @@ vtoc_read_label (int f, unsigned long position, format1_label_t *f1,
  * to the specified position
  */
 void
-vtoc_write_label (int f, unsigned long position, format1_label_t *f1,
-                  format4_label_t *f4, format5_label_t *f5, format7_label_t *f7)
+vtoc_write_label (int f, unsigned long position,
+		  format1_label_t const *f1,
+                  format4_label_t const *f4,
+		  format5_label_t const *f5,
+		  format7_label_t const *f7)
 {
 	PDEBUG
 	int t;

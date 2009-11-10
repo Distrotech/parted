@@ -209,27 +209,27 @@ struct __attribute__ ((packed)) format7_label {
 
 char *vtoc_ebcdic_enc (char const *source, char *target, int l);
 char *vtoc_ebcdic_dec (char const *source, char *target, int l);
-void vtoc_set_extent (extent_t * ext, u_int8_t typeind, u_int8_t seqno,
-                      cchh_t * lower, cchh_t * upper);
-void vtoc_set_cchh (cchh_t * addr, u_int16_t cc, u_int16_t hh);
-void vtoc_set_cchhb (cchhb_t * addr, u_int16_t cc, u_int16_t hh, u_int8_t b);
-void vtoc_set_date (labeldate_t * d, u_int8_t year, u_int16_t day);
+void vtoc_set_extent (extent_t *ext, u_int8_t typeind, u_int8_t seqno,
+                      cchh_t *lower, cchh_t *upper);
+void vtoc_set_cchh (cchh_t *addr, u_int16_t cc, u_int16_t hh);
+void vtoc_set_cchhb (cchhb_t *addr, u_int16_t cc, u_int16_t hh, u_int8_t b);
+void vtoc_set_date (labeldate_t *d, u_int8_t year, u_int16_t day);
 
 void vtoc_volume_label_init (volume_label_t *vlabel);
 
 int vtoc_read_volume_label (int fd, unsigned long vlabel_start,
-                            volume_label_t * vlabel);
+                            volume_label_t *vlabel);
 
 int vtoc_write_volume_label (int fd, unsigned long vlabel_start,
-                             volume_label_t *vlabel);
+                             volume_label_t const *vlabel);
 
-void vtoc_volume_label_set_volser (volume_label_t *vlabel, char *volser);
+void vtoc_volume_label_set_volser (volume_label_t *vlabel, char const *volser);
 
 char *vtoc_volume_label_get_volser (volume_label_t *vlabel, char *volser);
 
-void vtoc_volume_label_set_key (volume_label_t *vlabel, char *key);
+void vtoc_volume_label_set_key (volume_label_t *vlabel, char const *key);
 
-void vtoc_volume_label_set_label (volume_label_t *vlabel, char *lbl);
+void vtoc_volume_label_set_label (volume_label_t *vlabel, char const *lbl);
 
 char *vtoc_volume_label_get_label (volume_label_t *vlabel, char *lbl);
 
@@ -237,9 +237,11 @@ void vtoc_read_label (int fd, unsigned long position, format1_label_t *f1,
                       format4_label_t *f4, format5_label_t *f5,
                       format7_label_t *f7);
 
-void vtoc_write_label (int fd, unsigned long position, format1_label_t *f1,
-                       format4_label_t *f4, format5_label_t *f5,
-                       format7_label_t *f7);
+void vtoc_write_label (int fd, unsigned long position,
+		       format1_label_t const *f1,
+                       format4_label_t const *f4,
+		       format5_label_t const *f5,
+                       format7_label_t const *f7);
 
 void vtoc_init_format1_label (char *volid, unsigned int blksize,
                               extent_t *part_extent, format1_label_t *f1);
