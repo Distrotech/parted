@@ -258,8 +258,8 @@ vtoc_volume_label_init (volume_label_t *vlabel)
 {
 	PDEBUG
 	sprintf(buffer, "%84s", " ");
-	vtoc_ebcdic_enc(buffer, buffer, 84);
-	strncpy(vlabel->volkey, buffer, 84);
+	vtoc_ebcdic_enc(buffer, buffer, sizeof *vlabel);
+	memcpy(vlabel, buffer, sizeof *vlabel);
 }
 
 /*
