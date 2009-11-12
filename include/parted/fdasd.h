@@ -217,7 +217,7 @@ enum fdasd_failure {
 
 void fdasd_cleanup (fdasd_anchor_t *anchor);
 void fdasd_initialize_anchor (fdasd_anchor_t * anc);
-void fdasd_get_geometry (fdasd_anchor_t *anc, int fd);
+void fdasd_get_geometry (const PedDevice *dev, fdasd_anchor_t *anc, int fd);
 void fdasd_check_api_version (fdasd_anchor_t *anc, int fd);
 int fdasd_check_volume (fdasd_anchor_t *anc, int fd);
 int fdasd_write_labels (fdasd_anchor_t *anc, int fd);

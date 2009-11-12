@@ -230,7 +230,9 @@ dasd_probe (const PedDevice *dev)
 
 	PED_ASSERT(dev != NULL, return 0);
 
-	if (!(dev->type == PED_DEVICE_DASD || dev->type == PED_DEVICE_VIODASD))
+	if (!(dev->type == PED_DEVICE_DASD
+              || dev->type == PED_DEVICE_VIODASD
+              || dev->type == PED_DEVICE_FILE))
 		return 0;
 
 	arch_specific = LINUX_SPECIFIC(dev);
@@ -238,7 +240,7 @@ dasd_probe (const PedDevice *dev)
 	/* add partition test here */
 	fdasd_initialize_anchor(&anchor);
 
-	fdasd_get_geometry(&anchor, arch_specific->fd);
+	fdasd_get_geometry(dev, &anchor, arch_specific->fd);
 
 	fdasd_check_api_version(&anchor, arch_specific->fd);
 
@@ -268,7 +270,7 @@ dasd_clobber (PedDevice* dev)
 	arch_specific = LINUX_SPECIFIC(dev);
 
 	fdasd_initialize_anchor(&anchor);
-	fdasd_get_geometry(&anchor, arch_specific->fd);
+	fdasd_get_geometry(dev, &anchor, arch_specific->fd);
 
 	fdasd_recreate_vtoc(&anchor);
 	fdasd_write_labels(&anchor, arch_specific->fd);
@@ -309,7 +311,7 @@ dasd_read (PedDisk* disk)
 
 	fdasd_initialize_anchor(&anchor);
 
-	fdasd_get_geometry(&anchor, arch_specific->fd);
+	fdasd_get_geometry(disk->dev, &anchor, arch_specific->fd);
 
 	/* check dasd for labels and vtoc */
 	if (fdasd_check_volume(&anchor, arch_specific->fd))
@@ -577,7 +579,7 @@ dasd_write (const PedDisk* disk)
 
 	/* initialize the anchor */
 	fdasd_initialize_anchor(&anchor);
-	fdasd_get_geometry(&anchor, arch_specific->fd);
+	fdasd_get_geometry(disk->dev, &anchor, arch_specific->fd);
 	memcpy(anchor.vlabel, &disk_specific->vlabel, sizeof(volume_label_t));
 	anchor.vlabel_changed++;
 
@@ -905,11 +907,14 @@ dasd_alloc_metadata (PedDisk* disk)
 	/* If formated in LDL, the real partition starts at sector 24. */
 	if (disk_specific->format_type == 1)
 		vtoc_end = 23;
-	else
+	else {
+                if (disk->dev->type == PED_DEVICE_FILE)
+                        arch_specific->real_sector_size = disk->dev->sector_size;
         /* Mark the start of the disk as metadata. */
 		vtoc_end = (FIRST_USABLE_TRK * (long long) disk->dev->hw_geom.sectors
 				   * (long long) arch_specific->real_sector_size
 				   / (long long) disk->dev->sector_size) - 1;
+        }
 
 	new_part = ped_partition_new (disk,PED_PARTITION_METADATA,NULL,0,vtoc_end);
 	if (!new_part)

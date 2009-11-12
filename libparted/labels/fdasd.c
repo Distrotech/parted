@@ -19,6 +19,7 @@
 #include <config.h>
 #include <arch/linux.h>
 #include <parted/vtoc.h>
+#include <parted/device.h>
 #include <parted/fdasd.h>
 
 #include <parted/parted.h>
@@ -753,15 +754,21 @@ fdasd_check_api_version (fdasd_anchor_t *anc, int f)
 	int api;
 	char s[LINE_LENGTH];
 
-	if (ioctl(f, DASDAPIVER, &api) != 0)
-		fdasd_error(anc, unable_to_ioctl,
-			    _("Could not retrieve API version."));
+        struct stat st;
+        if (fstat (f, &st) == 0 && S_ISREG (st.st_mode)) {
+		/* skip these tests when F is a regular file.  */
+	}
+	else {
+		if (ioctl(f, DASDAPIVER, &api) != 0)
+			fdasd_error(anc, unable_to_ioctl,
+				    _("Could not retrieve API version."));
 
-	if (api != DASD_MIN_API_VERSION) {
-		sprintf(s, _("The current API version '%d' doesn't " \
-				"match dasd driver API version " \
-				"'%d'!"), api, DASD_MIN_API_VERSION);
-		fdasd_error(anc, api_version_mismatch, s);
+		if (api != DASD_MIN_API_VERSION) {
+			sprintf(s, _("The current API version '%d' doesn't " \
+					"match dasd driver API version " \
+					"'%d'!"), api, DASD_MIN_API_VERSION);
+			fdasd_error(anc, api_version_mismatch, s);
+		}
 	}
 }
 
@@ -769,24 +776,42 @@ fdasd_check_api_version (fdasd_anchor_t *anc, int f)
  * reads dasd geometry data
  */
 void
-fdasd_get_geometry (fdasd_anchor_t *anc, int f)
+fdasd_get_geometry (const PedDevice *dev, fdasd_anchor_t *anc, int f)
 {
 	PDEBUG
 	int blksize = 0;
 	dasd_information_t dasd_info;
 
-	if (ioctl(f, HDIO_GETGEO, &anc->geo) != 0)
-		fdasd_error(anc, unable_to_ioctl,
+	/* We can't get geometry from a regular file,
+	   so simulate something usable, for the sake of testing.  */
+	struct stat st;
+	if (fstat (f, &st) == 0 && S_ISREG (st.st_mode)) {
+	    PedSector n_sectors = st.st_size / dev->sector_size;
+	    anc->geo.heads = 15;
+	    anc->geo.sectors = 12;
+	    anc->geo.cylinders
+	      = (n_sectors / (anc->geo.heads * anc->geo.sectors
+			      * (dev->sector_size / dev->phys_sector_size)));
+	    anc->geo.start = 0;
+	    blksize = 4096;
+	    memcpy (dasd_info.type, "ECKD", 4);
+	    dasd_info.dev_type = 13200;
+	    dasd_info.label_block = 2;
+	    dasd_info.devno = 513;
+	} else {
+		if (ioctl(f, HDIO_GETGEO, &anc->geo) != 0)
+			fdasd_error(anc, unable_to_ioctl,
 			    _("Could not retrieve disk geometry information."));
 
-	if (ioctl(f, BLKSSZGET, &blksize) != 0)
-		fdasd_error(anc, unable_to_ioctl,
+		if (ioctl(f, BLKSSZGET, &blksize) != 0)
+			fdasd_error(anc, unable_to_ioctl,
 			    _("Could not retrieve blocksize information."));
 
-	/* get disk type */
-	if (ioctl(f, BIODASDINFO, &dasd_info) != 0)
-		fdasd_error(anc, unable_to_ioctl,
-			    _("Could not retrieve disk information."));
+		/* get disk type */
+		if (ioctl(f, BIODASDINFO, &dasd_info) != 0)
+			fdasd_error(anc, unable_to_ioctl,
+				    _("Could not retrieve disk information."));
+	}
 
 	if (strncmp(dasd_info.type, "ECKD", 4) != 0)
 		fdasd_error(anc, wrong_disk_type,
