@@ -490,53 +490,16 @@ gpt_probe (const PedDevice *dev)
 }
 
 #ifndef DISCOVER_ONLY
-/* writes zeros to the PMBR and the primary and alternate GPTHs and PTEs */
+/* writes zeros to the PMBR and the primary GPTH, and to the final sector */
 static int
 gpt_clobber (PedDevice *dev)
 {
-  uint8_t *pth_raw = ped_malloc (pth_get_size (dev));
-  GuidPartitionTableHeader_t *gpt;
-
   PED_ASSERT (dev != NULL, return 0);
 
-  /*
-   * TO DISCUSS: check whether checksum is correct?
-   * If not, we might get a wrong AlternateLBA field and destroy
-   * one sector of random data.
-   */
-  if (!ped_device_read (dev, pth_raw,
-                        GPT_PRIMARY_HEADER_LBA, GPT_HEADER_SECTORS))
-    {
-      free (pth_raw);
-      return 0;
-    }
-
-  gpt = pth_new_from_raw (dev, pth_raw);
-  free (pth_raw);
-
-  if (!ptt_clear_sectors (dev, GPT_PMBR_LBA, GPT_PMBR_SECTORS))
-    goto error_free_with_gpt;
-  if (!ptt_clear_sectors (dev, GPT_PRIMARY_HEADER_LBA, GPT_HEADER_SECTORS))
-    goto error_free_with_gpt;
-  if (!ptt_clear_sectors (dev, dev->length - GPT_HEADER_SECTORS,
-                          GPT_HEADER_SECTORS))
-    goto error_free_with_gpt;
-
-  if ((PedSector) PED_LE64_TO_CPU (gpt->AlternateLBA) < dev->length - 1)
-    {
-      if (!ped_device_write (dev, gpt,
-                             PED_LE64_TO_CPU (gpt->AlternateLBA),
-                             GPT_HEADER_SECTORS))
-        return 0;
-    }
-
-  pth_free (gpt);
-
-  return 1;
-
-error_free_with_gpt:
-  pth_free (gpt);
-  return 0;
+  return (ptt_clear_sectors (dev, GPT_PMBR_LBA, GPT_PMBR_SECTORS)
+          && ptt_clear_sectors (dev, GPT_PRIMARY_HEADER_LBA, GPT_HEADER_SECTORS)
+          && ptt_clear_sectors (dev, dev->length - GPT_HEADER_SECTORS,
+                                GPT_HEADER_SECTORS));
 }
 #endif /* !DISCOVER_ONLY */
 
