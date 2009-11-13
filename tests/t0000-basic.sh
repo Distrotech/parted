@@ -49,7 +49,7 @@ test_expect_success 'expect no output' 'compare out /dev/null'
 
 test_expect_success \
     'erase the left-over label' \
-    'dd if=/dev/zero of=$dev bs=4K count=1 2> /dev/null'
+    'dd if=/dev/zero of=$dev bs=4K count=1 conv=notrunc 2> /dev/null'
 
 # First iteration works with no prompting, since there is no preexisting label.
 test_expect_success \
