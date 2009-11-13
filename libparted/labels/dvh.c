@@ -98,12 +98,7 @@ dvh_probe (const PedDevice *dev)
 static int
 dvh_clobber (PedDevice* dev)
 {
-	char *zeros = ped_calloc (dev->sector_size);
-	if (zeros == NULL)
-                return 0;
-	int ok = ped_device_write (dev, zeros, 0, 1);
-	free (zeros);
-	return ok;
+	return ptt_clear_sectors (dev, 0, 1);
 }
 #endif /* !DISCOVER_ONLY */
 
