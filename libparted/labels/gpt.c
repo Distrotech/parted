@@ -444,6 +444,9 @@ gpt_probe (const PedDevice *dev)
 
   PED_ASSERT (dev != NULL, return 0);
 
+  if (dev->length <= 1)
+    return 0;
+
   if (ped_device_read (dev, pth_raw, 1, GPT_HEADER_SECTORS)
       || ped_device_read (dev, pth_raw, dev->length - 1, GPT_HEADER_SECTORS))
     {
