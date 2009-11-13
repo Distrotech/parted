@@ -101,7 +101,7 @@ ped_disk_type_unregister (PedDiskType* disk_type)
  * \return Next disk; NULL if "type" is the last registered disk type.
  */
 PedDiskType*
-ped_disk_type_get_next (PedDiskType* type)
+ped_disk_type_get_next (PedDiskType const *type)
 {
 	if (type)
 		return type->next;

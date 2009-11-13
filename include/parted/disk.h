@@ -239,7 +239,7 @@ struct _PedDiskArchOps {
 extern void ped_disk_type_register (PedDiskType* type);
 extern void ped_disk_type_unregister (PedDiskType* type);
 
-extern PedDiskType* ped_disk_type_get_next (PedDiskType* type);
+extern PedDiskType* ped_disk_type_get_next (PedDiskType const *type);
 extern PedDiskType* ped_disk_type_get (const char* name);
 extern int ped_disk_type_check_feature (const PedDiskType* disk_type,
                                         PedDiskTypeFeature feature);
@@ -354,4 +354,3 @@ extern int _ped_partition_attempt_align (
 #endif /* PED_DISK_H_INCLUDED */
 
 /** @} */
-
