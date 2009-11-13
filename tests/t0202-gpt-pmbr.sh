@@ -28,16 +28,21 @@ dev=loop-file
 bootcode_size=446
 
 fail=0
-# Create a 100k test file with random content
-printf %0${bootcode_size}d 0 > in || fail=1
-dd if=in of=$dev bs=1c count=$bootcode_size || fail=1
-dd if=/dev/zero of=$dev bs=1c seek=$bootcode_size \
-  count=101954 > /dev/null 2>&1 || fail=1
-
-# Extract the first $bootcode_size Bytes before GPT creation
-dd if=$dev of=before bs=1c count=$bootcode_size > /dev/null 2>&1 || fail=1
+dd if=/dev/null of=$dev bs=1 seek=1M || framework_failure
 
 # create a GPT partition table
+parted -s $dev mklabel gpt > out 2>&1 || fail=1
+# expect no output
+compare out /dev/null
+
+# Fill the first $bootcode_size bytes with 0's.
+# This affects only the protective MBR, so doesn't affect validity of gpt table.
+printf %0${bootcode_size}d 0 > in || fail=1
+dd of=$dev bs=1 seek=0 count=$bootcode_size conv=notrunc < in || fail=1
+
+parted -s $dev p || fail=1
+
+# create a GPT partition table on top of the existing one.
 parted -s $dev mklabel gpt > out 2>&1 || fail=1
 # expect no output
 compare out /dev/null
@@ -46,6 +51,6 @@ compare out /dev/null
 dd if=$dev of=after bs=1c count=$bootcode_size > /dev/null 2>&1 || fail=1
 
 # Compare the before and after
-compare before after || fail=1
+compare in after || fail=1
 
 Exit $fail
