@@ -1,4 +1,5 @@
 #!/bin/sh
+# Preserve first 446B of the Protected MBR for gpt partitions.
 
 # Copyright (C) 2009 Free Software Foundation, Inc.
 
@@ -15,36 +16,36 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test_description='Preserve first 446B of the Protected MBR for gpt partitions.'
+if test "$VERBOSE" = yes; then
+  set -x
+  parted --version
+fi
 
 : ${srcdir=.}
-. $srcdir/test-lib.sh
+. $srcdir/t-lib.sh
 
 dev=loop-file
 bootcode_size=446
 
-test_expect_success \
-    'Create a 100k test file with random content' \
-    'printf %0${bootcode_size}d 0 > in &&
-     dd if=in of=$dev bs=1c count=$bootcode_size &&
-     dd if=/dev/zero of=$dev bs=1c seek=$bootcode_size \
-	    count=101954 > /dev/null 2>&1'
+fail=0
+# Create a 100k test file with random content
+printf %0${bootcode_size}d 0 > in || fail=1
+dd if=in of=$dev bs=1c count=$bootcode_size || fail=1
+dd if=/dev/zero of=$dev bs=1c seek=$bootcode_size \
+  count=101954 > /dev/null 2>&1 || fail=1
 
-test_expect_success \
-    'Extract the first $bootcode_size Bytes before GPT creation' \
-    'dd if=$dev of=before bs=1c count=$bootcode_size > /dev/null 2>&1'
+# Extract the first $bootcode_size Bytes before GPT creation
+dd if=$dev of=before bs=1c count=$bootcode_size > /dev/null 2>&1 || fail=1
 
-test_expect_success \
-    'create a GPT partition table' \
-    'parted -s $dev mklabel gpt > out 2>&1'
-test_expect_success 'expect no output' 'compare out /dev/null'
+# create a GPT partition table
+parted -s $dev mklabel gpt > out 2>&1 || fail=1
+# expect no output
+compare out /dev/null
 
-test_expect_success \
-    'Extract the first $bootcode_size Bytes after GPT creation' \
-    'dd if=$dev of=after bs=1c count=$bootcode_size > /dev/null 2>&1'
+# Extract the first $bootcode_size Bytes after GPT creation
+dd if=$dev of=after bs=1c count=$bootcode_size > /dev/null 2>&1 || fail=1
 
-test_expect_success \
-    'Compare the before and after' \
-    'compare before after'
+# Compare the before and after
+compare before after || fail=1
 
-test_done
+Exit $fail
