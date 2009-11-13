@@ -39,6 +39,7 @@
 
 #include "architecture.h"
 #include "intprops.h"
+#include "labels/pt-tools.h"
 
 #if ENABLE_NLS
 #  include <libintl.h>
@@ -276,6 +277,20 @@ error:
 	return NULL;
 }
 
+/* Given a partition table type NAME, e.g., "gpt", return its PedDiskType
+   handle.  If no known type has a name matching NAME, return NULL.  */
+static PedDiskType const *
+find_disk_type (char const *name)
+{
+  PedDiskType const *t;
+  for (t = ped_disk_type_get_next (NULL); t; t = ped_disk_type_get_next (t))
+    {
+      if (strcmp (t->name, name) == 0)
+        return t;
+    }
+  return NULL;
+}
+
 /**
  * Remove all identifying signatures of a partition table,
  * except for partition tables of a given type.
@@ -287,31 +302,43 @@ error:
 int
 ped_disk_clobber_exclude (PedDevice* dev, const PedDiskType* exclude)
 {
-	PedDiskType*	walk;
-
 	PED_ASSERT (dev != NULL, goto error);
 
 	if (!ped_device_open (dev))
 		goto error;
 
-	for (walk = ped_disk_type_get_next (NULL); walk;
-	     walk = ped_disk_type_get_next (walk)) {
-		int	probed;
+        PedDiskType const *gpt = find_disk_type ("gpt");
+	PED_ASSERT (gpt != NULL, goto error);
 
-		if (walk == exclude)
-			continue;
+        /* If there is a GPT table, don't clobber the protective MBR.  */
+        bool is_gpt = gpt->ops->probe (dev);
+        PedSector first_sector = (is_gpt ? 1 : 0);
 
-		ped_exception_fetch_all ();
-		probed = walk->ops->probe (dev);
-		if (!probed)
-			ped_exception_catch ();
-		ped_exception_leave_all ();
+	/* How many sectors to zero out at each end.
+	   This must be large enough to zero out the magic bytes
+	   starting at offset 8KiB on a DASD partition table.
+	   Doing the same from the end of the disk is probably
+	   overkill, but at least on GPT, we do need to zero out
+	   the final sector.  */
+	const PedSector n_sectors = 9 * 1024 / dev->sector_size + 1;
 
-		if (probed && walk->ops->clobber) {
-			if (!walk->ops->clobber (dev))
-				goto error_close_dev;
-		}
-	}
+	/* Clear the first few.  */
+	PedSector n = n_sectors;
+	if (dev->length < first_sector + n_sectors)
+	  n = dev->length - first_sector;
+        if (!ptt_clear_sectors (dev, first_sector, n))
+          goto error_close_dev;
+
+	/* Clear the last few.  */
+	PedSector t = (dev->length -
+		       (n_sectors < dev->length ? n_sectors : 1));
+
+        /* Don't clobber the pMBR if we have a pathologically small disk.  */
+        if (t < first_sector)
+          t = first_sector;
+        if (!ptt_clear_sectors (dev, t, dev->length - t))
+          goto error_close_dev;
+
 	ped_device_close (dev);
 	return 1;
 
@@ -469,7 +496,7 @@ ped_disk_commit_to_dev (PedDisk* disk)
 		goto error;
 
 	if (disk->needs_clobber) {
-		if (!ped_disk_clobber_exclude (disk->dev, disk->type))
+		if (!ped_disk_clobber_exclude (disk->dev, NULL))
 			goto error_close_dev;
 		disk->needs_clobber = 0;
 	}
