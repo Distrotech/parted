@@ -1711,7 +1711,9 @@ linux_read (const PedDevice* dev, void* buffer, PedSector start,
                 ex_status = ped_exception_throw (
                         PED_EXCEPTION_ERROR,
                         PED_EXCEPTION_RETRY_IGNORE_CANCEL,
-                        _("%s during read on %s"),
+                        (status == 0
+                         ? _("end of file while reading %s")
+                         : _("%s during read on %s")),
                         strerror (errno),
                         dev->path);
 
