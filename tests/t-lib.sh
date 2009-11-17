@@ -30,6 +30,13 @@ skip_test_()
   Exit 77
 }
 
+fail_()
+{
+  echo "$0: failed test: $@" | head -1 1>&9
+  echo "$0: failed test: $@" 1>&2
+  Exit 1
+}
+
 getlimits_()
 {
     eval $(getlimits)
