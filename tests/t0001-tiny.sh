@@ -40,7 +40,11 @@ for opt in '' -s; do
   parted $opt $dev mklabel msdos ---pretend-input-tty </dev/null > out 2>&1 \
       || fail=1
   # expect no output
-  sed 's/.*WARNING: You are not superuser.*//;/^$/d' out > k && mv k out || fail=1
+  sed 's/.*WARNING: You are not superuser.*//;/^$/d' out > k && mv k out \
+      || fail=1
+  # When run as root, there are just curses-related control chars. Remove them.
+  sed 's/^.\{1,12\}$//;/^$/d' out > k && mv k out \
+      || fail=1
   compare out /dev/null || fail=1
 
   parted -s $dev p || fail=1
