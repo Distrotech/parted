@@ -47,6 +47,38 @@ scsi_dev=$(cat dev-name)
 fail=0
 parted -s $scsi_dev mklabel msdos mkpart primary fat32 64s 80000s || fail=1
 
-compare out exp || fail=1
+parted -s $scsi_dev u s p
+
+p1=${scsi_dev}1
+wait_for_dev_to_appear_ $p1 || fail=1
+mkfs.ext2 $p1 || fail=1
+
+# print as hex, the type of the first partition
+msdos_p1_type() { od -An --skip=450 -N1 -tx1 "$1"; }
+
+# Initially, it is 0x0c (FAT32).
+type=$(msdos_p1_type $scsi_dev) || fail=1
+type=${type# } # remove leading space
+case $type in
+  0c) ;;
+  *) fail_ "expected initial type of 0c (FAT32)";;
+esac
+
+parted -s $scsi_dev u s p
+parted -s $scsi_dev set 1 lvm off || fail=1
+
+# Before parted-2.1, the above would mistakenly change it to 0x83,
+# to match the file system now residing in that partition.
+type=$(msdos_p1_type $scsi_dev) || fail=1
+type=${type# } # remove leading space
+case $type in
+  0c) ;;
+  *) fail_ "parted changed the type of partition 1 from 0c to $type";;
+esac
+
+# Ensure that setting the "lvm" flag still works.
+parted -s $scsi_dev set 1 lvm on || fail=1
+parted -s $scsi_dev u s p > out || fail=1
+grep lvm out || { fail=1; cat out; }
 
 Exit $fail
