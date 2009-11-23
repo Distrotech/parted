@@ -98,14 +98,14 @@ ptt_clear_sectors (PedDevice *dev, PedSector start, PedSector n)
 int
 ptt_partition_max_start_len (char const *label_type, const PedPartition *part)
 {
-  static char const *const max_32[] = {"msdos", "dvh"};
+  static char const *const max_32[] = {"msdos", "dvh", "dasd"};
   unsigned int i;
 
   for (i = 0; i < sizeof max_32 / sizeof *max_32; i++)
     {
       if (strcmp (label_type, max_32[i]) == 0)
         {
-          /* The starting sector length must fit in 32 bytes.  */
+          /* The length (in sectors) must fit in 32 bytes.  */
           if (part->geom.length > UINT32_MAX)
             {
               ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,

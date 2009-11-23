@@ -48,6 +48,7 @@
 #endif /* ENABLE_NLS */
 
 #include "misc.h"
+#include "pt-tools.h"
 
 #define PARTITION_LINUX_SWAP 0x82
 #define PARTITION_LINUX 0x83
@@ -106,6 +107,12 @@ static int dasd_partition_set_system (PedPartition* part,
 									  const PedFileSystemType* fs_type);
 static int dasd_alloc_metadata (PedDisk* disk);
 
+static bool
+dasd_partition_check (const PedPartition *part)
+{
+  return ptt_partition_max_start_len ("dasd", part);
+}
+
 static PedDiskOps dasd_disk_ops = {
 	probe: dasd_probe,
 	clobber: dasd_clobber,
@@ -132,6 +139,7 @@ static PedDiskOps dasd_disk_ops = {
 	get_max_primary_partition_count: dasd_get_max_primary_partition_count,
 	get_max_supported_partition_count: dasd_get_max_supported_partition_count,
 	get_partition_alignment: dasd_get_partition_alignment,
+	partition_check:	dasd_partition_check,
 };
 
 static PedDiskType dasd_disk_type = {
