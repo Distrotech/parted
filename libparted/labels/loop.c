@@ -78,13 +78,7 @@ static int
 loop_clobber (PedDevice* dev)
 {
 	PED_ASSERT (dev != NULL, return 0);
-
-	PedSector i = 0;
-	while (loop_probe (dev)) {
-		if (!ptt_clear_sectors (dev, i++, 1))
-			return 0;
-	}
-	return 1;
+        return ptt_clear_sectors (dev, 0, 1);
 }
 #endif /* !DISCOVER_ONLY */
 
