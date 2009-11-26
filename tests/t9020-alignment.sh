@@ -47,7 +47,7 @@ scsi_dev=$(cat dev-name)
 
 fail=0
 
-# create partition table and print
+# print alignment info
 "$abs_srcdir/print-align" $scsi_dev > out 2>&1 || fail=1
 
 compare out exp || fail=1
