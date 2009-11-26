@@ -293,14 +293,13 @@ find_disk_type (char const *name)
 
 /**
  * Remove all identifying signatures of a partition table,
- * except for partition tables of a given type.
  *
  * \return 0 on error, 1 otherwise.
  *
  * \sa ped_disk_clobber()
  */
 int
-ped_disk_clobber_exclude (PedDevice* dev, const PedDiskType* exclude)
+ped_disk_clobber (PedDevice* dev)
 {
 	PED_ASSERT (dev != NULL, goto error);
 
@@ -346,19 +345,6 @@ error_close_dev:
 	ped_device_close (dev);
 error:
 	return 0;
-}
-
-/**
- * Remove all identifying signatures of a partition table,
- *
- * \return 0 on error, 1 otherwise.
- *
- * \sa ped_disk_clobber_exclude()
- */
-int
-ped_disk_clobber (PedDevice* dev)
-{
-	return ped_disk_clobber_exclude (dev, NULL);
 }
 
 /**
@@ -496,7 +482,7 @@ ped_disk_commit_to_dev (PedDisk* disk)
 		goto error;
 
 	if (disk->needs_clobber) {
-		if (!ped_disk_clobber_exclude (disk->dev, NULL))
+		if (!ped_disk_clobber (disk->dev))
 			goto error_close_dev;
 		disk->needs_clobber = 0;
 	}

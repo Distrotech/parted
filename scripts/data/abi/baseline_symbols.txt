@@ -256,7 +256,6 @@ FUNC:ped_disk_bsd_done
 FUNC:ped_disk_bsd_init
 FUNC:ped_disk_check
 FUNC:ped_disk_clobber
-FUNC:ped_disk_clobber_exclude
 FUNC:ped_disk_commit
 FUNC:ped_disk_commit_to_dev
 FUNC:ped_disk_commit_to_os

@@ -246,8 +246,6 @@ extern int ped_disk_type_check_feature (const PedDiskType* disk_type,
 
 extern PedDiskType* ped_disk_probe (PedDevice* dev);
 extern int ped_disk_clobber (PedDevice* dev);
-extern int ped_disk_clobber_exclude (PedDevice* dev,
-                                     const PedDiskType* exclude);
 extern PedDisk* ped_disk_new (PedDevice* dev);
 extern PedDisk* ped_disk_new_fresh (PedDevice* dev,
                                     const PedDiskType* disk_type);
