@@ -113,6 +113,7 @@ static const char* number_msg = N_(
 static const char* label_type_msg_start = N_("LABEL-TYPE is one of: ");
 static const char* flag_msg_start =   N_("FLAG is one of: ");
 static const char* unit_msg_start =   N_("UNIT is one of: ");
+static const char* min_or_opt_msg = N_("desired alignment: minimum or optimal");
 static const char* part_type_msg =    N_("PART-TYPE is one of: primary, logical, "
                                    "extended\n");
 static const char* fs_type_msg_start = N_("FS-TYPE is one of: ");
@@ -1937,6 +1938,49 @@ do_select (PedDevice** dev)
         return 1;
 }
 
+/* Return true if partition PART is consistent with DISK's selected
+   offset and alignment requirements.  Also return true if there is
+   insufficient kernel support to determine DISK's alignment requirements.
+   Otherwise, return false.  A_TYPE selects whether to check for minimal
+   or optimal alignment requirements.  */
+static bool
+partition_align_check (PedDisk const *disk, PedPartition const *part,
+		       enum AlignmentType a_type)
+{
+  PED_ASSERT (part->disk == disk, return false);
+  PedDevice const *dev = disk->dev;
+
+  PedAlignment *pa = (a_type == PA_MINIMUM
+		      ? ped_device_get_minimum_alignment (dev)
+		      : ped_device_get_optimum_alignment (dev));
+  if (pa == NULL)
+    return true;
+
+  PED_ASSERT (pa->grain_size != 0, return false);
+  bool ok = (part->geom.start % pa->grain_size == pa->offset);
+  free (pa);
+  return ok;
+}
+
+static int
+do_align_check (PedDevice **dev)
+{
+  PedDisk *disk = ped_disk_new (*dev);
+  if (!disk)
+    return 0;
+
+  enum AlignmentType align_type;
+  PedPartition *part = NULL;
+  bool aligned =
+    (command_line_get_align_type (_("alignment type(min/opt)"), &align_type)
+     && command_line_get_partition (_("Partition number?"), disk, &part)
+     && partition_align_check (disk, part, align_type));
+
+  ped_disk_destroy (disk);
+
+  return aligned ? 1 : 0;
+}
+
 static int
 do_set (PedDevice** dev)
 {
@@ -2172,6 +2216,18 @@ _done_messages ()
 static void
 _init_commands ()
 {
+  command_register (commands,
+    command_create ( str_list_create_unique ("align-check",
+					     _("align-check"), NULL),
+		     do_align_check,
+		     str_list_create (
+				      _("align-check TYPE N"
+					"                        "
+					"check partition N for"
+					" TYPE(min|opt) alignment"), NULL),
+
+		     str_list_create (_(number_msg), _(min_or_opt_msg),
+				      NULL), 1));
         command_register (commands, command_create (
                 str_list_create_unique ("check", _("check"), NULL),
                 do_check,

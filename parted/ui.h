@@ -21,6 +21,12 @@
 
 #include "strlist.h"
 
+enum AlignmentType
+  {
+    PA_MINIMUM = 1,
+    PA_OPTIMUM
+  };
+
 extern const char *prog_name;
 
 extern int init_ui ();
@@ -65,6 +71,8 @@ extern int command_line_get_part_type (const char* prompt, const PedDisk* disk,
 extern PedExceptionOption command_line_get_ex_opt (const char* prompt,
 						   PedExceptionOption options);
 extern int command_line_get_unit (const char* prompt, PedUnit* unit);
+extern int command_line_get_align_type (const char *prompt,
+					enum AlignmentType *align_type);
 
 extern int command_line_is_integer ();
 extern int command_line_is_sector ();
@@ -79,6 +87,5 @@ extern int	pretend_input_tty;
 
 extern void print_options_help ();
 extern void print_commands_help ();
-
 
 #endif /* UI_H_INCLUDED */

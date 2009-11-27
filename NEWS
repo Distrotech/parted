@@ -2,7 +2,14 @@ GNU parted NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
-** Improvements
+** New features
+
+  new command "align-check TYPE N" to determine whether the starting sector
+  of partition N is TYPE(minimal|optimal)-aligned for the disk.  E.g.,
+      parted -s /dev/sda align-check min 1 && echo partition 1 is min-aligned
+      parted -s /dev/sda align-check opt 2 && echo partition 2 is opt-aligned
+  This is useful only on kernels for which Parted is able to determine
+  a disk's alignment characteristics.
 
   Add functions to libparted to get minimal and optimal alignment
   information from devices:

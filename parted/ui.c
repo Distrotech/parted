@@ -193,6 +193,11 @@ static StrList*     ex_opt_str [64];
 static StrList*     on_list;
 static StrList*     off_list;
 static StrList*     on_off_list;
+
+static StrList*     align_opt_list;
+static StrList*     align_min_list;
+static StrList*     align_opt_min_list;
+
 static StrList*     fs_type_list;
 static StrList*     disk_type_list;
 
@@ -1260,6 +1265,27 @@ command_line_get_ex_opt (const char* prompt, PedExceptionOption options)
 }
 
 int
+command_line_get_align_type (const char *prompt, enum AlignmentType *align_type)
+{
+  char*    def_word;
+  char*    input;
+
+  if (*align_type)
+    def_word = str_list_convert_node (align_opt_list);
+  else
+    def_word = str_list_convert_node (align_min_list);
+  input = command_line_get_word (prompt, def_word, align_opt_min_list, 1);
+  free (def_word);
+  if (!input)
+    return 0;
+  *align_type = (str_list_match_any (align_opt_list, input)
+	     ? PA_OPTIMUM
+	     : PA_MINIMUM);
+  free (input);
+  return 1;
+}
+
+int
 command_line_get_unit (const char* prompt, PedUnit* unit)
 {
         StrList*       opts = NULL;
@@ -1347,6 +1373,24 @@ done_state_str ()
 }
 
 static int
+init_alignment_type_str ()
+{
+        align_opt_list = str_list_create_unique (_("optimal"), "optimal", NULL);
+        align_min_list = str_list_create_unique (_("minimal"), "minimal", NULL);
+        align_opt_min_list = str_list_join (str_list_duplicate (align_opt_list),
+					    str_list_duplicate (align_min_list));
+        return 1;
+}
+
+static void
+done_alignment_type_str ()
+{
+        str_list_destroy (align_opt_list);
+        str_list_destroy (align_min_list);
+        str_list_destroy (align_opt_min_list);
+}
+
+static int
 init_fs_type_str ()
 {
         PedFileSystemType*    walk;
@@ -1409,6 +1453,7 @@ init_ui ()
 {
         if (!init_ex_opt_str ()
             || !init_state_str ()
+            || !init_alignment_type_str ()
             || !init_fs_type_str ()
             || !init_disk_type_str ())
                 return 0;
@@ -1453,6 +1498,7 @@ done_ui ()
         ped_exception_set_handler (NULL);
         done_ex_opt_str ();
         done_state_str ();
+        done_alignment_type_str ();
         str_list_destroy (fs_type_list);
         str_list_destroy (disk_type_list);
 }
