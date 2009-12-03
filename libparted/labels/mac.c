@@ -1625,50 +1625,21 @@ mac_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 	return true;
 }
 
-static bool
-mac_partition_check (const PedPartition* part)
-{
-	return ptt_partition_max_start_len ("mac", part);
-}
+#include "pt-common.h"
+PT_define_limit_functions (mac)
 
 static PedDiskOps mac_disk_ops = {
-	probe:			mac_probe,
-#ifndef DISCOVER_ONLY
-	clobber:		mac_clobber,
-#else
-	clobber:		NULL,
-#endif
-	alloc:			mac_alloc,
-	duplicate:		mac_duplicate,
-	free:			mac_free,
-	read:			mac_read,
-#ifndef DISCOVER_ONLY
+	clobber: NULL_IF_DISCOVER_ONLY (mac_clobber),
         /* FIXME: remove this cast, once mac_write is fixed not to
            modify its *DISK parameter.  */
-	write:			(int (*) (const PedDisk*)) mac_write,
-#else
-	write:			NULL,
-#endif
+	write:	NULL_IF_DISCOVER_ONLY ((int (*) (const PedDisk*)) mac_write),
 
-	partition_new:		mac_partition_new,
-	partition_duplicate:	mac_partition_duplicate,
-	partition_destroy:	mac_partition_destroy,
-	partition_set_system:	mac_partition_set_system,
-	partition_set_flag:	mac_partition_set_flag,
-	partition_get_flag:	mac_partition_get_flag,
-	partition_is_flag_available:	mac_partition_is_flag_available,
 	partition_set_name:	mac_partition_set_name,
 	partition_get_name:	mac_partition_get_name,
-	partition_align:	mac_partition_align,
-	partition_enumerate:	mac_partition_enumerate,
-	partition_check:	mac_partition_check,
 
-	alloc_metadata:		mac_alloc_metadata,
-	get_max_primary_partition_count:
-				mac_get_max_primary_partition_count,
-	get_max_supported_partition_count:
-				mac_get_max_supported_partition_count,
 	get_partition_alignment: mac_get_partition_alignment,
+
+	PT_op_function_initializers (mac)
 };
 
 static PedDiskType mac_disk_type = {

@@ -2274,56 +2274,17 @@ msdos_get_max_supported_partition_count(const PedDisk* disk, int *max_n)
 	return true;
 }
 
-/*
- * Enforce some restrictions inherent in the DOS partition table format.
- * 1. Partition size must be smaller than 2^32 (unsigned int) sectors.
- *    If sector size is 512 bytes, this results in 2T aprox.
- * 2. Partition starting sector number must be smaller than 2^32.
- */
-static bool
-msdos_partition_check (const PedPartition* part)
-{
-	if (!ptt_partition_max_start_len("msdos", part))
-		return false;
-
-	return true;
-}
+#include "pt-common.h"
+PT_define_limit_functions (msdos)
 
 static PedDiskOps msdos_disk_ops = {
-	probe:			msdos_probe,
-#ifndef DISCOVER_ONLY
-	clobber:		msdos_clobber,
-#else
-	clobber:		NULL,
-#endif
-	alloc:			msdos_alloc,
-	duplicate:		msdos_duplicate,
-	free:			msdos_free,
-	read:			msdos_read,
-#ifndef DISCOVER_ONLY
-	write:			msdos_write,
-#else
-	write:			NULL,
-#endif
+	clobber:		NULL_IF_DISCOVER_ONLY (msdos_clobber),
+	write:			NULL_IF_DISCOVER_ONLY (msdos_write),
 
-	partition_new:		msdos_partition_new,
-	partition_duplicate:	msdos_partition_duplicate,
-	partition_destroy:	msdos_partition_destroy,
-	partition_set_system:	msdos_partition_set_system,
-	partition_set_flag:	msdos_partition_set_flag,
-	partition_get_flag:	msdos_partition_get_flag,
-	partition_is_flag_available:	msdos_partition_is_flag_available,
 	partition_set_name:	NULL,
 	partition_get_name:	NULL,
-	partition_align:	msdos_partition_align,
-	partition_enumerate:	msdos_partition_enumerate,
-	partition_check:	msdos_partition_check,
 
-	alloc_metadata:		msdos_alloc_metadata,
-	get_max_primary_partition_count:
-				msdos_get_max_primary_partition_count,
-	get_max_supported_partition_count:
-				msdos_get_max_supported_partition_count
+  PT_op_function_initializers (msdos)
 };
 
 static PedDiskType msdos_disk_type = {

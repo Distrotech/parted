@@ -887,54 +887,16 @@ error:
 	return 0;
 }
 
-/*
- * Enforce some restrictions inherent in the dvh partition table format.
- * 1. Partition size must be smaller than 2^32 (unsigned int) sectors.
- *    If sector size is 512 bytes, this results in 2T aprox.
- * 2. Partition starting sector number must be smaller than 2^32.
- */
-static bool
-dvh_partition_check (const PedPartition* part)
-{
-	if (!ptt_partition_max_start_len("dvh", part))
-		return false;
-
-	return true;
-}
+#include "pt-common.h"
+PT_define_limit_functions (dvh)
 
 static PedDiskOps dvh_disk_ops = {
-	probe:			dvh_probe,
-#ifndef DISCOVER_ONLY
-	clobber:		dvh_clobber,
-#else
-	clobber:		NULL,
-#endif
-	alloc:			dvh_alloc,
-	duplicate:		dvh_duplicate,
-	free:			dvh_free,
-	read:			dvh_read,
-#ifndef DISCOVER_ONLY
-	write:			dvh_write,
-#else
-	write:			NULL,
-#endif
+	clobber:		NULL_IF_DISCOVER_ONLY (dvh_clobber),
+	write:			NULL_IF_DISCOVER_ONLY (dvh_write),
 
-	partition_new:		dvh_partition_new,
-	partition_duplicate:	dvh_partition_duplicate,
-	partition_destroy:	dvh_partition_destroy,
-	partition_set_system:	dvh_partition_set_system,
-	partition_set_flag:	dvh_partition_set_flag,
-	partition_get_flag:	dvh_partition_get_flag,
-	partition_is_flag_available:	dvh_partition_is_flag_available,
 	partition_set_name:	dvh_partition_set_name,
 	partition_get_name:	dvh_partition_get_name,
-	partition_align:	dvh_partition_align,
-	partition_enumerate:	dvh_partition_enumerate,
-	partition_check:	dvh_partition_check,
-
-	alloc_metadata:		dvh_alloc_metadata,
-	get_max_primary_partition_count: dvh_get_max_primary_partition_count,
-	get_max_supported_partition_count: dvh_get_max_supported_partition_count
+	PT_op_function_initializers (dvh)
 };
 
 static PedDiskType dvh_disk_type = {

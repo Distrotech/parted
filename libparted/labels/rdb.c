@@ -26,6 +26,8 @@
 #include <parted/debug.h>
 #include <parted/endian.h>
 
+#include "pt-tools.h"
+
 #ifndef MAX
 # define MAX(a,b) ((a) < (b) ? (b) : (a))
 #endif
@@ -1143,49 +1145,19 @@ amiga_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 	return true;
 }
 
-static bool
-amiga_partition_check (const PedPartition* part)
-{
-	return true;
-}
+#include "pt-common.h"
+PT_define_limit_functions (amiga)
 
 static PedDiskOps amiga_disk_ops = {
-	probe:			amiga_probe,
-#ifndef DISCOVER_ONLY
-	clobber:		amiga_clobber,
-#else
-	clobber:		NULL,
-#endif
-	alloc:			amiga_alloc,
-	duplicate:		amiga_duplicate,
-	free:			amiga_free,
-	read:			amiga_read,
-#ifndef DISCOVER_ONLY
-	write:			amiga_write,
-#else
-	write:			NULL,
-#endif
+	clobber:		NULL_IF_DISCOVER_ONLY (amiga_clobber),
+	write:			NULL_IF_DISCOVER_ONLY (amiga_write),
 
-	partition_new:		amiga_partition_new,
-	partition_duplicate:	amiga_partition_duplicate,
-	partition_destroy:	amiga_partition_destroy,
-	partition_set_system:	amiga_partition_set_system,
-	partition_set_flag:	amiga_partition_set_flag,
-	partition_get_flag:	amiga_partition_get_flag,
-	partition_is_flag_available:
-				amiga_partition_is_flag_available,
 	partition_set_name:	amiga_partition_set_name,
 	partition_get_name:	amiga_partition_get_name,
-	partition_align:	amiga_partition_align,
-	partition_enumerate:	amiga_partition_enumerate,
-	partition_check:	amiga_partition_check,
 
-	alloc_metadata:		amiga_alloc_metadata,
-	get_max_primary_partition_count:
-				amiga_get_max_primary_partition_count,
-	get_max_supported_partition_count:
-				amiga_get_max_supported_partition_count,
 	get_partition_alignment: amiga_get_partition_alignment,
+
+	PT_op_function_initializers (amiga)
 };
 
 static PedDiskType amiga_disk_type = {

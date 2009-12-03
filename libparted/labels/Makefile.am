@@ -28,6 +28,7 @@ liblabels_la_SOURCES = \
   mac.c		\
   misc.h	\
   pc98.c	\
+  pt-common.h	\
   pt-tools.c	\
   pt-tools.h	\
   rdb.c		\

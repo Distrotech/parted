@@ -638,47 +638,17 @@ error:
 	return 0;
 }
 
-static bool
-bsd_partition_check (const PedPartition* part)
-{
-	return true;
-}
+#include "pt-common.h"
+PT_define_limit_functions (bsd)
 
 static PedDiskOps bsd_disk_ops = {
-	probe:			bsd_probe,
-#ifndef DISCOVER_ONLY
-	clobber:		bsd_clobber,
-#else
-	clobber:		NULL,
-#endif
-	alloc:			bsd_alloc,
-	duplicate:		bsd_duplicate,
-	free:			bsd_free,
-	read:			bsd_read,
-#ifndef DISCOVER_ONLY
-	write:			bsd_write,
-#else
-	write:			NULL,
-#endif
+	clobber:		NULL_IF_DISCOVER_ONLY (bsd_clobber),
+	write:			NULL_IF_DISCOVER_ONLY (bsd_write),
 
-	partition_new:		bsd_partition_new,
-	partition_duplicate:	bsd_partition_duplicate,
-	partition_destroy:	bsd_partition_destroy,
-	partition_set_system:	bsd_partition_set_system,
-	partition_set_flag:	bsd_partition_set_flag,
-	partition_get_flag:	bsd_partition_get_flag,
-	partition_is_flag_available:	bsd_partition_is_flag_available,
 	partition_set_name:	NULL,
 	partition_get_name:	NULL,
-	partition_align:	bsd_partition_align,
-	partition_enumerate:	bsd_partition_enumerate,
-	partition_check:	bsd_partition_check,
 
-	alloc_metadata:		bsd_alloc_metadata,
-	get_max_primary_partition_count:
-				bsd_get_max_primary_partition_count,
-	get_max_supported_partition_count:
-				bsd_get_max_supported_partition_count
+	PT_op_function_initializers (bsd)
 };
 
 static PedDiskType bsd_disk_type = {

@@ -215,6 +215,8 @@ struct _PedDiskOps {
         bool (*get_max_supported_partition_count) (const PedDisk* disk,
                                                    int* supported);
         PedAlignment *(*get_partition_alignment)(const PedDisk *disk);
+        PedSector (*max_length) (void);
+        PedSector (*max_start_sector) (void);
 };
 
 struct _PedDiskType {

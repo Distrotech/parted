@@ -875,48 +875,19 @@ error:
 	return 0;
 }
 
-static bool
-sun_partition_check (const PedPartition* part)
-{
-	return true;
-}
+#include "pt-common.h"
+PT_define_limit_functions (sun)
 
 static PedDiskOps sun_disk_ops = {
-	probe:			sun_probe,
-#ifndef DISCOVER_ONLY
-	clobber:		sun_clobber,
-#else
-	clobber:		NULL,
-#endif
-	alloc:			sun_alloc,
-	duplicate:		sun_duplicate,
-	free:			sun_free,
-	read:			sun_read,
-#ifndef DISCOVER_ONLY
-	write:			sun_write,
-#else
-	write:			NULL,
-#endif
+	clobber:		NULL_IF_DISCOVER_ONLY (sun_clobber),
+	write:			NULL_IF_DISCOVER_ONLY (sun_write),
 
-	partition_new:		sun_partition_new,
-	partition_duplicate:	sun_partition_duplicate,
-	partition_destroy:	sun_partition_destroy,
-	partition_set_system:	sun_partition_set_system,
-	partition_set_flag:	sun_partition_set_flag,
-	partition_get_flag:	sun_partition_get_flag,
-	partition_is_flag_available:	sun_partition_is_flag_available,
-	partition_align:	sun_partition_align,
-	partition_enumerate:	sun_partition_enumerate,
-	partition_check:	sun_partition_check,
-	alloc_metadata:		sun_alloc_metadata,
-	get_max_primary_partition_count:
-				sun_get_max_primary_partition_count,
-	get_max_supported_partition_count:
-				sun_get_max_supported_partition_count,
 	get_partition_alignment: sun_get_partition_alignment,
 
 	partition_set_name:		NULL,
 	partition_get_name:		NULL,
+
+	PT_op_function_initializers (sun)
 };
 
 static PedDiskType sun_disk_type = {

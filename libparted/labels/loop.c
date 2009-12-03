@@ -293,47 +293,17 @@ loop_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 	return true;
 }
 
-static bool
-loop_partition_check (const PedPartition* part)
-{
-	return true;
-}
+#include "pt-common.h"
+PT_define_limit_functions (loop)
 
 static PedDiskOps loop_disk_ops = {
-	probe:			loop_probe,
-#ifndef DISCOVER_ONLY
-	clobber:		loop_clobber,
-#else
-	clobber:		NULL,
-#endif
-	alloc:			loop_alloc,
-	duplicate:		loop_duplicate,
-	free:			loop_free,
-	read:			loop_read,
-#ifndef DISCOVER_ONLY
-	write:			loop_write,
-#else
-	write:			NULL,
-#endif
+	clobber:		NULL_IF_DISCOVER_ONLY (loop_clobber),
+	write:			NULL_IF_DISCOVER_ONLY (loop_write),
 
-	partition_new:		loop_partition_new,
-	partition_duplicate:	loop_partition_duplicate,
-	partition_destroy:	loop_partition_destroy,
-	partition_set_system:	loop_partition_set_system,
-	partition_set_flag:	loop_partition_set_flag,
-	partition_get_flag:	loop_partition_get_flag,
-	partition_is_flag_available:	loop_partition_is_flag_available,
 	partition_set_name:	NULL,
 	partition_get_name:	NULL,
-	partition_align:	loop_partition_align,
-	partition_enumerate:	loop_partition_enumerate,
-	partition_check:	loop_partition_check,
 
-	alloc_metadata:		loop_alloc_metadata,
-	get_max_primary_partition_count:
-				loop_get_max_primary_partition_count,
-	get_max_supported_partition_count:
-				loop_get_max_supported_partition_count
+	PT_op_function_initializers (loop)
 };
 
 static PedDiskType loop_disk_type = {

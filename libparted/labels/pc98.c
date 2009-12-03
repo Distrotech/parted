@@ -22,6 +22,8 @@
 #include <parted/debug.h>
 #include <parted/endian.h>
 
+#include "pt-tools.h"
+
 #if ENABLE_NLS
 #  include <libintl.h>
 #  define _(String) dgettext (PACKAGE, String)
@@ -851,48 +853,19 @@ pc98_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 	return true;
 }
 
-static bool
-pc98_partition_check (const PedPartition* part)
-{
-	return true;
-}
+#include "pt-common.h"
+PT_define_limit_functions (pc98)
 
 static PedDiskOps pc98_disk_ops = {
-	probe:			pc98_probe,
-#ifndef DISCOVER_ONLY
-	clobber:		pc98_clobber,
-#else
-	clobber:		NULL,
-#endif
-	alloc:			pc98_alloc,
-	duplicate:		pc98_duplicate,
-	free:			pc98_free,
-	read:			pc98_read,
-#ifndef DISCOVER_ONLY
-	write:			pc98_write,
-#else
-	write:			NULL,
-#endif
+	clobber:		NULL_IF_DISCOVER_ONLY (pc98_clobber),
+	write:			NULL_IF_DISCOVER_ONLY (pc98_write),
 
-	partition_new:		pc98_partition_new,
-	partition_duplicate:	pc98_partition_duplicate,
-	partition_destroy:	pc98_partition_destroy,
-	partition_set_system:	pc98_partition_set_system,
-	partition_set_flag:	pc98_partition_set_flag,
-	partition_get_flag:	pc98_partition_get_flag,
-	partition_is_flag_available:	pc98_partition_is_flag_available,
 	partition_set_name:	pc98_partition_set_name,
 	partition_get_name:	pc98_partition_get_name,
-	partition_align:	pc98_partition_align,
-	partition_enumerate:	pc98_partition_enumerate,
-	partition_check:	pc98_partition_check,
 
-	alloc_metadata:		pc98_alloc_metadata,
-	get_max_primary_partition_count:
-				pc98_get_max_primary_partition_count,
-	get_max_supported_partition_count:
-				pc98_get_max_supported_partition_count,
 	get_partition_alignment: pc98_get_partition_alignment,
+
+	PT_op_function_initializers (pc98)
 };
 
 static PedDiskType pc98_disk_type = {

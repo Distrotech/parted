@@ -235,47 +235,17 @@ aix_alloc_metadata (PedDisk* disk)
 	return 1;
 }
 
-static bool
-aix_partition_check (const PedPartition* part)
-{
-	return true;
-}
+#include "pt-common.h"
+PT_define_limit_functions (aix)
 
 static PedDiskOps aix_disk_ops = {
-	probe:			aix_probe,
-#ifndef DISCOVER_ONLY
-	clobber:		aix_clobber,
-#else
-	clobber:		NULL,
-#endif
-	alloc:			aix_alloc,
-	duplicate:		aix_duplicate,
-	free:			aix_free,
-	read:			aix_read,
-#ifndef DISCOVER_ONLY
-	write:			aix_write,
-#else
-	write:			NULL,
-#endif
-
-	partition_new:		aix_partition_new,
-	partition_duplicate:	aix_partition_duplicate,
-	partition_destroy:	aix_partition_destroy,
-	partition_set_system:	aix_partition_set_system,
-	partition_set_flag:	aix_partition_set_flag,
-	partition_get_flag:	aix_partition_get_flag,
-	partition_is_flag_available:	aix_partition_is_flag_available,
-	partition_align:	aix_partition_align,
-	partition_enumerate:	aix_partition_enumerate,
-	partition_check:	aix_partition_check,
-	alloc_metadata:		aix_alloc_metadata,
-	get_max_primary_partition_count:
-				aix_get_max_primary_partition_count,
-	get_max_supported_partition_count:
-				aix_get_max_supported_partition_count,
+	clobber:		NULL_IF_DISCOVER_ONLY (aix_clobber),
+	write:			NULL_IF_DISCOVER_ONLY (aix_write),
 
 	partition_set_name:		NULL,
 	partition_get_name:		NULL,
+
+	PT_op_function_initializers (aix)
 };
 
 static PedDiskType aix_disk_type = {

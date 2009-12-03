@@ -107,39 +107,19 @@ static int dasd_partition_set_system (PedPartition* part,
 									  const PedFileSystemType* fs_type);
 static int dasd_alloc_metadata (PedDisk* disk);
 
-static bool
-dasd_partition_check (const PedPartition *part)
-{
-  return ptt_partition_max_start_len ("dasd", part);
-}
+#include "pt-common.h"
+PT_define_limit_functions (dasd)
 
 static PedDiskOps dasd_disk_ops = {
-	probe: dasd_probe,
-	clobber: dasd_clobber,
-	read: dasd_read,
-	write: dasd_write,
+	clobber:		NULL_IF_DISCOVER_ONLY (dasd_clobber),
+	write:			NULL_IF_DISCOVER_ONLY (dasd_write),
 
-	alloc: dasd_alloc,
-	duplicate: dasd_duplicate,
-	free: dasd_free,
-	partition_set_system: dasd_partition_set_system,
-
-	partition_new: dasd_partition_new,
-	partition_duplicate: dasd_partition_duplicate,
-	partition_destroy: dasd_partition_destroy,
-	partition_set_flag:	dasd_partition_set_flag,
-	partition_get_flag:	dasd_partition_get_flag,
-	partition_is_flag_available: dasd_partition_is_flag_available,
 	partition_set_name:	NULL,
 	partition_get_name:	NULL,
-	partition_align: dasd_partition_align,
-	partition_enumerate: dasd_partition_enumerate,
 
-	alloc_metadata: dasd_alloc_metadata,
-	get_max_primary_partition_count: dasd_get_max_primary_partition_count,
-	get_max_supported_partition_count: dasd_get_max_supported_partition_count,
 	get_partition_alignment: dasd_get_partition_alignment,
-	partition_check:	dasd_partition_check,
+
+	PT_op_function_initializers (dasd)
 };
 
 static PedDiskType dasd_disk_type = {
