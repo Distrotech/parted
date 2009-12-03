@@ -98,7 +98,7 @@ ptt_clear_sectors (PedDevice *dev, PedSector start, PedSector n)
 int
 ptt_partition_max_start_len (char const *label_type, const PedPartition *part)
 {
-  static char const *const max_32[] = {"msdos", "dvh", "dasd"};
+  static char const *const max_32[] = {"msdos", "dvh", "dasd", "mac"};
   unsigned int i;
 
   for (i = 0; i < sizeof max_32 / sizeof *max_32; i++)

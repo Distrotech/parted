@@ -1628,7 +1628,7 @@ mac_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 static bool
 mac_partition_check (const PedPartition* part)
 {
-	return true;
+	return ptt_partition_max_start_len ("mac", part);
 }
 
 static PedDiskOps mac_disk_ops = {
