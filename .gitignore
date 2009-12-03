@@ -48,5 +48,6 @@ partprobe/partprobe
 po/.reference
 stamp-h1
 tests/init.sh
+tests/print-align
 tests/t*.sh.log
 tests/test-suite.log

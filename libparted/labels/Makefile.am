@@ -37,4 +37,18 @@ liblabels_la_LIBADD = $(OS_LIBS) $(INTLLIBS)
 
 INCLUDES = $(partedincludedir) $(INTLINCS)
 
-MAINTAINERCLEANFILES = Makefile.in
+BUILT_SOURCES = pt-limit.c
+DISTCLEANFILES = $(BUILT_SOURCES)
+liblabels_la_SOURCES += pt-limit.gperf
+
+GPERF = gperf
+GPERF_OPTIONS = \
+  -C -N pt_limit_lookup -n -t -s 6 -k '*' --language=ANSI-C
+
+pt-limit.c: pt-limit.gperf
+	rm -f $@ $@-tmp
+	$(GPERF) $(GPERF_OPTIONS) $< \
+	  | perl -ne '/__GNUC_STDC_INLINE__/ and print "static\n"; print' \
+	  > $@-tmp
+	chmod a-w $@-tmp
+	mv $@-tmp $@

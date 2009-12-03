@@ -1,0 +1,12 @@
+struct partition_limit
+{
+  char const *name;
+  uint64_t max_start_sector;
+  uint64_t max_length;
+};
+%%
+dasd,UINT32_MAX,UINT32_MAX
+dvh,UINT32_MAX,UINT32_MAX
+gpt,UINT64_MAX,UINT64_MAX
+mac,UINT32_MAX,UINT32_MAX
+msdos,UINT32_MAX,UINT32_MAX

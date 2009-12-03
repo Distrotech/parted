@@ -103,46 +103,75 @@ ptt_clear_sectors (PedDevice *dev, PedSector start, PedSector n)
           ? 1 : ped_device_write (dev, zero, start + n_z_sectors * i, rem));
 }
 
+#include "pt-limit.c"
+
 /* Throw an exception and return 0 if PART's starting sector number or
    its length is greater than the maximum allowed value for LABEL_TYPE.
    Otherwise, return 1.  */
 int
-ptt_partition_max_start_len (char const *label_type, const PedPartition *part)
+ptt_partition_max_start_len (char const *pt_type, const PedPartition *part)
 {
-  static char const *const max_32[] = {"msdos", "dvh", "dasd", "mac"};
-  unsigned int i;
+  struct partition_limit const *pt_lim
+    = pt_limit_lookup (pt_type, strlen (pt_type));
 
-  for (i = 0; i < sizeof max_32 / sizeof *max_32; i++)
+  /* If we don't have info on the type, return "true".  */
+  if (pt_lim == NULL)
+    return 1;
+
+  /* If the length in sectors exceeds the limit, you lose.  */
+  if (part->geom.length > pt_lim->max_length)
     {
-      if (strcmp (label_type, max_32[i]) == 0)
-        {
-          /* The length (in sectors) must fit in 32 bytes.  */
-          if (part->geom.length > UINT32_MAX)
-            {
-              ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
-                                   _("partition length of %jd sectors exceeds"
-                                     " the %s-partition-table-imposed maximum"
-                                     " of %jd"),
-                                   part->geom.length,
-                                   label_type,
-                                   UINT32_MAX);
-              return 0;
-            }
-
-          /* The starting sector number must fit in 32 bytes.  */
-          if (part->geom.start > UINT32_MAX) {
-            ped_exception_throw (
-                                 PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
-                                 _("starting sector number, %jd exceeds"
-                                   " the %s-partition-table-imposed maximum"
-                                   " of %jd"),
-                                 part->geom.start,
-                                 label_type,
-                                 UINT32_MAX);
-            return 0;
-          }
-        }
+      ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
+			   _("partition length of %jd sectors exceeds"
+			     " the %s-partition-table-imposed maximum"
+			     " of %jd"),
+			   part->geom.length,
+			   pt_type,
+			   UINT32_MAX);
+      return 0;
     }
 
+  /* If the starting sector exceeds the limit, you lose.  */
+  if (part->geom.start > pt_lim->max_start_sector) {
+    ped_exception_throw (
+			 PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
+			 _("starting sector number, %jd exceeds"
+			   " the %s-partition-table-imposed maximum"
+			   " of %jd"),
+			 part->geom.start,
+			 pt_type,
+			 UINT32_MAX);
+    return 0;
+  }
+
   return 1;
+}
+
+/* Set *MAX to the largest representation-imposed starting sector number
+   of a partition of type PT_TYPE and return 0.  If PT_TYPE is not
+   recognized, return -1.  */
+int
+ptt_partition_max_start_sector (char const *pt_type, PedSector *max)
+{
+  struct partition_limit const *pt_lim
+    = pt_limit_lookup (pt_type, strlen (pt_type));
+  if (pt_lim == NULL)
+    return -1;
+
+  *max = pt_lim->max_start_sector;
+  return 0;
+}
+
+/* Set *MAX to the maximum representable length of a partition of type
+   PT_TYPE and return 0.  If PT_TYPE is not recognized, return -1.  */
+int
+ptt_partition_max_length (char const *pt_type, PedSector *max)
+{
+  struct partition_limit const *pt_lim
+    = pt_limit_lookup (pt_type, strlen (pt_type));
+  if (pt_lim == NULL)
+    return -1;
+
+  *max = pt_lim->max_length;
+  return 0;
 }

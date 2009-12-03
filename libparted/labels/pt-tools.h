@@ -24,3 +24,6 @@ int ptt_read_sectors (PedDevice const *dev, PedSector start_sector,
 int ptt_clear_sectors (PedDevice *dev, PedSector start, PedSector count);
 int ptt_partition_max_start_len (char const *label_type,
                 const PedPartition *part);
+
+int ptt_partition_max_start_sector (char const *pt_type, PedSector *max);
+int ptt_partition_max_length (char const *pt_type, PedSector *max);

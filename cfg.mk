@@ -49,3 +49,6 @@ update-copyright-env = UPDATE_COPYRIGHT_USE_INTERVALS=1
 
 useless_free_options = \
   --name=pth_free
+
+# Tools used to bootstrap this package, used for "announcement".
+bootstrap-tools = autoconf,automake,gnulib,gperf
