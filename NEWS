@@ -4,6 +4,12 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** New features
 
+  libparted: new functions to return per-partition-table-type limits:
+    - ped_disk_max_partition_start_sector: Return the largest representable
+    start sector number for a given "disk".
+    - ped_disk_max_partition_length: Return the maximum partition length
+    for a given "disk".
+
   new command "align-check TYPE N" to determine whether the starting sector
   of partition N is TYPE(minimal|optimal)-aligned for the disk.  E.g.,
       parted -s /dev/sda align-check min 1 && echo partition 1 is min-aligned

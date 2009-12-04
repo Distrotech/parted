@@ -327,6 +327,9 @@ extern PedPartition* ped_disk_get_partition_by_sector (const PedDisk* disk,
                                                        PedSector sect);
 extern PedPartition* ped_disk_extended_partition (const PedDisk* disk);
 
+extern PedSector ped_disk_max_partition_length (const PedDisk *disk);
+extern PedSector ped_disk_max_partition_start_sector (const PedDisk *disk);
+
 /* internal functions */
 extern PedDisk* _ped_disk_alloc (const PedDevice* dev, const PedDiskType* type);
 extern void _ped_disk_free (PedDisk* disk);

@@ -1479,6 +1479,26 @@ ped_disk_get_partition_by_sector (const PedDisk* disk, PedSector sect)
 	return NULL;
 }
 
+/**
+ * Return the maximum representable length (in sectors) of a
+ * partition on disk \disk.
+ */
+PedSector
+ped_disk_max_partition_length (const PedDisk* disk)
+{
+  return disk->type->ops->max_length ();
+}
+
+/**
+ * Return the maximum representable start sector of a
+ * partition on disk \disk.
+ */
+PedSector
+ped_disk_max_partition_start_sector (const PedDisk* disk)
+{
+  return disk->type->ops->max_start_sector ();
+}
+
 /* I'm beginning to agree with Sedgewick :-/ */
 static int
 _disk_raw_insert_before (PedDisk* disk, PedPartition* loc, PedPartition* part)
