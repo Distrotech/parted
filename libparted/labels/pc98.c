@@ -501,34 +501,37 @@ fill_raw_part (PC98RawPartition* raw_part, const PedPartition* part)
 static int
 pc98_write (const PedDisk* disk)
 {
-	PC98RawTable		table;
 	PedPartition*		part;
 	int			i;
 
 	PED_ASSERT (disk != NULL, return 0);
 	PED_ASSERT (disk->dev != NULL, return 0);
 
-	if (!ped_device_read (disk->dev, &table, 0, 2))
+	void *s0;
+	if (!ptt_read_sectors (disk->dev, 0, 2, &s0))
 		return 0;
+	PC98RawTable *table = s0;
 
-	if (!pc98_check_ipl_signature (&table)) {
-		memset (table.boot_code, 0, sizeof(table.boot_code));
-		memcpy (table.boot_code, MBR_BOOT_CODE, sizeof(MBR_BOOT_CODE));
+	if (!pc98_check_ipl_signature (table)) {
+		memset (table->boot_code, 0, sizeof(table->boot_code));
+		memcpy (table->boot_code, MBR_BOOT_CODE, sizeof(MBR_BOOT_CODE));
 	}
 
-	memset (table.partitions, 0, sizeof (table.partitions));
-	table.magic = PED_CPU_TO_LE16(PC9800_EXTFMT_MAGIC);
+	memset (table->partitions, 0, sizeof (table->partitions));
+	table->magic = PED_CPU_TO_LE16(PC9800_EXTFMT_MAGIC);
 
 	for (i = 1; i <= MAX_PART_COUNT; i++) {
 		part = ped_disk_get_partition (disk, i);
 		if (!part)
 			continue;
 
-		if (!fill_raw_part (&table.partitions [i - 1], part))
+		if (!fill_raw_part (&table->partitions [i - 1], part))
 			return 0;
 	}
 
-	if (!ped_device_write (disk->dev, (void*) &table, 0, 2))
+	int write_ok = ped_device_write (disk->dev, table, 0, 2);
+	free (s0);
+	if (!write_ok)
 		return 0;
 	return ped_device_sync (disk->dev);
 }
