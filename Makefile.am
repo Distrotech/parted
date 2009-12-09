@@ -76,13 +76,17 @@ MAINTAINERCLEANFILES += \
   aclocal.m4    \
   configure
 
+.PHONY: ss-1024 ss-2048 ss-4096
+ss-1024 ss-2048 ss-4096:
+	PARTED_SECTOR_SIZE=$(ss-,,$@) $(MAKE) check-recursive
+
 # Run the regression test suite with different settings,
 # to ensure it works with simulated partition sizes > 512.
 .PHONY: check-other-sector_sizes
 check-other-sector_sizes:
-	PARTED_SECTOR_SIZE=1024 $(MAKE) check-recursive
-	PARTED_SECTOR_SIZE=2048 $(MAKE) check-recursive
-	PARTED_SECTOR_SIZE=4096 $(MAKE) check-recursive
+	$(MAKE) ss-1024
+	$(MAKE) ss-2048
+	$(MAKE) ss-4096
 
 check: check-other-sector_sizes
 
