@@ -738,6 +738,130 @@ ped_disk_get_max_primary_partition_count (const PedDisk* disk)
 }
 
 /**
+ * Set the state (\c 1 or \c 0) of a flag on a disk.
+ *
+ * \note It is an error to call this on an unavailable flag -- use
+ * ped_disk_is_flag_available() to determine which flags are available
+ * for a given disk label.
+ *
+ * \throws PED_EXCEPTION_ERROR if the requested flag is not available for this
+ *      label.
+ */
+int
+ped_disk_set_flag(PedDisk *disk, PedDiskFlag flag, int state)
+{
+        PED_ASSERT (disk != NULL, return 0);
+
+        PedDiskOps *ops = disk->type->ops;
+
+        if (!ped_disk_is_flag_available(disk, flag)) {
+                ped_exception_throw (
+                        PED_EXCEPTION_ERROR,
+                        PED_EXCEPTION_CANCEL,
+                        "The flag '%s' is not available for %s disk labels.",
+                        ped_disk_flag_get_name(flag),
+                        disk->type->name);
+                return 0;
+        }
+
+        return ops->disk_set_flag(disk, flag, state);
+}
+
+/**
+ * Get the state (\c 1 or \c 0) of a flag on a disk.
+ */
+int
+ped_disk_get_flag(const PedDisk *disk, PedDiskFlag flag)
+{
+        PED_ASSERT (disk != NULL, return 0);
+
+        PedDiskOps *ops = disk->type->ops;
+
+        if (!ped_disk_is_flag_available(disk, flag))
+                return 0;
+
+        return ops->disk_get_flag(disk, flag);
+}
+
+/**
+ * Check whether a given flag is available on a disk.
+ *
+ * \return \c 1 if the flag is available.
+ */
+int
+ped_disk_is_flag_available(const PedDisk *disk, PedDiskFlag flag)
+{
+        PED_ASSERT (disk != NULL, return 0);
+
+        PedDiskOps *ops = disk->type->ops;
+
+        if (!ops->disk_is_flag_available)
+                return 0;
+
+        return ops->disk_is_flag_available(disk, flag);
+}
+
+/**
+ * Returns a name for a \p flag, e.g. PED_DISK_CYLINDER_ALIGNMENT will return
+ * "cylinder_alignment".
+ *
+ * \note The returned string will be in English.  However,
+ * translations are provided, so the caller can call
+ * dgettext("parted", RESULT) on the result.
+ */
+const char *
+ped_disk_flag_get_name(PedDiskFlag flag)
+{
+        switch (flag) {
+        case PED_DISK_CYLINDER_ALIGNMENT:
+                return N_("cylinder_alignment");
+
+        default:
+                ped_exception_throw (
+                        PED_EXCEPTION_BUG,
+                        PED_EXCEPTION_CANCEL,
+                        _("Unknown disk flag, %d."),
+                        flag);
+                return NULL;
+        }
+}
+
+/**
+ * Returns the flag associated with \p name.
+ *
+ * \p name can be the English
+ * string, or the translation for the native language.
+ */
+PedDiskFlag
+ped_disk_flag_get_by_name(const char *name)
+{
+        PedDiskFlag flag;
+
+        for (flag = ped_disk_flag_next(0); flag;
+             flag = ped_disk_flag_next(flag)) {
+                const char *flag_name = ped_disk_flag_get_name(flag);
+                if (strcasecmp(name, flag_name) == 0
+                    || strcasecmp(name, _(flag_name)) == 0)
+                        return flag;
+        }
+
+        return 0;
+}
+
+/**
+ * Iterates through all disk flags.
+ *
+ * ped_disk_flag_next(0) returns the first flag
+ *
+ * \return the next flag, or 0 if there are no more flags
+ */
+PedDiskFlag
+ped_disk_flag_next(PedDiskFlag flag)
+{
+        return (flag + 1) % (PED_DISK_LAST_FLAG + 1);
+}
+
+/**
  * \internal We turned a really nasty bureaucracy problem into an elegant maths
  * problem :-)  Basically, there are some constraints to a partition's
  * geometry:

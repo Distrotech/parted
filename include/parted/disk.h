@@ -27,6 +27,20 @@
 #define PED_DISK_H_INCLUDED
 
 /**
+ * Disk flags
+ */
+enum _PedDiskFlag {
+        /* This flag (which defaults to true) controls if disk types for
+           which cylinder alignment is optional do cylinder alignment when a
+           new partition gets added.
+           This flag is available for msdos and sun disklabels (for sun labels
+           it only controls the aligning of the end of the partition) */
+        PED_DISK_CYLINDER_ALIGNMENT=1,
+};
+#define PED_DISK_FIRST_FLAG             PED_DISK_CYLINDER_ALIGNMENT
+#define PED_DISK_LAST_FLAG              PED_DISK_CYLINDER_ALIGNMENT
+
+/**
  * Partition types
  */
 enum _PedPartitionType {
@@ -71,6 +85,7 @@ struct _PedDiskOps;
 struct _PedDiskType;
 struct _PedDiskArchOps;
 
+typedef enum _PedDiskFlag               PedDiskFlag;
 typedef enum _PedPartitionType          PedPartitionType;
 typedef enum _PedPartitionFlag          PedPartitionFlag;
 typedef enum _PedDiskTypeFeature        PedDiskTypeFeature;
@@ -179,6 +194,16 @@ struct _PedDiskOps {
         void (*free) (PedDisk* disk);
         int (*read) (PedDisk* disk);
         int (*write) (const PedDisk* disk);
+        int (*disk_set_flag) (
+                PedDisk *disk,
+                PedDiskFlag flag,
+                int state);
+        int (*disk_get_flag) (
+                const PedDisk *disk,
+                PedDiskFlag flag);
+        int (*disk_is_flag_available) (
+                const PedDisk *disk,
+                PedDiskFlag flag);
         /** \todo add label guessing op here */
 
         /* partition operations */
@@ -265,6 +290,14 @@ extern int ped_disk_get_max_primary_partition_count (const PedDisk* disk);
 extern bool ped_disk_get_max_supported_partition_count(const PedDisk* disk,
                                                        int* supported);
 extern PedAlignment *ped_disk_get_partition_alignment(const PedDisk *disk);
+
+extern int ped_disk_set_flag(PedDisk *disk, PedDiskFlag flag, int state);
+extern int ped_disk_get_flag(const PedDisk *disk, PedDiskFlag flag);
+extern int ped_disk_is_flag_available(const PedDisk *disk, PedDiskFlag flag);
+
+extern const char *ped_disk_flag_get_name(PedDiskFlag flag);
+extern PedDiskFlag ped_disk_flag_get_by_name(const char *name);
+extern PedDiskFlag ped_disk_flag_next(PedDiskFlag flag);
 
 /** @} */
 
