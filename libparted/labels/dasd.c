@@ -185,8 +185,11 @@ static void
 dasd_free (PedDisk* disk)
 {
 	PED_ASSERT(disk != NULL, return);
-
+	/* Don't free disk->disk_specific first, in case _ped_disk_free
+	   or one of its eventual callees ever accesses it.  */
+	void *p = disk->disk_specific;
 	_ped_disk_free(disk);
+	free(p);
 }
 
 
