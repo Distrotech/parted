@@ -96,6 +96,7 @@ struct _SunPartitionData {
 struct _SunDiskData {
 	PedSector		length; /* This is based on cyl - alt-cyl */
 	SunRawLabel		raw_label;
+	int                     cylinder_alignment;
 };
 
 static PedDiskType sun_disk_type;
@@ -196,6 +197,7 @@ sun_alloc (const PedDevice* dev)
 	PED_ASSERT (bios_geom->cylinders == (PedSector) (dev->length / cyl_size),
                     return NULL);
 	sun_specific->length = ped_round_down_to (dev->length, cyl_size);
+        sun_specific->cylinder_alignment = 1;
 
 	label = &sun_specific->raw_label;
 	memset(label, 0, sizeof(SunRawLabel));
@@ -255,6 +257,42 @@ sun_free (PedDisk *disk)
 {
 	free (disk->disk_specific);
 	_ped_disk_free (disk);
+}
+
+static int
+sun_disk_set_flag (PedDisk *disk, PedDiskFlag flag, int state)
+{
+        SunDiskData *disk_specific = disk->disk_specific;
+        switch (flag) {
+        case PED_DISK_CYLINDER_ALIGNMENT:
+                disk_specific->cylinder_alignment = !!state;
+                return 1;
+        default:
+                return 0;
+        }
+}
+
+static int
+sun_disk_get_flag (const PedDisk *disk, PedDiskFlag flag)
+{
+        SunDiskData *disk_specific = disk->disk_specific;
+        switch (flag) {
+        case PED_DISK_CYLINDER_ALIGNMENT:
+                return disk_specific->cylinder_alignment;
+        default:
+                return 0;
+        }
+}
+
+static int
+sun_disk_is_flag_available (const PedDisk *disk, PedDiskFlag flag)
+{
+        switch (flag) {
+        case PED_DISK_CYLINDER_ALIGNMENT:
+               return 1;
+        default:
+               return 0;
+        }
 }
 
 static int
@@ -768,12 +806,15 @@ sun_partition_align (PedPartition* part, const PedConstraint* constraint)
 {
         PED_ASSERT (part != NULL, return 0);
 
-	if (_ped_partition_attempt_align (part, constraint,
-					  _get_strict_constraint (part->disk)))
-	       	return 1;
-	if (_ped_partition_attempt_align (part, constraint,
-					  _get_lax_constraint (part->disk)))
-	       	return 1;
+        SunDiskData *disk_specific = part->disk->disk_specific;
+
+        if (disk_specific->cylinder_alignment &&
+            _ped_partition_attempt_align (part, constraint,
+                                          _get_strict_constraint (part->disk)))
+                return 1;
+        if (_ped_partition_attempt_align (part, constraint,
+                                          _get_lax_constraint (part->disk)))
+                return 1;
 
 #ifndef DISCOVER_ONLY
 	ped_exception_throw (
@@ -881,6 +922,10 @@ PT_define_limit_functions (sun)
 static PedDiskOps sun_disk_ops = {
 	clobber:		NULL_IF_DISCOVER_ONLY (sun_clobber),
 	write:			NULL_IF_DISCOVER_ONLY (sun_write),
+
+	disk_set_flag:          sun_disk_set_flag,
+	disk_get_flag:          sun_disk_get_flag,
+	disk_is_flag_available: sun_disk_is_flag_available,
 
 	get_partition_alignment: sun_get_partition_alignment,
 

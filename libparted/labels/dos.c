@@ -143,6 +143,10 @@ typedef struct {
 } OrigState;
 
 typedef struct {
+        int             cylinder_alignment;
+} DosDiskData;
+
+typedef struct {
 	unsigned char	system;
 	int		boot;
 	int		hidden;
@@ -227,8 +231,16 @@ msdos_alloc (const PedDevice* dev)
 	PED_ASSERT (dev != NULL, return NULL);
 
 	disk = _ped_disk_alloc ((PedDevice*)dev, &msdos_disk_type);
-	if (disk)
-		disk->disk_specific = NULL;
+        if (disk) {
+		DosDiskData *disk_specific = ped_malloc(sizeof *disk_specific);
+                if (!disk_specific) {
+                        free (disk);
+                        return NULL;
+                }
+                disk_specific->cylinder_alignment = 1;
+                disk->disk_specific = disk_specific;
+        }
+
 	return disk;
 }
 
@@ -240,7 +252,10 @@ msdos_duplicate (const PedDisk* disk)
 	new_disk = ped_disk_new_fresh (disk->dev, &msdos_disk_type);
 	if (!new_disk)
 		return NULL;
-	new_disk->disk_specific = NULL;
+
+        memcpy(new_disk->disk_specific, disk->disk_specific,
+               sizeof(DosDiskData));
+
 	return new_disk;
 }
 
@@ -249,7 +264,45 @@ msdos_free (PedDisk* disk)
 {
 	PED_ASSERT (disk != NULL, return);
 
+	DosDiskData *disk_specific = disk->disk_specific;
 	_ped_disk_free (disk);
+	free(disk_specific);
+}
+
+static int
+msdos_disk_set_flag (PedDisk *disk, PedDiskFlag flag, int state)
+{
+        DosDiskData *disk_specific = disk->disk_specific;
+        switch (flag) {
+        case PED_DISK_CYLINDER_ALIGNMENT:
+                disk_specific->cylinder_alignment = !!state;
+                return 1;
+        default:
+                return 0;
+        }
+}
+
+static int
+msdos_disk_get_flag (const PedDisk *disk, PedDiskFlag flag)
+{
+        DosDiskData *disk_specific = disk->disk_specific;
+        switch (flag) {
+        case PED_DISK_CYLINDER_ALIGNMENT:
+                return disk_specific->cylinder_alignment;
+        default:
+                return 0;
+        }
+}
+
+static int
+msdos_disk_is_flag_available (const PedDisk *disk, PedDiskFlag flag)
+{
+        switch (flag) {
+        case PED_DISK_CYLINDER_ALIGNMENT:
+               return 1;
+        default:
+               return 0;
+        }
 }
 
 #ifndef DISCOVER_ONLY
@@ -1974,10 +2027,11 @@ msdos_partition_align (PedPartition* part, const PedConstraint* constraint)
 	PedCHSGeometry	bios_geom;
 	DosPartitionData* dos_data;
 
- 	PED_ASSERT (part != NULL, return 0);
+	PED_ASSERT (part != NULL, return 0);
 	PED_ASSERT (part->disk_specific != NULL, return 0);
 
 	dos_data = part->disk_specific;
+
 	if (dos_data->system == PARTITION_LDM && dos_data->orig) {
 		PedGeometry *orig_geom = &dos_data->orig->geom;
 
@@ -1997,7 +2051,9 @@ msdos_partition_align (PedPartition* part, const PedConstraint* constraint)
 
 	partition_probe_bios_geometry (part, &bios_geom);
 
-	if (_align (part, &bios_geom, constraint))
+	DosDiskData *disk_specific = part->disk->disk_specific;
+	if (disk_specific->cylinder_alignment
+	    && _align(part, &bios_geom, constraint))
 		return 1;
 	if (_align_no_geom (part, constraint))
 		return 1;
@@ -2280,6 +2336,10 @@ PT_define_limit_functions (msdos)
 static PedDiskOps msdos_disk_ops = {
 	clobber:		NULL_IF_DISCOVER_ONLY (msdos_clobber),
 	write:			NULL_IF_DISCOVER_ONLY (msdos_write),
+
+	disk_set_flag:          msdos_disk_set_flag,
+	disk_get_flag:          msdos_disk_get_flag,
+	disk_is_flag_available: msdos_disk_is_flag_available,
 
 	partition_set_name:	NULL,
 	partition_get_name:	NULL,
