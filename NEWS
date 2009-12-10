@@ -26,8 +26,7 @@ GNU parted NEWS                                    -*- outline -*-
   of partition N is TYPE(minimal|optimal)-aligned for the disk.  E.g.,
       parted -s /dev/sda align-check min 1 && echo partition 1 is min-aligned
       parted -s /dev/sda align-check opt 2 && echo partition 2 is opt-aligned
-  This is useful only on kernels for which Parted is able to determine
-  a disk's alignment characteristics.
+  The same libblkid and kernel version requirements apply as for --align
 
   Add functions to libparted to get minimal and optimal alignment
   information from devices:
@@ -35,6 +34,7 @@ GNU parted NEWS                                    -*- outline -*-
   ped_device_get_optimal_aligned_constraint()
   ped_device_get_minimum_alignment()
   ped_device_get_optimum_alignment()
+  The same libblkid and kernel version requirements apply as for --align
 
   Add ped_disk_get_partition_alignment() function to libparted to get
   information about alignment enforced by the disk type.
