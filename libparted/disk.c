@@ -2391,6 +2391,8 @@ ped_partition_flag_get_name (PedPartitionFlag flag)
 		return N_("prep");
 	case PED_PARTITION_MSFT_RESERVED:
 		return N_("msftres");
+        case PED_PARTITION_APPLE_TV_RECOVERY:
+                return N_("atvrecv");
 
 	default:
 		ped_exception_throw (
