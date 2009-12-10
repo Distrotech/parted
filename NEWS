@@ -4,6 +4,21 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** New features
 
+  new --align=<align> commandline option which can have the following values:
+  none:     Use the minimum alignment allowed by the disk type
+  cylinder: Align partitions to cylinders (the default)
+  minimal:  Use minimum alignment as given by the disk topology information
+  optimal:  Use optimum alignment as given by the disk topology information
+  The minimal and optimal  values will use layout information provided by the
+  disk to align the logical partition table addresses to actual physical
+  blocks on the disks. The mininal value uses the minimum aligment needed to
+  align the partition properly to physical blocks, which avoids performance
+  degradation. Where as the optimal value uses a multiple of the physical
+  block size in a way that guarantees optimal performance.
+  The min and opt values will only work when compiled with
+  libblkid >= 2.17 and running on a kernel >= 2.6.31, otherwise they will
+  behave as the none --align value.
+
   libparted: new functions to set per disk (instead of per partition) flags:
   ped_disk_set_flag()
   ped_disk_get_flag()

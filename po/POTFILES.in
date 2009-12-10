@@ -5,6 +5,7 @@
 # list of files containing translatable strings
 
 # lib
+lib/argmatch.c
 lib/closeout.c
 lib/error.c
 lib/getopt.c

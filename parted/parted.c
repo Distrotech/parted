@@ -19,6 +19,7 @@
 #include <config.h>
 #include <stdbool.h>
 
+#include "argmatch.h"
 #include "closeout.h"
 #include "configmake.h"
 #include "version-etc.h"
@@ -74,6 +75,31 @@ enum
   PRETEND_INPUT_TTY = CHAR_MAX + 1,
 };
 
+enum
+{
+        ALIGNMENT_NONE = 2,
+        ALIGNMENT_CYLINDER,
+        ALIGNMENT_MINIMAL,
+        ALIGNMENT_OPTIMAL
+};
+
+static char const *const align_args[] =
+{
+  "none",
+  "cylinder",
+  "minimal",
+  "optimal",
+  NULL
+};
+
+static int const align_types[] =
+{
+  ALIGNMENT_NONE,
+  ALIGNMENT_CYLINDER,
+  ALIGNMENT_MINIMAL,
+  ALIGNMENT_OPTIMAL
+};
+ARGMATCH_VERIFY (align_args, align_types);
 
 typedef struct {
         time_t  last_update;
@@ -87,6 +113,7 @@ static struct option const options[] = {
         {"machine",     0, NULL, 'm'},
         {"script",      0, NULL, 's'},
         {"version",     0, NULL, 'v'},
+        {"align",       required_argument, NULL, 'a'},
         {"-pretend-input-tty", 0, NULL, PRETEND_INPUT_TTY},
         {NULL,          0, NULL, 0}
 };
@@ -97,6 +124,7 @@ static const char *const options_help [][2] = {
         {"machine",     N_("displays machine parseable output")},
         {"script",      N_("never prompts for user intervention")},
         {"version",     N_("displays the version")},
+        {"align=[none|cyl|min|opt]", N_("alignment for new partitions")},
         {NULL,          NULL}
 };
 
@@ -105,6 +133,7 @@ int     pretend_input_tty = 0;
 int     opt_machine_mode = 0;
 int     disk_is_modified = 0;
 int     is_toggle_mode = 0;
+int     alignment = ALIGNMENT_CYLINDER;
 
 static const char* number_msg = N_(
 "NUMBER is the partition number used by Linux.  On MS-DOS disk labels, the "
@@ -587,7 +616,7 @@ print_options_help ()
         int             i;
 
         for (i=0; options_help [i][0]; i++) {
-                printf ("  -%c, --%-23.23s %s\n",
+                printf ("  -%c, --%-25.25s %s\n",
                         options_help [i][0][0],
                         options_help [i][0],
                         _(options_help [i][1]));
@@ -719,6 +748,11 @@ do_mkpart (PedDevice** dev)
         if (!disk)
                 goto error;
 
+        if (ped_disk_is_flag_available(disk, PED_DISK_CYLINDER_ALIGNMENT))
+                if (!ped_disk_set_flag(disk, PED_DISK_CYLINDER_ALIGNMENT,
+                                       alignment == ALIGNMENT_CYLINDER))
+                        goto error_destroy_disk;
+
         if (!ped_disk_type_check_feature (disk->type, PED_DISK_TYPE_EXTENDED)) {
                 part_type = PED_PARTITION_NORMAL;
         } else {
@@ -771,7 +805,14 @@ do_mkpart (PedDevice** dev)
                         range_end);
         PED_ASSERT (user_constraint != NULL, return 0);
 
-        dev_constraint = ped_device_get_constraint (*dev);
+        if (alignment == ALIGNMENT_OPTIMAL)
+                dev_constraint =
+                        ped_device_get_optimal_aligned_constraint(*dev);
+        else if (alignment == ALIGNMENT_MINIMAL)
+                dev_constraint =
+                        ped_device_get_minimal_aligned_constraint(*dev);
+        else
+                dev_constraint = ped_device_get_constraint(*dev);
         PED_ASSERT (dev_constraint != NULL, return 0);
 
         final_constraint = ped_constraint_intersect (user_constraint,
@@ -2451,7 +2492,7 @@ int     opt, help = 0, list = 0, version = 0, wrong = 0;
 
 while (1)
 {
-        opt = getopt_long (*argc_ptr, *argv_ptr, "hlmsv",
+        opt = getopt_long (*argc_ptr, *argv_ptr, "hlmsva:",
                            options, NULL);
         if (opt == -1)
                 break;
@@ -2462,16 +2503,22 @@ while (1)
                 case 'm': opt_machine_mode = 1; break;
                 case 's': opt_script_mode = 1; break;
                 case 'v': version = 1; break;
+                case 'a':
+                  alignment = XARGMATCH ("--align", optarg,
+                                         align_args, align_types);
+                  break;
                 case PRETEND_INPUT_TTY:
                   pretend_input_tty = 1;
                   break;
-                default:  wrong = 1; break;
+                default:
+                  wrong = 1;
+                  break;
         }
 }
 
 if (wrong == 1) {
         fprintf (stderr,
-                 _("Usage: %s [-hlmsv] [DEVICE [COMMAND [PARAMETERS]]...]\n"),
+                 _("Usage: %s [-hlmsv] [-a<align>] [DEVICE [COMMAND [PARAMETERS]]...]\n"),
                  program_name);
         return 0;
 }

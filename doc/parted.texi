@@ -496,6 +496,11 @@ display a help message
 @itemx --script
 never prompt the user
 
+@item -a alignment-type
+@itemx --align alignment-type
+Set alignment for newly created partitions, valid alignment types are:
+none, cylinder, minimal and optimal.
+
 @item -v
 @itemx --version
 display the version

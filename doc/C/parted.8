@@ -30,6 +30,26 @@ never prompts for user intervention
 .TP
 .B -v, --version
 displays the version
+.TP
+.B -a \fIalignment-type\fP, --align \fIalignment-type\fP
+Set alignment for newly created partitions, valid alignment types are:
+.RS
+.IP none
+Use the minimum alignment allowed by the disk type.
+.IP cylinder
+Align partitions to cylinders.
+.IP minimal
+Use minimum alignment as given by the disk topology information. This and
+the opt value will use layout information provided by the disk to align the
+logical partition table addresses to actual physical blocks on the disks.
+The min value is the minimum aligment needed to align the partition properly to
+physical blocks, which avoids performance degradation.
+.IP optimal
+Use optimum alignment as given by the disk topology information. This
+aligns to a multiple of the physical block size in a way that guarantees
+optimal performance.
+.RE
+
 .SH COMMANDS
 .TP
 .B [device]
