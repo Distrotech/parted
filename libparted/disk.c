@@ -264,8 +264,10 @@ ped_disk_duplicate (const PedDisk* old_disk)
 	for (old_part = ped_disk_next_partition (old_disk, NULL); old_part;
 	     old_part = ped_disk_next_partition (old_disk, old_part)) {
 		if (ped_partition_is_active (old_part)) {
-			if (!_add_duplicate_part (new_disk, old_part))
+			if (!_add_duplicate_part (new_disk, old_part)){
+				_disk_pop_update_mode (new_disk);
 				goto error_destroy_new_disk;
+			}
 		}
 	}
 	_disk_pop_update_mode (new_disk);
