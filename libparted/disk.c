@@ -2124,8 +2124,10 @@ ped_disk_delete_all (PedDisk* disk)
 	for (walk = disk->part_list; walk; walk = next) {
 		next = walk->next;
 
-		if (!ped_disk_delete_partition (disk, walk))
+		if (!ped_disk_delete_partition (disk, walk)) {
+		        _disk_pop_update_mode(disk);
 			return 0;
+                }
 	}
 
 	if (!_disk_pop_update_mode (disk))
