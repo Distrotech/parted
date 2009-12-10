@@ -16,10 +16,10 @@ partedinclude_HEADERS = constraint.h	\
 			natmath.h	\
 			timer.h		\
 			unit.h		\
-			parted.h        \
-			$(S390_HDRS)
+			parted.h
 
 noinst_HEADERS	      = crc32.h		\
-			endian.h
+			endian.h	\
+			$(S390_HDRS)
 
 MAINTAINERCLEANFILES = Makefile.in
