@@ -54,8 +54,8 @@
 #ifdef DEBUG
 static int _disk_check_sanity (PedDisk* disk);
 #endif
-static void _disk_push_update_mode (PedDisk* disk);
-static void _disk_pop_update_mode (PedDisk* disk);
+static int _disk_push_update_mode (PedDisk* disk);
+static int _disk_pop_update_mode (PedDisk* disk);
 static int _disk_raw_insert_before (PedDisk* disk, PedPartition* loc,
 				    PedPartition* part);
 static int _disk_raw_insert_after (PedDisk* disk, PedPartition* loc,
@@ -222,9 +222,11 @@ _add_duplicate_part (PedDisk* disk, PedPartition* old_part)
 		goto error;
 	new_part->disk = disk;
 
-	_disk_push_update_mode (disk);
+	if (!_disk_push_update_mode (disk))
+		goto error_destroy_new_part;
 	ret = _disk_raw_add (disk, new_part);
-	_disk_pop_update_mode (disk);
+	if (!_disk_pop_update_mode (disk))
+		goto error_destroy_new_part;
 	if (!ret)
 		goto error_destroy_new_part;
 #ifdef DEBUG
@@ -260,7 +262,8 @@ ped_disk_duplicate (const PedDisk* old_disk)
 	if (!new_disk)
 		goto error;
 
-	_disk_push_update_mode (new_disk);
+	if (!_disk_push_update_mode (new_disk))
+		goto error_destroy_new_disk;
 	for (old_part = ped_disk_next_partition (old_disk, NULL); old_part;
 	     old_part = ped_disk_next_partition (old_disk, old_part)) {
 		if (ped_partition_is_active (old_part)) {
@@ -270,7 +273,8 @@ ped_disk_duplicate (const PedDisk* old_disk)
 			}
 		}
 	}
-	_disk_pop_update_mode (new_disk);
+	if (!_disk_pop_update_mode (new_disk))
+		goto error_destroy_new_disk;
 	return new_disk;
 
 error_destroy_new_disk:
@@ -373,12 +377,15 @@ ped_disk_new_fresh (PedDevice* dev, const PedDiskType* type)
 	disk = type->ops->alloc (dev);
 	if (!disk)
        		goto error;
-	_disk_pop_update_mode (disk);
+        if (!_disk_pop_update_mode (disk))
+                goto error_destroy_disk;
 	PED_ASSERT (disk->update_mode == 0, ignored);
 
 	disk->needs_clobber = 1;
 	return disk;
 
+error_destroy_disk:
+        ped_disk_destroy (disk);
 error:
 	return NULL;
 }
@@ -1099,12 +1106,13 @@ _disk_alloc_freespace (PedDisk* disk)
  * partitions are removed, making it much easier for various manipulation
  * routines...
  */
-static void
+static int
 _disk_push_update_mode (PedDisk* disk)
 {
 	if (!disk->update_mode) {
 #ifdef DEBUG
-		_disk_check_sanity (disk);
+		if (!_disk_check_sanity (disk))
+			return 0;
 #endif
 
 		_disk_remove_freespace (disk);
@@ -1112,24 +1120,27 @@ _disk_push_update_mode (PedDisk* disk)
 		_disk_remove_metadata (disk);
 
 #ifdef DEBUG
-		_disk_check_sanity (disk);
+		if (!_disk_check_sanity (disk))
+			return 0;
 #endif
 	} else {
 		disk->update_mode++;
 	}
+	return 1;
 }
 
-static void
+static int
 _disk_pop_update_mode (PedDisk* disk)
 {
-	PED_ASSERT (disk->update_mode, return);
+	PED_ASSERT (disk->update_mode, return 0);
 
 	if (disk->update_mode == 1) {
 	/* re-allocate metadata BEFORE leaving update mode, to prevent infinite
 	 * recursion (metadata allocation requires update mode)
 	 */
 #ifdef DEBUG
-		_disk_check_sanity (disk);
+		if (!_disk_check_sanity (disk))
+			return 0;
 #endif
 
 		_disk_alloc_metadata (disk);
@@ -1137,11 +1148,13 @@ _disk_pop_update_mode (PedDisk* disk)
 		_disk_alloc_freespace (disk);
 
 #ifdef DEBUG
-		_disk_check_sanity (disk);
+		if (!_disk_check_sanity (disk))
+			return 0;
 #endif
 	} else {
 		disk->update_mode--;
 	}
+	return 1;
 }
 
 /** @} */
@@ -1971,7 +1984,8 @@ ped_disk_add_partition (PedDisk* disk, PedPartition* part,
 	if (!_partition_check_basic_sanity (disk, part))
 		return 0;
 
-	_disk_push_update_mode (disk);
+	if (!_disk_push_update_mode (disk))
+		return 0;
 
 	if (ped_partition_is_active (part)) {
 		overlap_constraint
@@ -2005,7 +2019,8 @@ ped_disk_add_partition (PedDisk* disk, PedPartition* part,
 
 	ped_constraint_destroy (overlap_constraint);
 	ped_constraint_destroy (constraints);
-	_disk_pop_update_mode (disk);
+	if (!_disk_pop_update_mode (disk))
+		return 0;
 #ifdef DEBUG
 	if (!_disk_check_sanity (disk))
 		return 0;
@@ -2034,10 +2049,12 @@ ped_disk_remove_partition (PedDisk* disk, PedPartition* part)
 	PED_ASSERT (disk != NULL, return 0);
 	PED_ASSERT (part != NULL, return 0);
 
-	_disk_push_update_mode (disk);
+	if (!_disk_push_update_mode (disk))
+		return 0;
 	PED_ASSERT (part->part_list == NULL, ignored);
 	_disk_raw_remove (disk, part);
-	_disk_pop_update_mode (disk);
+	if (!_disk_pop_update_mode (disk))
+		return 0;
 	ped_disk_enumerate_partitions (disk);
 	return 1;
 }
@@ -2056,12 +2073,14 @@ ped_disk_delete_partition (PedDisk* disk, PedPartition* part)
 	PED_ASSERT (disk != NULL, return 0);
 	PED_ASSERT (part != NULL, return 0);
 
-	_disk_push_update_mode (disk);
+	if (!_disk_push_update_mode (disk))
+		return 0;
 	if (part->type == PED_PARTITION_EXTENDED)
 		ped_disk_delete_all_logical (disk);
 	ped_disk_remove_partition (disk, part);
 	ped_partition_destroy (part);
-	_disk_pop_update_mode (disk);
+	if (!_disk_pop_update_mode (disk))
+		return 0;
 
 	return 1;
 }
@@ -2099,7 +2118,8 @@ ped_disk_delete_all (PedDisk* disk)
 
 	PED_ASSERT (disk != NULL, return 0);
 
-	_disk_push_update_mode (disk);
+	if (!_disk_push_update_mode (disk))
+		return 0;
 
 	for (walk = disk->part_list; walk; walk = next) {
 		next = walk->next;
@@ -2108,7 +2128,8 @@ ped_disk_delete_all (PedDisk* disk)
 			return 0;
 	}
 
-	_disk_pop_update_mode (disk);
+	if (!_disk_pop_update_mode (disk))
+		return 0;
 
 	return 1;
 }
@@ -2142,7 +2163,8 @@ ped_disk_set_partition_geom (PedDisk* disk, PedPartition* part,
 	old_geom = part->geom;
 	ped_geometry_init (&new_geom, part->geom.dev, start, end - start + 1);
 
-	_disk_push_update_mode (disk);
+	if (!_disk_push_update_mode (disk))
+		return 0;
 
 	overlap_constraint
 		= _partition_get_overlap_constraint (part, &new_geom);
@@ -2165,7 +2187,8 @@ ped_disk_set_partition_geom (PedDisk* disk, PedPartition* part,
 	_disk_raw_remove (disk, part);
 	_disk_raw_add (disk, part);
 
-	_disk_pop_update_mode (disk);
+	if (!_disk_pop_update_mode (disk))
+		goto error;
 
 	ped_constraint_destroy (overlap_constraint);
 	ped_constraint_destroy (constraints);
@@ -2173,6 +2196,7 @@ ped_disk_set_partition_geom (PedDisk* disk, PedPartition* part,
 
 error_pop_update_mode:
 	_disk_pop_update_mode (disk);
+error:
 	ped_constraint_destroy (overlap_constraint);
 	ped_constraint_destroy (constraints);
 	part->geom = old_geom;
@@ -2211,7 +2235,8 @@ ped_disk_maximize_partition (PedDisk* disk, PedPartition* part,
 
 	old_geom = part->geom;
 
-	_disk_push_update_mode (disk);
+	if (!_disk_push_update_mode (disk))
+		return 0;
 
 	if (part->prev)
 		new_start = part->prev->geom.end + 1;
@@ -2227,7 +2252,8 @@ ped_disk_maximize_partition (PedDisk* disk, PedPartition* part,
 					  new_end))
 		goto error;
 
-	_disk_pop_update_mode (disk);
+	if (!_disk_pop_update_mode (disk))
+		return 0;
 	return 1;
 
 error:
@@ -2299,11 +2325,13 @@ ped_disk_minimize_extended_partition (PedDisk* disk)
 	if (!ext_part)
 		return 1;
 
-	_disk_push_update_mode (disk);
+	if (!_disk_push_update_mode (disk))
+		return 0;
 
 	first_logical = ext_part->part_list;
 	if (!first_logical) {
-		_disk_pop_update_mode (disk);
+		if (!_disk_pop_update_mode (disk))
+			return 0;
 		return ped_disk_delete_partition (disk, ext_part);
 	}
 
@@ -2316,7 +2344,8 @@ ped_disk_minimize_extended_partition (PedDisk* disk)
 					      last_logical->geom.end);
 	ped_constraint_destroy (constraint);
 
-	_disk_pop_update_mode (disk);
+	if (!_disk_pop_update_mode (disk))
+		return 0;
 	return status;
 }
 
