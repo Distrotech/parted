@@ -4,6 +4,18 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** New features
 
+  libparted: new functions to set per disk (instead of per partition) flags:
+  ped_disk_set_flag()
+  ped_disk_get_flag()
+  ped_disk_is_flag_available()
+  ped_disk_flag_get_name()
+  ped_disk_flag_get_by_name()
+  ped_disk_flag_next()
+
+  libparted: new per disk flag: PED_DISK_CYLINDER_ALIGNMENT. This flag
+  (which defaults to true) controls if disk types for which cylinder alignment
+  is optional do cylinder alignment when a new partition gets added.
+
   libparted: new functions to return per-partition-table-type limits:
     - ped_disk_max_partition_start_sector: Return the largest representable
     start sector number for a given "disk".
