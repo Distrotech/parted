@@ -254,6 +254,7 @@ struct blkdev_ioctl_param {
 #define SX8_MAJOR2              161
 #define XVD_MAJOR               202
 #define SDMMC_MAJOR             179
+#define LOOP_MAJOR              7
 
 #define SCSI_BLK_MAJOR(M) (                                             \
                 (M) == SCSI_DISK0_MAJOR                                 \
@@ -569,6 +570,8 @@ _device_probe_type (PedDevice* dev)
                 dev->type = PED_DEVICE_SDMMC;
         } else if (_is_virtblk_major(dev_major)) {
                 dev->type = PED_DEVICE_VIRTBLK;
+        } else if (dev_major == LOOP_MAJOR) {
+                dev->type = PED_DEVICE_FILE;
         } else {
                 dev->type = PED_DEVICE_UNKNOWN;
         }
