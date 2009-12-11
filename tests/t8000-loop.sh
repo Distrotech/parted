@@ -25,37 +25,25 @@ fi
 . $srcdir/t-lib.sh
 
 require_root_
-lvm_init_root_dir_
 
-d1=
+d1= f1=
 cleanup_()
 {
   test -n "$d1" && losetup -d "$d1"
-  rm -f "$f1";
+  rm -f "$f1"
 }
 
 f1=$(pwd)/1; d1=$(loop_setup_ "$f1") \
   || skip_test_ "is this partition mounted with 'nodev'?"
 
-printf '%s\n' \
-    'Warning: WARNING: the kernel failed to re-read the partition table on' \
-  > exp || framework_failure
-
 fail=0
 
-# Expect this to exit with status of 1.
-parted -s $d1 mklabel msdos > err 2>&1
-test $? = 1 || fail=1
-sed 's/^\(Warn.*table on\).*/\1/' err > k && mv k err || fail=1
+# Expect this to succeed.
+parted -s $d1 mklabel msdos > err 2>&1 || fail=1
+compare err /dev/null || fail=1     # expect no output
 
-compare exp err || fail=1
-
-# Create a partition; expect to exit 1
-parted -s $d1 mkpart primary 1 10 > err 2>&1
-test $? = 1 || fail=1
-sed 's/^\(Warn.*table on\).*/\1/' err > k && mv k err || fail=1
-
-# check for expected output
-compare exp err || fail=1
+# Create a partition
+parted -s $d1 mkpart primary 1 10 > err 2>&1 || fail=1
+compare err /dev/null || fail=1     # expect no output
 
 Exit $fail

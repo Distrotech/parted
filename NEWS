@@ -56,6 +56,10 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  parted can once again create partition tables on loop devices.
+  Before, "parted -s /dev/loop0 mklabel gpt" would fail.
+  [bug introduced in parted-1.9.0]
+
   improved >512-byte sector support: for example, printing a table on a
   4k-sector disk would show "Sector size (logical/physical): 4096B/512B",
   when the sizes should have been "4096B/4096B".
