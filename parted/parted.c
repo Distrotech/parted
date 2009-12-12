@@ -878,7 +878,8 @@ do_mkpart (PedDevice** dev)
         /* set minor attributes */
         if (part_name)
                 PED_ASSERT (ped_partition_set_name (part, part_name), return 0);
-        free (part_name);
+        free (part_name);  /* avoid double-free upon failure */
+        part_name = NULL;
         if (!ped_partition_set_system (part, fs_type))
                 goto error_destroy_disk;
         if (ped_partition_is_flag_available (part, PED_PARTITION_LBA))
