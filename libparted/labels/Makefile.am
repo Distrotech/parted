@@ -39,8 +39,9 @@ liblabels_la_LIBADD = $(OS_LIBS) $(INTLLIBS)
 INCLUDES = $(partedincludedir) $(INTLINCS)
 
 BUILT_SOURCES = pt-limit.c
-DISTCLEANFILES = $(BUILT_SOURCES)
+MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 liblabels_la_SOURCES += pt-limit.gperf
+EXTRA_DIST = $(BUILT_SOURCES)
 
 GPERF = gperf
 GPERF_OPTIONS = \
