@@ -19,7 +19,7 @@ Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 License:   GPL
 Group:     Applications/System
 
-BuildRequires: e2fsprogs-devel readline-devel ncurses-devel
+BuildRequires: e2fsprogs-devel readline-devel ncurses-devel gperf
 BuildRequires: automake libtool gettext-devel texinfo pkgconfig
 
 BuildRequires: device-mapper-devel, libselinux-devel libsepol-devel
