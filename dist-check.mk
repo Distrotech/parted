@@ -4,23 +4,47 @@ bin=bin-$$$$
 
 write_loser = printf '\#!%s\necho $$0: bad path 1>&2; exit 1\n' '$(SHELL)'
 
-TMPDIR ?= /tmp
-t=$(TMPDIR)/$(PACKAGE)/test
+tmpdir = $(abs_top_builddir)/tests/torture
+
+t=$(tmpdir)/$(PACKAGE)/test
 pfx=$(t)/i
+
+built_programs = $$(cd src && MAKEFLAGS= $(MAKE) -s built_programs.list)
 
 # More than once, tainted build and source directory names would
 # have caused at least one "make check" test to apply "chmod 700"
 # to all directories under $HOME.  Make sure it doesn't happen again.
-tp := $(shell echo "$(TMPDIR)/$(PACKAGE)-$$$$")
+tp = $(tmpdir)/taint
 t_prefix = $(tp)/a
 t_taint = '$(t_prefix) b'
 fake_home = $(tp)/home
 
-# Disable this test, since libtool-generated scripts
-# can't deal with a space-tainted srcdir.
+# Ensure that tests run from tainted build and src dir names work,
+# and don't affect anything in $HOME.  Create witness files in $HOME,
+# record their attributes, and build/test.  Then ensure that the
+# witnesses were not affected.
+# Skip this test when using libtool, since libtool-generated scripts
+# cannot deal with a space-tainted srcdir.
 ALL_RECURSIVE_TARGETS += taint-distcheck
-.PHONY: taint-distcheck
-taint-distcheck:
+taint-distcheck: $(DIST_ARCHIVES)
+	grep '^[	 ]*LT_INIT' configure.ac >/dev/null && exit 0
+	test -d $(t_taint) && chmod -R 700 $(t_taint) || :
+	-rm -rf $(t_taint) $(fake_home)
+	mkdir -p $(t_prefix) $(t_taint) $(fake_home)
+	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t_taint) -zxf $(distdir).tar.gz
+	mkfifo $(fake_home)/fifo
+	touch $(fake_home)/f
+	mkdir -p $(fake_home)/d/e
+	ls -lR $(fake_home) $(t_prefix) > $(tp)/.ls-before
+	HOME=$(fake_home); export HOME;			\
+	cd $(t_taint)/$(distdir)			\
+	  && ./configure				\
+	  && $(MAKE)					\
+	  && $(MAKE) check				\
+	  && ls -lR $(fake_home) $(t_prefix) > $(tp)/.ls-after \
+	  && diff $(tp)/.ls-before $(tp)/.ls-after	\
+	  && test -d $(t_prefix)
+	rm -rf $(tp)
 
 # Verify that a twisted use of --program-transform-name=PROGRAM works.
 define install-transform-check
@@ -35,6 +59,7 @@ endef
 # Install, then verify that all binaries and man pages are in place.
 # Note that neither the binary, ginstall, nor the ].1 man page is installed.
 define my-instcheck
+  echo running my-instcheck;				\
   $(MAKE) prefix=$(pfx) install				\
     && test ! -f $(pfx)/bin/ginstall			\
     && { fail=0;					\
@@ -51,8 +76,16 @@ define my-instcheck
     }
 endef
 
+# The hard-linking for-loop below ensures that there is a bin/ directory
+# full of all of the programs under test (except the ones that are required
+# for basic Makefile rules), all symlinked to the just-built "false" program.
+# This is to ensure that if ever a test neglects to make PATH include
+# the build srcdir, these always-failing programs will run.
+# Otherwise, it is too easy to test the wrong programs.
+# Note that "false" itself is a symlink to true, so it too will malfunction.
 define coreutils-path-check
   {							\
+    echo running coreutils-path-check;			\
     if test -f $(srcdir)/src/true.c; then		\
       fail=1;						\
       mkdir $(bin)					\
@@ -80,18 +113,17 @@ define coreutils-path-check
   }
 endef
 
-# Use -Wformat -Werror to detect format-string/arg-list mismatches.
-# Also, check for shadowing problems with -Wshadow, and for pointer
-# arithmetic problems with -Wpointer-arith.
-# These CFLAGS are pretty strict.  If you build this target, you probably
-# have to have a recent version of gcc and glibc headers.
-# The hard-linking for-loop below ensures that there is a bin/ directory
-# full of all of the programs under test (except the ones that are required
-# for basic Makefile rules), all symlinked to the just-built "false" program.
-# This is to ensure that if ever a test neglects to make PATH include
-# the build srcdir, these always-failing programs will run.
-# Otherwise, it is too easy to test the wrong programs.
-# Note that "false" itself is a symlink to true, so it too will malfunction.
+# Use this to make sure we don't run these programs when building
+# from a virgin tgz file, below.
+null_AM_MAKEFLAGS ?= \
+  ACLOCAL=false \
+  AUTOCONF=false \
+  AUTOMAKE=false \
+  AUTOHEADER=false \
+  GPERF=false \
+  LIBTOOL=false \
+  MAKEINFO=false
+
 ALL_RECURSIVE_TARGETS += my-distcheck
 my-distcheck: $(DIST_ARCHIVES) $(local-check)
 	$(MAKE) syntax-check
@@ -100,7 +132,7 @@ my-distcheck: $(DIST_ARCHIVES) $(local-check)
 	mkdir -p $(t)
 	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
 	cd $(t)/$(distdir)				\
-	  && ./configure --enable-gcc-warnings --disable-nls \
+	  && ./configure --quiet --enable-gcc-warnings --disable-nls \
 	  && $(MAKE) AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)' \
 	  && $(MAKE) dvi				\
 	  && $(install-transform-check)			\
@@ -111,6 +143,7 @@ my-distcheck: $(DIST_ARCHIVES) $(local-check)
 	  && $(AMTAR) -zxf - ) < $(distdir).tar.gz
 	diff -ur $(t)/$(distdir).old $(t)/$(distdir)
 	-rm -rf $(t)
+	rmdir $(tmpdir)/$(PACKAGE) $(tmpdir)
 	@echo "========================"; \
 	echo "$(distdir).tar.gz is ready for distribution"; \
 	echo "========================"
