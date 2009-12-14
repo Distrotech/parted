@@ -11,7 +11,7 @@ pfx=$(t)/i
 
 built_programs =						\
   $$(echo 'spy:;@echo $$(PROGRAMS)'				\
-    | MAKEFLAGS= $(MAKE) -s -C src -f Makefile -f - spy		\
+    | MAKEFLAGS= $(MAKE) -s -C parted -f Makefile -f - spy	\
     | fmt -1 | sed 's,$(EXEEXT)$$,,' | sort -u)
 
 # More than once, tainted build and source directory names would
@@ -85,8 +85,8 @@ define my-instcheck
     && { fail=0;					\
       for i in $(built_programs); do			\
         test "$$i" = ginstall && i=install;		\
-        for j in "$(pfx)/bin/$$i"			\
-                 "$(pfx)/share/man/man1/$$i.1"; do	\
+        for j in "$(pfx)/sbin/$$i"			\
+                 "$(pfx)/share/man/man8/$$i.8"; do	\
           case $$j in *'[.1') continue;; esac;		\
           test -f "$$j" && :				\
             || { echo "$$j not installed"; fail=1; };	\
