@@ -394,7 +394,7 @@ mac_clobber (PedDevice* dev)
         }
 
         memset (buf, 0, dev->sector_size);
-        bool ok = ped_device_write (dev, buf, 0, 1);
+        int ok = ped_device_write (dev, buf, 0, 1);
         free (buf);
         if (!ok)
 		return 0;

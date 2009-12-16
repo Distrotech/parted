@@ -522,7 +522,7 @@ sun_write (const PedDisk* disk)
 
         verify (sizeof *label == 512);
         memcpy (s0, label, sizeof *label);
-	bool write_ok = ped_device_write (disk->dev, s0, 0, 1);
+	int write_ok = ped_device_write (disk->dev, s0, 0, 1);
 	free (s0);
 
 	if (write_ok)

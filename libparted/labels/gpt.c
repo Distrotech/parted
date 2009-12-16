@@ -1213,7 +1213,7 @@ gpt_write (const PedDisk *disk)
   if ((pth_raw = pth_get_raw (disk->dev, gpt)) == NULL)
     goto error_free_ptes;
   pth_free (gpt);
-  bool write_ok = ped_device_write (disk->dev, pth_raw, 1, 1);
+  int write_ok = ped_device_write (disk->dev, pth_raw, 1, 1);
   free (pth_raw);
   if (!write_ok)
     goto error_free_ptes;
