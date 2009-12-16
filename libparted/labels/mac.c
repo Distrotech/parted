@@ -1163,7 +1163,9 @@ mac_write (PedDisk* disk)
 			       mac_disk_data->part_map_entry_count))
 		goto error_free_part_map;
 	free (part_map);
-	return write_block_zero (disk, mac_driverdata);
+	int write_ok = write_block_zero (disk, mac_driverdata);
+	free (mac_driverdata);
+	return write_ok;
 
 error_free_part_map:
 	free (part_map);
