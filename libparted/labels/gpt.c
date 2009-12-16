@@ -444,7 +444,6 @@ static int
 gpt_probe (const PedDevice *dev)
 {
   GuidPartitionTableHeader_t *gpt = NULL;
-  uint8_t *pth_raw = ped_malloc (pth_get_size (dev));
   int gpt_sig_found = 0;
 
   PED_ASSERT (dev != NULL, return 0);
@@ -452,6 +451,7 @@ gpt_probe (const PedDevice *dev)
   if (dev->length <= 1)
     return 0;
 
+  void *pth_raw = ped_malloc (pth_get_size (dev));
   if (ped_device_read (dev, pth_raw, 1, GPT_HEADER_SECTORS)
       || ped_device_read (dev, pth_raw, dev->length - 1, GPT_HEADER_SECTORS))
     {
