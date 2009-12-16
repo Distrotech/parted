@@ -1257,7 +1257,6 @@ msdos_partition_new (const PedDisk* disk, PedPartitionType part_type,
 	}
 	return part;
 
-	free (dos_data);
 error_free_part:
 	free (part);
 error:
