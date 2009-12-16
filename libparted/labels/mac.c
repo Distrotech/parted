@@ -1095,7 +1095,9 @@ write_block_zero (PedDisk* disk, MacDiskData* mac_driverdata)
 	memcpy(&raw_disk->driverlist[0], &mac_driverdata->driverlist[0],
 			sizeof(raw_disk->driverlist));
 
-	return ped_device_write (dev, raw_disk, 0, 1);
+	int write_ok = ped_device_write (dev, raw_disk, 0, 1);
+        free (s0);
+	return write_ok;
 }
 
 static int
