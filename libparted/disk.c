@@ -759,9 +759,14 @@ ped_disk_get_max_primary_partition_count (const PedDisk* disk)
 int
 ped_disk_set_flag(PedDisk *disk, PedDiskFlag flag, int state)
 {
+        int ret;
+
         PED_ASSERT (disk != NULL, return 0);
 
         PedDiskOps *ops = disk->type->ops;
+
+        if (!_disk_push_update_mode(disk))
+                return 0;
 
         if (!ped_disk_is_flag_available(disk, flag)) {
                 ped_exception_throw (
@@ -770,10 +775,16 @@ ped_disk_set_flag(PedDisk *disk, PedDiskFlag flag, int state)
                         "The flag '%s' is not available for %s disk labels.",
                         ped_disk_flag_get_name(flag),
                         disk->type->name);
+                _disk_pop_update_mode(disk);
                 return 0;
         }
 
-        return ops->disk_set_flag(disk, flag, state);
+        ret = ops->disk_set_flag(disk, flag, state);
+
+        if (!_disk_pop_update_mode (disk))
+                return 0;
+
+        return ret;
 }
 
 /**
