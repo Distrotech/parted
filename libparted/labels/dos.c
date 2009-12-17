@@ -2209,7 +2209,10 @@ add_startend_metadata (PedDisk* disk)
 	else
 		init_end = PED_MIN (dev->bios_geom.sectors - 1, init_end - 1);
 
-	if (!get_end_last_nonfree_part(disk, &final_start))
+        DosDiskData *disk_specific = disk->disk_specific;
+        if (!disk_specific->cylinder_alignment)
+                final_start = dev->length - 1;
+        else if (!get_end_last_nonfree_part(disk, &final_start))
 		final_start = ped_round_down_to (dev->length, cyl_size);
 	else
 		final_start = PED_MAX (final_start + 1,
