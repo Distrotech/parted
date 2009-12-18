@@ -1254,7 +1254,7 @@ partition_print_flags (PedPartition* part)
                         _res = res;
                         ped_realloc (&_res, strlen (res) + 1 + strlen (name));
                         res = _res;
-                        strncat (res, name, 21);
+                        strcat(res, name);
                 }
         }
 
