@@ -2423,7 +2423,6 @@ err:
 static int
 _dm_add_partition (PedDisk* disk, PedPartition* part)
 {
-        struct dm_task* task = NULL;
         int             rc;
         char*           vol_name = NULL;
         const char*     dev_name = NULL;
@@ -2434,7 +2433,7 @@ _dm_add_partition (PedDisk* disk, PedPartition* part)
                 return 0;
 
         /* Get map name from devicemapper */
-        task = dm_task_create (DM_DEVICE_INFO);
+        struct dm_task *task = dm_task_create (DM_DEVICE_INFO);
         if (!task)
                 goto err;
 
@@ -2447,11 +2446,13 @@ _dm_add_partition (PedDisk* disk, PedPartition* part)
                 goto err;
 
         dev_name = dm_task_get_name (task);
-        dm_task_destroy (task);
-        task = NULL;
 
         if (asprintf (&vol_name, "%sp%d", dev_name, part->num) == -1)
                 goto err;
+
+        /* Caution: dm_task_destroy frees dev_name.  */
+        dm_task_destroy (task);
+        task = NULL;
 
         if (asprintf (&params, "%d:%d %lld", arch_specific->major,
                       arch_specific->minor, part->geom.start) == -1)
