@@ -24,6 +24,9 @@ gnu_rel_host = $(gnu_ftp_host-$(RELEASE_TYPE))
 url_dir_list = \
   ftp://$(gnu_rel_host)/gnu/parted
 
+# Used in maint.mk's web-manual rule
+manual_title = Parted User's Manual
+
 # The GnuPG ID of the key used to sign the tarballs.
 gpg_key_ID = B9AB9A16
 

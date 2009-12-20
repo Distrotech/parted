@@ -83,9 +83,7 @@ edited by Leslie P. Polzer in 2006.
 * Related information::         Further reading on related topics
 * Copying This Manual::         How to make copies of this manual
 * History::                     This manual's history
-@ifnotplaintext
-* Index::                       Index of referenced concepts
-@end ifnotplaintext
+* Concept index::               Concept index
 @end menu
 
 @node    Introduction
@@ -1260,12 +1258,9 @@ by the Free Software Foundation; with no Invariant Sections, with no
 Front-Cover Texts, and with no Back-Cover Texts.  @xref{Copying
 This Manual}, for details.
 
-@c FIXME: why doesn't this @ifnotplaintext work?!
-@c @ifnotplaintext
-@node Index
+@node Concept index
 @unnumbered Index
 @printindex cp
-@c @end ifnotplaintext
 
 @bye
 
