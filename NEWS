@@ -75,6 +75,9 @@ GNU parted NEWS                                    -*- outline -*-
   handle device nodes created by lvm build with udev synchronisation enabled
   properly.
 
+  when printing tables, parted no longer truncates flag names
+
+
 * Noteworthy changes in release 2.0 (2009-10-06) [beta]
 
 ** Improvements
