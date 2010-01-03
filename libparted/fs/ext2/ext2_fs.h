@@ -15,7 +15,7 @@
 
 /*
  * EXT2_*_*() convienience macros added by Andrew Clausen <clausen@gnu.org>
- * Copyright (C) 2000, 2009 Free Software Foundation, Inc.
+ * Copyright (C) 2000, 2009-2010 Free Software Foundation, Inc.
  */
 
 #ifndef _EXT2_FS_H

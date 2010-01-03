@@ -1,6 +1,7 @@
 /*
     ext2_block_relocator.c -- ext2 block relocator
-    Copyright (C) 1998-2000, 2007, 2009 Free Software Foundation, Inc.
+    Copyright (C) 1998-2000, 2007, 2009-2010 Free Software Foundation,
+    Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

@@ -14,7 +14,7 @@ resizing, checking and copy partitions and file systems on them.
 @ifnottex @c texi2pdf don't understand copying and insertcopying ???
 @c modifications must also be done in the titlepage
 @copying
-Copyright @copyright{} 1999-2009 Free Software Foundation, Inc.
+Copyright @copyright{} 1999-2010 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.1 or
