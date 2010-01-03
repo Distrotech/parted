@@ -45,10 +45,12 @@ old_NEWS_hash = 5f004112c95714cc7c498ee7da4ceccf
 
 include $(srcdir)/dist-check.mk
 
-update-copyright-env = UPDATE_COPYRIGHT_USE_INTERVALS=1
-
 useless_free_options = \
   --name=pth_free
 
 # Tools used to bootstrap this package, used for "announcement".
 bootstrap-tools = autoconf,automake,gnulib,gperf
+
+update-copyright-env = \
+  UPDATE_COPYRIGHT_USE_INTERVALS=1 \
+  UPDATE_COPYRIGHT_MAX_LINE_LENGTH=79
