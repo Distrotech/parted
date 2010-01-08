@@ -41,7 +41,7 @@ local-checks-to-skip = \
 # Now that we have better (check.mk) tests, make this the default.
 export VERBOSE = yes
 
-old_NEWS_hash = 5f004112c95714cc7c498ee7da4ceccf
+old_NEWS_hash = 3667631deb6fa6200514ce8811be7801
 
 include $(srcdir)/dist-check.mk
 
