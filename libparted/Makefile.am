@@ -36,7 +36,6 @@ libparted_la_SOURCES  = debug.c			\
 			cs/geom.c		\
 			cs/constraint.c		\
 			cs/natmath.c		\
-			arch/blkpg.h		\
 			$(ARCH_SOURCE)
 
 

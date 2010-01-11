@@ -44,7 +44,6 @@
 #include <libdevmapper.h>
 #endif
 
-#include "blkpg.h"
 #include "../architecture.h"
 #include "dirname.h"
 
