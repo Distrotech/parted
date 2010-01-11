@@ -674,8 +674,7 @@ _device_set_sector_size (PedDevice* dev)
 
 #if defined __s390__ || defined __s390x__
         /* Return PED_SECTOR_SIZE_DEFAULT for DASDs. */
-        if (dev->type == PED_DEVICE_DASD
-            || dev->type == PED_DEVICE_FILE) {
+        if (dev->type == PED_DEVICE_DASD) {
                 arch_specific->real_sector_size = dev->sector_size;
                 dev->sector_size = PED_SECTOR_SIZE_DEFAULT;
         }
