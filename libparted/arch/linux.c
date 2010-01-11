@@ -668,7 +668,7 @@ _device_set_sector_size (PedDevice* dev)
                         dev->path, strerror (errno), PED_SECTOR_SIZE_DEFAULT);
         } else {
                 dev->phys_sector_size =
-                        blkid_topology_get_minimum_io_size(
+                        blkid_topology_get_physical_sector_size(
                                 arch_specific->topology);
         }
 #endif
