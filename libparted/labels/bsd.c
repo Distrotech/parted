@@ -416,7 +416,6 @@ bsd_partition_new (const PedDisk* disk, PedPartitionType part_type,
 	}
 	return part;
 
-	free (bsd_data);
 error_free_part:
 	free (part);
 error:

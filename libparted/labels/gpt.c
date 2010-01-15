@@ -1240,7 +1240,6 @@ gpt_write (const PedDisk *disk)
   free (ptes);
   return ped_device_sync (disk->dev);
 
-  free (pth_raw);
 error_free_ptes:
   free (ptes);
 error:

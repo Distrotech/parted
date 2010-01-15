@@ -406,7 +406,6 @@ _ped_disk_alloc (const PedDevice* dev, const PedDiskType* disk_type)
 	disk->part_list = NULL;
 	return disk;
 
-	free (disk);
 error:
 	return NULL;
 }
