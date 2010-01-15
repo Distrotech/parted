@@ -1020,7 +1020,6 @@ gpt_read (PedDisk *disk)
       GuidPartitionEntry_t *pte
         = (GuidPartitionEntry_t *) ((char *) ptes + i * p_ent_size);
       PedPartition *part;
-      PedConstraint *constraint_exact;
 
       if (!guid_cmp (pte->PartitionTypeGuid, UNUSED_ENTRY_GUID))
         continue;
@@ -1032,9 +1031,10 @@ gpt_read (PedDisk *disk)
       part->fs_type = ped_file_system_probe (&part->geom);
       part->num = i + 1;
 
-      constraint_exact = ped_constraint_exact (&part->geom);
+      PedConstraint *constraint_exact = ped_constraint_exact (&part->geom);
       if (!ped_disk_add_partition (disk, part, constraint_exact))
         {
+          ped_constraint_destroy (constraint_exact);
           ped_partition_destroy (part);
           goto error_delete_all;
         }
