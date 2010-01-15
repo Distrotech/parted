@@ -873,7 +873,6 @@ read_table (PedDisk* disk, PedSector sector, int is_extended_table)
 	PedPartition*		part;
 	PedPartitionType	type;
 	PedSector		lba_offset;
-	PedConstraint*		constraint_exact;
 
 	PED_ASSERT (disk != NULL, return 0);
 	PED_ASSERT (disk->dev != NULL, return 0);
@@ -944,10 +943,12 @@ read_table (PedDisk* disk, PedSector sector, int is_extended_table)
 		if (type != PED_PARTITION_EXTENDED)
 			part->fs_type = ped_file_system_probe (&part->geom);
 
-		constraint_exact = ped_constraint_exact (&part->geom);
-		if (!ped_disk_add_partition (disk, part, constraint_exact))
-			goto error;
+		PedConstraint *constraint_exact
+		  = ped_constraint_exact (&part->geom);
+		bool ok = ped_disk_add_partition (disk, part, constraint_exact);
 		ped_constraint_destroy (constraint_exact);
+		if (!ok)
+			goto error;
 
 		/* non-nested extended partition */
 		if (part->type == PED_PARTITION_EXTENDED) {
