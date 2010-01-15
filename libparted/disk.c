@@ -632,7 +632,9 @@ ped_disk_check (const PedDisk* disk)
 				walk->num, part_size, fs_size);
 
 			free (part_size);
+
 			free (fs_size);
+			fs_size = NULL;
 
 			if (choice != PED_EXCEPTION_IGNORE)
 				return 0;
