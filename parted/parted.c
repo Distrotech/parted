@@ -1635,7 +1635,6 @@ do_print (PedDevice** dev)
 
         return 1;
 
-        ped_disk_destroy (disk);
 error:
         return 0;
 }
