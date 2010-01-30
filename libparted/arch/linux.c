@@ -654,21 +654,26 @@ _device_set_sector_size (PedDevice* dev)
                         dev->path, strerror (errno), PED_SECTOR_SIZE_DEFAULT);
         } else {
                 dev->sector_size = (long long)sector_size;
+                dev->phys_sector_size = dev->sector_size;
         }
 
 #if USE_BLKID
         get_blkid_topology(arch_specific);
         if (!arch_specific->topology) {
-                ped_exception_throw (
-                        PED_EXCEPTION_WARNING,
-                        PED_EXCEPTION_OK,
-                        _("Could not determine minimum io size for %s: %s.\n"
-                          "Using the default size (%lld)."),
-                        dev->path, strerror (errno), PED_SECTOR_SIZE_DEFAULT);
+                dev->phys_sector_size = 0;
         } else {
                 dev->phys_sector_size =
                         blkid_topology_get_physical_sector_size(
                                 arch_specific->topology);
+        }
+        if (dev->phys_sector_size == 0) {
+                ped_exception_throw (
+                        PED_EXCEPTION_WARNING,
+                        PED_EXCEPTION_OK,
+                        _("Could not determine physical sector size for %s.\n"
+                          "Using the logical sector size (%lld)."),
+                        dev->path, dev->sector_size);
+                dev->phys_sector_size = dev->sector_size;
         }
 #endif
 

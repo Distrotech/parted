@@ -4,6 +4,9 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  Parted no longer uses a physical sector size of 0 or of any other
+  value smaller than the logical sector size.
+
   gpt: read-only operation could clobber MBR part of hybrid GPT+MBR table
   [bug introduced in parted-2.1]
 
