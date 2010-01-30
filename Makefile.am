@@ -78,7 +78,7 @@ MAINTAINERCLEANFILES += \
 
 .PHONY: ss-1024 ss-2048 ss-4096
 ss-1024 ss-2048 ss-4096:
-	PARTED_SECTOR_SIZE=$(ss-,,$@) $(MAKE) check-recursive
+	PARTED_SECTOR_SIZE=$(subst ss-,,$@) $(MAKE) check-recursive
 
 # Run the regression test suite with different settings,
 # to ensure it works with simulated partition sizes > 512.
