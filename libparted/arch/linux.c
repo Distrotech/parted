@@ -2564,9 +2564,14 @@ PedAlignment*
 linux_get_minimum_alignment(const PedDevice *dev)
 {
         blkid_topology tp = LINUX_SPECIFIC(dev)->topology;
+        if (!tp)
+                return NULL;
 
-        if (!tp || blkid_topology_get_minimum_io_size(tp) == 0)
-                return NULL; /* ped_alignment_none */
+        if (blkid_topology_get_minimum_io_size(tp) == 0)
+                return ped_alignment_new(
+                        blkid_topology_get_alignment_offset(tp) /
+                                dev->sector_size,
+                        dev->phys_sector_size / dev->sector_size);
 
         return ped_alignment_new(
                 blkid_topology_get_alignment_offset(tp) / dev->sector_size,
@@ -2577,9 +2582,21 @@ PedAlignment*
 linux_get_optimum_alignment(const PedDevice *dev)
 {
         blkid_topology tp = LINUX_SPECIFIC(dev)->topology;
+        if (!tp)
+                return NULL;
 
-        if (!tp || blkid_topology_get_optimal_io_size(tp) == 0)
-                return NULL; /* ped_alignment_none */
+        /* If optimal_io_size is 0 _and_ alignment_offset is 0 _and_
+           minimum_io_size is a power of 2 then go with the device.c default */
+        unsigned long minimum_io_size = blkid_topology_get_minimum_io_size(tp);
+        if (blkid_topology_get_optimal_io_size(tp) == 0 &&
+            blkid_topology_get_alignment_offset(tp) == 0 &&
+            (minimum_io_size & (minimum_io_size - 1)) == 0)
+                return NULL;
+
+        /* If optimal_io_size is 0 and we don't meet the other criteria
+           for using the device.c default, return the minimum alignment. */
+        if (blkid_topology_get_optimal_io_size(tp) == 0)
+                return linux_get_minimum_alignment(dev);
 
         return ped_alignment_new(
                 blkid_topology_get_alignment_offset(tp) / dev->sector_size,
