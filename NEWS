@@ -2,6 +2,13 @@ GNU parted NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New features
+
+  The ped_device_get_*_alignment() functions now return a sane default
+  value instead of NULL when the so called topology information is incomplete.
+  The default minimum alignment aligns to physical sector size, the default
+  optimal alignment is 1MiB, which is what vista and windows 7 do.
+
 ** Bug fixes
 
   Parted no longer uses a physical sector size of 0 or of any other
