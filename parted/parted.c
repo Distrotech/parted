@@ -949,6 +949,11 @@ do_mkpartfs (PedDevice** dev)
         if (!disk)
                 goto error;
 
+        if (ped_disk_is_flag_available(disk, PED_DISK_CYLINDER_ALIGNMENT))
+                if (!ped_disk_set_flag(disk, PED_DISK_CYLINDER_ALIGNMENT,
+                                       alignment == ALIGNMENT_CYLINDER))
+                        goto error_destroy_disk;
+
         if (!ped_disk_type_check_feature (disk->type, PED_DISK_TYPE_EXTENDED)) {
                 part_type = PED_PARTITION_NORMAL;
         } else {
@@ -989,7 +994,14 @@ do_mkpartfs (PedDevice** dev)
                                                                 range_end);
         PED_ASSERT (user_constraint != NULL, return 0);
 
-        dev_constraint = ped_device_get_constraint (*dev);
+        if (alignment == ALIGNMENT_OPTIMAL)
+                dev_constraint =
+                        ped_device_get_optimal_aligned_constraint(*dev);
+        else if (alignment == ALIGNMENT_MINIMAL)
+                dev_constraint =
+                        ped_device_get_minimal_aligned_constraint(*dev);
+        else
+                dev_constraint = ped_device_get_constraint(*dev);
         PED_ASSERT (dev_constraint != NULL, return 0);
 
         final_constraint = ped_constraint_intersect (user_constraint,
@@ -1352,6 +1364,11 @@ do_print (PedDevice** dev)
         if (!disk)
                 goto error;
 
+        if (ped_disk_is_flag_available(disk, PED_DISK_CYLINDER_ALIGNMENT))
+                if (!ped_disk_set_flag(disk, PED_DISK_CYLINDER_ALIGNMENT,
+                                       alignment == ALIGNMENT_CYLINDER))
+                        goto error_destroy_disk;
+
         peek_word = command_line_peek_word ();
         if (peek_word) {
                 if (strncmp (peek_word, "devices", 7) == 0) {
@@ -1634,6 +1651,8 @@ do_print (PedDevice** dev)
 
         return 1;
 
+error_destroy_disk:
+        ped_disk_destroy (disk);
 error:
         return 0;
 }
@@ -1860,6 +1879,11 @@ do_resize (PedDevice** dev)
         disk = ped_disk_new (*dev);
         if (!disk)
                 goto error;
+
+        if (ped_disk_is_flag_available(disk, PED_DISK_CYLINDER_ALIGNMENT))
+                if (!ped_disk_set_flag(disk, PED_DISK_CYLINDER_ALIGNMENT,
+                                       alignment == ALIGNMENT_CYLINDER))
+                        goto error_destroy_disk;
 
         if (!command_line_get_partition (_("Partition number?"), disk, &part))
                 goto error_destroy_disk;
