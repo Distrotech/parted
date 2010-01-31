@@ -23,6 +23,7 @@ fi
 
 : ${srcdir=.}
 . $srcdir/t-lib.sh
+ss=$sector_size_
 
 fail=0
 dev=dev-file
@@ -33,7 +34,7 @@ export PATH
 for t in msdos gpt dvh sun mac bsd amiga loop pc98; do
     echo $t
     rm -f $dev
-    dd if=/dev/zero of=$dev bs=512 count=1 seek=10000 || { fail=1; continue; }
+    dd if=/dev/zero of=$dev bs=$ss count=1 seek=10000 || { fail=1; continue; }
     parted -s $dev mklabel $t || { fail=1; continue; }
 
     #case $t in pc98) sleep 999d;; esac
