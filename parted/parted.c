@@ -830,7 +830,7 @@ do_mkpart (PedDevice** dev)
                 ped_exception_leave_all();
 
                 PedConstraint *constraint_any = ped_constraint_any (*dev);
-                bool added_ok = ped_disk_add_partition (disk, part,
+                added_ok = ped_disk_add_partition (disk, part,
                                                         constraint_any);
                 ped_constraint_destroy (constraint_any);
                 if (added_ok) {
@@ -1346,7 +1346,6 @@ do_print (PedDevice** dev)
         char*           size;
         const char*     name;
         char*           tmp;
-        char*           flags;
         wchar_t*        table_rendered;
 
         disk = ped_disk_new (*dev);
@@ -1549,7 +1548,7 @@ do_print (PedDevice** dev)
                                     str_list_append (row, name);
                             }
 
-                            flags = partition_print_flags (part);
+                            char *flags = partition_print_flags (part);
                             str_list_append (row, flags);
                             free (flags);
                     } else {
