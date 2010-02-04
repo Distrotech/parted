@@ -132,7 +132,7 @@ default_handler (PedException* e)
 			_("A bug has been detected in GNU Parted.  "
 			"Refer to the web site of parted "
 			"http://www.gnu.org/software/parted/parted.html "
-			"for more informations of what could be useful "
+			"for more information of what could be useful "
 			"for bug submitting!  "
 			"Please email a bug report to "
 			"bug-parted@gnu.org containing at least the "

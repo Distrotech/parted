@@ -34,7 +34,7 @@ test_newfs_hfs()
 # it seems that the wrapper bad block file is stored differently by
 # newfs_hfs than by mac os X install format program
 # -dfn for fsck_hfs means Debug, Force, No
-# Debug => print more informations
+# Debug => print more information
 # Force => force check even if clean bit is set
 # No => don't modify the F.S.
 	ped_test "mkpart && newfs_hfs && fsck_hfs"\
@@ -67,7 +67,7 @@ prepare_resize_tests()
 test_resize_move_end_backward()
 {
 # -dfn for fsck_hfs means Debug, Force, No
-# Debug => print more informations
+# Debug => print more information
 # Force => force check even if clean bit is set
 # No => don't modify the F.S.
 	do_test_diff "resize: move end backward"\

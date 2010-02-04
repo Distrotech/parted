@@ -294,11 +294,11 @@ enum { /* Don't change these values */
         SECT_END        = -1
 };
 
-/* Find the prefered way to adjust the sector s inside range.
+/* Find the preferred way to adjust the sector s inside range.
  * If a move isn't allowed or is out of range it can't be selected.
  * what contains SECT_START if the sector to adjust is a start sector
  * or SECT_END if it's an end one.
- * The prefered move is to the nearest allowed boundary of the part
+ * The preferred move is to the nearest allowed boundary of the part
  * partition (if at equal distance: to start if SECT_START or to end
  * if SECT_END).
  * The distance is returned in dist.
