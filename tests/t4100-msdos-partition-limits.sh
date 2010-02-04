@@ -37,7 +37,7 @@ test_expect_success \
     'create an XFS file system' \
     '
     dd if=/dev/zero of=$fs bs=1MB count=2 seek=20 &&
-    mkfs.xfs -q $fs &&
+    mkfs.xfs -f -q $fs &&
     mkdir "$mp"
 
     '
