@@ -2,6 +2,11 @@ GNU parted NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  gpt: read-only operation could clobber MBR part of hybrid GPT+MBR table
+  [bug introduced in parted-2.1]
+
 
 * Noteworthy changes in release 2.1 (2009-12-20) [stable]
 

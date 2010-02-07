@@ -9,6 +9,7 @@ TESTS = \
   t0200-gpt.sh \
   t0201-gpt.sh \
   t0202-gpt-pmbr.sh \
+  t0205-gpt-list-clobbers-pmbr.sh \
   t0220-gpt-msftres.sh \
   t0250-gpt.sh \
   t0280-gpt-corrupt.sh \

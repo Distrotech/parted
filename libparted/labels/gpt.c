@@ -4,7 +4,7 @@
     original version by Matt Domsch <Matt_Domsch@dell.com>
     Disclaimed into the Public Domain
 
-    Portions Copyright (C) 2001-2003, 2005-2009 Free Software Foundation, Inc.
+    Portions Copyright (C) 2001-2003, 2005-2010 Free Software Foundation, Inc.
 
     EFI GUID Partition Table handling
     Per Intel EFI Specification v1.02
@@ -932,9 +932,9 @@ gpt_read (PedDisk *disk)
   if (primary_gpt && backup_gpt)
     {
       /* Both are valid.  */
+#ifndef DISCOVER_ONLY
       if (PED_LE64_TO_CPU (primary_gpt->AlternateLBA) < disk->dev->length - 1)
         {
-#ifndef DISCOVER_ONLY
           switch (ped_exception_throw
                   (PED_EXCEPTION_ERROR,
                    (PED_EXCEPTION_FIX | PED_EXCEPTION_CANCEL
@@ -954,8 +954,12 @@ gpt_read (PedDisk *disk)
               write_back = 0;
               break;
             }
-#endif /* !DISCOVER_ONLY */
         }
+      else
+	{
+	  write_back = 0;
+	}
+#endif /* !DISCOVER_ONLY */
       gpt = primary_gpt;
       pth_free (backup_gpt);
     }
