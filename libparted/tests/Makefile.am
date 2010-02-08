@@ -5,7 +5,7 @@
 
 TESTS = t1000-label.sh t2000-disk.sh
 EXTRA_DIST = $(TESTS)
-bin_PROGRAMS = label disk
+check_PROGRAMS = label disk
 AM_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
 
 LDADD = \
