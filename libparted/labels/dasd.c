@@ -399,7 +399,7 @@ dasd_read (PedDisk* disk)
 
 		if (strncmp(PART_TYPE_SWAP, str, 6) == 0) {
 			fs = ped_file_system_probe(&part->geom);
-			if (is_linux_swap(fs->name)) {
+			if (fs && is_linux_swap(fs->name)) {
 				dasd_data->system = PARTITION_LINUX_SWAP;
 				PDEBUG;
 			}
