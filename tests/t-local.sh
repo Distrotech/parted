@@ -97,4 +97,61 @@ require_512_byte_sector_size_()
       || skip_test_ FS test with sector size != 512
 }
 
+peek_()
+{
+  case $# in 2) ;; *) echo "usage: peek_ FILE 0_BASED_OFFSET" >&2; exit 1;; esac
+  case $2 in *[^0-9]*) echo "peek_: invalid offset: $2" >&2; exit 1 ;; esac
+  dd if="$1" bs=1 skip="$2" count=1
+}
+
+poke_()
+{
+  case $# in 3) ;; *) echo "usage: poke_ FILE 0_BASED_OFFSET BYTE" >&2; exit 1;;
+    esac
+  case $2 in *[^0-9]*) echo "poke_: invalid offset: $2" >&2; exit 1 ;; esac
+  case $3 in ?) ;; *) echo "poke_: invalid byte: '$3'" >&2; exit 1 ;; esac
+  printf %s "$3" | dd of="$1" bs=1 seek="$2" count=1 conv=notrunc
+}
+
+# byte 56 of the partition entry is the first byte of its 72-byte name field
+gpt1_pte_name_offset_()
+{
+  local ss=$1
+  case $ss in *[^0-9]*) echo "$0: invalid sector size: $ss">&2; return 1;; esac
+  expr $ss \* 2 + 56
+  return 0
+}
+
+# Change the name of the first partition in the primary GPT table,
+# thus invalidating the PartitionEntryArrayCRC32 checksum.
+gpt_corrupt_primary_table_()
+{
+  case $# in 2) ;; *) echo "$0: expected 2 args, got $#" >&2; return 1;; esac
+  local dev=$1
+  local ss=$2
+  case $ss in *[^0-9]*) echo "$0: invalid sector size: $ss">&2; return 1;; esac
+
+  # get the first byte of the name
+  local orig_pte_name_byte=$(peek_ $dev $(gpt1_pte_name_offset_ $ss)) || return 1
+
+  local new_byte
+  test x"$orig_pte_name_byte" = xA && new_byte=B || new_byte=A
+
+  # Replace with a different byte
+  poke_ $dev $(gpt1_pte_name_offset_ $ss) "$new_byte" || return 1
+
+  printf %s "$orig_pte_name_byte"
+  return 0
+}
+
+gpt_restore_primary_table_()
+{
+  case $# in 3) ;; *) echo "$0: expected 2 args, got $#" >&2; return 1;; esac
+  local dev=$1
+  local ss=$2
+  case $ss in *[^0-9]*) echo "$0: invalid sector size: $ss">&2; return 1;; esac
+  local orig_byte=$3
+  poke_ $dev $(gpt1_pte_name_offset_ $ss) "$orig_byte" || return 1
+}
+
 . $srcdir/t-lvm.sh

@@ -24,22 +24,6 @@ fi
 : ${srcdir=.}
 . $srcdir/t-lib.sh
 
-peek()
-{
-  case $# in 2) ;; *) echo "usage: peek FILE 0_BASED_OFFSET" >&2; exit 1;; esac
-  case $2 in *[^0-9]*) echo "peek: invalid offset: $2"; exit 1 ;; esac
-  dd if="$1" bs=1 skip="$2" count=1
-}
-
-poke()
-{
-  case $# in 3) ;; *) echo "usage: poke FILE 0_BASED_OFFSET BYTE" >&2; exit 1;;
-    esac
-  case $2 in *[^0-9]*) echo "poke: invalid offset: $2"; exit 1 ;; esac
-  case $3 in ?) ;; *) echo "poke: invalid byte: '$3'"; exit 1 ;; esac
-  printf %s "$3" | dd of="$1" bs=1 seek="$2" count=1 conv=notrunc
-}
-
 dev=loop-file
 
 ss=$sector_size_
@@ -67,17 +51,7 @@ compare /dev/null empty || fail=1
 
 # We're going to change the name of the first partition,
 # thus invalidating the PartitionEntryArrayCRC32 checksum.
-
-# byte 56 of the partition entry is the first byte of its 72-byte name field
-pte_offset=$(expr $ss \* 2 + 56)
-
-# get the first byte of the name
-pte_byte=$(peek $dev $pte_offset) || fail=1
-
-test x"$pte_byte" = xA && new_byte=B || new_byte=A
-
-# Replace with a different byte
-poke $dev $pte_offset "$new_byte" || fail=1
+orig_byte=$(gpt_corrupt_primary_table_ $dev $ss) || fail=1
 
 # printing the table must succeed, but with a scary diagnostic.
 parted -s $dev print > err 2>&1 || fail=1
@@ -91,9 +65,8 @@ compare exp err || fail=1
 # ----------------------------------------------------------
 # Now, restore things, and corrupt the MyLBA in the alternate GUID table.
 
-orig_byte=s
 # Restore original byte
-poke $dev $pte_offset "$orig_byte" || fail=1
+gpt_restore_primary_table_ $dev $ss "$orig_byte" || fail=1
 
 # print the table
 parted -s $dev print > out 2> err || fail=1
@@ -103,13 +76,13 @@ compare /dev/null err || fail=1
 # $n_sectors, 8-byte field starting at offset 24.
 alt_my_lba_offset=$(expr $n_sectors \* $ss - $ss + 24)
 # get the first byte of MyLBA
-byte=$(peek $dev $alt_my_lba_offset) || fail=1
+byte=$(peek_ $dev $alt_my_lba_offset) || fail=1
 
 # Perturb it.
 test x"$byte" = xA && new_byte=B || new_byte=A
 
 # Replace good byte with the bad one.
-poke $dev $alt_my_lba_offset "$new_byte" || fail=1
+poke_ $dev $alt_my_lba_offset "$new_byte" || fail=1
 
 # attempting to set partition name must print a diagnostic
 parted -m -s $dev name 1 foo > err 2>&1 || fail=1
