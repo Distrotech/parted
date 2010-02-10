@@ -178,6 +178,8 @@ static TimerContext timer_context;
 
 static int _print_list ();
 static void _done (PedDevice* dev);
+static bool partition_align_check (PedDisk const *disk,
+                        PedPartition const *part, enum AlignmentType a_type);
 
 static void
 _timer_handler (PedTimer* timer, void* context)
@@ -833,7 +835,12 @@ do_mkpart (PedDevice** dev)
                 added_ok = ped_disk_add_partition (disk, part,
                                                         constraint_any);
                 ped_constraint_destroy (constraint_any);
-                if (added_ok) {
+
+                if (!added_ok)
+                        goto error_remove_part;
+
+                if (!ped_geometry_test_sector_inside(range_start, part->geom.start) ||
+                    !ped_geometry_test_sector_inside(range_end, part->geom.end)) {
                         start_usr = ped_unit_format (*dev, start);
                         end_usr   = ped_unit_format (*dev, end);
                         start_sol = ped_unit_format (*dev, part->geom.start);
@@ -867,8 +874,23 @@ do_mkpart (PedDevice** dev)
                                         /* undo partition addition */
                                         goto error_remove_part;
                         }
-                } else {
-                        goto error_remove_part;
+                }
+
+                if ((alignment == ALIGNMENT_OPTIMAL &&
+                     !partition_align_check(disk, part, PA_OPTIMUM)) ||
+                    (alignment == ALIGNMENT_MINIMAL &&
+                     !partition_align_check(disk, part, PA_MINIMUM))) {
+                        if (ped_exception_throw(
+                                PED_EXCEPTION_WARNING,
+                                (opt_script_mode
+                                 ? PED_EXCEPTION_OK
+                                 : PED_EXCEPTION_IGNORE_CANCEL),
+                                _("The resulting partition is not properly "
+                                  "aligned for best performance.")) ==
+                            PED_EXCEPTION_CANCEL) {
+                                /* undo partition addition */
+                                goto error_remove_part;
+                        }
                 }
         } else {
                 ped_exception_leave_all();
@@ -1018,8 +1040,16 @@ do_mkpartfs (PedDevice** dev)
         if (!added_ok) {
                 ped_exception_leave_all();
 
-                if (ped_disk_add_partition (disk, part,
-                                        ped_constraint_any (*dev))) {
+                PedConstraint *constraint_any = ped_constraint_any (*dev);
+                bool added_ok = ped_disk_add_partition (disk, part,
+                                                        constraint_any);
+                ped_constraint_destroy (constraint_any);
+
+                if (!added_ok)
+                        goto error_remove_part;
+
+                if (!ped_geometry_test_sector_inside(range_start, part->geom.start) ||
+                    !ped_geometry_test_sector_inside(range_end, part->geom.end)) {
                         start_usr = ped_unit_format (*dev, start);
                         end_usr   = ped_unit_format (*dev, end);
                         start_sol = ped_unit_format (*dev, part->geom.start);
@@ -1048,8 +1078,23 @@ do_mkpartfs (PedDevice** dev)
                                         /* undo partition addition */
                                         goto error_remove_part;
                         }
-                } else {
-                        goto error_remove_part;
+                }
+
+                if ((alignment == ALIGNMENT_OPTIMAL &&
+                     !partition_align_check(disk, part, PA_OPTIMUM)) ||
+                    (alignment == ALIGNMENT_MINIMAL &&
+                     !partition_align_check(disk, part, PA_MINIMUM))) {
+                        if (ped_exception_throw(
+                                PED_EXCEPTION_WARNING,
+                                (opt_script_mode
+                                 ? PED_EXCEPTION_OK
+                                 : PED_EXCEPTION_IGNORE_CANCEL),
+                                _("The resulting partition is not properly "
+                                  "aligned for best performance.")) ==
+                            PED_EXCEPTION_CANCEL) {
+                                /* undo partition addition */
+                                goto error_remove_part;
+                        }
                 }
         } else {
                 ped_exception_leave_all();
