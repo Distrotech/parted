@@ -43,7 +43,7 @@ poke()
 dev=loop-file
 
 ss=$sector_size_
-n_sectors=200
+n_sectors=5000
 
 fail=0
 dd if=/dev/null of=$dev bs=$ss seek=$n_sectors || fail=1
@@ -62,7 +62,7 @@ printf "BYT;\n$dev:${n_sectors}s:file:$sector_size_:$sector_size_:gpt:;\n" \
 compare exp out || fail=1
 
 # create a partition
-parted -s $dev mkpart sw linux-swap 60s 100s > empty 2>&1 || fail=1
+parted -s $dev mkpart sw linux-swap 2048s 4095s > empty 2>&1 || fail=1
 compare /dev/null empty || fail=1
 
 # We're going to change the name of the first partition,
@@ -123,7 +123,7 @@ compare exp err || fail=1
 parted -m -s $dev u s print > out 2>&1 || fail=1
 
 # check for expected output
-printf "BYT;\nfile\n1:60s:100s:41s::foo:;\n" > exp || fail=1
+printf "BYT;\nfile\n1:2048s:4095s:2048s::foo:;\n" > exp || fail=1
 sed "s/.*gpt:;/file/" out > k && mv k out || fail=1
 compare exp out || fail=1
 

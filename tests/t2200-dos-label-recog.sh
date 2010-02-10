@@ -25,11 +25,12 @@ test_description='improved MSDOS partition-table recognition'
 # parted 1.8.8.1.29 and earlier would fail to recognize a DOS
 # partition table.
 ######################################################################
-N=10M
+ss=$sector_size_
+N=8192
 dev=loop-file
 test_expect_success \
     'create a file to simulate the underlying device' \
-    'dd if=/dev/null of=$dev bs=1 seek=$N 2> /dev/null'
+    'dd if=/dev/null of=$dev bs=$ss seek=$N 2> /dev/null'
 
 test_expect_success \
     'label the test disk' \
@@ -39,8 +40,8 @@ test_expect_success 'expect no output' 'compare out /dev/null'
 test_expect_success \
     'create two partition' \
     '
-    parted -s $dev mkpart primary  1s 40s > out 2>&1 &&
-    parted -s $dev mkpart primary 41s 80s >> out 2>&1
+    parted -s $dev mkpart primary 2048s 4095s > out 2>&1 &&
+    parted -s $dev mkpart primary 4096s 8191s >> out 2>&1
 
     '
 test_expect_success 'expect no output' 'compare out /dev/null'
@@ -54,7 +55,7 @@ test_expect_success \
     '
     parted -m -s $dev unit s p > out &&
     tail -2 out > k && mv k out &&
-    printf "1:1s:40s:40s:::;\n2:41s:80s:40s:::;\n" > exp
+    printf "1:2048s:4095s:2048s:::;\n2:4096s:8191s:4096s:::;\n" > exp
 
     '
 test_expect_success 'expect two partitions' 'compare out exp'

@@ -27,7 +27,7 @@ ss=$sector_size_
 # consistent in the use of metadata padding for msdos labels.
 ######################################################################
 
-N=200 # number of sectors
+N=4096 # number of sectors
 dev=loop-file
 test_expect_success \
     'create a file to simulate the underlying device' \
@@ -43,7 +43,7 @@ fail=0
 cat <<EOF > exp || fail=1
 BYT;
 path:${N}s:file:$ss:$ss:msdos:;
-1:32s:127s:96s:free;
+1:32s:4095s:4064s:free;
 EOF
 
 test_expect_success 'create expected output file' 'test $fail = 0'
@@ -62,15 +62,15 @@ fail=0
 cat <<EOF > exp || fail=1
 BYT;
 path:${N}s:file:$ss:$ss:msdos:;
-1:32s:50s:19s:free;
-1:51s:199s:149s:::;
+1:32s:2047s:2016s:free;
+1:2048s:4095s:2048s:::;
 EOF
 
 test_expect_success 'create expected output file' 'test $fail = 0'
 
 test_expect_success \
     'create a partition at the end of the label' \
-    'parted -s $dev mkpart primary 51s 199s'
+    'parted -s $dev mkpart primary 2048s 4095s'
 
 test_expect_success \
     'display output of label with partition' \

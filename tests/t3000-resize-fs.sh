@@ -64,8 +64,8 @@ for fs_type in hfs+ fat32; do
 
   # create an empty $fs_type partition, cylinder aligned, size > 256 MB
   parted -s $dev mkpart primary $fs_type $start $default_end > out 2>&1 || fail=1
-  # expect no output
-  compare out /dev/null || fail=1
+  echo "Warning: The resulting partition is not properly aligned for best performance." > exp
+  compare out exp || fail=1
 
   # print partition table
   parted -m -s $dev u s p > out 2>&1 || fail=1

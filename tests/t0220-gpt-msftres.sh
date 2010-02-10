@@ -35,8 +35,8 @@ NTFS
 reiserfs
 '
 
-start=200
-part_size=100
+start=2048
+part_size=2048
 n_types=$(echo "$fs_types"|wc -w)
 
 # Create a "disk" with enough room for one partition per FS type,

@@ -102,27 +102,13 @@ test_expect_success \
     'check for new diagnostic' \
     'bad_part_length 4294967296 > exp && diff -u err exp'
 
-# FIXME: investigate this.
-# Unexpectedly to me, both of these failed with this same diagnostic:
-#
-#   Error: partition length of 4294967296 sectors exceeds the \
-#   DOS-partition-table-imposed maximum of 2^32-1" > exp &&
-#
-# I expected the one below to fail with a length of _4294967297_.
-# Debugging, I see that _check_partition *does* detect this,
-# but the diagnostic doesn't get displayed because of the wonders
-# of parted's exception mechanism.
-
 test_expect_failure \
     "$table_type: a partition length of 2^32+1 sectors provokes failure." \
     'do_mkpart $n $(echo $n+2^32|bc) > err 2>&1'
 
-# FIXME: odd that we asked for 2^32+1, yet the diagnostic says 2^32
-# FIXME: Probably due to constraints.
-# FIXME: For now, just accept the current output.
 test_expect_success \
     'check for new diagnostic' \
-    'bad_part_length 4294967296 > exp && diff -u err exp'
+    'bad_part_length 4294967297 > exp && diff -u err exp'
 
 # =========================================================
 # Now consider partition starting sector numbers.
@@ -164,7 +150,7 @@ test_expect_failure \
     'do_mkpart_start_and_len $(echo 2^32+1|bc) 1000 > err 2>&1'
 test_expect_success \
     'check for new diagnostic' \
-    'bad_start_sector 4294967296 > exp && diff -u err exp'
+    'bad_start_sector 4294967297 > exp && diff -u err exp'
 
 done
 

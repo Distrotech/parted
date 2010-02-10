@@ -27,7 +27,7 @@ bootcode_size=446
 
 test_expect_success \
   'Create the test file' \
-  'dd if=/dev/zero of=$dev bs=1024c count=100 >/dev/null 2>&1'
+  'dd if=/dev/zero of=$dev bs=1M count=4 >/dev/null 2>&1'
 
 test_expect_success \
   'Create msdos label' \
@@ -36,23 +36,23 @@ test_expect_success 'Expect no output' 'compare out /dev/null'
 
 test_expect_success \
   'Create extended partition' \
-  'parted -s $dev mkpart extended 32s 127s > out 2>&1'
+  'parted -s $dev mkpart extended 2048s 8191s > out 2>&1'
 test_expect_success 'Expect no output' 'compare out /dev/null'
 
 test_expect_success \
   'Create logical partition' \
-  'parted -s $dev mkpart logical 64s 127s > out 2>&1'
+  'parted -s $dev mkpart logical 4096s 8191s > out 2>&1'
 test_expect_success 'Expect no output' 'compare out /dev/null'
 
 test_expect_success \
   'Install fake bootcode' \
   'printf %0${bootcode_size}d 0 > in &&
-   dd if=in of=$dev bs=1c seek=16384 count=$bootcode_size \
+   dd if=in of=$dev bs=1c seek=1M count=$bootcode_size \
       conv=notrunc > /dev/null 2>&1'
 
 test_expect_success \
   'Save fake bootcode for later comparison' \
-  'dd if=$dev of=before bs=1 skip=16384 count=$bootcode_size > /dev/null 2>&1'
+  'dd if=$dev of=before bs=1 skip=1M count=$bootcode_size > /dev/null 2>&1'
 
 test_expect_success \
   'Do something to the label' \
@@ -61,7 +61,7 @@ test_expect_success 'Expect no output' 'compare out /dev/null'
 
 test_expect_success \
   'Extract the bootcode for comparison' \
-  'dd if=$dev of=after bs=1 skip=16384 count=$bootcode_size > /dev/null 2>&1'
+  'dd if=$dev of=after bs=1 skip=1M count=$bootcode_size > /dev/null 2>&1'
 
 test_expect_success \
   'Expect bootcode has not changed' \

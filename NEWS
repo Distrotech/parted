@@ -2,6 +2,11 @@ GNU parted NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Changes in behavior
+
+  The default alignment (--align option) for newly created partitions has
+  been changed to optimal.
+
 ** New features
 
   The ped_device_get_*_alignment() functions now return a sane default

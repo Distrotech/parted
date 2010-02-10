@@ -27,7 +27,7 @@ require_512_byte_sector_size_
 # table, ensure that the proper file system type (0x82) is used.
 # Some releases, e.g. parted-1.8.8 would mistakenly use 0x83.
 ######################################################################
-N=1M
+N=2M
 dev=loop-file
 dev2=loop-file-2
 test_expect_success \
@@ -41,7 +41,7 @@ test_expect_success 'expect no output' 'compare out /dev/null'
 
 test_expect_success \
     'create a partition' \
-    'parted -s $dev mkpart primary 0 1 > out 2>&1'
+    'parted -s $dev mkpart primary 2048s 4095s > out 2>&1'
 test_expect_success 'expect no output' 'compare out /dev/null'
 
 test_expect_success \
@@ -66,7 +66,7 @@ test_expect_success 'expect no output' 'compare out /dev/null'
 
 test_expect_success \
     'create another partition' \
-    'parted -s $dev2 mkpart primary 0 1 > out 2>&1'
+    'parted -s $dev2 mkpart primary 2048s 4095s > out 2>&1'
 test_expect_success 'expect no output' 'compare out /dev/null'
 
 test_expect_success \
@@ -74,13 +74,13 @@ test_expect_success \
     'parted -s $dev2 mkfs 1 "linux-swap(v1)" > out 2>&1'
 test_expect_success 'expect no output' 'compare out /dev/null'
 
-# partition starts at offset 16384; swap UUID is 1036 bytes in
+# partition starts at offset 1048576; swap UUID is 1036 bytes in
 test_expect_success \
     'extract UUID 1' \
-    'od -t x1 -An -j17420 -N16 $dev > uuid1'
+    'od -t x1 -An -j1049612 -N16 $dev > uuid1'
 test_expect_success \
     'extract UUID 2' \
-    'od -t x1 -An -j17420 -N16 $dev2 > uuid2'
+    'od -t x1 -An -j1049612 -N16 $dev2 > uuid2'
 test_expect_failure \
     'two linux-swap file systems have different UUIDs' \
     'compare uuid1 uuid2'
@@ -92,7 +92,7 @@ test_expect_success 'expect no output' 'compare out /dev/null'
 
 test_expect_success \
     'extract new UUID 2' \
-    'od -t x1 -An -j17420 -N16 $dev2 > uuid2-new'
+    'od -t x1 -An -j1049612 -N16 $dev2 > uuid2-new'
 test_expect_success \
     'check preserves linux-swap UUID' \
     'compare uuid2 uuid2-new'

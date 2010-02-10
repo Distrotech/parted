@@ -133,7 +133,7 @@ int     pretend_input_tty = 0;
 int     opt_machine_mode = 0;
 int     disk_is_modified = 0;
 int     is_toggle_mode = 0;
-int     alignment = ALIGNMENT_CYLINDER;
+int     alignment = ALIGNMENT_OPTIMAL;
 
 static const char* number_msg = N_(
 "NUMBER is the partition number used by Linux.  On MS-DOS disk labels, the "

@@ -26,6 +26,7 @@ fi
 ss=$sector_size_
 
 fail=0
+ss=$sector_size_
 dev=dev-file
 PATH="..:$PATH"
 export PATH

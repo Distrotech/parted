@@ -25,6 +25,7 @@ fi
 . $srcdir/t-lib.sh
 
 require_root_
+lvm_init_root_dir_
 
 d1= f1=
 cleanup_()
