@@ -984,6 +984,7 @@ gpt_read (PedDisk *disk)
         goto error_free_gpt;
 
       gpt = primary_gpt;
+      write_back = 0;
     }
   else /* !primary_gpt && backup_gpt */
     {
@@ -996,6 +997,7 @@ gpt_read (PedDisk *disk)
         goto error_free_gpt;
 
       gpt = backup_gpt;
+      write_back = 0;
     }
   backup_gpt = NULL;
   primary_gpt = NULL;

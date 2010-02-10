@@ -22,6 +22,11 @@ GNU parted NEWS                                    -*- outline -*-
   gpt: read-only operation could clobber MBR part of hybrid GPT+MBR table
   [bug introduced in parted-2.1]
 
+  gpt: a read-only operation like "parted $dev print" would overwrite $dev's
+  protective MBR when exactly one of the primary and backup GPT tables was
+  found to be corrupt.
+  [bug introduced prior to parted-1.8.0]
+
   "make install" no longer installs tests programs named disk and label
 
 
