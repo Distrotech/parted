@@ -898,7 +898,7 @@ gpt_read (PedDisk *disk)
   GPTDiskData *gpt_disk_data = disk->disk_specific;
   int i;
 #ifndef DISCOVER_ONLY
-  int write_back = 1;
+  int write_back = 0;
 #endif
 
   ped_disk_delete_all (disk);
@@ -949,16 +949,12 @@ gpt_read (PedDisk *disk)
             case PED_EXCEPTION_FIX:
               ptt_clear_sectors (disk->dev,
                                  PED_LE64_TO_CPU (primary_gpt->AlternateLBA), 1);
+              write_back = 1;
               break;
             default:
-              write_back = 0;
               break;
             }
         }
-      else
-	{
-	  write_back = 0;
-	}
 #endif /* !DISCOVER_ONLY */
       gpt = primary_gpt;
       pth_free (backup_gpt);
@@ -984,7 +980,6 @@ gpt_read (PedDisk *disk)
         goto error_free_gpt;
 
       gpt = primary_gpt;
-      write_back = 0;
     }
   else /* !primary_gpt && backup_gpt */
     {
@@ -997,7 +992,6 @@ gpt_read (PedDisk *disk)
         goto error_free_gpt;
 
       gpt = backup_gpt;
-      write_back = 0;
     }
   backup_gpt = NULL;
   primary_gpt = NULL;
