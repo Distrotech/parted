@@ -1,4 +1,8 @@
-Here is most of the steps we (maintainers) follow when making a release.
+Here are most of the steps a maintainer followas when making a release.
+
+0. Adjust the shared library version number in libparted/Makefile.am.
+   See the three variables there, CURRENT, REVISION, AGE, and follow
+   the guidelines in "info libtool".
 
 1. Execute build-aux/parted-release.  `parted-release --help` contains
    additional information.
@@ -7,8 +11,8 @@ Here is most of the steps we (maintainers) follow when making a release.
    builds and passes all tests.
 
 3. Write the release announcement that will be posted to the mailing lists.
-   There is a template generated at /tmp/announce-parted-$VERSION.
-   Remember to include the definition of parted.  You can find this at
+   Start with the generated template in ~/announce-parted-$VERSION.
+   Remember to include a description of parted.  You can find this at
    http://www.gnu.org/software/parted/index.shtml
 
 4. Run the gnupload command that was suggested by the release script.  You can
@@ -25,4 +29,3 @@ Here is most of the steps we (maintainers) follow when making a release.
      To: info-gnu@gnu.org, parted-devel@lists.alioth.debian.org
      Cc: coordinator@translationproject.org, bug-parted@gnu.org
      Subject: parted-$VERSION released [stable]
-
