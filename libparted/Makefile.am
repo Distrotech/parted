@@ -21,8 +21,15 @@ SUBDIRS       = labels fs . $(SUBDIRS_CHECK)
 
 partedincludedir      = -I$(top_srcdir)/lib -I$(top_srcdir)/include
 lib_LTLIBRARIES	      =	libparted.la
-libparted_la_LDFLAGS  = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
-						-release $(LT_RELEASE)
+
+# Set the shared library version, per Libtool's guidelines.
+# For details, see the "Libtool's versioning system" section of "info libtool"
+CURRENT = 0
+REVISION = 1
+AGE = 0
+
+libparted_la_LDFLAGS  = -version-info $(CURRENT):$(REVISION):$(AGE)
+
 libparted_la_SOURCES  = debug.c			\
 			architecture.c		\
 			architecture.h		\
