@@ -38,6 +38,11 @@ GNU parted NEWS                                    -*- outline -*-
   or a user might encounter a failure to format or delete a newly
   created partition, respectively.
 
+  libparted: committing a disk that was returned by ped_disk_duplicate
+  would always result in ped_disk_clobber being called (and thus the first
+  and last 9KiB of the disk being zeroed), even if the duplicated disk,
+  was not returned by ped_disk_fresh().
+
 
 * Noteworthy changes in release 2.1 (2009-12-20) [stable]
 

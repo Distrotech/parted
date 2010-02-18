@@ -276,6 +276,9 @@ ped_disk_duplicate (const PedDisk* old_disk)
 	}
 	if (!_disk_pop_update_mode (new_disk))
 		goto error_destroy_new_disk;
+
+        new_disk->needs_clobber = old_disk->needs_clobber;
+
 	return new_disk;
 
 error_destroy_new_disk:
