@@ -27,6 +27,12 @@ GNU parted NEWS                                    -*- outline -*-
   found to be corrupt.
   [bug introduced prior to parted-1.8.0]
 
+  sun: the version, sanity and nparts VTOC fields were ignored by libparted.
+  Those fields are properly initialized now. The nparts (number of partitions)
+  field is initialized to 8 (max. number of sun partitions) rather that to a
+  real number of partitions. This solution is compatible with Linux kernel
+  and Linux fdisk.
+
   "make install" no longer installs tests programs named disk and label
 
   libparted: try harder to inform kernel of partition changes.

@@ -44,6 +44,9 @@
 #define SUN_DISK_MAGIC		0xDABE	/* Disk magic number */
 #define SUN_DISK_MAXPARTITIONS	8
 
+#define SUN_VTOC_VERSION	1
+#define SUN_VTOC_SANITY		0x600DDEEE
+
 #define WHOLE_DISK_ID		0x05
 #define WHOLE_DISK_PART		2	/* as in 0, 1, 2 (3rd partition) */
 #define LINUX_SWAP_ID		0x82
@@ -68,9 +71,18 @@ struct __attribute__ ((packed)) _SunPartitionInfo {
 
 struct __attribute__ ((packed)) _SunRawLabel {
 	char 		info[128];	/* Informative text string */
-	u_int8_t	spare0[14];
+	u_int32_t	version;	/* Layout version */
+	u_int8_t	volume[8];	/* Volume name */
+	u_int16_t	nparts;		/* Number of partitions */
 	SunPartitionInfo infos[SUN_DISK_MAXPARTITIONS];
-	u_int8_t	spare1[246];	/* Boot information etc. */
+	u_int16_t	padding;	/* Alignment padding */
+	u_int32_t	bootinfo[3];	/* Info needed by mboot */
+	u_int32_t	sanity;		/* To verify vtoc sanity */
+	u_int32_t	reserved[10];	/* Free space */
+	u_int32_t	timestamp[8];	/* Partition timestamp */
+	u_int32_t	write_reinstruct; /* sectors to skip, writes */
+	u_int32_t	read_reinstruct; /* sectors to skip, reads */
+	u_int8_t	spare1[148];	/* Padding */
 	u_int16_t	rspeed;		/* Disk rotational speed */
 	u_int16_t	pcylcount;	/* Physical cylinder count */
 	u_int16_t	sparecyl;	/* extra sects per cylinder */
@@ -194,6 +206,10 @@ sun_alloc (const PedDevice* dev)
 	label->ntrks	= PED_CPU_TO_BE16 (bios_geom->heads);
 	label->nsect	= PED_CPU_TO_BE16 (bios_geom->sectors);
 	label->ncyl	= PED_CPU_TO_BE16 (dev->length / cyl_size);
+
+	label->sanity   = PED_CPU_TO_BE32 (SUN_VTOC_SANITY);
+	label->version  = PED_CPU_TO_BE32 (SUN_VTOC_VERSION);
+	label->nparts   = PED_CPU_TO_BE16 (SUN_DISK_MAXPARTITIONS);
 
 	/* Add a whole disk partition at a minimum */
 	label->infos[WHOLE_DISK_PART].id = WHOLE_DISK_ID;
