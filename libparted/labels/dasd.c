@@ -75,7 +75,6 @@ typedef struct {
 } DasdDiskSpecific;
 
 static int dasd_probe (const PedDevice *dev);
-static int dasd_clobber (PedDevice* dev);
 static int dasd_read (PedDisk* disk);
 static int dasd_write (const PedDisk* disk);
 
@@ -111,7 +110,7 @@ static int dasd_alloc_metadata (PedDisk* disk);
 PT_define_limit_functions (dasd)
 
 static PedDiskOps dasd_disk_ops = {
-	clobber:		NULL_IF_DISCOVER_ONLY (dasd_clobber),
+	clobber:		NULL,
 	write:			NULL_IF_DISCOVER_ONLY (dasd_write),
 
 	partition_set_name:	NULL,
@@ -240,27 +239,6 @@ dasd_probe (const PedDevice *dev)
 			    "Error while probing device %s.", dev->path);
 
 	return 0;
-}
-
-static int
-dasd_clobber (PedDevice* dev)
-{
-	LinuxSpecific* arch_specific;
-	struct fdasd_anchor anchor;
-
-	PED_ASSERT(dev != NULL, return 0);
-
-	arch_specific = LINUX_SPECIFIC(dev);
-
-	fdasd_initialize_anchor(&anchor);
-	fdasd_get_geometry(dev, &anchor, arch_specific->fd);
-
-	fdasd_recreate_vtoc(&anchor);
-	fdasd_write_labels(&anchor, arch_specific->fd);
-
-	fdasd_cleanup(&anchor);
-
-	return 1;
 }
 
 static int

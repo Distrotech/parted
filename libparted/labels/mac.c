@@ -353,57 +353,6 @@ mac_free (PedDisk* disk)
 	free (mac_disk_data);
 }
 
-#ifndef DISCOVER_ONLY
-static int
-_clobber_part_map (PedDevice* dev)
-{
-        void *buf = ped_malloc (dev->sector_size);
-        if (!buf)
-                return 0;
-
-        int ok = 1;
-	PedSector sector;
-	for (sector=1; 1; sector++) {
-                if (!ped_device_read (dev, buf, sector, 1)) {
-                        ok = 0;
-                        break;
-                }
-		if (!_rawpart_check_signature (buf)) {
-                        ok = 1;
-                        break;
-                }
-		memset (buf, 0, dev->sector_size);
-		if (!ped_device_write (dev, buf, sector, 1)) {
-                        ok = 0;
-                        break;
-                }
-	}
-        free (buf);
-        return ok;
-}
-
-static int
-mac_clobber (PedDevice* dev)
-{
-	void *buf;
-	if (!ptt_read_sector (dev, 0, &buf))
-		return 0;
-
-	if (!_check_signature (buf)) {
-                free (buf);
-		return 0;
-        }
-
-        memset (buf, 0, dev->sector_size);
-        int ok = ped_device_write (dev, buf, 0, 1);
-        free (buf);
-        if (!ok)
-		return 0;
-
-	return _clobber_part_map (dev);
-}
-#endif /* !DISCOVER_ONLY */
-
 static int
 _rawpart_cmp_type (const MacRawPartition* raw_part, const char* type)
 {
@@ -1634,7 +1583,7 @@ mac_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 PT_define_limit_functions (mac)
 
 static PedDiskOps mac_disk_ops = {
-	clobber: NULL_IF_DISCOVER_ONLY (mac_clobber),
+	clobber: NULL,
         /* FIXME: remove this cast, once mac_write is fixed not to
            modify its *DISK parameter.  */
 	write:	NULL_IF_DISCOVER_ONLY ((int (*) (const PedDisk*)) mac_write),

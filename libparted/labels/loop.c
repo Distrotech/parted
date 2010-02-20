@@ -73,15 +73,6 @@ error:
 	return 0;
 }
 
-#ifndef DISCOVER_ONLY
-static int
-loop_clobber (PedDevice* dev)
-{
-	PED_ASSERT (dev != NULL, return 0);
-        return ptt_clear_sectors (dev, 0, 1);
-}
-#endif /* !DISCOVER_ONLY */
-
 static PedDisk*
 loop_alloc (const PedDevice* dev)
 {
@@ -297,7 +288,7 @@ loop_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 PT_define_limit_functions (loop)
 
 static PedDiskOps loop_disk_ops = {
-	clobber:		NULL_IF_DISCOVER_ONLY (loop_clobber),
+	clobber:		NULL,
 	write:			NULL_IF_DISCOVER_ONLY (loop_write),
 
 	partition_set_name:	NULL,

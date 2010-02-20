@@ -95,14 +95,6 @@ dvh_probe (const PedDevice *dev)
 	return found;
 }
 
-#ifndef DISCOVER_ONLY
-static int
-dvh_clobber (PedDevice* dev)
-{
-	return ptt_clear_sectors (dev, 0, 1);
-}
-#endif /* !DISCOVER_ONLY */
-
 static PedDisk*
 dvh_alloc (const PedDevice* dev)
 {
@@ -892,7 +884,7 @@ error:
 PT_define_limit_functions (dvh)
 
 static PedDiskOps dvh_disk_ops = {
-	clobber:		NULL_IF_DISCOVER_ONLY (dvh_clobber),
+	clobber:		NULL,
 	write:			NULL_IF_DISCOVER_ONLY (dvh_write),
 
 	partition_set_name:	dvh_partition_set_name,

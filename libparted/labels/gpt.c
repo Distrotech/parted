@@ -494,20 +494,6 @@ gpt_probe (const PedDevice *dev)
   return ok;
 }
 
-#ifndef DISCOVER_ONLY
-/* writes zeros to the PMBR and the primary GPTH, and to the final sector */
-static int
-gpt_clobber (PedDevice *dev)
-{
-  PED_ASSERT (dev != NULL, return 0);
-
-  return (ptt_clear_sectors (dev, GPT_PMBR_LBA, GPT_PMBR_SECTORS)
-          && ptt_clear_sectors (dev, GPT_PRIMARY_HEADER_LBA, GPT_HEADER_SECTORS)
-          && ptt_clear_sectors (dev, dev->length - GPT_HEADER_SECTORS,
-                                GPT_HEADER_SECTORS));
-}
-#endif /* !DISCOVER_ONLY */
-
 static PedDisk *
 gpt_alloc (const PedDevice *dev)
 {
@@ -1736,7 +1722,7 @@ PT_define_limit_functions (gpt)
 
 static PedDiskOps gpt_disk_ops =
 {
-  clobber:			NULL_IF_DISCOVER_ONLY (gpt_clobber),
+  clobber:			NULL,
   write:			NULL_IF_DISCOVER_ONLY (gpt_write),
 
   partition_set_name:		gpt_partition_set_name,

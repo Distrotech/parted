@@ -449,29 +449,6 @@ amiga_free (PedDisk* disk)
 	_ped_disk_free (disk);
 }
 
-#ifndef DISCOVER_ONLY
-static int
-amiga_clobber (PedDevice* dev)
-{
-	struct RigidDiskBlock *rdb;
-	uint32_t i;
-	int result = 0;
-	PED_ASSERT(dev != NULL, return 0);
-
-	if ((rdb=RDSK(ped_malloc(dev->sector_size)))==NULL)
-		return 0;
-
-	while ((i = _amiga_find_rdb (dev, rdb)) != AMIGA_RDB_NOT_FOUND) {
-		rdb->rdb_ID = PED_CPU_TO_BE32 (0);
-		result = ped_device_write (dev, (void*) rdb, i, 1);
-	}
-
-	free (rdb);
-
-	return result;
-}
-#endif /* !DISCOVER_ONLY */
-
 static int
 _amiga_loop_check (uint32_t block, uint32_t * blocklist, uint32_t max)
 {
@@ -1150,7 +1127,7 @@ amiga_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 PT_define_limit_functions (amiga)
 
 static PedDiskOps amiga_disk_ops = {
-	clobber:		NULL_IF_DISCOVER_ONLY (amiga_clobber),
+	clobber:		NULL,
 	write:			NULL_IF_DISCOVER_ONLY (amiga_write),
 
 	partition_set_name:	amiga_partition_set_name,

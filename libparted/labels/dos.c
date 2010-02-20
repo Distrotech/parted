@@ -306,25 +306,6 @@ msdos_disk_is_flag_available (const PedDisk *disk, PedDiskFlag flag)
         }
 }
 
-#ifndef DISCOVER_ONLY
-static int
-msdos_clobber (PedDevice* dev)
-{
-	PED_ASSERT (dev != NULL, return 0);
-	PED_ASSERT (msdos_probe (dev), return 0);
-
-	void *label;
-	if (!ptt_read_sector (dev, 0, &label))
-		return 0;
-
-	DosRawTable *table = label;
-	table->magic = 0;
-        int write_ok = ped_device_write (dev, (void*) table, 0, 1);
-        free (label);
-	return write_ok;
-}
-#endif /* !DISCOVER_ONLY */
-
 static int
 chs_get_cylinder (const RawCHS* chs)
 {
@@ -2338,7 +2319,7 @@ msdos_get_max_supported_partition_count(const PedDisk* disk, int *max_n)
 PT_define_limit_functions (msdos)
 
 static PedDiskOps msdos_disk_ops = {
-	clobber:		NULL_IF_DISCOVER_ONLY (msdos_clobber),
+	clobber:		NULL,
 	write:			NULL_IF_DISCOVER_ONLY (msdos_write),
 
 	disk_set_flag:          msdos_disk_set_flag,

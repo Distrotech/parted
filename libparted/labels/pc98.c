@@ -218,30 +218,6 @@ pc98_probe (const PedDevice *dev)
 	return 1;
 }
 
-#ifndef DISCOVER_ONLY
-static int
-pc98_clobber (PedDevice* dev)
-{
-	PC98RawTable	table;
-
-	PED_ASSERT (dev != NULL, return 0);
-	PED_ASSERT (pc98_probe (dev), return 0);
-
-	if (!ped_device_read (dev, &table, 0, 1))
-		return 0;
-
-	memset (table.partitions, 0, sizeof (table.partitions));
-	table.magic = PED_CPU_TO_LE16(0);
-
-	if (pc98_check_ipl_signature (&table))
-		memset (table.boot_code, 0, sizeof (table.boot_code));
-
-	if (!ped_device_write (dev, (void*) &table, 0, 1))
-		return 0;
-	return ped_device_sync (dev);
-}
-#endif /* !DISCOVER_ONLY */
-
 static PedDisk*
 pc98_alloc (const PedDevice* dev)
 {
@@ -857,7 +833,7 @@ pc98_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 PT_define_limit_functions (pc98)
 
 static PedDiskOps pc98_disk_ops = {
-	clobber:		NULL_IF_DISCOVER_ONLY (pc98_clobber),
+	clobber:		NULL,
 	write:			NULL_IF_DISCOVER_ONLY (pc98_write),
 
 	partition_set_name:	pc98_partition_set_name,
