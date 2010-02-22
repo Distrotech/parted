@@ -1,5 +1,5 @@
 /* libparted - a library for manipulating disk partitions
-    Copyright (C) 1999 - 2005, 2007, 2008, 2009 Free Software Foundation, Inc.
+    Copyright (C) 1999-2010 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -2521,12 +2521,15 @@ static int
 _kernel_reread_part_table (PedDevice* dev)
 {
         LinuxSpecific*  arch_specific = LINUX_SPECIFIC (dev);
-        int             retry_count = 5;
+        int             retry_count = 9;
 
         sync();
         while (ioctl (arch_specific->fd, BLKRRPART)) {
                 retry_count--;
                 sync();
+                if (retry_count == 3)
+                        sleep(1); /* Pause to allow system to settle */
+
                 if (!retry_count) {
                         ped_exception_throw (
                                 PED_EXCEPTION_WARNING,

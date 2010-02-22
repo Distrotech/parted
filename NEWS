@@ -29,6 +29,15 @@ GNU parted NEWS                                    -*- outline -*-
 
   "make install" no longer installs tests programs named disk and label
 
+  libparted: try harder to inform kernel of partition changes.
+  Previously when editing partitions, occasionally the kernel would
+  fail to be informed of partition changes.  When this happened future
+  problems would occur because the kernel had incorrect information.
+  For example, if this problem arose when resizing or creating a
+  new partition, then an incorrect partition size might be displayed
+  or a user might encounter a failure to format or delete a newly
+  created partition, respectively.
+
 
 * Noteworthy changes in release 2.1 (2009-12-20) [stable]
 
