@@ -2,6 +2,7 @@ XFAIL_TESTS = \
   t3200-type-change.sh
 
 TESTS = \
+  dup-clobber \
   t0000-basic.sh \
   t0001-tiny.sh \
   t0010-script-no-ctrl-chars.sh \
@@ -39,7 +40,7 @@ TESTS = \
 EXTRA_DIST = \
   $(TESTS) test-lib.sh t-lib.sh lvm-utils.sh t-local.sh t-lvm.sh
 
-check_PROGRAMS = print-align print-max
+check_PROGRAMS = print-align print-max dup-clobber
 LDADD = \
   $(top_builddir)/libparted/libparted.la
 AM_CPPFLAGS = \
