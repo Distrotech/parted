@@ -2,7 +2,6 @@ XFAIL_TESTS = \
   t3200-type-change.sh
 
 TESTS = \
-  dup-clobber \
   t0000-basic.sh \
   t0001-tiny.sh \
   t0010-script-no-ctrl-chars.sh \
@@ -17,6 +16,7 @@ TESTS = \
   t0280-gpt-corrupt.sh \
   t0300-dos-on-gpt.sh \
   t0400-loop-clobber-infloop.sh \
+  t0500-dup-clobber.sh \
   t1100-busy-label.sh \
   t1700-ext-probe.sh \
   t2100-mkswap.sh \
