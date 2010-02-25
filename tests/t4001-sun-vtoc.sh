@@ -18,37 +18,43 @@
 
 # Written by Karel Zak <kzak@redhat.com>
 
-test_description='test Sun VTOC initialization'
+if test "$VERBOSE" = yes; then
+  set -x
+  parted --version
+fi
 
 : ${srcdir=.}
-. $srcdir/test-lib.sh
+. $srcdir/t-lib.sh
 
 N=2M
 dev=loop-file
-test_expect_success \
-    'create a file to simulate the underlying device' \
-    'dd if=/dev/null of=$dev bs=1 seek=$N 2> /dev/null'
+# create a file to simulate the underlying device
+dd if=/dev/null of=$dev bs=1 seek=$N || framework_failure
 
-test_expect_success \
-    'label the test disk' \
-    'parted -s $dev mklabel sun > out 2>&1'
-test_expect_success 'expect no output' 'compare out /dev/null'
+fail=0
 
-test_expect_success \
-    'extract version' \
-    'od -t x1 -An -j128 -N4 $dev > out && echo " 00 00 00 01" > exp'
-test_expect_success 'expect it to be 00 00 00 01, not 00 00 00 00' \
-    'compare out exp'
+# label the test disk
+parted -s $dev mklabel sun > out 2>&1 || fail=1
+# expect no output
+compare out /dev/null || fail=1
 
-test_expect_success \
-    'extract nparts' \
-    'od -t x1 -An -j140 -N2 $dev > out && echo " 00 08" > exp'
-test_expect_success 'expect it to be 00 08, not 00 00' 'compare out exp'
+# extract version
+od -t x1 -An -j128 -N4 $dev > out || fail=1
+echo " 00 00 00 01" > exp || fail=1
+# expect it to be 00 00 00 01, not 00 00 00 00
+compare out exp || fail=1
 
-test_expect_success \
-    'extract sanity magic' \
-    'od -t x1 -An -j188 -N4 $dev > out && echo " 60 0d de ee" > exp'
-test_expect_success 'expect it to be 60 0d de ee, not 00 00 00 00' \
-    'compare out exp'
+# extract nparts
+od -t x1 -An -j140 -N2 $dev > out || fail=1
+echo " 00 08" > exp || fail=1
 
-test_done
+# expect it to be 00 08, not 00 00
+compare out exp || fail=1
+
+# extract sanity magic
+od -t x1 -An -j188 -N4 $dev > out || fail=1
+echo " 60 0d de ee" > exp
+# expect it to be 60 0d de ee, not 00 00 00 00
+compare out exp || fail=1
+
+Exit $fail
