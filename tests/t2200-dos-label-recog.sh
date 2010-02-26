@@ -1,4 +1,5 @@
 #!/bin/sh
+# improved MSDOS partition-table recognition
 
 # Copyright (C) 2008-2010 Free Software Foundation, Inc.
 
@@ -15,10 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test_description='improved MSDOS partition-table recognition'
+if test "$VERBOSE" = yes; then
+  set -x
+  parted --version
+fi
 
 : ${srcdir=.}
-. $srcdir/test-lib.sh
+. $srcdir/t-lib.sh
 
 ######################################################################
 # With vestiges of a preceding FAT file system boot sector in the MBR,
@@ -28,36 +32,27 @@ test_description='improved MSDOS partition-table recognition'
 ss=$sector_size_
 N=8192
 dev=loop-file
-test_expect_success \
-    'create a file to simulate the underlying device' \
-    'dd if=/dev/null of=$dev bs=$ss seek=$N 2> /dev/null'
 
-test_expect_success \
-    'label the test disk' \
-    'parted -s $dev mklabel msdos > out 2>&1'
-test_expect_success 'expect no output' 'compare out /dev/null'
+# create a file to simulate the underlying device
+dd if=/dev/null of=$dev bs=$ss seek=$N 2> /dev/null || fail=1
 
-test_expect_success \
-    'create two partition' \
-    '
-    parted -s $dev mkpart primary 2048s 4095s > out 2>&1 &&
-    parted -s $dev mkpart primary 4096s 8191s >> out 2>&1
+# label the test disk
+parted -s $dev mklabel msdos > out 2>&1 || fail=1
+compare out /dev/null || fail=1 # expect no output
 
-    '
-test_expect_success 'expect no output' 'compare out /dev/null'
+# create two partitions
+parted -s $dev mkpart primary 2048s 4095s \
+               mkpart primary 4096s 8191s > out 2>&1 || fail=1
+compare out /dev/null || fail=1 # expect no output
 
-test_expect_success \
-    'write "FAT" where it would cause trouble' \
-    'printf FAT|dd bs=1c seek=82 count=3 of=$dev conv=notrunc'
+# write "FAT" where it would cause trouble
+printf FAT | dd bs=1c seek=82 count=3 of=$dev conv=notrunc || fail=1
 
-test_expect_success \
-    'print the partition table' \
-    '
-    parted -m -s $dev unit s p > out &&
-    tail -2 out > k && mv k out &&
-    printf "1:2048s:4095s:2048s:::;\n2:4096s:8191s:4096s:::;\n" > exp
+# print the partition table
+parted -m -s $dev unit s p > out || fail=1
+tail -2 out > k && mv k out || fail=1
+printf "1:2048s:4095s:2048s:::;\n2:4096s:8191s:4096s:::;\n" > exp || fail=1
 
-    '
-test_expect_success 'expect two partitions' 'compare out exp'
+compare out exp || fail=1
 
-test_done
+Exit $fail

@@ -1,4 +1,5 @@
 #!/bin/sh
+# Probe Ext2, Ext3 and Ext4 file systems
 
 # Copyright (C) 2008-2010 Free Software Foundation, Inc.
 
@@ -15,30 +16,33 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test_description='Probe Ext2, Ext3 and Ext4 file systems.'
+if test "$VERBOSE" = yes; then
+  set -x
+  parted --version
+fi
 
 : ${srcdir=.}
-. $srcdir/test-lib.sh
-
+. $srcdir/t-lib.sh
 require_512_byte_sector_size_
 
 dev=loop-file
+ss=$sector_size_
+n_sectors=8000
+
+fail=0
 
 for type in ext2 ext3 ext4; do
 
-( mkfs.$type -V ) >/dev/null 2>&1 ||
-  { echo "no $type support; skipping that test"; continue; }
+  ( mkfs.$type -V ) >/dev/null 2>&1 || skip_test_ "no $type support"
 
-test_expect_success \
-    "create an $type file system" '
-    dd if=/dev/zero of=$dev bs=1024 count=4096 >/dev/null &&
-    mkfs.$type -F $dev >/dev/null'
+  # create an $type file system
+  dd if=/dev/zero of=$dev bs=1024 count=4096 >/dev/null || fail=1
+  mkfs.$type -F $dev >/dev/null || fail=1
 
-test_expect_success \
-    "probe the $type file system" '
-    parted -s $dev print >out 2>1
-    grep -w $type out'
+  # probe the $type file system
+  parted -s $dev print >out 2>1 || fail=1
+  grep -w $type out || fail=1
 
 done
 
-test_done
+Exit $fail

@@ -1,4 +1,5 @@
 #!/bin/sh
+# Ensure parted preserves bootcode in extended partition.
 
 # Copyright (C) 2009-2010 Free Software Foundation, Inc.
 
@@ -15,56 +16,52 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test_description='Ensure parted preserves bootcode in extended partition.'
+if test "$VERBOSE" = yes; then
+  set -x
+  parted --version
+fi
 
 : ${srcdir=.}
-. $srcdir/test-lib.sh
+. $srcdir/t-lib.sh
 
 require_512_byte_sector_size_
 
 dev=loop-file
 bootcode_size=446
 
-test_expect_success \
-  'Create the test file' \
-  'dd if=/dev/zero of=$dev bs=1M count=4 >/dev/null 2>&1'
+fail=0
 
-test_expect_success \
-  'Create msdos label' \
-  'parted -s $dev mklabel msdos > out 2>&1'
-test_expect_success 'Expect no output' 'compare out /dev/null'
+# Create the test file
+dd if=/dev/zero of=$dev bs=1M count=4 || fail=1
 
-test_expect_success \
-  'Create extended partition' \
-  'parted -s $dev mkpart extended 2048s 8191s > out 2>&1'
-test_expect_success 'Expect no output' 'compare out /dev/null'
+# Create msdos label
+parted -s $dev mklabel msdos > out 2>&1 || fail=1
+compare out /dev/null || fail=1 # Expect no output
 
-test_expect_success \
-  'Create logical partition' \
-  'parted -s $dev mkpart logical 4096s 8191s > out 2>&1'
-test_expect_success 'Expect no output' 'compare out /dev/null'
+# Create extended partition
+parted -s $dev mkpart extended 2048s 8191s > out 2>&1 || fail=1
+compare out /dev/null || fail=1 # Expect no output
 
-test_expect_success \
-  'Install fake bootcode' \
-  'printf %0${bootcode_size}d 0 > in &&
-   dd if=in of=$dev bs=1c seek=1M count=$bootcode_size \
-      conv=notrunc > /dev/null 2>&1'
+# Create logical partition
+parted -s $dev mkpart logical 4096s 8191s > out 2>&1 || fail=1
+compare out /dev/null || fail=1 # Expect no output
 
-test_expect_success \
-  'Save fake bootcode for later comparison' \
-  'dd if=$dev of=before bs=1 skip=1M count=$bootcode_size > /dev/null 2>&1'
+# Install fake bootcode
+printf %0${bootcode_size}d 0 > in || fail=1
+dd if=in of=$dev bs=1c seek=1M count=$bootcode_size \
+  conv=notrunc > /dev/null 2>&1 || fail=1
 
-test_expect_success \
-  'Do something to the label' \
-  'parted -s $dev rm 5 > out 2>&1'
-test_expect_success 'Expect no output' 'compare out /dev/null'
+# Save fake bootcode for later comparison
+dd if=$dev of=before bs=1 skip=1M count=$bootcode_size || fail=1
 
-test_expect_success \
-  'Extract the bootcode for comparison' \
-  'dd if=$dev of=after bs=1 skip=1M count=$bootcode_size > /dev/null 2>&1'
+# Do something to the label
+parted -s $dev rm 5 > out 2>&1 || fail=1
+compare out /dev/null || fail=1 # Expect no output
 
-test_expect_success \
-  'Expect bootcode has not changed' \
-  'compare before after'
+# Extract the bootcode for comparison
+dd if=$dev of=after bs=1 skip=1M count=$bootcode_size || fail=1
 
-test_done
+# Expect bootcode has not changed
+compare before after || fail=1
+
+Exit $fail
