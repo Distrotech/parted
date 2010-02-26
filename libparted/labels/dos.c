@@ -86,6 +86,7 @@ static const char MBR_BOOT_CODE[] = {
 #define PARTITION_LINUX		0x83
 #define PARTITION_LINUX_EXT	0x85
 #define PARTITION_LINUX_LVM	0x8e
+#define PARTITION_HFS		0xaf
 #define PARTITION_SUN_UFS	0xbf
 #define PARTITION_DELL_DIAG	0xde
 #define PARTITION_GPT		0xee
@@ -1354,7 +1355,10 @@ msdos_partition_set_system (PedPartition* part,
 		   || !strcmp (fs_type->name, "hpfs")) {
 		dos_data->system = PARTITION_NTFS;
 		dos_data->system |= dos_data->hidden ? PART_FLAG_HIDDEN : 0;
-	} else if (!strcmp (fs_type->name, "sun-ufs"))
+	} else if (!strcmp (fs_type->name, "hfs")
+		   || !strcmp (fs_type->name, "hfs+"))
+		dos_data->system = PARTITION_HFS;
+	else if (!strcmp (fs_type->name, "sun-ufs"))
 		dos_data->system = PARTITION_SUN_UFS;
 	else if (is_linux_swap (fs_type->name))
 		dos_data->system = PARTITION_LINUX_SWAP;
