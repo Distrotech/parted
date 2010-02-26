@@ -19,6 +19,10 @@ GNU parted NEWS                                    -*- outline -*-
   Parted no longer uses a physical sector size of 0 or of any other
   value smaller than the logical sector size.
 
+  dos: creating an HFS or HFS+ partition in an msdos partition table
+  used to set the partition type to 0x83.  That is wrong.  The required
+  number is 0xaf, and that is what is used now.
+
   gpt: read-only operation could clobber MBR part of hybrid GPT+MBR table
   [bug introduced in parted-2.1]
 

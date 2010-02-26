@@ -22,6 +22,7 @@ TESTS = \
   t2100-mkswap.sh \
   t2200-dos-label-recog.sh \
   t2300-dos-label-extended-bootcode.sh \
+  t2400-dos-hfs-partition-type.sh \
   t3000-resize-fs.sh \
   t4000-sun-raid-type.sh \
   t4001-sun-vtoc.sh \
