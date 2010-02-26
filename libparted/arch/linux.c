@@ -2571,7 +2571,7 @@ linux_disk_commit (PedDisk* disk)
 }
 
 #if USE_BLKID
-PedAlignment*
+static PedAlignment*
 linux_get_minimum_alignment(const PedDevice *dev)
 {
         blkid_topology tp = LINUX_SPECIFIC(dev)->topology;
@@ -2589,7 +2589,7 @@ linux_get_minimum_alignment(const PedDevice *dev)
                 blkid_topology_get_minimum_io_size(tp) / dev->sector_size);
 }
 
-PedAlignment*
+static PedAlignment*
 linux_get_optimum_alignment(const PedDevice *dev)
 {
         blkid_topology tp = LINUX_SPECIFIC(dev)->topology;
