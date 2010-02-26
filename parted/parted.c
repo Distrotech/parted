@@ -1396,7 +1396,7 @@ do_print (PedDevice** dev)
         const char *const transport[] = {"unknown", "scsi", "ide", "dac960",
                                          "cpqarray", "file", "ataraid", "i2o",
                                          "ubd", "dasd", "viodasd", "sx8", "dm",
-                                         "xvd", "sd/mmc", "virtblk"};
+                                         "xvd", "sd/mmc", "virtblk", "aoe"};
         char*           peek_word;
         char*           start;
         char*           end;

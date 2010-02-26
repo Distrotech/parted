@@ -249,6 +249,7 @@ struct blkdev_ioctl_param {
 #define UBD_MAJOR               98
 #define DASD_MAJOR              94
 #define VIODASD_MAJOR           112
+#define AOE_MAJOR               152
 #define SX8_MAJOR1              160
 #define SX8_MAJOR2              161
 #define XVD_MAJOR               202
@@ -540,6 +541,8 @@ _device_probe_type (PedDevice* dev)
                 dev->type = PED_DEVICE_DAC960;
         } else if (dev_major == ATARAID_MAJOR && (dev_minor % 0x10 == 0)) {
                 dev->type = PED_DEVICE_ATARAID;
+        } else if (dev_major == AOE_MAJOR && (dev_minor % 0x10 == 0)) {
+                dev->type = PED_DEVICE_AOE;
         } else if (dev_major == DASD_MAJOR && (dev_minor % 0x4 == 0)) {
                 dev->type = PED_DEVICE_DASD;
         } else if (dev_major == VIODASD_MAJOR && (dev_minor % 0x8 == 0)) {
@@ -1311,6 +1314,11 @@ linux_new (const char* path)
         case PED_DEVICE_SX8:
                 if (!init_generic (dev, _("Promise SX8 SATA Device")))
                         goto error_free_arch_specific;
+                break;
+
+        case PED_DEVICE_AOE:
+                if (!init_generic (dev, _("ATA over Ethernet Device")))
+                    goto error_free_arch_specific;
                 break;
 
 #if defined __s390__ || defined __s390x__

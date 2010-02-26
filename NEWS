@@ -2,6 +2,10 @@ GNU parted NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New features
+
+  parted now recognizes ATA over Ethernet (AoE) devices
+
 
 * Noteworthy changes in release 2.2 (2010-02-26) [stable]
 
