@@ -23,6 +23,7 @@ fi
 
 : ${srcdir=.}
 . $srcdir/t-lib.sh
+require_hfs_
 
 require_root_
 require_scsi_debug_module_

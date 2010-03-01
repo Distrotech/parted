@@ -54,6 +54,12 @@ require_acl_()
     || skip_test_ "This test requires a local user named bin."
 }
 
+require_hfs_()
+{
+  mkfs.hfs 2>&1 | grep '^usage:' \
+    || skip_test_ "This test requires HFS support."
+}
+
 # Skip this test if we're not in SELinux "enforcing" mode.
 require_selinux_enforcing_()
 {
