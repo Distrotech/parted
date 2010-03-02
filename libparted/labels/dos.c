@@ -1467,7 +1467,10 @@ msdos_partition_get_flag (const PedPartition* part, PedPartitionFlag flag)
 	dos_data = part->disk_specific;
 	switch (flag) {
 	case PED_PARTITION_HIDDEN:
-		return dos_data->hidden;
+		if (part->type == PED_PARTITION_EXTENDED)
+			return 0;
+		else
+			return dos_data->hidden;
 
 	case PED_PARTITION_BOOT:
 		return dos_data->boot;
@@ -1498,6 +1501,11 @@ msdos_partition_is_flag_available (const PedPartition* part,
 {
 	switch (flag) {
 	case PED_PARTITION_HIDDEN:
+		if (part->type == PED_PARTITION_EXTENDED)
+			return 0;
+		else
+			return 1;
+
 	case PED_PARTITION_BOOT:
 	case PED_PARTITION_RAID:
 	case PED_PARTITION_LVM:
