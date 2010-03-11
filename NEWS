@@ -13,6 +13,12 @@ GNU parted NEWS                                    -*- outline -*-
   Similarly, msdos_partition_get_flag(p,PED_PARTITION_HIDDEN) always returns 0
   for an extended partition.
 
+** Changes in behavior
+
+  libparted no longer issues an exception/warning about >512-byte
+  sector support being "HIGHLY EXPERIMENTAL".  It seems to have matured
+  enough to be usable at least with GPT and MSDOS partition tables.
+
 
 * Noteworthy changes in release 2.2 (2010-02-26) [stable]
 

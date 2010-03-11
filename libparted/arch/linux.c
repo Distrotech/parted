@@ -687,16 +687,6 @@ _device_set_sector_size (PedDevice* dev)
                 dev->sector_size = PED_SECTOR_SIZE_DEFAULT;
         }
 #endif
-
-        if (dev->sector_size != PED_SECTOR_SIZE_DEFAULT) {
-                ped_exception_throw (
-                        PED_EXCEPTION_WARNING,
-                        PED_EXCEPTION_OK,
-                        _("Device %s has a logical sector size of %lld.  Not "
-                          "all parts of GNU Parted support this at the moment, "
-                          "and the working code is HIGHLY EXPERIMENTAL.\n"),
-                        dev->path, dev->sector_size);
-        }
 }
 
 static int
