@@ -68,7 +68,6 @@ _implemented_disk_label (const char *label)
 {
         /* FIXME: these have minor problems, so skip them, temporarily.  */
         if (STREQ (label, "amiga")) return 0;
-        if (STREQ (label, "bsd")) return 0;
 
         /* Not implemented yet */
         if (STREQ (label, "aix")) return 0;
