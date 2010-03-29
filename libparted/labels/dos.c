@@ -1754,7 +1754,11 @@ _get_min_extended_part_geom (const PedPartition* ext_part,
 	min_geom = ped_geometry_duplicate (&walk->geom);
 	if (!min_geom)
 		return NULL;
-	ped_geometry_set_start (min_geom, walk->geom.start - 1 * head_size);
+	/* We must always allow at least two sectors at the start, to leave
+	 * room for LILO.  See linux/fs/partitions/msdos.c.
+	 */
+	ped_geometry_set_start (min_geom,
+				walk->geom.start - PED_MAX (1 * head_size, 2));
 
 	for (walk = ext_part->part_list; walk; walk = walk->next) {
 		if (!ped_partition_is_active (walk) || walk->num == 5)
