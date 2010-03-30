@@ -29,6 +29,7 @@ Free Documentation License''.
 @end ifplaintext
 @end ifnottex
 
+@dircategory System administration
 @direntry
 * parted: (parted).                         GNU partitioning software
 @end direntry
