@@ -23,6 +23,9 @@ parted_LDADD = \
 
 parted_LDFLAGS = $(PARTEDLDFLAGS)
 
+# Tell the linker to omit references to unused shared libraries.
+parted_LDFLAGS += $(IGNORE_UNUSED_LIBRARIES_CFLAGS)
+
 INCLUDES	= $(partedincludedir) $(INTLINCS)
 
 MAINTAINERCLEANFILES = Makefile.in
