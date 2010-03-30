@@ -22,6 +22,7 @@ TESTS = \
   t2100-mkswap.sh \
   t2200-dos-label-recog.sh \
   t2300-dos-label-extended-bootcode.sh \
+  t2310-dos-extended-2-sector-min-offset.sh \
   t2400-dos-hfs-partition-type.sh \
   t3000-resize-fs.sh \
   t3200-type-change.sh \
