@@ -36,7 +36,8 @@ local-checks-to-skip = \
   sc_prohibit_strcmp \
   sc_prohibit_atoi_atof \
   sc_require_test_exit_idiom \
-  sc_space_tab
+  sc_space_tab \
+  sc_texinfo_acronym
 
 # Now that we have better (check.mk) tests, make this the default.
 export VERBOSE = yes
