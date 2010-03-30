@@ -8,6 +8,8 @@ noinst_SCRIPTS	= test			\
 		  test_disk_sun		\
 		  test_fs_ext2		\
 		  test_fs_fat		\
+		  test_fs_hfs		\
+		  test_fs_hfsplus	\
 		  test_fs_linux_swap	\
 		  test_fs_reiserfs	\
 		  build_leak_list

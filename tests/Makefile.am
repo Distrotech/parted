@@ -24,6 +24,7 @@ TESTS = \
   t2300-dos-label-extended-bootcode.sh \
   t2400-dos-hfs-partition-type.sh \
   t3000-resize-fs.sh \
+  t3200-type-change.sh \
   t4000-sun-raid-type.sh \
   t4001-sun-vtoc.sh \
   t4100-msdos-partition-limits.sh \

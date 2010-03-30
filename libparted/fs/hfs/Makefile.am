@@ -14,4 +14,6 @@ libhfs_la_SOURCES	= hfs.c hfs.h \
 
 INCLUDES = $(partedincludedir) $(INTLINCS)
 
+EXTRA_DIST = DOC HISTORY
+
 MAINTAINERCLEANFILES = Makefile.in
