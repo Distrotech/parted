@@ -39,7 +39,6 @@
 #include <stdbool.h>
 
 #include "architecture.h"
-#include "intprops.h"
 #include "labels/pt-tools.h"
 
 #if ENABLE_NLS
