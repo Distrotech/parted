@@ -110,7 +110,8 @@ AC_ARG_ENABLE([dynamic-loading],
 		enable_dynamic_loading=yes
 	fi
 )
-if test "$enable_discover_only" = yes -a "$enable_dynamic_loading" = yes; then
+if test "$enable_discover_only" = yes \
+ && test "$enable_dynamic_loading" = yes; then
 	AC_MSG_ERROR(
 [You can't use --enable-dynamic-loading and --disable-discover-only together]
 	)
@@ -282,7 +283,7 @@ AC_CHECK_SIZEOF([off_t], [64], [
 ])
 
 AM_ENABLE_SHARED
-if test "$OS" = linux -a $ac_cv_sizeof_off_t -lt 8; then
+if test "$OS" = linux && test $ac_cv_sizeof_off_t -lt 8; then
 	dnl Need to disable shared libraries, to get llseek() to work.  Long
 	dnl story.  The short story is: lseek() isn't in glibc, so a syscall
 	dnl must be made.  syscalls can't be made from within shared libraries,
@@ -363,7 +364,7 @@ AC_SUBST([SELINUX_LIBS])
 
 dnl Check for libreiserfs
 REISER_LIBS=""
-if test "$enable_dynamic_loading" = no -a "$enable_discover_only" = no; then
+if test "$enable_dynamic_loading" = no && test "$enable_discover_only" = no; then
 	OLD_LIBS="$LIBS"
 	AC_CHECK_LIB([dal], [dal_equals],
 		LIBS="-ldal"

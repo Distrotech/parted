@@ -1,7 +1,7 @@
 # Put lvm-related utilities here.
 # This file is sourced from test-lib.sh.
 
-# Copyright (C) 2007-2009 Red Hat, Inc. All rights reserved.
+# Copyright (C) 2007-2010 Red Hat, Inc. All rights reserved.
 #
 # This copyrighted material is made available to anyone wishing to use,
 # modify, copy, or redistribute it subject to the terms and conditions
@@ -149,8 +149,8 @@ dmsetup_has_dm_devdir_support_()
   # Detect support for the envvar.  If it's supported, the
   # following command will fail with the expected diagnostic.
   out=$(DM_DEV_DIR=j dmsetup version 2>&1)
-  test "$?:$out" = "1:Invalid DM_DEV_DIR envvar value." -o \
-       "$?:$out" = "1:Invalid DM_DEV_DIR environment variable value."
+  test "$?:$out" = "1:Invalid DM_DEV_DIR envvar value." ||
+  test "$?:$out" = "1:Invalid DM_DEV_DIR environment variable value."
 }
 
 # set up private /dev and /etc
