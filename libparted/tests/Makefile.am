@@ -3,9 +3,9 @@
 #
 # This file may be modified and/or distributed without restriction.
 
-TESTS = t1000-label.sh t2000-disk.sh
+TESTS = t1000-label.sh t2000-disk.sh t3000-symlink.sh
 EXTRA_DIST = $(TESTS)
-check_PROGRAMS = label disk
+check_PROGRAMS = label disk symlink
 AM_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
 
 LDADD = \
@@ -19,6 +19,7 @@ AM_CPPFLAGS = \
 
 label_SOURCES = common.h common.c label.c
 disk_SOURCES  = common.h common.c disk.c
+symlink_SOURCES = common.h common.c symlink.c
 
 MAINTAINERCLEANFILES = Makefile.in
 
