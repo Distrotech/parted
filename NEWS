@@ -8,6 +8,11 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  When libparted deferenced a /dev/mapper/foo symlink, it would keep the
+  resulting /dev/dm-N name and sometimes use it later, even though it
+  had since become stale and invalid.  It no longer stores the result
+  of dereferencing a /dev/mapper symlink.
+
   libparted's msdos_partition_is_flag_available function now always reports
   that the "hidden" flag is not available for an extended partition.
   Similarly, msdos_partition_get_flag(p,PED_PARTITION_HIDDEN) always returns 0
