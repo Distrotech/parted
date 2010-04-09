@@ -2423,7 +2423,9 @@ _device_get_partition_range(PedDevice* dev)
  * Sync the partition table in two step process:
  * 1. Remove all of the partitions from the kernel's tables, but do not attempt
  *    removal of any partition for which the corresponding ioctl call fails.
- * 2. Add all the partitions that we hold in disk.
+ * 2. Add all the partitions that we hold in disk, throwing a warning
+ *    if we cannot because step 1 failed to remove it and it is not being
+ *    added back with the same start and length.
  *
  * To achieve this two step process we must calculate the minimum number of
  * maximum possible partitions between what linux supports and what the label
@@ -2449,10 +2451,13 @@ _disk_sync_part_table (PedDisk* disk)
          * */
         if(lpn < 0)
                 return 0;
-
+        int ret = 0;
         int *rets = ped_malloc(sizeof(int) * lpn);
+        if (!rets)
+                return 0;
         int *errnums = ped_malloc(sizeof(int) * lpn);
-        int ret = 1;
+        if (!errnums)
+                goto free_rets;
         int i;
 
         for (i = 1; i <= lpn; i++) {
@@ -2463,21 +2468,78 @@ _disk_sync_part_table (PedDisk* disk)
         for (i = 1; i <= lpn; i++) {
                 const PedPartition *part = ped_disk_get_partition (disk, i);
                 if (part) {
-                        /* busy... so we won't (can't!) disturb ;)  Prolly
-                         * doesn't matter anyway, because users shouldn't be
-                         * changing mounted partitions anyway...
-                         */
-                        if (!rets[i - 1] && errnums[i - 1] == EBUSY)
-                                        continue;
+                        if (!rets[i - 1] && errnums[i - 1] == EBUSY) {
+                                struct hd_geometry geom;
+                                int fd;
+                                unsigned long long length = 0;
+                                /* get start and length of existing partition */
+                                char *dev_name = _device_get_part_path (disk->dev, i);
+                                if (!dev_name)
+                                        goto free_errnums;
+                                fd = open (dev_name, O_RDONLY);
+                                if (fd == -1 ||
+                                    ioctl (fd, HDIO_GETGEO, &geom) ||
+                                    ioctl (fd, BLKGETSIZE64, &length)) {
+                                        ped_exception_throw (
+                                                             PED_EXCEPTION_BUG,
+                                                             PED_EXCEPTION_CANCEL,
+                                                             _("Unable to determine the size and length of %s."),
+                                                             dev_name);
+                                        if( fd != -1 )
+                                                close (fd);
+                                        free (dev_name);
+                                        goto free_errnums;
+                                }
+                                free (dev_name);
+                                length /= disk->dev->sector_size;
+                                close (fd);
+                                if (geom.start == part->geom.start &&
+                                    length == part->geom.length)
+                                        rets[i - 1] = 1;
+                                /* if the new partition is unchanged and the existing
+                                   one was not removed because it was in use, then
+                                   reset the error flag and skip adding it
+                                   since it is already there */
+                                continue;
+                        }
 
                         /* add the (possibly modified or new) partition */
-                        if (!_blkpg_add_partition (disk, part))
-                                ret = 0;
+                        if (!_blkpg_add_partition (disk, part)) {
+                                ped_exception_throw (
+                                        PED_EXCEPTION_ERROR,
+                                        PED_EXCEPTION_RETRY_CANCEL,
+                                        _("Failed to add partition %i (%s)"),
+                                        i, strerror (errno));
+                                goto free_errnums;
+                        }
                 }
         }
 
-        free (rets);
+        char *parts = ped_malloc (lpn * 5);
+        if (!parts)
+                goto free_errnums;
+        parts[0] = 0;
+        /* now warn about any errors */
+        for (i = 1; i <= lpn; i++)
+                if (!rets[i - 1] && errnums[i - 1] != ENXIO)
+                        sprintf (parts + strlen (parts), "%i, ", i);
+        if (parts[0]) {
+                parts[strlen (parts) - 2] = 0;
+                ped_exception_throw (
+                        PED_EXCEPTION_WARNING,
+                        PED_EXCEPTION_IGNORE,
+                        _("Partition(s) %s on %s could not be modified, probably "
+                          "because it/they is/are in use.  As a result, the old partition(s) "
+                          "will remain in use until after reboot. You should reboot "
+                          "now before making further changes."),
+                        parts, disk->dev->path);
+        }
+        free (parts);
+        ret = 1;
+ free_errnums:
         free (errnums);
+ free_rets:
+        free (rets);
         return ret;
 }
 
