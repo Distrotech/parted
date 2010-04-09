@@ -127,7 +127,7 @@ ptt_partition_max_start_len (char const *pt_type, const PedPartition *part)
 			     " of %jd"),
 			   part->geom.length,
 			   pt_type,
-			   UINT32_MAX);
+			   pt_lim->max_length);
       return 0;
     }
 
@@ -140,7 +140,7 @@ ptt_partition_max_start_len (char const *pt_type, const PedPartition *part)
 			   " of %jd"),
 			 part->geom.start,
 			 pt_type,
-			 UINT32_MAX);
+			 pt_lim->max_start_sector);
     return 0;
   }
 
