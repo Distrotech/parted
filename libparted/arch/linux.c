@@ -2470,13 +2470,12 @@ _disk_sync_part_table (PedDisk* disk)
                 if (part) {
                         if (!rets[i - 1] && errnums[i - 1] == EBUSY) {
                                 struct hd_geometry geom;
-                                int fd;
                                 unsigned long long length = 0;
                                 /* get start and length of existing partition */
                                 char *dev_name = _device_get_part_path (disk->dev, i);
                                 if (!dev_name)
                                         goto free_errnums;
-                                fd = open (dev_name, O_RDONLY);
+                                int fd = open (dev_name, O_RDONLY);
                                 if (fd == -1
 				    || ioctl (fd, HDIO_GETGEO, &geom)
 				    || ioctl (fd, BLKGETSIZE64, &length)) {
@@ -2515,16 +2514,21 @@ _disk_sync_part_table (PedDisk* disk)
                 }
         }
 
-        char *parts = ped_malloc (lpn * 5);
-        if (!parts)
-                goto free_errnums;
-        parts[0] = 0;
+        char *bad_part_list = NULL;
         /* now warn about any errors */
-        for (i = 1; i <= lpn; i++)
-                if (!rets[i - 1] && errnums[i - 1] != ENXIO)
-                        sprintf (parts + strlen (parts), "%d, ", i);
-        if (parts[0]) {
-                parts[strlen (parts) - 2] = 0;
+        for (i = 1; i <= lpn; i++) {
+		if (rets[i - 1] || errnums[i - 1] == ENXIO)
+			continue;
+		if (bad_part_list == NULL) {
+			  bad_part_list = malloc (lpn * 5);
+			  if (!bad_part_list)
+				  goto free_errnums;
+			  bad_part_list[0] = 0;
+		}
+		sprintf (bad_part_list + strlen (bad_part_list), "%d, ", i);
+	}
+        if (bad_part_list) {
+                bad_part_list[strlen (bad_part_list) - 2] = 0;
                 ped_exception_throw (
                         PED_EXCEPTION_WARNING,
                         PED_EXCEPTION_IGNORE,
@@ -2533,9 +2537,9 @@ _disk_sync_part_table (PedDisk* disk)
                           "the old partition(s) will remain in use until after "
                           "reboot. You should reboot "
                           "now before making further changes."),
-                        parts, disk->dev->path);
+                        bad_part_list, disk->dev->path);
+		free (bad_part_list);
         }
-        free (parts);
         ret = 1;
  free_errnums:
         free (errnums);
