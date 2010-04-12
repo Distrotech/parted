@@ -2799,6 +2799,7 @@ _have_blkpg ()
         return have_blkpg = kver >= KERNEL_VERSION (2,4,0) ? 1 : 0;
 }
 
+/* Return nonzero upon success, 0 if something fails.  */
 static int
 linux_disk_commit (PedDisk* disk)
 {
@@ -2817,13 +2818,15 @@ linux_disk_commit (PedDisk* disk)
                  * to re-read and grok the partition table.
                  */
                 /* Work around kernel dasd problem so we really do BLKRRPART */
-                if (disk->dev->type != PED_DEVICE_DASD &&
-                    _have_blkpg () ) {
-                        if (_disk_sync_part_table (disk))
-                                return 1;
-                }
+		int ok = 1;
+		if (disk->dev->type != PED_DEVICE_DASD && _have_blkpg ()) {
+			if (!_disk_sync_part_table (disk))
+			  ok = 0;
+		}
 
-                return _kernel_reread_part_table (disk->dev);
+		if (!_kernel_reread_part_table (disk->dev))
+			ok = 0;
+                return ok;
         }
 
         return 1;
