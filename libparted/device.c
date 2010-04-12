@@ -403,7 +403,7 @@ ped_device_sync_fast (PedDevice* dev)
  *         constraint.
  */
 PedConstraint*
-ped_device_get_constraint (PedDevice* dev)
+ped_device_get_constraint (const PedDevice* dev)
 {
         PedGeometry *s, *e;
         PedConstraint* c = ped_constraint_new (
