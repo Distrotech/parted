@@ -45,4 +45,18 @@ for type in ext2 ext3 ext4; do
 
 done
 
+# Some features should indicate ext4 by themselves.
+for feature in uninit_bg flex_bg; do
+  # create an ext3 file system
+  dd if=/dev/zero of=$dev bs=1024 count=4096 >/dev/null || fail=1
+  mkfs.ext3 -F $dev >/dev/null || fail=1
+
+  # set the feature
+  tune2fs -O $feature $dev || fail=1
+
+  # probe the file system, which should now be ext4
+  parted -m -s $dev u s print >out 2>&1 || fail=1
+  grep '^1:.*:ext4::;$' out || fail=1
+done
+
 Exit $fail

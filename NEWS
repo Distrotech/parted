@@ -18,6 +18,9 @@ GNU parted NEWS                                    -*- outline -*-
   Similarly, msdos_partition_get_flag(p,PED_PARTITION_HIDDEN) always returns 0
   for an extended partition.
 
+  libparted uses a more accurate heuristic to distinguish between
+  ext4 and ext3 partitions.
+
 ** Changes in behavior
 
   libparted no longer issues an exception/warning about >512-byte
