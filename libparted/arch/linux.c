@@ -2405,11 +2405,11 @@ _device_get_partition_range(PedDevice* dev)
 
         r = snprintf(path, sizeof(path), "/sys/block/%s/range",
                      last_component(dev->path));
-        if(r < 0 || r >= sizeof(path))
+        if (r < 0 || r >= sizeof(path))
                 return MAX_NUM_PARTS;
 
         fp = fopen(path, "r");
-        if(!fp)
+        if (!fp)
                 return MAX_NUM_PARTS;
 
         ok = fscanf(fp, "%d", &range) == 1;
@@ -2441,7 +2441,7 @@ _disk_sync_part_table (PedDisk* disk)
         int lpn;
 
         /* lpn = largest partition number. */
-        if(ped_disk_get_max_supported_partition_count(disk, &lpn))
+        if (ped_disk_get_max_supported_partition_count(disk, &lpn))
                 lpn = PED_MIN(lpn, _device_get_partition_range(disk->dev));
         else
                 lpn = _device_get_partition_range(disk->dev);
@@ -2449,7 +2449,7 @@ _disk_sync_part_table (PedDisk* disk)
         /* Its not possible to support largest_partnum < 0.
          * largest_partnum == 0 would mean does not support partitions.
          * */
-        if(lpn < 0)
+        if (lpn < 0)
                 return 0;
         int ret = 0;
         int *rets = ped_malloc(sizeof(int) * lpn);
@@ -2477,15 +2477,15 @@ _disk_sync_part_table (PedDisk* disk)
                                 if (!dev_name)
                                         goto free_errnums;
                                 fd = open (dev_name, O_RDONLY);
-                                if (fd == -1 ||
-                                    ioctl (fd, HDIO_GETGEO, &geom) ||
-                                    ioctl (fd, BLKGETSIZE64, &length)) {
+                                if (fd == -1
+				    || ioctl (fd, HDIO_GETGEO, &geom)
+				    || ioctl (fd, BLKGETSIZE64, &length)) {
                                         ped_exception_throw (
                                                              PED_EXCEPTION_BUG,
                                                              PED_EXCEPTION_CANCEL,
-                                                             _("Unable to determine the size and length of %s."),
+			    _("Unable to determine the size and length of %s."),
                                                              dev_name);
-                                        if( fd != -1 )
+                                        if (fd != -1)
                                                 close (fd);
                                         free (dev_name);
                                         goto free_errnums;
@@ -2493,13 +2493,13 @@ _disk_sync_part_table (PedDisk* disk)
                                 free (dev_name);
                                 length /= disk->dev->sector_size;
                                 close (fd);
-                                if (geom.start == part->geom.start &&
-                                    length == part->geom.length)
+                                if (geom.start == part->geom.start
+				    && length == part->geom.length)
                                         rets[i - 1] = 1;
-                                /* if the new partition is unchanged and the existing
-                                   one was not removed because it was in use, then
-                                   reset the error flag and skip adding it
-                                   since it is already there */
+                                /* If the new partition is unchanged and the
+				   existing one was not removed because it was
+				   in use, then reset the error flag and do not
+				   try to add it since it is already there.  */
                                 continue;
                         }
 
@@ -2508,7 +2508,7 @@ _disk_sync_part_table (PedDisk* disk)
                                 ped_exception_throw (
                                         PED_EXCEPTION_ERROR,
                                         PED_EXCEPTION_RETRY_CANCEL,
-                                        _("Failed to add partition %i (%s)"),
+                                        _("Failed to add partition %d (%s)"),
                                         i, strerror (errno));
                                 goto free_errnums;
                         }
@@ -2522,7 +2522,7 @@ _disk_sync_part_table (PedDisk* disk)
         /* now warn about any errors */
         for (i = 1; i <= lpn; i++)
                 if (!rets[i - 1] && errnums[i - 1] != ENXIO)
-                        sprintf (parts + strlen (parts), "%i, ", i);
+                        sprintf (parts + strlen (parts), "%d, ", i);
         if (parts[0]) {
                 parts[strlen (parts) - 2] = 0;
                 ped_exception_throw (
