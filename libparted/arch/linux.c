@@ -2527,7 +2527,9 @@ _disk_sync_part_table (PedDisk* disk)
 		}
 		sprintf (bad_part_list + strlen (bad_part_list), "%d, ", i);
 	}
-        if (bad_part_list) {
+        if (bad_part_list == NULL)
+		ret = 1;
+	else {
                 bad_part_list[strlen (bad_part_list) - 2] = 0;
                 ped_exception_throw (
                         PED_EXCEPTION_WARNING,
@@ -2540,7 +2542,6 @@ _disk_sync_part_table (PedDisk* disk)
                         bad_part_list, disk->dev->path);
 		free (bad_part_list);
         }
-        ret = 1;
  free_errnums:
         free (errnums);
  free_rets:
