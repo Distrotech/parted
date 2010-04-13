@@ -40,8 +40,8 @@ for type in ext2 ext3 ext4; do
   mkfs.$type -F $dev >/dev/null || fail=1
 
   # probe the $type file system
-  parted -s $dev print >out 2>1 || fail=1
-  grep -w $type out || fail=1
+  parted -m -s $dev u s print >out 2>&1 || fail=1
+  grep '^1:.*:'$type'::;$' out || fail=1
 
 done
 
