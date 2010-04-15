@@ -2529,8 +2529,9 @@ _disk_sync_part_table (PedDisk* disk)
                         PED_EXCEPTION_WARNING,
                         PED_EXCEPTION_IGNORE,
                         _("Partition(s) %s on %s could not be modified, probably "
-                          "because it/they is/are in use.  As a result, the old partition(s) "
-                          "will remain in use until after reboot. You should reboot "
+                          "because it/they are in use.  As a result, "
+                          "the old partition(s) will remain in use until after "
+                          "reboot. You should reboot "
                           "now before making further changes."),
                         parts, disk->dev->path);
         }
