@@ -255,6 +255,7 @@ struct blkdev_ioctl_param {
 #define XVD_MAJOR               202
 #define SDMMC_MAJOR             179
 #define LOOP_MAJOR              7
+#define MD_MAJOR                9
 
 #define SCSI_BLK_MAJOR(M) (                                             \
                 (M) == SCSI_DISK0_MAJOR                                 \
@@ -574,6 +575,8 @@ _device_probe_type (PedDevice* dev)
                 dev->type = PED_DEVICE_VIRTBLK;
         } else if (dev_major == LOOP_MAJOR) {
                 dev->type = PED_DEVICE_FILE;
+        } else if (dev_major == MD_MAJOR) {
+                dev->type = PED_DEVICE_MD;
         } else {
                 dev->type = PED_DEVICE_UNKNOWN;
         }
@@ -1378,6 +1381,11 @@ linux_new (const char* path)
                 break;
         case PED_DEVICE_VIRTBLK:
                 if (!init_generic(dev, _("Virtio Block Device")))
+                        goto error_free_arch_specific;
+                break;
+
+        case PED_DEVICE_MD:
+                if (!init_generic(dev, _("Linux Software RAID Array")))
                         goto error_free_arch_specific;
                 break;
 

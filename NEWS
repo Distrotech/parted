@@ -6,6 +6,8 @@ GNU parted NEWS                                    -*- outline -*-
 
   parted now recognizes ATA over Ethernet (AoE) devices
 
+  parted now recognizes Linux Software RAID Arrays
+
 ** Bug fixes
 
   When libparted deferenced a /dev/mapper/foo symlink, it would keep the
