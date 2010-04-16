@@ -22,6 +22,7 @@ config.hin
 config.log
 config.status
 configure
+cscope.out
 doc/C/po/parted.8.pot
 doc/pt_BR/parted.8.pt_BR.po
 gnulib-tests
@@ -47,6 +48,7 @@ parted.spec
 partprobe/partprobe
 po/.reference
 stamp-h1
+tags
 tests/init.sh
 tests/print-align
 tests/t*.sh.log
