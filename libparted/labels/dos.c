@@ -1438,6 +1438,7 @@ msdos_partition_set_flag (PedPartition* part,
 			dos_data->hidden = 0;
 			dos_data->raid = 0;
 			dos_data->lvm = 0;
+			dos_data->prep = 0;
 		}
 		dos_data->palo = state;
 		return ped_partition_set_system (part, part->fs_type);
@@ -1447,6 +1448,7 @@ msdos_partition_set_flag (PedPartition* part,
 			dos_data->hidden = 0;
 			dos_data->raid = 0;
 			dos_data->lvm = 0;
+			dos_data->palo = 0;
 		}
 		dos_data->prep = state;
 		return ped_partition_set_system (part, part->fs_type);
