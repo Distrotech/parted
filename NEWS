@@ -8,6 +8,9 @@ GNU parted NEWS                                    -*- outline -*-
 
   parted now recognizes Linux Software RAID Arrays
 
+  libparted has a new partition flag to check for msdos disklabel diagnostics
+  partitions: PED_PARTITION_DIAG
+
 ** Bug fixes
 
   When libparted deferenced a /dev/mapper/foo symlink, it would keep the

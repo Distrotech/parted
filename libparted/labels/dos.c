@@ -157,6 +157,7 @@ typedef struct {
 	int		lba;
 	int		palo;
 	int		prep;
+	int		diag;
 	OrigState*	orig;			/* used for CHS stuff */
 } DosPartitionData;
 
@@ -828,6 +829,8 @@ raw_part_parse (const PedDisk* disk, const DosRawPartition* raw_part,
 	dos_data = part->disk_specific;
 	dos_data->system = raw_part->type;
 	dos_data->boot = raw_part->boot_ind != 0;
+	dos_data->diag = raw_part->type == PARTITION_COMPAQ_DIAG ||
+			 raw_part->type == PARTITION_DELL_DIAG;
 	dos_data->hidden = raw_part_is_hidden (raw_part);
 	dos_data->raid = raw_part->type == PARTITION_LINUX_RAID;
 	dos_data->lvm = raw_part->type == PARTITION_LINUX_LVM_OLD
@@ -1231,6 +1234,7 @@ msdos_partition_new (const PedDisk* disk, PedPartitionType part_type,
 		dos_data->system = PARTITION_LINUX;
 		dos_data->hidden = 0;
 		dos_data->boot = 0;
+		dos_data->diag = 0;
 		dos_data->raid = 0;
 		dos_data->lvm = 0;
 		dos_data->lba = 0;
@@ -1264,6 +1268,7 @@ msdos_partition_duplicate (const PedPartition* part)
 	new_dos_data = (DosPartitionData*) new_part->disk_specific;
 	new_dos_data->system = old_dos_data->system;
 	new_dos_data->boot = old_dos_data->boot;
+	new_dos_data->diag = old_dos_data->diag;
 	new_dos_data->hidden = old_dos_data->hidden;
 	new_dos_data->raid = old_dos_data->raid;
 	new_dos_data->lvm = old_dos_data->lvm;
@@ -1313,6 +1318,7 @@ msdos_partition_set_system (PedPartition* part,
 		dos_data->hidden = 0;
 
 	if (part->type & PED_PARTITION_EXTENDED) {
+		dos_data->diag = 0;
 		dos_data->raid = 0;
 		dos_data->lvm = 0;
 		dos_data->palo = 0;
@@ -1324,6 +1330,14 @@ msdos_partition_set_system (PedPartition* part,
 		return 1;
 	}
 
+	if (dos_data->diag) {
+		/* Don't change the system if it already is a diag type,
+		   otherwise use Compaq as almost all vendors use that. */
+		if (dos_data->system != PARTITION_COMPAQ_DIAG &&
+		    dos_data->system != PARTITION_DELL_DIAG)
+			dos_data->system = PARTITION_COMPAQ_DIAG;
+		return 1;
+	}
 	if (dos_data->lvm) {
 		dos_data->system = PARTITION_LINUX_LVM;
 		return 1;
@@ -1409,8 +1423,20 @@ msdos_partition_set_flag (PedPartition* part,
 		}
 		return 1;
 
+	case PED_PARTITION_DIAG:
+		if (state) {
+			dos_data->hidden = 0;
+			dos_data->raid = 0;
+			dos_data->lvm = 0;
+			dos_data->palo = 0;
+			dos_data->prep = 0;
+		}
+		dos_data->diag = state;
+		return ped_partition_set_system (part, part->fs_type);
+
 	case PED_PARTITION_RAID:
 		if (state) {
+			dos_data->diag = 0;
 			dos_data->hidden = 0;
 			dos_data->lvm = 0;
 			dos_data->palo = 0;
@@ -1421,6 +1447,7 @@ msdos_partition_set_flag (PedPartition* part,
 
 	case PED_PARTITION_LVM:
 		if (state) {
+			dos_data->diag = 0;
 			dos_data->hidden = 0;
 			dos_data->raid = 0;
 			dos_data->palo = 0;
@@ -1435,6 +1462,7 @@ msdos_partition_set_flag (PedPartition* part,
 
 	case PED_PARTITION_PALO:
 		if (state) {
+			dos_data->diag = 0;
 			dos_data->hidden = 0;
 			dos_data->raid = 0;
 			dos_data->lvm = 0;
@@ -1445,6 +1473,7 @@ msdos_partition_set_flag (PedPartition* part,
 
 	case PED_PARTITION_PREP:
 		if (state) {
+			dos_data->diag = 0;
 			dos_data->hidden = 0;
 			dos_data->raid = 0;
 			dos_data->lvm = 0;
@@ -1476,6 +1505,9 @@ msdos_partition_get_flag (const PedPartition* part, PedPartitionFlag flag)
 
 	case PED_PARTITION_BOOT:
 		return dos_data->boot;
+
+	case PED_PARTITION_DIAG:
+		return dos_data->diag;
 
 	case PED_PARTITION_RAID:
 		return dos_data->raid;
@@ -1514,6 +1546,7 @@ msdos_partition_is_flag_available (const PedPartition* part,
 	case PED_PARTITION_LBA:
 	case PED_PARTITION_PALO:
 	case PED_PARTITION_PREP:
+	case PED_PARTITION_DIAG:
 		return 1;
 
 	default:

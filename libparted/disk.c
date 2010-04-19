@@ -2441,6 +2441,8 @@ ped_partition_flag_get_name (PedPartitionFlag flag)
 		return N_("msftres");
         case PED_PARTITION_APPLE_TV_RECOVERY:
                 return N_("atvrecv");
+        case PED_PARTITION_DIAG:
+                return N_("diag");
 
 	default:
 		ped_exception_throw (

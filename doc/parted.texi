@@ -1089,6 +1089,10 @@ by the Linux/PA-RISC boot loader, palo.
 (MS-DOS) - this flag can be enabled so that the partition can be used
 as a PReP boot partition on PowerPC PReP or IBM RS6K/CHRP hardware.
 
+@item DIAG
+(MS-DOS) - Enable this to indicate that a partition can be used
+as a diagnostics / recovery partition.
+
 @end table
 
 The print command displays all enabled flags for each partition.
