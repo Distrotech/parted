@@ -39,7 +39,7 @@ ped_assert ( const char* cond_text,
 
 #define PED_DEBUG(level, ...) \
         ped_debug ( level, __FILE__, __LINE__, __PRETTY_FUNCTION__, \
-                    __VA_ARGS__ );
+                    __VA_ARGS__ )
 
 #define PED_ASSERT(cond, action)				\
 	do {							\
@@ -79,8 +79,8 @@ static void PED_DEBUG (int level, ...)
 
 #else /* !DEBUG */
 
-#define PED_ASSERT(cond, action)	while (0) {}
-#define PED_DEBUG(level, ...)           while (0) {}
+#define PED_ASSERT(cond, action)	do {} while (0)
+#define PED_DEBUG(level, ...)           do {} while (0)
 
 
 #endif /* DEBUG */
