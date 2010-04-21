@@ -27,6 +27,7 @@ TESTS = \
   t3000-resize-fs.sh \
   t3200-type-change.sh \
   t3300-palo-prep.sh \
+  t3310-flags.sh \
   t4000-sun-raid-type.sh \
   t4001-sun-vtoc.sh \
   t4100-msdos-partition-limits.sh \
