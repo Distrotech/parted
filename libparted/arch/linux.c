@@ -2321,7 +2321,7 @@ _dm_remove_map_name(char *name)
         rc = dm_task_run(task);
         dm_task_update_nodes();
         dm_task_destroy(task);
-        if (rc < 0)
+        if (!rc)
                 return 1;
 
         return 0;
@@ -2341,12 +2341,8 @@ _dm_is_part (struct dm_info *this, char *name)
                 return 0;
 
         dm_task_set_name(task, name);
-        rc = dm_task_run(task);
-        if (rc < 0) {
-                rc = 0;
+        if (!dm_task_run(task))
                 goto err;
-        }
-        rc = 0;
 
         memset(info, '\0', sizeof *info);
         dm_task_get_info(task, info);
@@ -2357,7 +2353,6 @@ _dm_is_part (struct dm_info *this, char *name)
         if (!deps)
                 goto err;
 
-        rc = 0;
         for (i = 0; i < deps->count; i++) {
                 unsigned int ma = major(deps->device[i]),
                              mi = minor(deps->device[i]);
@@ -2389,8 +2384,7 @@ _dm_remove_parts (PedDevice* dev)
                                       arch_specific->minor, 0))
                 goto err;
 
-        rc = dm_task_run(task);
-        if (rc < 0)
+        if (!dm_task_run(task))
                 goto err;
 
         memset(info, '\0', sizeof *info);
@@ -2432,7 +2426,6 @@ err:
 static int
 _dm_add_partition (PedDisk* disk, PedPartition* part)
 {
-        int             rc;
         char*           vol_name = NULL;
         const char*     dev_name = NULL;
         char*           params = NULL;
@@ -2450,8 +2443,7 @@ _dm_add_partition (PedDisk* disk, PedPartition* part)
                                       arch_specific->minor, 0))
                 goto err;
 
-        rc = dm_task_run(task);
-        if (rc < 0)
+        if (!dm_task_run(task))
                 goto err;
 
         dev_name = dm_task_get_name (task);
@@ -2474,8 +2466,7 @@ _dm_add_partition (PedDisk* disk, PedPartition* part)
         dm_task_set_name (task, vol_name);
         dm_task_add_target (task, 0, part->geom.length,
                 "linear", params);
-        rc = dm_task_run (task);
-        if (rc >= 0) {
+        if (dm_task_run (task)) {
                 //printf("0 %ld linear %s\n", part->geom.length, params);
                 dm_task_update_nodes();
                 dm_task_destroy(task);

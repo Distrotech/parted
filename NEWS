@@ -23,6 +23,9 @@ GNU parted NEWS                                    -*- outline -*-
   libparted uses a more accurate heuristic to distinguish between
   ext4 and ext3 partitions.
 
+  libparted now properly checks the return value of dm_task_run when
+  operating on devicemapper devices.
+
 ** Changes in behavior
 
   libparted no longer issues an exception/warning about >512-byte
