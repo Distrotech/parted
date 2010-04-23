@@ -2531,15 +2531,16 @@ _disk_sync_part_table (PedDisk* disk)
 		ret = 1;
 	else {
                 bad_part_list[strlen (bad_part_list) - 2] = 0;
-                ped_exception_throw (
+                if (ped_exception_throw (
                         PED_EXCEPTION_WARNING,
-                        PED_EXCEPTION_IGNORE,
-                        _("Partition(s) %s on %s could not be modified, probably "
-                          "because it/they are in use.  As a result, "
-                          "the old partition(s) will remain in use until after "
-                          "reboot. You should reboot "
-                          "now before making further changes."),
-                        bad_part_list, disk->dev->path);
+                        PED_EXCEPTION_IGNORE_CANCEL,
+                        _("Partition(s) %s on %s have been written, but we have "
+			  "been unable to inform the kernel of the change, "
+			  "probably because it/they are in use.  As a result, "
+                          "the old partition(s) will remain in use.  You "
+                          "should reboot now before making further changes."),
+                        bad_part_list, disk->dev->path) == PED_EXCEPTION_IGNORE)
+                        ret = 1;
 		free (bad_part_list);
         }
  free_errnums:
