@@ -27,6 +27,7 @@
 #include "ui.h"
 #include "progname.h"
 #include "table.h"
+#include "version.h"
 
 #define AUTHORS \
   "<http://parted.alioth.debian.org/cgi-bin/trac.cgi/browser/AUTHORS>"
@@ -2550,7 +2551,7 @@ textdomain(PACKAGE);
 void
 _version ()
 {
-  version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, VERSION, AUTHORS,
+  version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
                (char *) NULL);
 }
 
