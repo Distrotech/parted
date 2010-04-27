@@ -53,7 +53,7 @@
 #define PROGRAM_NAME "clearfat"
 
 #define AUTHORS \
-  "<http://parted.alioth.debian.org/cgi-bin/trac.cgi/browser/AUTHORS>"
+  "<http://git.debian.org/?p=parted/parted.git;a=blob_plain;f=AUTHORS>"
 
 static void
 usage (int status)

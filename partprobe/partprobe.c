@@ -50,7 +50,7 @@
 #define _(msgid) gettext (msgid)
 
 #define AUTHORS \
-  "<http://parted.alioth.debian.org/cgi-bin/trac.cgi/browser/AUTHORS>"
+  "<http://git.debian.org/?p=parted/parted.git;a=blob_plain;f=AUTHORS>"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "partprobe"
