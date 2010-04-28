@@ -29,6 +29,9 @@ GNU parted NEWS                                    -*- outline -*-
   libparted now properly checks the return value of dm_task_run when
   operating on devicemapper devices.
 
+  allow using ped_device_cache_remove(dev) followed by a (later)
+  ped_device_destroy() without corrupting the device cache.
+
 ** Changes in behavior
 
   libparted no longer issues an exception/warning about >512-byte
