@@ -25,9 +25,7 @@
 #include <sys/types.h>
 #include "tune.h"
 
-#if HAVE_INTTYPES_H
-#  include <inttypes.h>
-#endif
+#include <inttypes.h>
 
 #if ENABLE_NLS
 #  include <libintl.h>

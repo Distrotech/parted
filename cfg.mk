@@ -32,6 +32,8 @@ manual_title = Parted User's Manual
 # files -- otherwise, you'd need to have the upcoming version number
 # at the top of the file for each `make distcheck' run.
 local-checks-to-skip = \
+  sc_error_message_uppercase \
+  sc_error_message_period \
   sc_file_system \
   sc_prohibit_strcmp \
   sc_prohibit_atoi_atof \
