@@ -450,4 +450,3 @@ fat_info_sector_write (const FatInfoSector* is, PedFileSystem *fs)
 	return ped_geometry_sync (fs->geom);
 }
 #endif /* !DISCOVER_ONLY */
-

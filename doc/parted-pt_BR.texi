@@ -2896,4 +2896,3 @@ is extra information, not required for the identification of the book,
 e.g. its identity has already been established).
 
 @end ignore
-

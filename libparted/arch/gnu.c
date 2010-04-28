@@ -887,4 +887,3 @@ PedArchitecture ped_gnu_arch = {
 	dev_ops:	&gnu_dev_ops,
 	disk_ops:	&gnu_disk_ops
 };
-

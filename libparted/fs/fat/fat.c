@@ -887,4 +887,3 @@ ped_file_system_fat_done ()
 	ped_file_system_type_unregister (&fat16_type);
 	ped_file_system_type_unregister (&fat32_type);
 }
-

@@ -89,5 +89,3 @@ extern int ped_unit_parse_custom (const char* str, const PedDevice* dev,
 #endif /* PED_UNIT_H_INCLUDED */
 
 /** @} */
-
-

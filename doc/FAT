@@ -757,5 +757,3 @@ libparted/fs_fat/resize.c (slightly edited):
 
 		return 1;
 	}
-
-

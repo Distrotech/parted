@@ -64,4 +64,3 @@ extern StrList* str_list_match (const StrList* list, const char* str);
 extern int str_list_length (const StrList* list);
 
 #endif /* STRLIST_H_INCLUDED */
-

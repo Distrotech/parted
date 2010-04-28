@@ -130,4 +130,3 @@ int fat_info_sector_generate (FatInfoSector* is, const PedFileSystem* fs);
 int fat_info_sector_write (const FatInfoSector* is, PedFileSystem* fs);
 
 #endif /* PED_FAT_BOOTSECTOR_H */
-

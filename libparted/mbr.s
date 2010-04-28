@@ -83,4 +83,3 @@ found_bootable:
 
 error:
 	jmp	error
-

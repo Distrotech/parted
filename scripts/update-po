@@ -87,4 +87,3 @@ case `wget --help` in
 esac
 
 get_translations po $package
-

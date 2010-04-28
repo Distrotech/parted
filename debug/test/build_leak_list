@@ -9,4 +9,3 @@ mtrace $TEST_PARTED_BASE/parted/.libs/parted $MALLOC_TRACE \
 	| sed 's/  at.*//' \
 	| sed 's/^\(0x[0-9a-f]\+\) \+\(0x[0-9a-f]\+\) */ {\1, \2},/' \
 	| less
-

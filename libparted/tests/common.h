@@ -24,4 +24,3 @@ int _implemented_disk_label (const char* label);
  *
  */
 PedExceptionOption _test_exception_handler (PedException* e);
-

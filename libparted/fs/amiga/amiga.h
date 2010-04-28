@@ -68,4 +68,3 @@ struct AmigaIds {
 struct AmigaIds * _amiga_add_id (uint32_t id, struct AmigaIds *ids);
 void _amiga_free_ids (struct AmigaIds *ids);
 int _amiga_id_in_list (uint32_t id, struct AmigaIds *ids);
-

@@ -284,5 +284,3 @@ typedef void PedTimerHandler (PedTimer* timer, void* context);
 
 11.1	FIELDS
 --------------
-
-

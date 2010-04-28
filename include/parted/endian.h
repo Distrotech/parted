@@ -83,4 +83,3 @@
 #endif /* !WORDS_BIGENDIAN */
 
 #endif /* PED_ENDIAN_H_INCLUDED */
-

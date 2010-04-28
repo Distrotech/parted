@@ -95,4 +95,3 @@ extern PedConstraint*
 ped_constraint_exact (const PedGeometry* geom);
 
 #endif /* PED_CONSTRAINT_H_INCLUDED */
-

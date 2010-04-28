@@ -139,4 +139,3 @@ command_run (Command* cmd, PedDevice** dev)
 {
 	return cmd->method (dev);
 }
-

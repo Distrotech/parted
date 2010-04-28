@@ -75,4 +75,3 @@ extern FatCluster
 fat_sector_to_cluster (const PedFileSystem* fs, PedSector sector);
 
 #endif /* PED_FAT_CALC_H */
-

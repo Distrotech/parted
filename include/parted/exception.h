@@ -114,4 +114,3 @@ extern void			ped_exception_leave_all ();
 #endif /* PED_EXCEPTION_H_INCLUDED */
 
 /** @} */
-

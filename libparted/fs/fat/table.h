@@ -72,4 +72,3 @@ extern int fat_table_set_bad (FatTable* ft, FatCluster cluster);
 extern int fat_table_entry_size (FatType fat_type);
 
 #endif /* PED_FAT_TABLE_H_INCLUDED */
-

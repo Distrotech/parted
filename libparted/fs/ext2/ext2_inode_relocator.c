@@ -597,4 +597,3 @@ int ext2_inode_relocate(struct ext2_fs *fs, int newgroups)
 	return 1;
 }
 #endif /* !DISCOVER_ONLY */
-

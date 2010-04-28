@@ -83,4 +83,3 @@ extern PedSector ped_geometry_map (const PedGeometry* dst,
 #endif /* PED_GEOM_H_INCLUDED */
 
 /** @} */
-

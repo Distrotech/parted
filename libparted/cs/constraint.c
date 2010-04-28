@@ -527,4 +527,3 @@ ped_constraint_exact (const PedGeometry* geom)
 /**
  * @}
  */
-

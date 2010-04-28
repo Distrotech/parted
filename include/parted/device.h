@@ -163,4 +163,3 @@ extern void _ped_device_probe (const char* path);
 #endif /* PED_DEVICE_H_INCLUDED */
 
 /** @} */
-

@@ -49,4 +49,3 @@ void table_add_row (Table* t, wchar_t** row);
 void table_add_row_from_strlist (Table* t, StrList* list);
 
 wchar_t* table_render(Table* t);
-

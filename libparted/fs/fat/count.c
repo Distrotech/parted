@@ -401,4 +401,3 @@ fat_is_fragment_active (PedFileSystem* fs, FatFragment frag)
 }
 
 #endif /* !DISCOVER_ONLY */
-

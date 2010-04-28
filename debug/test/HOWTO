@@ -238,4 +238,3 @@ doesn't segfault.
 	The file system tests are mainly "do some operation on the
 file system, and check it's still got the same data", via diff(1).
 Also, it runs dosfsck(1) and e2fsck(1).
-

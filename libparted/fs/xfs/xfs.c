@@ -116,4 +116,3 @@ ped_file_system_xfs_done ()
 {
 	ped_file_system_type_unregister (&xfs_type);
 }
-

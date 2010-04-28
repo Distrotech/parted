@@ -25,4 +25,3 @@
 void ext2_destroy_dev_handle(struct ext2_dev_handle *handle);
 
 #endif
-

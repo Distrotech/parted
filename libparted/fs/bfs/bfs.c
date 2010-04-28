@@ -270,5 +270,3 @@ ped_file_system_bfs_done ()
 {
 	ped_file_system_type_unregister (&bfs_type);
 }
-
-

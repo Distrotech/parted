@@ -97,5 +97,3 @@ ped_file_system_ntfs_done ()
 {
 	ped_file_system_type_unregister (&ntfs_type);
 }
-
-

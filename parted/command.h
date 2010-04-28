@@ -46,4 +46,3 @@ extern void command_print_help (Command* cmd);
 extern int command_run (Command* cmd, PedDevice** dev);
 
 #endif /* COMMAND_H_INCLUDED */
-

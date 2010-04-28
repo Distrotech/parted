@@ -44,4 +44,3 @@ struct BfsSpecific
 };
 
 #endif
-

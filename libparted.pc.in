@@ -8,4 +8,3 @@ Description: The GNU Parted disk partitioning shared library
 Version: @VERSION@
 Libs: -L${libdir} -lparted
 Cflags: -I${includedir}
-

@@ -444,4 +444,3 @@ int ext2_brelse(struct ext2_buffer_head *bh, int forget)
 }
 
 #endif /* !DISCOVER_ONLY */
-
