@@ -1517,6 +1517,7 @@ help_msg ()
         fputs (_("COMMANDs:"), stdout);
         putchar ('\n');
         print_commands_help ();
+        printf (_("\nReport bugs to %s\n"), PACKAGE_BUGREPORT);
         exit (EXIT_SUCCESS);
 }
 
