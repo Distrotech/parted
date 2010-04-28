@@ -140,7 +140,8 @@ test_expect_failure () {
 	then
 		say >&3 "expecting failure: $2"
 		test_run_ "$2"
-		if [ "$?" = 0 -a "$eval_ret" != 0 -a "$eval_ret" -lt 129 ]
+		if test "$?" = 0 && test "$eval_ret" != 0 \
+		      && test "$eval_ret" -lt 129
 		then
 			test_ok_ "$1"
 		else
@@ -157,7 +158,7 @@ test_expect_success () {
 	then
 		say >&3 "expecting success: $2"
 		test_run_ "$2"
-		if [ "$?" = 0 -a "$eval_ret" = 0 ]
+		if test "$?" = 0 && test "$eval_ret" = 0
 		then
 			test_ok_ "$1"
 		else
@@ -174,7 +175,7 @@ test_expect_code () {
 	then
 		say >&3 "expecting exit code $1: $3"
 		test_run_ "$3"
-		if [ "$?" = 0 -a "$eval_ret" = "$1" ]
+		if test "$?" = 0 && test "$eval_ret" = "$1"
 		then
 			test_ok_ "$2"
 		else
