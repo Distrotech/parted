@@ -2,6 +2,7 @@ XFAIL_TESTS = \
   t3200-type-change.sh
 
 TESTS = \
+  help-version \
   t0000-basic.sh \
   t0001-tiny.sh \
   t0010-script-no-ctrl-chars.sh \
@@ -96,6 +97,7 @@ TESTS_ENVIRONMENT =				\
   abs_top_builddir='$(abs_top_builddir)'	\
   abs_top_srcdir='$(abs_top_srcdir)'		\
   abs_srcdir='$(abs_srcdir)'			\
+  built_programs=parted				\
   srcdir='$(srcdir)'				\
   top_srcdir='$(top_srcdir)'			\
   CC='$(CC)'					\
@@ -108,6 +110,7 @@ TESTS_ENVIRONMENT =				\
   PREFERABLY_POSIX_SHELL='$(PREFERABLY_POSIX_SHELL)' \
   REPLACE_GETCWD=$(REPLACE_GETCWD)		\
   PATH='$(abs_top_builddir)/parted$(PATH_SEPARATOR)'"$$PATH" \
+  VERSION=$(VERSION)				\
   ; shell_or_perl_
 
 VERBOSE = yes
