@@ -45,7 +45,7 @@ TESTS = \
   t9030-align-check.sh
 
 EXTRA_DIST = \
-  $(TESTS) test-lib.sh t-lib.sh lvm-utils.sh t-local.sh t-lvm.sh
+  $(TESTS) test-lib.sh t-lib.sh lvm-utils.sh t-local.sh t-lvm.sh init.sh
 
 check_PROGRAMS = print-align print-max dup-clobber
 LDADD = \
