@@ -49,7 +49,7 @@ partprobe/partprobe
 po/.reference
 stamp-h1
 tags
-tests/init.sh
+tests/old-init.sh
 tests/print-align
 tests/t*.sh.log
 tests/test-suite.log

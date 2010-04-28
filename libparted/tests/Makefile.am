@@ -23,9 +23,9 @@ symlink_SOURCES = common.h common.c symlink.c
 
 MAINTAINERCLEANFILES = Makefile.in
 
-CLEANFILES = init.sh
-all: init.sh
-init.sh: Makefile.in
+CLEANFILES = old-init.sh
+all: old-init.sh
+old-init.sh: Makefile.in
 	rm -f $@-t $@
 	echo 'PARTED_USABLE_TEST_DIR="$(PARTED_USABLE_TEST_DIR)"' > $@-t
 	echo 'abs_top_srcdir="$(abs_top_srcdir)"' >> $@-t
