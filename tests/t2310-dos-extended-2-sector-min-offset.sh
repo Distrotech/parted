@@ -39,6 +39,7 @@ scsi_debug_setup_ dev_size_mb=1 > dev-name ||
   skip_test_ 'failed to create scsi_debug device'
 scsi_dev=$(cat dev-name)
 p1=${scsi_dev}1
+p5=${scsi_dev}5
 
 cat <<EOF > exp || framework_failure
 BYT;
@@ -48,7 +49,7 @@ $scsi_dev:2048s:scsi:512:512:msdos:Linux scsi_debug;
 EOF
 
 cat <<EOF > err.exp || framework_failure
-Error: Error informing the kernel about modifications to partition /dev/sdd5 -- Device or resource busy.  This means Linux won't know about any changes you made to /dev/sdd5 until you reboot -- so you shouldn't mount it or use it in any way before rebooting.
+Error: Error informing the kernel about modifications to partition $p5 -- Device or resource busy.  This means Linux won't know about any changes you made to $p5 until you reboot -- so you shouldn't mount it or use it in any way before rebooting.
 Error: Failed to add partition 5 (Device or resource busy)
 EOF
 
