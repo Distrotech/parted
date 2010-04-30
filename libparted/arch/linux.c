@@ -2760,34 +2760,6 @@ _dm_reread_part_table (PedDisk* disk)
 #endif
 
 static int
-_kernel_reread_part_table (PedDevice* dev)
-{
-        LinuxSpecific*  arch_specific = LINUX_SPECIFIC (dev);
-        int             retry_count = 9;
-
-        sync();
-        while (ioctl (arch_specific->fd, BLKRRPART)) {
-                retry_count--;
-                sync();
-                if (retry_count == 3)
-                        sleep(1); /* Pause to allow system to settle */
-
-                if (!retry_count) {
-                        ped_exception_throw (
-                                PED_EXCEPTION_WARNING,
-                                PED_EXCEPTION_IGNORE,
-                        _("WARNING: the kernel failed to re-read the partition "
-                          "table on %s (%s).  As a result, it may not "
-                          "reflect all of your changes until after reboot."),
-                                dev->path, strerror (errno));
-                        return 0;
-                }
-        }
-
-        return 1;
-}
-
-static int
 _have_blkpg ()
 {
         static int have_blkpg = -1;
@@ -2825,8 +2797,6 @@ linux_disk_commit (PedDisk* disk)
 			  ok = 0;
 		}
 
-		if (!_kernel_reread_part_table (disk->dev))
-			ok = 0;
                 return ok;
         }
 
