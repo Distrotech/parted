@@ -2452,29 +2452,29 @@ _disk_sync_part_table (PedDisk* disk)
         if (lpn < 0)
                 return 0;
         int ret = 0;
-        int *rets = ped_malloc(sizeof(int) * lpn);
-        if (!rets)
+        int *ok = ped_malloc(sizeof(int) * lpn);
+        if (!ok)
                 return 0;
         int *errnums = ped_malloc(sizeof(int) * lpn);
         if (!errnums)
-                goto free_rets;
+                goto cleanup;
         int i;
 
         for (i = 1; i <= lpn; i++) {
-                rets[i - 1] = _blkpg_remove_partition (disk, i);
+                ok[i - 1] = _blkpg_remove_partition (disk, i);
                 errnums[i - 1] = errno;
         }
 
         for (i = 1; i <= lpn; i++) {
                 const PedPartition *part = ped_disk_get_partition (disk, i);
                 if (part) {
-                        if (!rets[i - 1] && errnums[i - 1] == EBUSY) {
+                        if (!ok[i - 1] && errnums[i - 1] == EBUSY) {
                                 struct hd_geometry geom;
                                 unsigned long long length = 0;
                                 /* get start and length of existing partition */
                                 char *dev_name = _device_get_part_path (disk->dev, i);
                                 if (!dev_name)
-                                        goto free_errnums;
+                                        goto cleanup;
                                 int fd = open (dev_name, O_RDONLY);
                                 if (fd == -1
 				    || ioctl (fd, HDIO_GETGEO, &geom)
@@ -2487,14 +2487,14 @@ _disk_sync_part_table (PedDisk* disk)
                                         if (fd != -1)
                                                 close (fd);
                                         free (dev_name);
-                                        goto free_errnums;
+                                        goto cleanup;
                                 }
                                 free (dev_name);
                                 length /= disk->dev->sector_size;
                                 close (fd);
                                 if (geom.start == part->geom.start
 				    && length == part->geom.length)
-                                        rets[i - 1] = 1;
+                                        ok[i - 1] = 1;
                                 /* If the new partition is unchanged and the
 				   existing one was not removed because it was
 				   in use, then reset the error flag and do not
@@ -2509,7 +2509,7 @@ _disk_sync_part_table (PedDisk* disk)
                                         PED_EXCEPTION_RETRY_CANCEL,
                                         _("Failed to add partition %d (%s)"),
                                         i, strerror (errno));
-                                goto free_errnums;
+                                goto cleanup;
                         }
                 }
         }
@@ -2517,12 +2517,12 @@ _disk_sync_part_table (PedDisk* disk)
         char *bad_part_list = NULL;
         /* now warn about any errors */
         for (i = 1; i <= lpn; i++) {
-		if (rets[i - 1] || errnums[i - 1] == ENXIO)
+		if (ok[i - 1] || errnums[i - 1] == ENXIO)
 			continue;
 		if (bad_part_list == NULL) {
 			  bad_part_list = malloc (lpn * 5);
 			  if (!bad_part_list)
-				  goto free_errnums;
+				  goto cleanup;
 			  bad_part_list[0] = 0;
 		}
 		sprintf (bad_part_list + strlen (bad_part_list), "%d, ", i);
@@ -2543,10 +2543,9 @@ _disk_sync_part_table (PedDisk* disk)
                         ret = 1;
 		free (bad_part_list);
         }
- free_errnums:
+ cleanup:
         free (errnums);
- free_rets:
-        free (rets);
+        free (ok);
         return ret;
 }
 
