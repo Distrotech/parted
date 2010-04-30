@@ -2452,17 +2452,35 @@ _disk_sync_part_table (PedDisk* disk)
         if (lpn < 0)
                 return 0;
         int ret = 0;
-        int *ok = ped_malloc(sizeof(int) * lpn);
+        int *ok = calloc (lpn, sizeof *ok);
         if (!ok)
                 return 0;
         int *errnums = ped_malloc(sizeof(int) * lpn);
         if (!errnums)
                 goto cleanup;
-        int i;
 
-        for (i = 1; i <= lpn; i++) {
-                ok[i - 1] = _blkpg_remove_partition (disk, i);
-                errnums[i - 1] = errno;
+        /* Attempt to remove each and every partition, retrying for
+           up to max_sleep_seconds upon any failure due to EBUSY. */
+        unsigned int sleep_microseconds = 10000;
+        unsigned int max_sleep_seconds = 1;
+        unsigned int n_sleep = (max_sleep_seconds
+                                * 1000000 / sleep_microseconds);
+        int i;
+        for (i = 0; i < n_sleep; i++) {
+	    if (i)
+		usleep (sleep_microseconds);
+            bool busy = false;
+            int j;
+            for (j = 0; j < lpn; j++) {
+                if (!ok[j]) {
+                    ok[j] = _blkpg_remove_partition (disk, j + 1);
+                    errnums[j] = errno;
+                    if (!ok[j] && errnums[j] == EBUSY)
+                        busy = true;
+                }
+            }
+            if (!busy)
+                break;
         }
 
         for (i = 1; i <= lpn; i++) {
