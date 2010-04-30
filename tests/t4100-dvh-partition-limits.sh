@@ -25,6 +25,13 @@ privileges_required_=1
 require_xfs_
 ss=$sector_size_
 
+# On a 32-bit system, we must skip this test when $ss >= 4096.
+# Otherwise, due to an inherent 32-bit-XFS limit, dd would fail to
+# create the file of size > 16TiB
+if test $(uname -m) != x86_64; then
+  test $ss -le 2048 || exit 77
+fi
+
 ####################################################
 # Create and mount a file system capable of dealing with >=2TB files.
 # We must be able to create a file with an apparent length of 2TB or larger.
