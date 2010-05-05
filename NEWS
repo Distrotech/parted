@@ -32,6 +32,12 @@ GNU parted NEWS                                    -*- outline -*-
   allow using ped_device_cache_remove(dev) followed by a (later)
   ped_device_destroy() without corrupting the device cache.
 
+  when creating an ext2 file system[*], Parted no longer creates an
+  invalid one when its size is 2TiB or larger.
+  [*] Remember, now all FS-creation operations are deprecated in Parted.
+  This is not an indicator that we'll be supporting this code.
+  On the contrary, it is slated to be removed.
+
 ** Changes in behavior
 
   libparted no longer issues an exception/warning about >512-byte
