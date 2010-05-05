@@ -82,7 +82,9 @@ static int do_read(void *cookie, void *ptr, blk_t block, blk_t num)
 {
 	struct my_cookie *monster = cookie;
 
-	return ped_geometry_read(monster->geom, ptr, block << (monster->logsize - 9), num << (monster->logsize - 9));
+	return ped_geometry_read(monster->geom, ptr,
+				 (PedSector) block << (monster->logsize - 9),
+				 (PedSector) num << (monster->logsize - 9));
 }
 
 static int do_set_blocksize(void *cookie, int logsize)
@@ -98,8 +100,8 @@ static int do_write(void *cookie, void *ptr, blk_t block, blk_t num)
 	struct my_cookie *monster = cookie;
 
 	return ped_geometry_write(monster->geom, ptr,
-				  block << (monster->logsize - 9),
-				  num << (monster->logsize - 9));
+				  (PedSector) block << (monster->logsize - 9),
+				  (PedSector) num << (monster->logsize - 9));
 }
 
 
