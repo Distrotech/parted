@@ -69,8 +69,13 @@ while :; do
     i=$((i+1))
 done
 t_final=$(date +%s.%N)
-$AWK 'BEGIN {printf "created %d partitions in %.2f seconds\n",'\
-"$n_partitions, $t_final - $t0 }" /dev/null
+
+# Fail the test if it takes too long.
+# On Fedora 13, it takes about 15 seconds.
+# With older kernels, it typically takes more than 150 seconds.
+$AWK "BEGIN {d = $t_final - $t0; n = $n_partitions; st = 60 < d;"\
+' printf "created %d partitions in %.2f seconds\n", n, d; exit st }' /dev/null \
+    || fail=1
 
 parted -m -s $scsi_dev u s p > out || fail=1
 compare out exp || fail=1
