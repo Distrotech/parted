@@ -42,7 +42,8 @@ TESTS = \
   t9010-big-sector.sh \
   t9020-alignment.sh \
   t9021-maxima.sh \
-  t9030-align-check.sh
+  t9030-align-check.sh \
+  t9040-many-partitions.sh
 
 EXTRA_DIST = \
   $(TESTS) test-lib.sh t-lib.sh lvm-utils.sh t-local.sh t-lvm.sh init.sh
@@ -100,6 +101,7 @@ TESTS_ENVIRONMENT =				\
   built_programs=parted				\
   srcdir='$(srcdir)'				\
   top_srcdir='$(top_srcdir)'			\
+  AWK='$(AWK)'					\
   CC='$(CC)'					\
   MAKE=$(MAKE)					\
   PACKAGE_BUGREPORT='$(PACKAGE_BUGREPORT)'	\
