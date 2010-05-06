@@ -81,6 +81,7 @@ static const char MBR_BOOT_CODE[] = {
 #define PARTITION_FAT16_LBA_H	(PARTITION_FAT16_LBA	| PART_FLAG_HIDDEN)
 
 #define PARTITION_COMPAQ_DIAG	0x12
+#define PARTITION_MSFT_RECOVERY	0x27
 #define PARTITION_LDM		0x42
 #define PARTITION_LINUX_SWAP	0x82
 #define PARTITION_LINUX		0x83
@@ -830,6 +831,7 @@ raw_part_parse (const PedDisk* disk, const DosRawPartition* raw_part,
 	dos_data->system = raw_part->type;
 	dos_data->boot = raw_part->boot_ind != 0;
 	dos_data->diag = raw_part->type == PARTITION_COMPAQ_DIAG ||
+			 raw_part->type == PARTITION_MSFT_RECOVERY ||
 			 raw_part->type == PARTITION_DELL_DIAG;
 	dos_data->hidden = raw_part_is_hidden (raw_part);
 	dos_data->raid = raw_part->type == PARTITION_LINUX_RAID;
@@ -1334,6 +1336,7 @@ msdos_partition_set_system (PedPartition* part,
 		/* Don't change the system if it already is a diag type,
 		   otherwise use Compaq as almost all vendors use that. */
 		if (dos_data->system != PARTITION_COMPAQ_DIAG &&
+		    dos_data->system != PARTITION_MSFT_RECOVERY &&
 		    dos_data->system != PARTITION_DELL_DIAG)
 			dos_data->system = PARTITION_COMPAQ_DIAG;
 		return 1;
