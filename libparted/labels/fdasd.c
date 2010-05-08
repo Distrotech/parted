@@ -698,15 +698,15 @@ fdasd_valid_vtoc_pointer(fdasd_anchor_t *anc, unsigned long b, int fd)
 	/* VOL1 label contains valid VTOC pointer */
 	vtoc_read_label (fd, b, NULL, anc->f4, NULL, NULL);
 
-	if (anc->f4->DS4IDFMT != 0xf4) {
-		if (strncmp(anc->vlabel->volkey,vtoc_ebcdic_enc("LNX1",str,4),4) == 0)
-			return 0;
-		fdasd_error(anc, wrong_disk_format, _("Invalid VTOC."));
-	} else {
+	if (anc->f4->DS4IDFMT == 0xf4) {
 		fdasd_process_valid_vtoc (anc, b, fd);
+		return 0;
 	}
+	if (strncmp(anc->vlabel->volkey, vtoc_ebcdic_enc("LNX1",str,4),4) == 0 ||
+	    strncmp(anc->vlabel->volkey, vtoc_ebcdic_enc("CMS1",str,4),4) == 0)
+		return 0;
 
-	return 0;
+	fdasd_error(anc, wrong_disk_format, _("Invalid VTOC."));
 }
 
 /*
@@ -737,7 +737,8 @@ fdasd_check_volume (fdasd_anchor_t *anc, int fd)
 		} else {
 			return 1;
 		}
-	} else if (strncmp (v->volkey, vtoc_ebcdic_enc ("LNX1", str, 4), 4) == 0) {
+	} else if (strncmp (v->volkey, vtoc_ebcdic_enc ("LNX1", str, 4), 4) == 0 ||
+	           strncmp (v->volkey, vtoc_ebcdic_enc ("CMS1", str, 4), 4) == 0) {
 		return 0;
 	}
 

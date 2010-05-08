@@ -150,7 +150,7 @@ enum failure {
 	unable_to_read
 };
 
-static char buffer[85];
+static char buffer[89];
 
 static void
 vtoc_error (enum failure why, char const *s1, char const *s2)
@@ -257,7 +257,7 @@ void
 vtoc_volume_label_init (volume_label_t *vlabel)
 {
 	PDEBUG
-	sprintf(buffer, "%84s", " ");
+	sprintf(buffer, "%88s", " ");
 	vtoc_ebcdic_enc(buffer, buffer, sizeof *vlabel);
 	memcpy(vlabel, buffer, sizeof *vlabel);
 }
@@ -279,7 +279,9 @@ vtoc_read_volume_label (int f, unsigned long vlabel_start,
 	}
 
 	rc = read(f, vlabel, sizeof(volume_label_t));
-	if (rc != sizeof(volume_label_t)) {
+	if (rc != sizeof(volume_label_t) &&
+	/* For CDL we ask to read 88 bytes, but only get 84 */
+            rc != sizeof(volume_label_t) - 4) {
 		vtoc_error(unable_to_read, "vtoc_read_volume_label",
 			   _("Could not read volume label."));
 		return 1;
@@ -302,8 +304,10 @@ vtoc_write_volume_label (int f, unsigned long vlabel_start,
 		vtoc_error(unable_to_seek, "vtoc_write_volume_label",
 			   _("Could not write volume label."));
 
-	rc = write(f, vlabel, sizeof(volume_label_t));
-	if (rc != sizeof(volume_label_t))
+	rc = write(f, vlabel, sizeof(volume_label_t) - 4);
+	/* Subtract 4 to leave off the "fudge" variable when writing.
+           We only write CDL volume labels, never LDL or CMS.  */
+	if (rc != sizeof(volume_label_t) - 4)
 		vtoc_error(unable_to_write, "vtoc_write_volume_label",
 			   _("Could not write volume label."));
 

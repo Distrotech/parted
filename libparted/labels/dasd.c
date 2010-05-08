@@ -286,18 +286,58 @@ dasd_read (PedDisk* disk)
 
 	ped_disk_delete_all (disk);
 
-	if (strncmp(anchor.vlabel->volkey,
-				vtoc_ebcdic_enc ("LNX1", str, 4), 4) == 0) {
+	bool is_ldl = strncmp(anchor.vlabel->volkey,
+			 vtoc_ebcdic_enc("LNX1", str, 4), 4) == 0;
+	bool is_cms = strncmp(anchor.vlabel->volkey,
+			 vtoc_ebcdic_enc("CMS1", str, 4), 4) == 0;
+	if (is_ldl || is_cms) {
 		DasdPartitionData* dasd_data;
 
-		/* LDL format, old one */
+		union vollabel {
+			volume_label_t unused;
+			ldl_volume_label_t ldl;
+			cms_volume_label_t cms;
+		};
+		union vollabel *cms_ptr1 = (union vollabel *) anchor.vlabel;
+		cms_volume_label_t *cms_ptr = &cms_ptr1->cms;
+		ldl_volume_label_t *ldl_ptr = &cms_ptr1->ldl;
+
 		disk_specific->format_type = 1;
-		start = 24;
-		end = (long long)(long long) anchor.geo.cylinders
-		      * (long long)anchor.geo.heads
-		      * (long long)disk->dev->hw_geom.sectors
-		      * (long long)arch_specific->real_sector_size
-		      / (long long)disk->dev->sector_size - 1;
+		if (is_ldl || cms_ptr->disk_offset == 0)
+			start = (long long) arch_specific->real_sector_size
+				/ (long long)disk->dev->sector_size * 3;
+		else
+			start = (long long) arch_specific->real_sector_size
+				/ (long long) disk->dev->sector_size
+				* (long long) cms_ptr->disk_offset;
+		if (is_ldl)
+		   if (ldl_ptr->ldl_version >= 0xf2)
+		      end = (long long) arch_specific->real_sector_size
+			    / (long long) disk->dev->sector_size
+			    * (long long) ldl_ptr->formatted_blocks - 1;
+		   else
+		      end = (long long) arch_specific->real_sector_size
+			    / (long long) disk->dev->sector_size
+			    * (long long) anchor.geo.cylinders
+			    * (long long) anchor.geo.heads
+			    * (long long) disk->dev->hw_geom.sectors - 1;
+		else
+		   if (cms_ptr->disk_offset == 0)
+		      end = (long long) arch_specific->real_sector_size
+			    / (long long) disk->dev->sector_size
+			    * (long long) cms_ptr->block_count - 1;
+		   else
+		      /*
+			 Frankly, I do not understand why the last block
+			 of the CMS reserved file is not included in the
+			 partition; but this is the algorithm used by the
+			 Linux kernel.  See fs/partitions/ibm.c in the
+			 Linux kernel source code.
+		      */
+		      end = (long long) arch_specific->real_sector_size
+			    / (long long) disk->dev->sector_size
+			    * (long long) (cms_ptr->block_count - 1) - 1;
+
 		part = ped_partition_new (disk, PED_PARTITION_PROTECTED, NULL, start, end);
 		if (!part)
 			goto error_close_dev;
@@ -856,6 +896,10 @@ dasd_alloc_metadata (PedDisk* disk)
 	PedSector vtoc_end;
 	LinuxSpecific* arch_specific;
 	DasdDiskSpecific* disk_specific;
+	PedPartition* part;
+	PedPartition* new_part2;
+	PedSector trailing_meta_start, trailing_meta_end;
+	struct fdasd_anchor anchor;
 
 	PED_ASSERT (disk != NULL, goto error);
 	PED_ASSERT (disk->dev != NULL, goto error);
@@ -865,9 +909,12 @@ dasd_alloc_metadata (PedDisk* disk)
 
 	constraint_any = ped_constraint_any (disk->dev);
 
-	/* If formated in LDL, the real partition starts at sector 24. */
-	if (disk_specific->format_type == 1)
-		vtoc_end = 23;
+	/* For LDL or CMS, the leading metadata ends at the sector before
+	   the start of the first partition */
+	if (disk_specific->format_type == 1) {
+	        part = ped_disk_get_partition(disk, 1);
+		vtoc_end = part->geom.start - 1;
+	}
 	else {
                 if (disk->dev->type == PED_DEVICE_FILE)
                         arch_specific->real_sector_size = disk->dev->sector_size;
@@ -884,6 +931,41 @@ dasd_alloc_metadata (PedDisk* disk)
 	if (!ped_disk_add_partition (disk, new_part, constraint_any)) {
 		ped_partition_destroy (new_part);
 		goto error;
+	}
+
+	if (disk_specific->format_type == 1) {
+	   /*
+	      For LDL or CMS there may be trailing metadata as well.
+	      For example: the last block of a CMS reserved file,
+	      the "recomp" area of a CMS minidisk that has been
+	      formatted and then formatted again with the RECOMP
+	      option specifying fewer than the maximum number of
+	      cylinders, a disk that was formatted at one size,
+	      backed up, then restored to a larger size disk, etc.
+	   */
+	   trailing_meta_start = part->geom.end + 1;
+	   fdasd_initialize_anchor(&anchor);
+	   fdasd_get_geometry(disk->dev, &anchor, arch_specific->fd);
+	   trailing_meta_end = (long long) arch_specific->real_sector_size
+		/ (long long) disk->dev->sector_size
+		* (long long) anchor.geo.cylinders
+		* (long long) anchor.geo.heads
+		* (long long) disk->dev->hw_geom.sectors - 1;
+	   fdasd_cleanup(&anchor);
+	   if (trailing_meta_end >= trailing_meta_start) {
+		new_part2 = ped_partition_new (disk,PED_PARTITION_METADATA,
+		   NULL, trailing_meta_start, trailing_meta_end);
+		if (!new_part2) {
+		   ped_partition_destroy (new_part);
+		   goto error;
+		}
+		if (!ped_disk_add_partition (disk, new_part2,
+		   constraint_any)) {
+		   ped_partition_destroy (new_part2);
+		   ped_partition_destroy (new_part);
+		   goto error;
+		}
+	   }
 	}
 
 	ped_constraint_destroy (constraint_any);

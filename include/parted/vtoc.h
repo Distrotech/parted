@@ -49,6 +49,8 @@ typedef struct cchhb            cchhb_t;
 typedef struct cchh             cchh_t;
 typedef struct labeldate        labeldate_t;
 typedef struct volume_label     volume_label_t;
+typedef struct cms_volume_label cms_volume_label_t;
+typedef struct ldl_volume_label ldl_volume_label_t;
 typedef struct extent           extent_t;
 typedef struct dev_const        dev_const_t;
 typedef struct format1_label    format1_label_t;
@@ -81,7 +83,7 @@ struct __attribute__ ((packed)) labeldate {
 
 struct __attribute__ ((packed)) volume_label {
 	char volkey[4];         /* volume key = volume label                 */
-	char vollbl[4];	        /* volume label                              */
+	char vollbl[4];	        /* volume label ("VOL1" in EBCDIC)           */
 	char volid[6];	        /* volume identifier                         */
 	u_int8_t security;	/* security byte                             */
 	cchhb_t vtoc;           /* VTOC address                              */
@@ -93,6 +95,58 @@ struct __attribute__ ((packed)) volume_label {
 	char res2[4];	        /* reserved                                  */
 	char lvtoc[14];	        /* owner code for LVTOC                      */
 	char res3[29];	        /* reserved                                  */
+        char fudge[4];          /* filler to match length of ldl label       */
+};
+
+struct __attribute__ ((packed)) ldl_volume_label {
+	char vollbl[4];         /* Label identifier ("LNX1" in EBCDIC)       */
+        char volid[6];          /* Volume identifier                         */
+        char res3[69];          /* Reserved field                            */
+        char ldl_version[1];    /* Version number, valid for ldl format      */
+        u_int64_t formatted_blocks;  /* valid when ldl_version >= "2" (in
+                                        EBCDIC)                              */
+};
+
+/*
+ * See:
+ *	z/VM V5R2.0 CMS Planning and Administration
+ *	SC24-6078-01
+ *	What CMS Does / Disk and File Management / Disk File Format
+ * http://publib.boulder.ibm.com/infocenter/zvm/v5r4/topic/com.ibm.zvm.v54.dmsd1/hcsg2b1018.htm
+ */
+struct __attribute__ ((packed)) cms_volume_label {
+	char label_id[4];       /* Label identifier ("CMS1" in EBCDIC)       */
+	char vol_id[6];         /* Volume identifier                         */
+	char version_id[2];     /* Version identifier ("\0\0")               */
+	u_int32_t block_size;   /* Disk block size (512, 1024, 2048 or 4096) */
+	u_int32_t origin_ptr;   /* Disk origin pointer (4 or 5)              */
+	u_int32_t usable_count; /* Number of usable cylinders/blocks         */
+	u_int32_t formatted_count; /* Max # of formatted cylinders/blocks    */
+	u_int32_t block_count;  /* Disk size in CMS blocks                   */
+	u_int32_t used_count;   /* Number of CMS blocks in use               */
+	u_int32_t fst_size;     /* File Status Table (FST) size (64)         */
+	u_int32_t fst_count;    /* Number of FSTs per CMS block              */
+	char format_date[6];    /* Disk FORMAT date (YYMMDDhhmmss)           */
+	char reserved1[2];      /* Reserved fields.
+	                           The low-order bit of the first byte is a
+	                           century flag.  0 = 1900s, 1 = 2000s.
+	                           It is used in conjunction with
+	                           "format_date" to determine the
+	                           four-digit year.                          */
+	u_int32_t disk_offset;  /* Offset in blocks to the start of the
+	                           reserved file when the disk is reserved.
+	                           This is the number of blocks to skip
+	                           before the partition starts.              */
+	u_int32_t map_block;    /* Allocation map block with next hole       */
+	u_int32_t hblk_disp;    /* Displacement in HBLK data of next hole    */
+	u_int32_t user_disp;    /* Disp into user part of allocation map     */
+	u_int32_t open_files;   /* Count of SFS open files for this ADT.
+	                           open_files is not really part of the
+	                           volume label.  It is not used for
+	                           minidisks.                                */
+	char segment_name[8];   /* Name of the shared segment.
+	                           segment_name is not really part of the
+	                           volume label.  It is not stored on disk.  */
 };
 
 struct __attribute__ ((packed)) extent {
