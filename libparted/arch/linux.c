@@ -2550,7 +2550,7 @@ _disk_sync_part_table (PedDisk* disk)
 	else {
                 bad_part_list[strlen (bad_part_list) - 2] = 0;
                 if (ped_exception_throw (
-                        PED_EXCEPTION_WARNING,
+                        PED_EXCEPTION_ERROR,
                         PED_EXCEPTION_IGNORE_CANCEL,
                         _("Partition(s) %s on %s have been written, but we have "
 			  "been unable to inform the kernel of the change, "
