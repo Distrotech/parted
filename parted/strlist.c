@@ -38,14 +38,6 @@
 #include <wchar.h>
 #include <wctype.h>
 
-#else /* ENABLE_NLS */
-
-#ifdef wchar_t
-#undef wchar_t
-#endif
-
-#define wchar_t char
-
 #endif /* !ENABLE_NLS */
 
 #include "strlist.h"

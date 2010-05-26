@@ -9,6 +9,7 @@ EXTRA_DIST =				\
   parted.spec.in			\
   parted.spec				\
   .x-sc_GPL_version			\
+  .x-sc_prohibit_always-defined_macros	\
   scripts/data/abi/baseline_symbols.txt \
   scripts/extract_symvers		\
   cfg.mk				\

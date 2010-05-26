@@ -36,10 +36,6 @@
 #	define L_(str) L##str
 #else
 #	define L_(str) str
-#       ifdef wchar_t
-#               undef wchar_t
-#       endif
-#       define wchar_t char
 #       define wcslen strlen
 #       define wcswidth strnlen
 #       define wcscat strcat

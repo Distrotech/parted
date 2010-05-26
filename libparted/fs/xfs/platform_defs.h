@@ -51,12 +51,6 @@
 # define constpp	char * const *
 #endif
 
-#ifdef __sparc__
-# ifndef O_DIRECT
-#  define O_DIRECT	0x100000
-# endif
-#endif
-
 typedef loff_t		xfs_off_t;
 typedef uint64_t	xfs_ino_t;
 typedef uint32_t	xfs_dev_t;
