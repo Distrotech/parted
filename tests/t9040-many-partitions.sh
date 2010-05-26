@@ -45,7 +45,7 @@ n_sectors=$(($start + n_partitions * partition_sectors + gpt_slop))
 sectors_per_MiB=$((1024 * 1024 / ss))
 n_MiB=$(((n_sectors + sectors_per_MiB - 1) / sectors_per_MiB))
 # create memory-backed device
-scsi_debug_setup_ dev_size_mb=$n_MiB > dev-name ||
+scsi_debug_setup_ sector_size=$ss dev_size_mb=$n_MiB > dev-name ||
   skip_test_ 'failed to create scsi_debug device'
 scsi_dev=$(cat dev-name)
 
