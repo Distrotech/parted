@@ -2080,7 +2080,7 @@ do_align_check (PedDevice **dev)
   if (!disk)
     return 0;
 
-  enum AlignmentType align_type;
+  enum AlignmentType align_type = PA_OPTIMUM;
   PedPartition *part = NULL;
   bool aligned =
     (command_line_get_align_type (_("alignment type(min/opt)"), &align_type)
