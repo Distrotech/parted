@@ -2318,6 +2318,7 @@ static void
 _done_messages ()
 {
         free (flag_msg);
+        free (unit_msg);
         free (mkfs_fs_type_msg);
         free (mkpart_fs_type_msg);
         free (resize_fs_type_msg);
