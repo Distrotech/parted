@@ -2078,18 +2078,29 @@ do_align_check (PedDevice **dev)
 {
   PedDisk *disk = ped_disk_new (*dev);
   if (!disk)
-    return 0;
+    goto error;
 
   enum AlignmentType align_type = PA_OPTIMUM;
   PedPartition *part = NULL;
-  bool aligned =
-    (command_line_get_align_type (_("alignment type(min/opt)"), &align_type)
-     && command_line_get_partition (_("Partition number?"), disk, &part)
-     && partition_align_check (disk, part, align_type));
+
+  if (!command_line_get_align_type (_("alignment type(min/opt)"), &align_type))
+    goto error_destroy_disk;
+  if (!command_line_get_partition (_("Partition number?"), disk, &part))
+    goto error_destroy_disk;
+
+  bool aligned = partition_align_check (disk, part, align_type);
+  if (!opt_script_mode)
+    printf(aligned ? _("%d aligned\n") : _("%d not aligned\n"), part->num);
 
   ped_disk_destroy (disk);
 
+  /* FIXME: perhaps we should always return 1 when in interactive mode???  */
   return aligned ? 1 : 0;
+
+error_destroy_disk:
+  ped_disk_destroy (disk);
+error:
+  return 0;
 }
 
 static int
