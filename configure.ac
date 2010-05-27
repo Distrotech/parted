@@ -295,7 +295,7 @@ libraries.)
 fi
 AM_PROG_LIBTOOL
 
-AM_GNU_GETTEXT_VERSION([0.18])
+AM_GNU_GETTEXT_VERSION([0.17])
 AM_GNU_GETTEXT([external])
 if test "$USE_INCLUDED_LIBINTL" = "yes"; then
 	AC_MSG_ERROR([
