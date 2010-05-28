@@ -1,31 +1,83 @@
-Here are most of the steps a maintainer followas when making a release.
+Here are most of the steps we (maintainers) follow when making a release.
 
-0. Adjust the shared library version number in libparted/Makefile.am.
-   See the three variables there, CURRENT, REVISION, AGE, and follow
-   the guidelines in "info libtool".
+* start from a clean, up-to-date git directory.
 
-1. Execute build-aux/parted-release.  `parted-release --help` contains
-   additional information.
+    git checkout master; git pull
 
-2. Test the tarball.  Copy it to a few odd-ball systems and ensure that it
-   builds and passes all tests.
+* Run ./configure && make maintainer-clean
 
-3. Write the release announcement that will be posted to the mailing lists.
-   Start with the generated template in ~/announce-parted-$VERSION.
-   Remember to include a description of parted.  You can find this at
-   http://www.gnu.org/software/parted/index.shtml
+* Ensure that the desired versions of autoconf, automake, etc.
+  are in your PATH.  See the buildreq list in bootstrap.conf for
+  the complete list.
 
-4. Run the gnupload command that was suggested by the release script.  You can
-   find this at the end of release.log.
+* Ensure that you're on "master" with no uncommitted diffs.
+  This should produce no output: git checkout master; git diff
 
-5. Wait a few minutes (maybe up to 30?) and then use the release URLs to
-   download all tarball/signature pairs and use gpg --verify to ensure that
-   they're all valid.  You will also need these URLs in the announcement mail.
+* Run bootstrap one last time.  This downloads any new translations:
 
-6. Push the new tag with the following command:
-     git push origin tag v$VERSION
+    ./bootstrap
 
-7. Send the gpg-signed announcement mail, e.g.,
-     To: info-gnu@gnu.org, parted-devel@lists.alioth.debian.org
-     Cc: coordinator@translationproject.org, bug-parted@gnu.org
-     Subject: parted-$VERSION released [stable]
+* Pre-release testing:
+  Ensure that make check syntax-check succeeds.
+
+* Run "make distcheck"
+
+* Set the date, version number, and release type [stable/alpha/beta] on
+  line 3 of NEWS, commit that, and tag the release by running e.g.,
+
+    build-aux/do-release-commit-and-tag X.Y stable
+
+* Run the following to create release tarballs.  Your choice selects the
+  corresponding upload-to destination in the emitted gnupload command.
+  The different destinations are specified in cfg.mk.  See the definitions
+  of gnu_ftp_host-{alpha,beta,stable}.
+
+    # "TYPE" must be stable, beta or alpha
+    make TYPE
+
+* Test the tarball.  copy it to a few odd-ball systems and ensure that
+  it builds and passes all tests.
+
+* While that's happening, write the release announcement that you will
+  soon post.
+
+Once all the builds and tests have passed,
+
+* Run the gnupload command that was suggested by your "make stable" run above.
+
+* Wait a few minutes (maybe up to 30?) and then use the release URLs to
+  download all tarball/signature pairs and use gpg --verify to ensure
+  that they're all valid.
+
+* Push the NEWS-updating changes and the new tag:
+
+    v=$(cat .prev-version)
+    git push origin master tag v$v
+
+* Announce it on Savannah first, so you can include the preferable
+  savannah.org announcement link in the email message.
+
+  From here:
+    https://savannah.gnu.org/projects/parted/
+  click on the "submit news", then write something like the following:
+  (If there is no such button, then enable "News" for the project via
+   the Main -> "Select Features" menu item, or via this link:
+   https://savannah.gnu.org/project/admin/editgroupfeatures.php?group=parted)
+
+    Subject: parted-X.Y released [stable]
+    +verbatim+
+    ...paste the announcement here...
+    -verbatim-
+
+  Then go here to approve it:
+    https://savannah.gnu.org/news/approve.php?group=parted
+
+* Send the announcement email message.
+
+* After each non-alpha release, update the on-line manual accessible via
+
+    http://www.gnu.org/software/parted/manual/
+
+  by running this:
+
+    build-aux/gnu-web-doc-update
