@@ -2094,8 +2094,12 @@ do_align_check (PedDevice **dev)
 
   ped_disk_destroy (disk);
 
-  /* FIXME: perhaps we should always return 1 when in interactive mode???  */
-  return aligned ? 1 : 0;
+  if (opt_script_mode)
+    return aligned ? 1 : 0;
+
+  /* Always return 1 in interactive mode, to be consistent
+     with the other modes.  */
+  return 1;
 
 error_destroy_disk:
   ped_disk_destroy (disk);
