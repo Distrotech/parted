@@ -1164,7 +1164,7 @@ and will select the nearest location in this range from the one you
 wrote that satisfies constraints from both the operation, the
 filesystem being worked on, the disk label, other partitions and so
 on.  Use the sector unit ``s'' to specify exact locations (if they
-do not satisfy all onstraints, Parted will ask you for the nearest
+do not satisfy all constraints, Parted will ask you for the nearest
 solution).  Note that negative numbers count back from the end of
 the disk, with ``-1s'' pointing to the end of the disk.
 
