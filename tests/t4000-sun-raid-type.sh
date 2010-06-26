@@ -26,7 +26,7 @@ ss=$sector_size_
 
 N=2000 # number of sectors
 dev=sun-disk-file
-exp="BYT;\n---:${N}s:file:$ss:$ss:sun:;\n1:0s:50s:51s"
+exp="BYT;\n---:${N}s:file:$ss:$ss:sun:;\n1:0s:127s:128s"
 test_expect_success \
     'create an empty file as a test disk' \
     'dd if=/dev/zero of=$dev bs=${ss}c count=$N 2> /dev/null'
@@ -38,7 +38,7 @@ test_expect_success 'check for empty output' 'compare out /dev/null'
 
 test_expect_success \
     'create a single partition' \
-    'parted -s $dev unit s mkpart ext2 0s 50s > out 2>&1'
+    'parted -s $dev unit s mkpart ext2 0s 127s > out 2>&1'
 test_expect_success 'check for empty output' 'compare out /dev/null'
 
 test_expect_success \
