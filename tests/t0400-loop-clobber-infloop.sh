@@ -24,6 +24,8 @@ fi
 : ${srcdir=.}
 . $srcdir/t-lib.sh
 
+( mkswap -V ) >/dev/null 2>&1 || skip_test_ "no mkswap program"
+
 N=1M
 dev=loop-file
 fail=0
