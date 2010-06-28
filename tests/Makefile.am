@@ -19,6 +19,7 @@ TESTS = \
   t0400-loop-clobber-infloop.sh \
   t0500-dup-clobber.sh \
   t1100-busy-label.sh \
+  t1101-busy-partition.sh \
   t1700-ext-probe.sh \
   t2100-mkswap.sh \
   t2200-dos-label-recog.sh \
