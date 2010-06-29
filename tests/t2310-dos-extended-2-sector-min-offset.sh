@@ -30,10 +30,6 @@ fi
 require_root_
 require_scsi_debug_module_
 
-# check for scsi_debug module
-modprobe -n scsi_debug ||
-  skip_test_ "you lack the scsi_debug kernel module"
-
 # create memory-backed device
 scsi_debug_setup_ dev_size_mb=1 > dev-name ||
   skip_test_ 'failed to create scsi_debug device'

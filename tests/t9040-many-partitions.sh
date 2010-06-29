@@ -27,10 +27,6 @@ fi
 require_root_
 require_scsi_debug_module_
 
-# check for scsi_debug module
-modprobe -n scsi_debug ||
-  skip_test_ "you lack the scsi_debug kernel module"
-
 grep '^#define USE_BLKID 1' "$CONFIG_HEADER" > /dev/null ||
   skip_test_ 'this system lacks a new-enough libblkid'
 
