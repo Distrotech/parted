@@ -79,13 +79,7 @@ for fs_type in hfs+ fat32; do
   # as $dev, the loop below typically iterates 7-20 times.
 
   # wait for new partition device to appear
-  i=0
-  while :; do
-    test -e "${dev}1" && break; test $i = 90 && break;
-    i=$(expr $i + 1)
-    sleep .01 2>/dev/null || sleep 1
-  done
-  test $i = 90 && fail=1
+  wait_for_dev_to_appear_ ${dev}1
 
   case $fs_type in
     fat32) mkfs_cmd='mkfs.vfat -F 32';;
