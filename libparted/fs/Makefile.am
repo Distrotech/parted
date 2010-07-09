@@ -3,7 +3,8 @@
 #
 # This file may be modified and/or distributed without restriction.
 
-SUBDIRS       = amiga ext2 ufs fat ntfs hfs linux_swap xfs jfs reiserfs # bfs
+SUBDIRS       = amiga ext2 ufs fat ntfs hfs linux_swap xfs jfs reiserfs \
+		nilfs2 # bfs
 
 partedincludedir      =	-I$(top_srcdir)/include
 noinst_LTLIBRARIES    =	libfs.la
@@ -23,7 +24,8 @@ libfs_la_LIBADD   = $(UUID_LIBS)		\
 		    linux_swap/liblinuxswap.la	\
 		    xfs/libxfs.la		\
 		    jfs/libjfs.la		\
-		    reiserfs/libreiserfs.la
+		    reiserfs/libreiserfs.la	\
+		    nilfs2/libnilfs2.la
 #		    bfs/libbfs.la
 
 libfs_la_SOURCES   =
