@@ -164,6 +164,73 @@ typedef struct {
 
 static PedDiskType msdos_disk_type;
 
+#if 0
+From http://www.win.tue.nl/~aeb/linux/fs/fat/fat-1.html
+
+The 2-byte numbers are stored little endian (low order byte first).
+
+Here the FAT12 version, that is also the common part of the FAT12, FAT16 and FAT32 boot sectors. See further below.
+
+Bytes   Content
+0-2     Jump to bootstrap (E.g. eb 3c 90; on i86: JMP 003E NOP.
+        One finds either eb xx 90, or e9 xx xx.
+        The position of the bootstrap varies.)
+3-10    OEM name/version (E.g. "IBM  3.3", "IBM 20.0", "MSDOS5.0", "MSWIN4.0".
+        Various format utilities leave their own name, like "CH-FOR18".
+        Sometimes just garbage. Microsoft recommends "MSWIN4.1".)
+        /* BIOS Parameter Block starts here */
+11-12   Number of bytes per sector (512)
+        Must be one of 512, 1024, 2048, 4096.
+13      Number of sectors per cluster (1)
+        Must be one of 1, 2, 4, 8, 16, 32, 64, 128.
+        A cluster should have at most 32768 bytes. In rare cases 65536 is OK.
+14-15   Number of reserved sectors (1)
+        FAT12 and FAT16 use 1. FAT32 uses 32.
+16      Number of FAT copies (2)
+17-18   Number of root directory entries (224)
+        0 for FAT32. 512 is recommended for FAT16.
+19-20   Total number of sectors in the filesystem (2880)
+        (in case the partition is not FAT32 and smaller than 32 MB)
+21      Media descriptor type (f0: 1.4 MB floppy, f8: hard disk; see below)
+22-23   Number of sectors per FAT (9)
+        0 for FAT32.
+24-25   Number of sectors per track (12)
+26-27   Number of heads (2, for a double-sided diskette)
+28-29   Number of hidden sectors (0)
+        Hidden sectors are sectors preceding the partition.
+        /* BIOS Parameter Block ends here */
+30-509  Bootstrap
+510-511 Signature 55 aa
+#endif
+
+/* There is a significant risk of misclassifying (as msdos)
+   a disk that is composed solely of a single FAT partition.
+   Return false if sector S could not be a valid FAT boot sector.
+   Otherwise, return true.  */
+static bool
+maybe_FAT (unsigned char const *s)
+{
+  if (! (s[0] == 0xeb || s[0] == 0xe9))
+    return false;
+
+  unsigned int sector_size = PED_LE16_TO_CPU (*(uint16_t *) (s + 11));
+  switch (sector_size)
+    {
+    case 512:
+    case 1024:
+    case 2048:
+    case 4096:
+      break;
+    default:
+      return false;
+    }
+
+  if (! (s[21] == 0xf0 || s[21] == 0xf8))
+    return false;
+
+  return true;
+}
+
 static int
 msdos_probe (const PedDevice *dev)
 {
@@ -191,11 +258,19 @@ msdos_probe (const PedDevice *dev)
 	 * and ensure that each partition has a boot indicator that is
 	 * either 0 or 0x80.
 	 */
+	unsigned int n_active = 0;
 	for (i = 0; i < DOS_N_PRI_PARTITIONS; i++) {
+		if (part_table->partitions[i].boot_ind == 0x80)
+			++n_active;
 		if (part_table->partitions[i].boot_ind != 0
 		    && part_table->partitions[i].boot_ind != 0x80)
 			goto probe_fail;
 	}
+
+	/* If there are no active partitions and this is probably
+	   a FAT file system, do not classify it as msdos.  */
+	if (n_active == 0 && maybe_FAT (label))
+	  goto probe_fail;
 
 	/* If this is a GPT disk, fail here */
 	for (i = 0; i < DOS_N_PRI_PARTITIONS; i++) {
