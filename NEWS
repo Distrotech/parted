@@ -7,6 +7,8 @@ GNU parted NEWS                                    -*- outline -*-
   libparted once again recognizes a whole-disk FAT partition
   [bug introduced in parted-1.9.0]
 
+  libparted now recognizes scsi disks with a high major (128-135) as scsi
+  disks
 
 * Noteworthy changes in release 2.3 (2010-05-28) [stable]
 

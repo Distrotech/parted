@@ -220,6 +220,14 @@ struct blkdev_ioctl_param {
 #define SCSI_DISK5_MAJOR        69
 #define SCSI_DISK6_MAJOR        70
 #define SCSI_DISK7_MAJOR        71
+#define SCSI_DISK8_MAJOR        128
+#define SCSI_DISK9_MAJOR        129
+#define SCSI_DISK10_MAJOR       130
+#define SCSI_DISK11_MAJOR       131
+#define SCSI_DISK12_MAJOR       132
+#define SCSI_DISK13_MAJOR       133
+#define SCSI_DISK14_MAJOR       134
+#define SCSI_DISK15_MAJOR       135
 #define COMPAQ_SMART2_MAJOR     72
 #define COMPAQ_SMART2_MAJOR1    73
 #define COMPAQ_SMART2_MAJOR2    74
@@ -260,7 +268,8 @@ struct blkdev_ioctl_param {
 #define SCSI_BLK_MAJOR(M) (                                             \
                 (M) == SCSI_DISK0_MAJOR                                 \
                 || (M) == SCSI_CDROM_MAJOR                              \
-                || ((M) >= SCSI_DISK1_MAJOR && (M) <= SCSI_DISK7_MAJOR))
+                || ((M) >= SCSI_DISK1_MAJOR && (M) <= SCSI_DISK7_MAJOR) \
+                || ((M) >= SCSI_DISK8_MAJOR && (M) <= SCSI_DISK15_MAJOR))
 
 /* Maximum number of partitions supported by linux. */
 #define MAX_NUM_PARTS		64
