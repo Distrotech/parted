@@ -19,7 +19,8 @@ sun,128ULL*UINT32_MAX,UINT32_MAX
 #
 bsd,UINT32_MAX,UINT32_MAX
 # aix,UINT32_MAX,UINT32_MAX
-loop,UINT32_MAX,UINT32_MAX
+# In reality, loop labels have no particular limit.
+loop,UINT64_MAX,UINT64_MAX
 pc98,UINT32_MAX,UINT32_MAX
 #
 # FIXME: not verified.  looks like these are cylinder aligned, too

@@ -42,7 +42,7 @@ for t in msdos gpt dvh sun mac bsd amiga loop pc98; do
     max_start=4294967295
     max_len=4294967295
     case $t in
-	gpt) max_start=18446744073709551615; max_len=$max_start;;
+	gpt|loop) max_start=18446744073709551615; max_len=$max_start;;
 	sun) max_start=549755813760;; # 128 * (2^32-1)
     esac
 
