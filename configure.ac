@@ -326,15 +326,12 @@ dnl Check for libuuid
 UUID_LIBS=""
 AC_CHECK_LIB([uuid], [uuid_generate], [UUID_LIBS="-luuid"],
 	[AC_MSG_ERROR(dnl
-[GNU Parted requires libuuid - a part of the e2fsprogs package (but
-sometimes distributed separately in uuid-devel or similar)
+[GNU Parted requires libuuid - a part of the util-linux-ng package (but
+usually distributed separately in libuuid-devel, uuid-dev or similar)
 This can probably be found on your distribution's CD or FTP site or at:
-         http://web.mit.edu/tytso/www/linux/e2fsprogs.html
-Note: if you are using precompiled packages you will also need the development
-package as well (which may be called e2fsprogs-devel or something similar).
-If you compile e2fsprogs yourself then you need to do 'make install' and
-'make install-libs'.])]
-)
+    http://userweb.kernel.org/~kzak/util-linux-ng/
+Note: originally, libuuid was part of the e2fsprogs package.  Later, it
+moved to util-linux-ng-2.16, and that package is now the preferred source.])])
 AC_SUBST([UUID_LIBS])
 
 dnl Check for libdevmapper
