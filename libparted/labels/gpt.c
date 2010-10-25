@@ -40,6 +40,7 @@
 #include <stdbool.h>
 #include <errno.h>
 #include "xalloc.h"
+#include "verify.h"
 
 #include "pt-tools.h"
 
@@ -69,6 +70,8 @@ typedef struct _GuidPartitionEntry_t GuidPartitionEntry_t;
 typedef struct _PartitionRecord_t PartitionRecord_t;
 typedef struct _LegacyMBR_t LegacyMBR_t;
 typedef struct _GPTDiskData GPTDiskData;
+
+
 typedef struct
 {
   uint32_t time_low;
@@ -1777,9 +1780,6 @@ static PedDiskType gpt_disk_type =
 void
 ped_disk_gpt_init ()
 {
-  PED_ASSERT (sizeof (GuidPartitionEntryAttributes_t) == 8, return);
-  PED_ASSERT (sizeof (GuidPartitionEntry_t) == 128, return);
-
   ped_disk_type_register (&gpt_disk_type);
 }
 
@@ -1788,3 +1788,6 @@ ped_disk_gpt_done ()
 {
   ped_disk_type_unregister (&gpt_disk_type);
 }
+
+verify (sizeof (GuidPartitionEntryAttributes_t) == 8);
+verify (sizeof (GuidPartitionEntry_t) == 128);
