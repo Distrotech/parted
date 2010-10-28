@@ -301,29 +301,39 @@ dasd_read (PedDisk* disk)
 		union vollabel *cms_ptr1 = (union vollabel *) anchor.vlabel;
 		cms_volume_label_t *cms_ptr = &cms_ptr1->cms;
 		ldl_volume_label_t *ldl_ptr = &cms_ptr1->ldl;
+		int partition_start_block;
 
 		disk_specific->format_type = 1;
-		if (is_ldl || cms_ptr->disk_offset == 0)
-			start = (long long) arch_specific->real_sector_size
-				/ (long long)disk->dev->sector_size * 3;
+
+		if (is_cms && cms_ptr->usable_count >= cms_ptr->block_count)
+			partition_start_block = 2;   /* FBA DASD */
 		else
+			partition_start_block = 3;   /* CKD DASD */
+
+		if (is_ldl)
 			start = (long long) arch_specific->real_sector_size
 				/ (long long) disk->dev->sector_size
+				* (long long) partition_start_block;
+		else if (cms_ptr->disk_offset == 0)
+			start = (long long) cms_ptr->block_size
+				/ (long long) disk->dev->sector_size
+				* (long long) partition_start_block;
+		else
+			start = (long long) cms_ptr->block_size
+				/ (long long) disk->dev->sector_size
 				* (long long) cms_ptr->disk_offset;
+
 		if (is_ldl)
-		   if (ldl_ptr->ldl_version >= 0xf2)
+		   if (strncmp(ldl_ptr->ldl_version,
+			       vtoc_ebcdic_enc("2", str, 1), 1) >= 0)
 		      end = (long long) arch_specific->real_sector_size
 			    / (long long) disk->dev->sector_size
 			    * (long long) ldl_ptr->formatted_blocks - 1;
 		   else
-		      end = (long long) arch_specific->real_sector_size
-			    / (long long) disk->dev->sector_size
-			    * (long long) anchor.geo.cylinders
-			    * (long long) anchor.geo.heads
-			    * (long long) disk->dev->hw_geom.sectors - 1;
+		      end = disk->dev->length - 1;
 		else
 		   if (cms_ptr->disk_offset == 0)
-		      end = (long long) arch_specific->real_sector_size
+		      end = (long long) cms_ptr->block_size
 			    / (long long) disk->dev->sector_size
 			    * (long long) cms_ptr->block_count - 1;
 		   else
@@ -334,7 +344,7 @@ dasd_read (PedDisk* disk)
 			 Linux kernel.  See fs/partitions/ibm.c in the
 			 Linux kernel source code.
 		      */
-		      end = (long long) arch_specific->real_sector_size
+		      end = (long long) cms_ptr->block_size
 			    / (long long) disk->dev->sector_size
 			    * (long long) (cms_ptr->block_count - 1) - 1;
 
@@ -574,7 +584,7 @@ dasd_write (const PedDisk* disk)
 
 	PDEBUG;
 
-	/* If formated in LDL, don't write anything. */
+	/* If not formated in CDL, don't write anything. */
 	if (disk_specific->format_type == 1)
 		return 1;
 
@@ -946,11 +956,7 @@ dasd_alloc_metadata (PedDisk* disk)
 	   trailing_meta_start = part->geom.end + 1;
 	   fdasd_initialize_anchor(&anchor);
 	   fdasd_get_geometry(disk->dev, &anchor, arch_specific->fd);
-	   trailing_meta_end = (long long) arch_specific->real_sector_size
-		/ (long long) disk->dev->sector_size
-		* (long long) anchor.geo.cylinders
-		* (long long) anchor.geo.heads
-		* (long long) disk->dev->hw_geom.sectors - 1;
+	   trailing_meta_end = (long long) disk->dev->length - 1;
 	   fdasd_cleanup(&anchor);
 	   if (trailing_meta_end >= trailing_meta_start) {
 		new_part2 = ped_partition_new (disk,PED_PARTITION_METADATA,

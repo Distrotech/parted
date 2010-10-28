@@ -814,11 +814,6 @@ fdasd_get_geometry (const PedDevice *dev, fdasd_anchor_t *anc, int f)
 				    _("Could not retrieve disk information."));
 	}
 
-	if (strncmp(dasd_info.type, "ECKD", 4) != 0)
-		fdasd_error(anc, wrong_disk_type,
-			    _("This is not an ECKD disk!  " \
-			      "This disk type is not supported!"));
-
 	anc->dev_type   = dasd_info.dev_type;
 	anc->blksize    = blksize;
 	anc->label_pos  = dasd_info.label_block * blksize;

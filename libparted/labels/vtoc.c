@@ -269,6 +269,29 @@ int
 vtoc_read_volume_label (int f, unsigned long vlabel_start,
                         volume_label_t *vlabel)
 {
+
+	char str[5];
+	unsigned long block_zero;
+	typedef struct bogus_label bogus_label_t;
+	typedef union vollabel vollabel_t;
+
+	union __attribute__((packed)) vollabel {
+		volume_label_t cdl;
+		ldl_volume_label_t ldl;
+		cms_volume_label_t cms;
+	};
+
+	struct  __attribute__((packed)) bogus_label {
+	   char overhead[512];
+	   vollabel_t actual_label;
+	};
+
+	bogus_label_t mybogus;
+	bogus_label_t *bogus_ptr = &mybogus;
+	vollabel_t *union_ptr = &bogus_ptr->actual_label;
+	volume_label_t *cdl_ptr = &union_ptr->cdl;
+	cms_volume_label_t *cms_ptr = &union_ptr->cms;
+
 	PDEBUG
 	int rc;
 
@@ -287,6 +310,35 @@ vtoc_read_volume_label (int f, unsigned long vlabel_start,
 		return 1;
 	}
 
+	if (strncmp(vlabel->volkey, vtoc_ebcdic_enc("VOL1", str, 4), 4) == 0
+	 || strncmp(vlabel->volkey, vtoc_ebcdic_enc("LNX1", str, 4), 4) == 0
+         || strncmp(vlabel->volkey, vtoc_ebcdic_enc("CMS1", str, 4), 4) == 0)
+	return 0;
+
+	/*
+	   If we didn't find a valid volume label, there is a special case
+           we must try before we give up.  For a CMS-formatted disk on FBA
+	   DASD using the DIAG driver and a block size greater than 512, we
+	   must read the block at offset 0, then look for a label within
+	   that block at offset 512.
+	*/
+
+	block_zero = 0;
+
+	if (lseek(f, block_zero, SEEK_SET) == -1) {
+		vtoc_error(unable_to_seek, "vtoc_read_volume_label",
+			   _("Could not read volume label."));
+		return 1;
+	}
+
+	rc = read(f, bogus_ptr, sizeof(bogus_label_t));
+	if (rc != sizeof(bogus_label_t)) {
+		vtoc_error(unable_to_read, "vtoc_read_volume_label",
+			   _("Could not read volume label."));
+		return 1;
+	}
+
+	memcpy(vlabel, cdl_ptr, sizeof *vlabel);
 	return 0;
 }
 
