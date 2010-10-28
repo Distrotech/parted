@@ -4,6 +4,26 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  Improve support of DASD devices on the s390 architecture.
+  Parted now supports all DASD types (CKD and FBA), DASD formats (CDL,
+  LDL, CMS non-reserved, and CMS reserved), and DASD drivers (ECKD, FBA,
+  and DIAG) in all combinations supported by the Linux kernel.  As before,
+  only CDL format on CKD DASD using the ECKD driver is supported for
+  read-write operations (create, delete, move, re-size, etc.).  However,
+  the implicit partition present on LDL- and CMS-formatted disks is now
+  correctly recognized for read-only operations.  In detail:
+
+  - parted now correctly handles LDL-format disks with a block
+    size other than 4096 (bug fix)
+
+  - parted now recognizes the CMS disk format, both reserved
+    and non-reserved (enhancement)
+
+  - parted now supports FBA DASD devices (enhancement)
+
+  - parted now supports the DIAG driver when running in a
+    virtual machine under z/VM (enhancement)
+
   libparted: raise the limit on the maximum start sector and the
   maximum number of sectors in a "loop" partition table from 2^32 to 2^64.
   [bug introduced in parted-2.1]
