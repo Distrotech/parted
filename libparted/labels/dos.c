@@ -1713,13 +1713,13 @@ _primary_constraint (const PedDisk* disk, const PedCHSGeometry* bios_geom,
 			       		dev->length - min_geom->end))
 			return NULL;
 	} else {
-		/* Do not assume that length is larger than 1 cylinder's
-		   worth of sectors.  This is useful when testing with
-		   a memory-mapped "disk" (a la scsi_debug) that is say,
-		   2048 sectors long.  */
-		if (cylinder_size < dev->length
-		    && !ped_geometry_init (&start_geom, dev, cylinder_size,
-					   dev->length - cylinder_size))
+		/* Use cylinder_size as the starting sector number
+		   when the device is large enough to accommodate that.
+		   Otherwise, use sector 1.  */
+		PedSector start = (cylinder_size < dev->length
+				   ? cylinder_size : 1);
+		if (!ped_geometry_init (&start_geom, dev, start,
+					dev->length - start))
 			return NULL;
 		if (!ped_geometry_init (&end_geom, dev, 0, dev->length))
 			return NULL;

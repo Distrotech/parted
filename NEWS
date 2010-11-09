@@ -14,6 +14,10 @@ GNU parted NEWS                                    -*- outline -*-
   libparted now recognizes scsi disks with a high major (128-135) as scsi
   disks
 
+  an msdos partition table on a very small device (smaller than one cylinder)
+  is now recognized.  [bug introduced in parted-2.2]
+
+
 * Noteworthy changes in release 2.3 (2010-05-28) [stable]
 
 ** New features
