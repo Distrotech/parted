@@ -46,6 +46,7 @@
 
 #include "../architecture.h"
 #include "dirname.h"
+#include "xstrtol.h"
 
 #if ENABLE_NLS
 #  include <libintl.h>
@@ -719,10 +720,17 @@ _device_get_length (PedDevice* dev)
         unsigned long           size;
         LinuxSpecific*          arch_specific = LINUX_SPECIFIC (dev);
         uint64_t bytes=0;
+        const char*             test_str;
+        PedSector               test_size;
 
 
         PED_ASSERT (dev->open_count > 0, return 0);
         PED_ASSERT (dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0, return 0);
+
+        test_str = getenv ("PARTED_TEST_DEVICE_LENGTH");
+        if (test_str
+            && xstrtoll (test_str, NULL, 10, &test_size, NULL) == LONGINT_OK)
+                return test_size;
 
         if (_kernel_has_blkgetsize64()) {
                 if (ioctl(arch_specific->fd, BLKGETSIZE64, &bytes) == 0) {
@@ -1189,6 +1197,12 @@ init_generic (PedDevice* dev, const char* model_name)
         if (_device_probe_geometry (dev)) {
                 ped_exception_leave_all ();
         } else {
+		if (!_device_get_length (dev)) {
+			ped_exception_catch ();
+			ped_exception_leave_all ();
+			goto error_close_dev;
+		}
+
                 /* hack to allow use of files, for testing */
                 ped_exception_catch ();
                 ped_exception_leave_all ();

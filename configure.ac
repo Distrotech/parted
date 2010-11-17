@@ -310,10 +310,13 @@ fi
 
 dnl Check for libdl, if we are doing dynamic loading
 DL_LIBS=""
+AC_SUBST([DYNAMIC_LOADING])
+DYNAMIC_LOADING=no
 if test "$enable_dynamic_loading" = yes; then
 	AC_CHECK_LIB([dl], [dlopen],
 		DL_LIBS="-ldl"
 		PARTED_LIBS="$PARTED_LIBS -ldl"
+		DYNAMIC_LOADING=yes
 		AC_DEFINE([DYNAMIC_LOADING], [1], [Lazy linking to fs libs]),
 		AC_MSG_ERROR(
 			[-ldl not found!  Try using --disable-dynamic-loading]

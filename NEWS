@@ -17,6 +17,9 @@ GNU parted NEWS                                    -*- outline -*-
   an msdos partition table on a very small device (smaller than one cylinder)
   is now recognized.  [bug introduced in parted-2.2]
 
+  libparted: zero-length devices (other than files) are ignored rather than
+  throwing an exception.
+
 
 * Noteworthy changes in release 2.3 (2010-05-28) [stable]
 

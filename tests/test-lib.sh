@@ -390,4 +390,20 @@ require_xfs_()
     }
 }
 
+# Helper function: wait 2s (via .1s increments) for FILE to appear.
+# Usage: wait_for_dev_to_appear_ /dev/sdg
+# Return 0 upon success, 1 upon failure.
+wait_for_dev_to_appear_()
+{
+  local file=$1
+  local i=0
+  local incr=1
+  while :; do
+    ls "$file" > /dev/null 2>&1 && return 0
+    sleep .1 2>/dev/null || { sleep 1; incr=10; }
+    i=$(expr $i + $incr); test $i = 20 && break
+  done
+  return 1
+}
+
 sector_size_=${PARTED_SECTOR_SIZE:-512}
