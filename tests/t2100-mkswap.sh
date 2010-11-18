@@ -1,4 +1,5 @@
 #!/bin/sh
+# create linux-swap partitions
 
 # Copyright (C) 2007, 2009-2010 Free Software Foundation, Inc.
 
@@ -15,11 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test_description='create linux-swap partitions'
-
-: ${srcdir=.}
-. $srcdir/test-lib.sh
-
+. "${srcdir=.}/init.sh"; path_prepend_ ../parted
 require_512_byte_sector_size_
 
 ######################################################################
@@ -30,76 +27,62 @@ require_512_byte_sector_size_
 N=2M
 dev=loop-file
 dev2=loop-file-2
-test_expect_success \
-    'create a file to simulate the underlying device' \
-    'dd if=/dev/null of=$dev bs=1 seek=$N 2> /dev/null'
+# create a file to simulate the underlying device
+dd if=/dev/null of=$dev bs=1 seek=$N 2> /dev/null || fail=1
 
-test_expect_success \
-    'label the test disk' \
-    'parted -s $dev mklabel msdos > out 2>&1'
-test_expect_success 'expect no output' 'compare out /dev/null'
+# label the test disk
+parted -s $dev mklabel msdos > out 2>&1 || fail=1
+compare out /dev/null || fail=1
 
-test_expect_success \
-    'create a partition' \
-    'parted -s $dev mkpart primary 2048s 4095s > out 2>&1'
-test_expect_success 'expect no output' 'compare out /dev/null'
+# create a partition
+parted -s $dev mkpart primary 2048s 4095s > out 2>&1 || fail=1
+compare out /dev/null || fail=1
 
-test_expect_success \
-    'create a linux-swap file system' \
-    'parted -s $dev mkfs 1 "linux-swap(v1)" > out 2>&1'
-test_expect_success 'expect no output' 'compare out /dev/null'
+# create a linux-swap file system
+parted -s $dev mkfs 1 "linux-swap(v1)" > out 2>&1 || fail=1
+compare out /dev/null || fail=1
 
 # Extract the byte at offset 451.  It must be 0x82, not 0x83.
-test_expect_success \
-    'extract byte 451 (fs-type)' \
-    'od -t x1 -An -j450 -N1 $dev > out && echo " 82" > exp'
-test_expect_success 'expect it to be 82, not 83' 'compare out exp'
+# extract byte 451 (fs-type)
+od -t x1 -An -j450 -N1 $dev > out && echo " 82" > exp || fail=1
 
-test_expect_success \
-    'create another file to simulate the underlying device' \
-    'dd if=/dev/null of=$dev2 bs=1 seek=$N 2> /dev/null'
+# expect it to be 82, not 83
+compare out exp || fail=1
 
-test_expect_success \
-    'label another test disk' \
-    'parted -s $dev2 mklabel msdos > out 2>&1'
-test_expect_success 'expect no output' 'compare out /dev/null'
+# create another file to simulate the underlying device
+dd if=/dev/null of=$dev2 bs=1 seek=$N 2> /dev/null || fail=1
 
-test_expect_success \
-    'create another partition' \
-    'parted -s $dev2 mkpart primary 2048s 4095s > out 2>&1'
-test_expect_success 'expect no output' 'compare out /dev/null'
+# label another test disk
+parted -s $dev2 mklabel msdos > out 2>&1 || fail=1
+compare out /dev/null || fail=1
 
-test_expect_success \
-    'create another linux-swap file system' \
-    'parted -s $dev2 mkfs 1 "linux-swap(v1)" > out 2>&1'
-test_expect_success 'expect no output' 'compare out /dev/null'
+# create another partition
+parted -s $dev2 mkpart primary 2048s 4095s > out 2>&1 || fail=1
+compare out /dev/null || fail=1
+
+# create another linux-swap file system
+parted -s $dev2 mkfs 1 "linux-swap(v1)" > out 2>&1 || fail=1
+compare out /dev/null || fail=1
 
 # partition starts at offset 1048576; swap UUID is 1036 bytes in
-test_expect_success \
-    'extract UUID 1' \
-    'od -t x1 -An -j1049612 -N16 $dev > uuid1'
-test_expect_success \
-    'extract UUID 2' \
-    'od -t x1 -An -j1049612 -N16 $dev2 > uuid2'
-test_expect_failure \
-    'two linux-swap file systems have different UUIDs' \
-    'compare uuid1 uuid2'
+# extract UUID 1
+od -t x1 -An -j1049612 -N16 $dev > uuid1 || fail=1
+# extract UUID 2
+od -t x1 -An -j1049612 -N16 $dev2 > uuid2 || fail=1
+# two linux-swap file systems must have different UUIDs
+cmp uuid1 uuid2 && fail=1
 
-test_expect_success \
-    'check linux-swap file system' \
-    'parted -s $dev2 check 1 > out 2>&1'
-test_expect_success 'expect no output' 'compare out /dev/null'
+# check linux-swap file system
+parted -s $dev2 check 1 > out 2>&1 || fail=1
+compare out /dev/null || fail=1
 
-test_expect_success \
-    'extract new UUID 2' \
-    'od -t x1 -An -j1049612 -N16 $dev2 > uuid2-new'
-test_expect_success \
-    'check preserves linux-swap UUID' \
-    'compare uuid2 uuid2-new'
+# extract new UUID 2
+od -t x1 -An -j1049612 -N16 $dev2 > uuid2-new || fail=1
+# check preserves linux-swap UUID
+compare uuid2 uuid2-new || fail=1
 
-test_expect_success \
-    'create a linux-swap file system via alias' \
-    'parted -s $dev mkfs 1 linux-swap > out 2>&1'
-test_expect_success 'expect no output' 'compare out /dev/null'
+# create a linux-swap file system via alias
+parted -s $dev mkfs 1 linux-swap > out 2>&1 || fail=1
+compare out /dev/null || fail=1
 
-test_done
+Exit $fail
