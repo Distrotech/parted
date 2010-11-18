@@ -369,7 +369,7 @@ require_xfs_()
 require_dvhtool_()
 {
   (dvhtool --help) > /dev/null 2>&1 \
-    || skip 'dvhtool is required for this test'
+    || skip_ 'dvhtool is required for this test'
 }
 
 # Helper function: wait 2s (via .1s increments) for FILE to appear.
