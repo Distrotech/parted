@@ -183,15 +183,6 @@ rwx_to_mode_()
   echo "=$u$g$o"
 }
 
-skip_if_()
-{
-  case $1 in
-    root) skip_ must be run as root ;;
-    non-root) skip_ must be run as non-root ;;
-    *) ;;  # FIXME?
-  esac
-}
-
 require_selinux_()
 {
   case `ls -Zd .` in
