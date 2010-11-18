@@ -65,7 +65,8 @@ for fs_type in hfs+ fat32; do
 
   # create an empty $fs_type partition, cylinder aligned, size > 256 MB
   parted -s $dev mkpart primary $fs_type $start $default_end > out 2>&1 || fail=1
-  echo "Warning: The resulting partition is not properly aligned for best performance." > exp
+  echo "Warning: The resulting partition is not properly" \
+      "aligned for best performance." > exp
   compare out exp || fail=1
 
   # print partition table
@@ -79,7 +80,8 @@ for fs_type in hfs+ fat32; do
   # as $dev, the loop below typically iterates 7-20 times.
 
   # wait for new partition device to appear
-  wait_for_dev_to_appear_ ${dev}1
+  wait_for_dev_to_appear_ ${dev}1 || { warn_ "${dev}1 did not appear"  fail=1; }
+  sleep 1
 
   case $fs_type in
     fat32) mkfs_cmd='mkfs.vfat -F 32';;
