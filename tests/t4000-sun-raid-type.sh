@@ -1,4 +1,5 @@
 #!/bin/sh
+# RAID support on sun disk type
 
 # Copyright (C) 2008-2010 Free Software Foundation, Inc.
 
@@ -18,52 +19,41 @@
 # Written by Tom "spot" Callaway <tcallawa@redhat.com>
 # Derived from an example by Jim Meyering <jim@meyering.net>
 
-test_description="RAID support on sun disk type"
-
-: ${srcdir=.}
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../parted
 ss=$sector_size_
 
 N=2000 # number of sectors
 dev=sun-disk-file
 exp="BYT;\n---:${N}s:file:$ss:$ss:sun:;\n1:0s:127s:128s"
-test_expect_success \
-    'create an empty file as a test disk' \
-    'dd if=/dev/zero of=$dev bs=${ss}c count=$N 2> /dev/null'
+# create an empty file as a test disk
+dd if=/dev/zero of=$dev bs=${ss}c count=$N 2> /dev/null || fail=1
 
-test_expect_success \
-    'label the test disk as a sun disk' \
-    'parted -s $dev mklabel sun > out 2>&1'
-test_expect_success 'check for empty output' 'compare out /dev/null'
+# label the test disk as a sun disk
+parted -s $dev mklabel sun > out 2>&1 || fail=1
+compare out /dev/null || fail=1
 
-test_expect_success \
-    'create a single partition' \
-    'parted -s $dev unit s mkpart ext2 0s 127s > out 2>&1'
-test_expect_success 'check for empty output' 'compare out /dev/null'
+# create a single partition
+parted -s $dev unit s mkpart ext2 0s 127s > out 2>&1 || fail=1
+compare out /dev/null || fail=1
 
-test_expect_success \
-    'print the partition data in machine readable format' \
-    'parted -m -s $dev unit s p > out 2>&1 &&
-     sed "s,^.*/$dev:,---:," out > k && mv k out'
+# print the partition data in machine readable format
+parted -m -s $dev unit s p > out 2>&1 || fail=1
+sed "s,^.*/$dev:,---:," out > k && mv k out
 
-test_expect_success \
-    'check for expected values for the partition' '
-    printf "$exp:::;\n" > exp &&
-    compare out exp'
+# check for expected values for the partition
+printf "$exp:::;\n" > exp || fail=1
+compare out exp || fail=1
 
-test_expect_success \
-    'set the raid flag' \
-    'parted -s $dev set 1 raid >out 2>&1'
-test_expect_success 'check for empty output' 'compare out /dev/null'
+# set the raid flag
+parted -s $dev set 1 raid >out 2>&1 || fail=1
+compare out /dev/null || fail=1
 
-test_expect_success \
-    'print the partition data in machine readable format again' \
-    'parted -m -s $dev unit s p > out 2>&1 &&
-     sed "s,^.*/$dev:,---:," out > k && mv k out'
+# print the partition data in machine readable format again
+parted -m -s $dev unit s p > out 2>&1 || fail=1
+sed "s,^.*/$dev:,---:," out > k && mv k out || fail=1
 
-test_expect_success \
-    'check for expected values (including raid flag) for the partition' '
-    printf "$exp:::raid;\n" > exp &&
-    compare out exp'
+# check for expected values (including raid flag) for the partition
+printf "$exp:::raid;\n" > exp || fail=1
+compare out exp || fail=1
 
-test_done
+Exit $fail
