@@ -309,3 +309,75 @@ emit_superuser_warning()
   test "$uid" != 0 &&
     echo 'WARNING: You are not superuser.  Watch out for permissions.' || :
 }
+
+require_mdadm_()
+{
+  ( mdadm --version ) > /dev/null 2>&1 ||
+    {
+      say "skipping $0: could not find mdadm executable"
+      test_done
+      exit
+    }
+}
+
+# Will look for an md number that is not in use and create a md device with
+# that number.  If the system has more than 9 md devices, it will fail.
+mdadm_create_linear_device_()
+{
+  lo_dev=$1
+  mdd=$G_dev_/md0
+  for i in 0 1 2 3 4 5 6 7 8 9 ; do
+    mdd=$G_dev_/md$i
+    mdadm  --create --force $mdd --level=linear --raid-devices=1 $lo_dev \
+	> /dev/null 2>&1 \
+      && break
+
+    if [ $i -eq 9 ]; then echo $mdd ; return 1 ; fi
+  done
+
+  echo $mdd
+  return 0
+}
+
+# Often, when parted cannot use the specified size or start/endpoints
+# of a partition, it outputs a warning or error like this:
+#
+# Error: You requested a partition from 512B to 50.7kB.
+# The closest location we can manage is 17.4kB to 33.8kB.
+#
+# But those numbers depend on sector size, so
+# replace the specific values with place-holders,
+# so tests do not depend on sector size.
+normalize_part_diag_()
+{
+  local file=$1
+  sed 's/ [0-9.k]*B to [0-9.k]*B\.$/ X to Y./' $file > $file.t \
+    && mv $file.t $file && return 0
+  return 1
+}
+
+require_xfs_()
+{
+  ( mkfs.xfs -V ) >/dev/null 2>&1 ||
+    {
+      say "skipping $0: this test requires XFS support"
+      test_done
+      exit
+    }
+}
+
+# Helper function: wait 2s (via .1s increments) for FILE to appear.
+# Usage: wait_for_dev_to_appear_ /dev/sdg
+# Return 0 upon success, 1 upon failure.
+wait_for_dev_to_appear_()
+{
+  local file=$1
+  local i=0
+  local incr=1
+  while :; do
+    ls "$file" > /dev/null 2>&1 && return 0
+    sleep .1 2>/dev/null || { sleep 1; incr=10; }
+    i=$(expr $i + $incr); test $i = 20 && break
+  done
+  return 1
+}
