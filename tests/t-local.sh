@@ -8,7 +8,7 @@ require_scsi_debug_module_()
 {
   # check for scsi_debug module
   modprobe -n scsi_debug ||
-    skip_test_ "you lack the scsi_debug kernel module"
+    skip_ "you lack the scsi_debug kernel module"
 }
 
 scsi_debug_modprobe_succeeded_=
@@ -94,7 +94,7 @@ scsi_debug_setup_()
 require_512_byte_sector_size_()
 {
   test $sector_size_ = 512 \
-      || skip_test_ FS test with sector size != 512
+      || skip_ FS test with sector size != 512
 }
 
 peek_()

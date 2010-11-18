@@ -28,7 +28,7 @@ require_root_
 require_scsi_debug_module_
 
 grep '^#define USE_BLKID 1' "$CONFIG_HEADER" > /dev/null ||
-  skip_test_ 'this system lacks a new-enough libblkid'
+  skip_ 'this system lacks a new-enough libblkid'
 
 ss=$sector_size_
 partition_sectors=256  # sectors per partition
@@ -42,7 +42,7 @@ sectors_per_MiB=$((1024 * 1024 / ss))
 n_MiB=$(((n_sectors + sectors_per_MiB - 1) / sectors_per_MiB))
 # create memory-backed device
 scsi_debug_setup_ sector_size=$ss dev_size_mb=$n_MiB > dev-name ||
-  skip_test_ 'failed to create scsi_debug device'
+  skip_ 'failed to create scsi_debug device'
 scsi_dev=$(cat dev-name)
 
 fail=0

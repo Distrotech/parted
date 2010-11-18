@@ -28,13 +28,13 @@ init_root_dir_
 
 # This test only makes sense on Linux.
 test "$(uname -s)" = Linux \
-  || skip_test_ "not on Linux"
+  || skip_ "not on Linux"
 
 test "x$DYNAMIC_LOADING" = xyes \
-  || skip_test_ "no dynamic loading support"
+  || skip_ "no dynamic loading support"
 
 test "x$ENABLE_DEVICE_MAPPER" = xyes \
-  || skip_test_ "no device-mapper support"
+  || skip_ "no device-mapper support"
 
 # Device map name - should be random to not conflict with existing ones on
 # the system
@@ -61,13 +61,13 @@ cleanup_()
 
 f1=$(pwd)/1
 d1=$(loop_setup_ "$f1") \
-  || skip_test_ "is this partition mounted with 'nodev'?"
+  || skip_ "is this partition mounted with 'nodev'?"
 
 echo "0 1024 linear $d1 0" | dmsetup create "$linear_" \
-  || skip_test_ "unable to create dm device"
+  || skip_ "unable to create dm device"
 
 wait_for_dev_to_appear_ "/dev/mapper/$linear_" \
-  || skip_test_ "dm device did not appear"
+  || skip_ "dm device did not appear"
 
 test_expect_success \
     'run the actual tests' "zerolen /dev/mapper/$linear_"

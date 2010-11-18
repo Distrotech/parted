@@ -46,7 +46,7 @@ default_end=546147s
 
 # create memory-backed device
 scsi_debug_setup_ dev_size_mb=550 > dev-name ||
-  skip_test_ 'failed to create scsi_debug device'
+  skip_ 'failed to create scsi_debug device'
 dev=$(cat dev-name)
 
 fail=0

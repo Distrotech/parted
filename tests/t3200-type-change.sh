@@ -28,11 +28,11 @@ require_root_
 require_scsi_debug_module_
 
 grep '^#define USE_BLKID 1' "$CONFIG_HEADER" > /dev/null ||
-  skip_test_ 'this system lacks a new-enough libblkid'
+  skip_ 'this system lacks a new-enough libblkid'
 
 # create memory-backed device
 scsi_debug_setup_ dev_size_mb=550 > dev-name ||
-  skip_test_ 'failed to create scsi_debug device'
+  skip_ 'failed to create scsi_debug device'
 scsi_dev=$(cat dev-name)
 
 # Create an empty partition of "type fat32", and then create an actual

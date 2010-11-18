@@ -32,7 +32,7 @@ require_scsi_debug_module_
 
 # create memory-backed device
 scsi_debug_setup_ dev_size_mb=1 > dev-name ||
-  skip_test_ 'failed to create scsi_debug device'
+  skip_ 'failed to create scsi_debug device'
 scsi_dev=$(cat dev-name)
 p1=${scsi_dev}1
 p5=${scsi_dev}5

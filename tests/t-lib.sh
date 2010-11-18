@@ -23,7 +23,7 @@ if test $? != 11; then
   Exit 77
 fi
 
-skip_test_()
+skip_()
 {
   echo "$0: skipping test: $@" | head -1 1>&9
   echo "$0: skipping test: $@" 1>&2
@@ -48,23 +48,23 @@ require_acl_()
 {
   getfacl --version < /dev/null > /dev/null 2>&1 \
     && setfacl --version < /dev/null > /dev/null 2>&1 \
-      || skip_test_ "This test requires getfacl and setfacl."
+      || skip_ "This test requires getfacl and setfacl."
 
   id -u bin > /dev/null 2>&1 \
-    || skip_test_ "This test requires a local user named bin."
+    || skip_ "This test requires a local user named bin."
 }
 
 require_hfs_()
 {
   mkfs.hfs 2>&1 | grep '^usage:' \
-    || skip_test_ "This test requires HFS support."
+    || skip_ "This test requires HFS support."
 }
 
 # Skip this test if we're not in SELinux "enforcing" mode.
 require_selinux_enforcing_()
 {
   test "$(getenforce)" = Enforcing \
-    || skip_test_ "This test is useful only with SELinux in Enforcing mode."
+    || skip_ "This test is useful only with SELinux in Enforcing mode."
 }
 
 
@@ -73,13 +73,13 @@ require_openat_support_()
   # Skip this test if your system has neither the openat-style functions
   # nor /proc/self/fd support with which to emulate them.
   test -z "$CONFIG_HEADER" \
-    && skip_test_ 'internal error: CONFIG_HEADER not defined'
+    && skip_ 'internal error: CONFIG_HEADER not defined'
 
   _skip=yes
   grep '^#define HAVE_OPENAT' "$CONFIG_HEADER" > /dev/null && _skip=no
   test -d /proc/self/fd && _skip=no
   if test $_skip = yes; then
-    skip_test_ 'this system lacks openat support'
+    skip_ 'this system lacks openat support'
   fi
 }
 
@@ -95,12 +95,12 @@ require_ulimit_()
   ( ulimit -v 20;    date ) > /dev/null 2>&1 && ulimit_works=no
 
   test $ulimit_works = no \
-    && skip_test_ "this shell lacks ulimit support"
+    && skip_ "this shell lacks ulimit support"
 }
 
 require_readable_root_()
 {
-  test -r / || skip_test_ "/ is not readable"
+  test -r / || skip_ "/ is not readable"
 }
 
 # Skip the current test if strace is not available or doesn't work
@@ -110,10 +110,10 @@ require_strace_()
   test $# = 1 || framework_failure
 
   strace -V < /dev/null > /dev/null 2>&1 ||
-    skip_test_ 'no strace program'
+    skip_ 'no strace program'
 
   strace -qe "$1" echo > /dev/null 2>&1 ||
-    skip_test_ 'strace -qe "'"$1"'" does not work'
+    skip_ 'strace -qe "'"$1"'" does not work'
 }
 
 # Require a controlling input `terminal'.
@@ -122,7 +122,7 @@ require_controlling_input_terminal_()
   tty -s || have_input_tty=no
   test -t 0 || have_input_tty=no
   if test "$have_input_tty" = no; then
-    skip_test_ 'requires controlling input terminal
+    skip_ 'requires controlling input terminal
 This test must have a controlling input "terminal", so it may not be
 run via "batch", "at", or "ssh".  On some systems, it may not even be
 run in the background.'
@@ -186,8 +186,8 @@ rwx_to_mode_()
 skip_if_()
 {
   case $1 in
-    root) skip_test_ must be run as root ;;
-    non-root) skip_test_ must be run as non-root ;;
+    root) skip_ must be run as root ;;
+    non-root) skip_ must be run as non-root ;;
     *) ;;  # FIXME?
   esac
 }
@@ -196,7 +196,7 @@ require_selinux_()
 {
   case `ls -Zd .` in
     '? .'|'unlabeled .')
-      skip_test_ "this system (or maybe just" \
+      skip_ "this system (or maybe just" \
         "the current file system) lacks SELinux support"
     ;;
   esac
@@ -205,7 +205,7 @@ require_selinux_()
 very_expensive_()
 {
   if test "$RUN_VERY_EXPENSIVE_TESTS" != yes; then
-    skip_test_ 'very expensive: disabled by default
+    skip_ 'very expensive: disabled by default
 This test is very expensive, so it is disabled by default.
 To run it anyway, rerun make check with the RUN_VERY_EXPENSIVE_TESTS
 environment variable set to yes.  E.g.,
@@ -218,7 +218,7 @@ environment variable set to yes.  E.g.,
 expensive_()
 {
   if test "$RUN_EXPENSIVE_TESTS" != yes; then
-    skip_test_ 'expensive: disabled by default
+    skip_ 'expensive: disabled by default
 This test is relatively expensive, so it is disabled by default.
 To run it anyway, rerun make check with the RUN_EXPENSIVE_TESTS
 environment variable set to yes.  E.g.,
@@ -230,12 +230,12 @@ environment variable set to yes.  E.g.,
 
 require_root_()
 {
-  uid_is_privileged_ || skip_test_ "must be run as root"
+  uid_is_privileged_ || skip_ "must be run as root"
   NON_ROOT_USERNAME=${NON_ROOT_USERNAME=nobody}
   NON_ROOT_GROUP=${NON_ROOT_GROUP=$(id -g $NON_ROOT_USERNAME)}
 }
 
-skip_if_root_() { uid_is_privileged_ && skip_test_ "must be run as non-root"; }
+skip_if_root_() { uid_is_privileged_ && skip_ "must be run as non-root"; }
 error_() { echo "$0: $@" 1>&2; Exit 1; }
 framework_failure() { error_ 'failure in testing framework'; }
 
@@ -248,7 +248,7 @@ require_membership_in_two_groups_()
   groups=${COREUTILS_GROUPS-`(id -G || /usr/xpg4/bin/id -G) 2>/dev/null`}
   case "$groups" in
     *' '*) ;;
-    *) skip_test_ 'requires membership in two groups
+    *) skip_ 'requires membership in two groups
 this test requires that you be a member of more than one group,
 but running `id -G'\'' either failed or found just one.  If you really
 are a member of at least two groups, then rerun this test with
@@ -269,7 +269,7 @@ require_proc_pid_status_()
     local pid=$!
     sleep .5
     grep '^State:[	 ]*[S]' /proc/$pid/status > /dev/null 2>&1 ||
-    skip_test_ "/proc/$pid/status: missing or 'different'"
+    skip_ "/proc/$pid/status: missing or 'different'"
     kill $pid
 }
 
@@ -286,7 +286,7 @@ require_sparse_support_()
   kb_size=$2
   rm -f $t
   if test $kb_size -ge 128; then
-    skip_test_ 'this file system does not support sparse files'
+    skip_ 'this file system does not support sparse files'
   fi
 }
 
@@ -298,7 +298,7 @@ mkfifo_or_skip_()
     # failure as a test failure.  However, in this case, when running on a SunOS
     # system using a disk NFS mounted from OpenBSD, the above fails like this:
     # mkfifo: cannot make fifo `fifo-10558': Not owner
-    skip_test_ 'NOTICE: unable to create test prerequisites'
+    skip_ 'NOTICE: unable to create test prerequisites'
   fi
 }
 
@@ -313,7 +313,7 @@ skip_if_setgid_()
   case $perms in
     drwx------);;
     drwxr-xr-x);;  # Windows98 + DJGPP 2.03
-    *) skip_test_ 'this directory has the setgid bit set';;
+    *) skip_ 'this directory has the setgid bit set';;
   esac
 }
 
@@ -328,7 +328,7 @@ skip_if_mcstransd_is_running_()
   case $__ctx in
     *:*:*:*) ;; # four components is ok
     *) # anything else probably means mcstransd is running
-        skip_test_ "unexpected context '$__ctx'; turn off mcstransd" ;;
+        skip_ "unexpected context '$__ctx'; turn off mcstransd" ;;
   esac
 }
 
@@ -345,7 +345,7 @@ working_umask_or_skip_()
 
   case $perms in
   *'
-  '*) skip_test_ 'your build directory has unusual umask semantics'
+  '*) skip_ 'your build directory has unusual umask semantics'
   esac
 }
 

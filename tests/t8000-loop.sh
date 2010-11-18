@@ -35,7 +35,7 @@ cleanup_()
 }
 
 f1=$(pwd)/1; d1=$(loop_setup_ "$f1") \
-  || skip_test_ "is this partition mounted with 'nodev'?"
+  || skip_ "is this partition mounted with 'nodev'?"
 
 fail=0
 

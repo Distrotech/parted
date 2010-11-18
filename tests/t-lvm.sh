@@ -54,7 +54,7 @@ loop_setup_()
 lvm_init_root_dir_()
 {
   test -n "$t_" \
-    || skip_test_ "Internal error: called lvm_init_root_dir_ before" \
+    || skip_ "Internal error: called lvm_init_root_dir_ before" \
       "defining \$t_"
   test_dir_rand_=$t_
 

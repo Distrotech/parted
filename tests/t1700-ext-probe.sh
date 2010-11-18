@@ -33,7 +33,7 @@ fail=0
 
 for type in ext2 ext3 ext4; do
 
-  ( mkfs.$type -V ) >/dev/null 2>&1 || skip_test_ "no $type support"
+  ( mkfs.$type -V ) >/dev/null 2>&1 || skip_ "no $type support"
 
   # create an $type file system
   dd if=/dev/zero of=$dev bs=1024 count=4096 >/dev/null || fail=1

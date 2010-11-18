@@ -28,7 +28,7 @@ require_root_
 lvm_init_root_dir_
 
 test "x$ENABLE_DEVICE_MAPPER" = xyes \
-  || skip_test_ "no device-mapper support"
+  || skip_ "no device-mapper support"
 
 # Device maps names - should be random to not conflict with existing ones on
 # the system
@@ -47,7 +47,7 @@ cleanup_() {
 }
 
 f1=$(pwd)/1; d1=$(loop_setup_ "$f1") \
-  || skip_test_ "is this partition mounted with 'nodev'?"
+  || skip_ "is this partition mounted with 'nodev'?"
 
 fail=0
 
