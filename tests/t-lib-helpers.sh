@@ -387,3 +387,9 @@ wait_for_dev_to_appear_()
   done
   return 1
 }
+
+device_mapper_required_()
+{
+  . "$abs_top_srcdir/tests/lvm-utils.sh" \
+       || fail_ "device mapper setup failed"
+}
