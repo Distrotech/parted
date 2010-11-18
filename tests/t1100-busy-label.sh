@@ -1,4 +1,5 @@
 #!/bin/sh
+# partitioning (parted -s DEV mklabel) a busy disk must fail.
 
 # Copyright (C) 2007-2010 Free Software Foundation, Inc.
 
@@ -15,22 +16,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test_description='partitioning (parted -s DEV mklabel) a busy disk must fail.'
-
-privileges_required_=1
-erasable_device_required_=1
-
-: ${srcdir=.}
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../parted
+require_erasable_
+require_root_
 require_512_byte_sector_size_
+
 dev=$DEVICE_TO_ERASE
 
-test_expect_success \
-    "setup: create a fat32 file system on $dev" \
-    'dd if=/dev/zero "of=$dev" bs=1k count=1 2> /dev/null &&
-     parted -s "$dev" mklabel msdos                > out 2>&1 &&
-     parted -s "$dev" mkpartfs primary fat32 1 40 >> out 2>&1'
-test_expect_success 'expect no output' 'compare out /dev/null'
+# setup: create a fat32 file system on $dev
+dd if=/dev/zero "of=$dev" bs=1k count=1 2> /dev/null || fail=1
+parted -s "$dev" mklabel msdos                > out 2>&1 || fail=1
+parted -s "$dev" mkpartfs primary fat32 1 40 >> out 2>&1 || fail=1
+compare out /dev/null || fail=1
 
 mount_point="`pwd`/mnt"
 
@@ -41,45 +38,40 @@ cleanup_() { umount "${dev}1" > /dev/null 2>&1; }
 # device, ${dev}1 (i.e., /dev/sdd1) is not created immediately, and
 # without some delay, this mount command would fail.  Using a flash card
 # as $dev, the loop below typically iterates 7-20 times.
-test_expect_success \
-    'create mount point dir. and mount the just-created partition on it' \
-    'mkdir $mount_point &&
-     i=0; while :; do test -e "${dev}1" && break; test $i = 90 && break;
-	              i=$(expr $i + 1); done;
-     mount "${dev}1" $mount_point'
 
-test_expect_failure \
-    'now that a partition is mounted, mklabel attempt must fail' \
-    'parted -s "$dev" mklabel msdos > out 2>&1'
-test_expect_success \
-    'create expected output file' \
-    'echo "Error: Partition(s) on $dev are being used." > exp'
-test_expect_success \
-    'check for expected failure diagnostic' \
-    'compare out exp'
+# create mount point dir. and mount the just-created partition on it
+mkdir $mount_point || fail=1
+i=0; while :; do test -e "${dev}1" && break; test $i = 90 && break;
+  i=$(expr $i + 1); done;
+mount "${dev}1" $mount_point || fail=1
+
+# now that a partition is mounted, mklabel attempt must fail
+parted -s "$dev" mklabel msdos > out 2>&1; test $? = 1 || fail=1
+
+# create expected output file
+echo "Error: Partition(s) on $dev are being used." > exp
+compare out exp || fail=1
 
 # ==================================================
-# Now, test it in interactive mode.
-test_expect_success 'create input file' 'echo c > in'
-test_expect_failure \
-    'as above, this mklabel attempt must fail' \
-    'parted ---pretend-input-tty "$dev" mklabel msdos < in > out 2>&1'
+# Repeat the test in interactive mode.
+# create input file
+echo c > in
 
-fail=0
+# as above, this mklabel attempt must fail
+parted ---pretend-input-tty "$dev" mklabel msdos < in > out 2>&1
+test $? = 1 || fail=1
+
 cat <<EOF > exp || fail=1
 Warning: Partition(s) on $dev are being used.
 Ignore/Cancel? c
 EOF
-test_expect_success 'create expected output file' 'test $fail = 0'
 
 # Transform the actual output, removing ^M   ...^M.
-test_expect_success \
-    'normalize the actual output' \
-    'mv out o2 && sed -e "s,   *,,;s, $,," \
-                      -e "s,^.*/lt-parted: ,parted: ," o2 > out'
+# normalize the actual output
+mv out o2 && sed -e 's,   *,,;s, $,,;s/^.*Warning/Warning/' \
+                 -e 's,^.*/lt-parted: ,parted: ,' o2 > out
 
-test_expect_success \
-    'check for expected failure diagnostic' \
-    'compare out exp'
+# check for expected failure diagnostic
+compare out exp || fail=1
 
-test_done
+Exit $fail
