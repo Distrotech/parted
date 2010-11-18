@@ -16,8 +16,7 @@
 
 test_description='gpt default "flag" for a partition must not be msftres'
 
-: ${srcdir=.}
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../parted
 
 ss=$sector_size_
 dev=loop-file
@@ -45,18 +44,16 @@ n_types=$(echo "$fs_types"|wc -w)
 # minimum size of the secondary GPT header at the end of the disk.
 n_sectors=$(expr $start + $n_types \* $part_size + 1 + 32)
 
-test_expect_success \
-    'create a test file large enough for one partition per FS type' \
-    'dd if=/dev/null of=$dev bs=$ss seek=$n_sectors'
+# create a test file large enough for one partition per FS type
+dd if=/dev/null of=$dev bs=$ss seek=$n_sectors || fail=1
 
-test_expect_success \
-    'create a gpt partition table' \
-    'parted -s $dev mklabel gpt > out 2>&1'
-test_expect_success 'expect no output' 'compare out /dev/null'
+# create a gpt partition table
+parted -s $dev mklabel gpt > out 2>&1 || fail=1
+# expect no output
+compare out /dev/null || fail=1
 
 printf "BYT;\n$dev:${n_sectors}s:file:$ss:$ss:gpt:;\n" > exp
 i=1
-fail=0
 rm -f out
 for type in $fs_types; do
   end=$(expr $start + $part_size - 1)
@@ -67,19 +64,15 @@ for type in $fs_types; do
   i=$(expr $i + 1)
 done
 
-test_expect_success \
-    "create $n_types partitions" \
-    'test $fail = 0'
-test_expect_success 'expect no output' 'compare out /dev/null'
+# expect no output
+compare out /dev/null || fail=1
 
 rm -f out
-test_expect_success \
-    'print partition table' \
-    'parted -m -s $dev u s p > out 2>&1'
+# print partition table
+parted -m -s $dev u s p > out 2>&1 || fail=1
 
 sed "s,.*/$dev:,$dev:," out > k && mv k out && ok=1 || ok=0
-test_expect_success \
-    'match against expected output' \
-    'test $ok = 1 && compare out exp'
+# match against expected output
+test $ok = 1 && { compare out exp || fail=1; }
 
-test_done
+Exit $fail
