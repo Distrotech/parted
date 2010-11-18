@@ -368,7 +368,7 @@ require_xfs_()
 
 require_dvhtool_()
 {
-  (dvhtool --help) > /dev/null 2>&1 \
+  dvhtool --help \
     || skip_ 'dvhtool is required for this test'
 }
 
