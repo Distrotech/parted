@@ -302,3 +302,10 @@ working_umask_or_skip_()
   '*) skip_ 'your build directory has unusual umask semantics'
   esac
 }
+
+emit_superuser_warning()
+{
+  uid=`id -u` || uid=1
+  test "$uid" != 0 &&
+    echo 'WARNING: You are not superuser.  Watch out for permissions.' || :
+}
