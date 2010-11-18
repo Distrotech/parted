@@ -1,4 +1,5 @@
 #!/bin/sh
+# partprobe must not examine more than 16 partitions
 
 # Copyright (C) 2008-2010 Free Software Foundation, Inc.
 
@@ -15,29 +16,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test_description='partprobe must not examine more than 16 partitions'
+. "${srcdir=.}/init.sh"; path_prepend_ ../parted
+require_erasable_
+require_root_
+require_dvhtool_
 
-privileges_required_=1
-erasable_device_required_=1
-dvhtool_required_=1
-
-: ${srcdir=.}
-. $srcdir/test-lib.sh
 dev=$DEVICE_TO_ERASE
 
-test_expect_success \
-    "setup: create a DVH partition table on $dev" \
-    '
-    dd if=/dev/zero of=$dev bs=512 count=1 seek=10000 &&
-    parted -s $dev mklabel dvh
-    '
+# setup: create a DVH partition table on $dev"
+dd if=/dev/zero of=$dev bs=512 count=1 seek=10000 || fail=1
+parted -s $dev mklabel dvh || fail=1
 
-test_expect_success \
-    "setup: use dvhtool to create a 17th (invalid?) partition" \
-    '
-    dd if=/dev/zero of=d bs=1 count=4k &&
-    dvhtool -d $dev --unix-to-vh d data
-    '
+# setup: use dvhtool to create a 17th (invalid?) partition"
+dd if=/dev/zero of=d bs=1 count=4k || fail=1
+dvhtool -d $dev --unix-to-vh d data || fail=1
 
 # Here's sample output from the parted...print command below:
 # BYT;
@@ -45,21 +37,15 @@ test_expect_success \
 # 9:0s:4095s:4096s:::;
 # 17:4s:11s:8s::data:;
 
-test_expect_success \
-    "ensure that dvhtool did what we want" \
-    '
-    parted -m -s $dev unit s print > out 2>&1 &&
-    grep "^17:.*::data:;\$" out
-    '
+# ensure that dvhtool did what we want"
+parted -m -s $dev unit s print > out 2>&1 || fail=1
+grep "^17:.*::data:;\$" out || fail=1
 
 # Parted 1.8.9 and earlier would mistakenly try to access partition #17.
-test_expect_success \
-    "ensure that partprobe succeeds and produces no output" \
-    '
-    partprobe -s $dev > out 2>err &&
-    compare err /dev/null &&
-    echo "$dev: dvh partitions 9 <17>" > exp &&
-    compare out exp
-    '
+# ensure that partprobe succeeds and produces no output"
+partprobe -s $dev > out 2>err || fail=1
+compare err /dev/null || fail=1
+echo "$dev: dvh partitions 9 <17>" > exp || fail=1
+compare out exp || fail=1
 
-test_done
+Exit $fail
