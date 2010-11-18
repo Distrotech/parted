@@ -33,15 +33,6 @@ scsi_debug_setup_ dev_size_mb=80 > dev-name ||
   skip_test_ 'failed to create scsi_debug device'
 dev=$(cat dev-name)
 
-cat <<EOF > exp-warning || framework_failure
-WARNING: you are attempting to use parted to operate on (mkpartfs) a file system.
-parted's file system manipulation code is not as robust as what you'll find in
-dedicated, file-system-specific packages like e2fsprogs.  We recommend
-you use parted only to manipulate partition tables, whenever possible.
-Support for performing most operations on most types of file systems
-will be removed in an upcoming release.
-EOF
-
 cat <<EOF > exp-error || framework_failure
 Error: Partition ${dev}2 is being used. You must unmount it before you modify it with Parted.
 EOF
@@ -54,17 +45,13 @@ parted -s "$dev" mklabel msdos > out 2>&1 || fail=1
 compare out /dev/null || fail=1
 
 parted -s "$dev" mkpartfs primary fat32 1 40 > out 2>&1 || fail=1
-
-# expect warning
-compare out exp-warning || fail=1
+compare out /dev/null || fail=1
 
 parted -s "$dev" mkpartfs primary fat32 40 80 > out 2>&1 || fail=1
 
 # wait for new partition device to appear
 wait_for_dev_to_appear_ ${dev}2
-
-# expect warning
-compare out exp-warning || fail=1
+compare out /dev/null || fail=1
 
 # be sure to unmount upon interrupt, failure, etc.
 cleanup_() { umount "${dev}2" > /dev/null 2>&1; }
