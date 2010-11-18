@@ -49,7 +49,7 @@ TESTS = \
 
 EXTRA_DIST = \
   $(TESTS) test-lib.sh t-lib.sh lvm-utils.sh t-local.sh t-lvm.sh \
-  init.cfg init.sh
+  init.cfg init.sh t-lib-helpers.sh
 
 check_PROGRAMS = print-align print-max dup-clobber
 LDADD = \
