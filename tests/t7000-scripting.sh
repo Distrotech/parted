@@ -1,4 +1,5 @@
 #!/bin/sh
+# Make sure the scripting option works (-s) properly.
 
 # Copyright (C) 2008-2010 Free Software Foundation, Inc.
 
@@ -15,10 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test_description='Make sure the scripting option works (-s) properly.'
 
-: ${srcdir=.}
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../parted
 ss=$sector_size_
 N=100 # number of sectors
 
@@ -26,14 +25,8 @@ N=100 # number of sectors
 : ${CONFIG_HEADER="$abs_top_builddir/lib/config.h"}
 
 config_h=$abs_top_srcdir
-grep '^#define HAVE_LIBREADLINE 1' $CONFIG_HEADER > /dev/null ||
-  {
-    say "skipping $0: configured without readline support"
-    test_done
-    exit
-  }
-
-fail=0
+grep '^#define HAVE_LIBREADLINE 1' $CONFIG_HEADER > /dev/null \
+  || skip_ "configured without readline support"
 
 # The failure messages.
 cat << EOF > errS || fail=1
@@ -50,46 +43,36 @@ normalize_part_diag_ errS || fail=1
 for mkpart in mkpart; do
 
   # Test for mkpart in scripting mode
-  test_expect_success \
-      'Create the test file' \
-      'dd if=/dev/zero of=testfile bs=${ss}c count=$N 2> /dev/null'
+  # Create the test file
+  dd if=/dev/zero of=testfile bs=${ss}c count=$N 2> /dev/null || fail=1
 
-  test_expect_failure \
-      "Test the scripting mode of $mkpart" \
-      'parted -s testfile -- mklabel gpt '$mkpart' primary ext3 1s -1s > out'
+  # Test the scripting mode of $mkpart.
+  parted -s testfile -- mklabel gpt "$mkpart" primary ext3 1s -1s > out
+  test $? = 1 || fail=1
 
-  test_expect_success \
-      'Compare the real error and the expected one' \
-      '
-       normalize_part_diag_ out &&
-       compare out errS
-      '
+  # Compare the real error and the expected one
+  normalize_part_diag_ out || fail=1
+  compare out errS || fail=1
 
   # Test mkpart interactive mode.
-  test_expect_success \
-      'Create the test file' \
-      '
-      rm -f testfile
-      dd if=/dev/zero of=testfile bs=${ss}c count=$N 2> /dev/null
-      '
-  test_expect_failure \
-      "Test the interactive mode of $mkpart" \
-      'echo n | \
-      parted ---pretend-input-tty testfile \
-      "mklabel gpt '$mkpart' primary ext3 1s -1s" > out
-      '
-  # We have to format the output before comparing.
-  test_expect_success \
-      'normalize the actual output' \
-      '
-       printf x >> out &&
-       sed "s,   *,,;s, x$,,;/ n$/ {N;s, n\nx,,}" out > o2 && mv -f o2 out &&
-       normalize_part_diag_ out
-      '
+  # Create the test file
+  rm -f testfile
+  dd if=/dev/zero of=testfile bs=${ss}c count=$N 2> /dev/null || fail=1
+  # Test the interactive mode of $mkpart
+  echo n | \
+    parted ---pretend-input-tty testfile \
+      "mklabel gpt '$mkpart' primary ext3 1s -1s" > out && fail=1
 
-  test_expect_success \
-      'Compare the real error and the expected one' \
-      'compare out errI'
+  # We have to format the output before comparing.
+  # normalize the actual output
+  printf x >> out || fail=1
+  sed "s,   *,,;s, x$,,;/ n$/ {N;s, n\nx,,}" out > o2 && mv -f o2 out \
+      || fail=1
+  normalize_part_diag_ out || fail=1
+
+  # Compare the real error and the expected one
+  compare out errI || fail=1
 
 done
-test_done
+
+Exit $fail
