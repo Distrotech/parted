@@ -21,7 +21,7 @@ unsafe_losetup_()
   f=$1
 
   test -n "$G_dev_" \
-    || error "Internal error: unsafe_losetup_ called before init_root_dir_"
+    || fail_ "Internal error: unsafe_losetup_ called before init_root_dir_"
 
   # Iterate through $G_dev_/loop{,/}{0,1,2,3,4,5,6,7,8,9}
   for slash in '' /; do
@@ -156,8 +156,13 @@ dmsetup_has_dm_devdir_support_()
 # set up private /dev and /etc
 init_root_dir_()
 {
+  # If $test_dir_rand_ is not defined (from test-lib.sh), but
+  # the latter is ($test_dir_ is from init.sh), use the latter.
+  test -z "$test_dir_rand_" && test -n "$test_dir_" \
+    && test_dir_rand_=$test_dir_
+
   test -n "$test_dir_rand_" \
-    || error "Internal error: called init_root_dir_ before" \
+    || fail_ "Internal error: called init_root_dir_ before" \
       "defining \$test_dir_rand_"
 
   # Define these two globals.
