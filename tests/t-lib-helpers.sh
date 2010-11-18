@@ -366,6 +366,12 @@ require_xfs_()
     }
 }
 
+require_dvhtool_()
+{
+  (dvhtool --help) > /dev/null 2>&1 \
+    || skip 'dvhtool is required for this test'
+}
+
 # Helper function: wait 2s (via .1s increments) for FILE to appear.
 # Usage: wait_for_dev_to_appear_ /dev/sdg
 # Return 0 upon success, 1 upon failure.
