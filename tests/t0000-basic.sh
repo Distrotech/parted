@@ -16,16 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-../parted/parted --version > /dev/null 2>&1
-if test $? != 0; then
-  echo >&2 'You have not built parted yet.'
-  exit 1
-fi
+. "${srcdir=.}/init.sh"; path_prepend_ ../parted
 
-test_description='Test the very basics part #1.'
-
-: ${srcdir=.}
-. $srcdir/test-lib.sh
+parted --version || fail_ 'You have not built parted yet.'
 
 # FIXME: is id -u portable enough?
 uid=`id -u` || uid=1
@@ -34,64 +27,52 @@ uid=`id -u` || uid=1
 N=1M
 dev=loop-file
 
-test_expect_success \
-    'create the test file' \
-    'dd if=/dev/null of=$dev bs=1 seek=$N 2> /dev/null'
+# create the test file
+dd if=/dev/null of=$dev bs=1 seek=$N 2> /dev/null || fail=1
 
-test_expect_success \
-    'run parted -s FILE mklabel msdos' \
-    'parted -s $dev mklabel msdos > out 2>&1'
-test_expect_success 'expect no output' 'compare out /dev/null'
+# run parted -s FILE mklabel msdos
+parted -s $dev mklabel msdos > out 2>&1 || fail=1
+compare out /dev/null || fail=1
 
 # ----------------------------------------------
 # Now, ensure that a simple mklabel command succeeds.
 # Since there's no -s option, there are prompts -- sometimes.
 
-test_expect_success \
-    'erase the left-over label' \
-    'dd if=/dev/zero of=$dev bs=4K count=1 conv=notrunc 2> /dev/null'
+# erase the left-over label
+dd if=/dev/zero of=$dev bs=4K count=1 conv=notrunc 2> /dev/null || fail=1
 
 # First iteration works with no prompting, since there is no preexisting label.
-test_expect_success \
-    'run parted mklabel (without -s) on a blank disk' \
-    'parted $dev mklabel msdos > out 2>&1'
+# run parted mklabel (without -s) on a blank disk
+parted $dev mklabel msdos > out 2>&1 || fail=1
 
-test_expect_success \
-    'create expected output file' \
-    'emit_superuser_warning > exp'
+# create expected output file
+emit_superuser_warning > exp || fail=1
 
-test_expect_success \
-    'check its "interactive" output' \
-    'compare out exp 1>&2'
+# check its "interactive" output
+compare out exp || fail=1
 
-test_expect_success 'create interactive input' 'printf "y\n" > in'
+# create interactive input
+printf 'y\n' > in || fail=1
 
 # Now that there's a label, rerunning the same command is interactive.
-test_expect_success \
-    'rerun that same command, but now with a preexisting label' \
-    'parted ---pretend-input-tty $dev mklabel msdos < in > out 2>&1'
+# rerun that same command, but now with a preexisting label
+parted ---pretend-input-tty $dev mklabel msdos < in > out 2>&1 || fail=1
 
 # Transform the actual output, to avoid spurious differences when
 # $PWD contains a symlink-to-dir.  Also, remove the ^M      ...^M bogosity.
-test_expect_success \
-    'normalize the actual output' \
-    'mv out o2 && sed -e "s,on /.*/$dev,on DEVICE,;s,   *,,;s, $,," \
-                      -e "s,^.*/lt-parted: ,parted: ," o2 > out'
+# normalize the actual output
+mv out o2 && sed -e "s,on /.*/$dev,on DEVICE,;s,   *,,;s, $,," \
+                      -e "s,^.*/lt-parted: ,parted: ," o2 > out
 
 # Create expected output file.
-fail=0
 { emit_superuser_warning > exp; } || fail=1
 cat <<EOF >> exp || fail=1
 Warning: The existing disk label on DEVICE will be destroyed and all\
  data on this disk will be lost. Do you want to continue?
 Yes/No? y
 EOF
-test_expect_success \
-    'create expected output file' \
-    'test $fail = 0'
 
-test_expect_success \
-    'check its output -- slightly different here, due to prompts' \
-    'compare out exp'
+# check its output -- slightly different here, due to prompts
+compare out exp || fail=1
 
-test_done
+Exit $fail
