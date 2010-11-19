@@ -1126,6 +1126,18 @@ sector (n bytes depending on the sector size, often 512)
 @item B
 byte
 
+@item KiB
+kibibyte (1024 bytes)
+
+@item MiB
+mebibyte (1048576 bytes)
+
+@item GiB
+gibibyte (1073741824 bytes)
+
+@item TiB
+tebibyte (1099511627776 bytes)
+
 @item kB
 kilobyte (1000 bytes)
 
