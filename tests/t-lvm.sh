@@ -53,13 +53,12 @@ loop_setup_()
 # set up private /dev and /etc
 lvm_init_root_dir_()
 {
-  test -n "$t_" \
-    || skip_ "Internal error: called lvm_init_root_dir_ before" \
-      "defining \$t_"
-  test_dir_rand_=$t_
+  test -z "$test_dir_" \
+    && skip_ "Internal error: called lvm_init_root_dir_ before" \
+      "defining \$test_dir_"
 
   # Define these two globals.
-  G_root_=$test_dir_rand_/root
+  G_root_=$test_dir_/root
   G_dev_=$G_root_/dev
 
   export LVM_SYSTEM_DIR=$G_root_/etc
