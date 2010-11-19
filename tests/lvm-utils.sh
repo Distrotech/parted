@@ -1,5 +1,5 @@
 # Put lvm-related utilities here.
-# This file is sourced from test-lib.sh.
+# This file is sourced from test infrastructure.
 
 # Copyright (C) 2007-2010 Red Hat, Inc. All rights reserved.
 #
@@ -156,17 +156,12 @@ dmsetup_has_dm_devdir_support_()
 # set up private /dev and /etc
 init_root_dir_()
 {
-  # If $test_dir_rand_ is not defined (from test-lib.sh), but
-  # the latter is ($test_dir_ is from init.sh), use the latter.
-  test -z "$test_dir_rand_" && test -n "$test_dir_" \
-    && test_dir_rand_=$test_dir_
-
-  test -n "$test_dir_rand_" \
+  test -n "$test_dir_" \
     || fail_ "Internal error: called init_root_dir_ before" \
-      "defining \$test_dir_rand_"
+      "defining \$test_dir_"
 
   # Define these two globals.
-  G_root_=$test_dir_rand_/root
+  G_root_=$test_dir_/root
   G_dev_=$G_root_/dev
 
   export LVM_SYSTEM_DIR=$G_root_/etc

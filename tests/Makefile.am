@@ -48,7 +48,7 @@ TESTS = \
   t9040-many-partitions.sh
 
 EXTRA_DIST = \
-  $(TESTS) test-lib.sh t-lib.sh lvm-utils.sh t-local.sh t-lvm.sh \
+  $(TESTS) t-lib.sh lvm-utils.sh t-local.sh t-lvm.sh \
   init.cfg init.sh t-lib-helpers.sh
 
 check_PROGRAMS = print-align print-max dup-clobber
@@ -62,17 +62,6 @@ AM_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
 parted_dir = $(abs_top_builddir)/parted
 pp_dir = $(abs_top_builddir)/partprobe
 sep = $(PATH_SEPARATOR)
-
-CLEANFILES = old-init.sh
-all: old-init.sh
-old-init.sh: Makefile.in
-	rm -f $@-t $@
-	echo 'PARTED_USABLE_TEST_DIR="$(PARTED_USABLE_TEST_DIR)"' > $@-t
-	echo 'abs_top_srcdir="$(abs_top_srcdir)"' >> $@-t
-	echo 'PATH="$(parted_dir)$(sep)$(pp_dir)$(sep)$$PATH"' >> $@-t
-	echo 'export PATH' >> $@-t
-	chmod a-w $@-t
-	mv $@-t $@
 
 # Note that the first lines are statements.  They ensure that environment
 # variables that can perturb tests are unset or set to expected values.
