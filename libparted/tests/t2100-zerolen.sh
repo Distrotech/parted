@@ -1,4 +1,5 @@
 #!/bin/sh
+# run the zerolen unit tests in a directory supporting O_DIRECT
 
 # Copyright (C) 2007-2010 Free Software Foundation, Inc.
 
@@ -15,14 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test_description='run the zerolen unit tests in a directory supporting O_DIRECT'
-
+. "${abs_top_srcdir=../..}/tests/init.sh"; path_prepend_ .
+. $abs_top_srcdir/tests/t-lib-helpers.sh
 # Need root privileges to create a device-mapper device.
-privileges_required_=1
-device_mapper_required_=1
-
-: ${top_srcdir=../..}
-. "$top_srcdir/tests/test-lib.sh"
+require_root_
+device_mapper_required_
 
 init_root_dir_
 
@@ -69,7 +67,6 @@ echo "0 1024 linear $d1 0" | dmsetup create "$linear_" \
 wait_for_dev_to_appear_ "/dev/mapper/$linear_" \
   || skip_ "dm device did not appear"
 
-test_expect_success \
-    'run the actual tests' "zerolen /dev/mapper/$linear_"
+zerolen /dev/mapper/$linear_ || fail=1
 
-test_done
+Exit $fail

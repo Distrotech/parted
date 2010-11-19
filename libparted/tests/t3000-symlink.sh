@@ -1,4 +1,5 @@
 #!/bin/sh
+# run the /dev/mapper symlink test
 
 # Copyright (C) 2007-2010 Free Software Foundation, Inc.
 
@@ -15,15 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test_description='run the /dev/mapper symlink test'
+. "${abs_top_srcdir=../..}/tests/init.sh"; path_prepend_ .
 
+. $abs_top_srcdir/tests/t-lib-helpers.sh
 # Need root privileges to create a symlink under /dev/mapper.
-privileges_required_=1
+require_root_
 
-: ${top_srcdir=../..}
-. "$top_srcdir/tests/test-lib.sh"
+symlink || fail=1
 
-test_expect_success \
-    'run the actual tests' 'symlink'
-
-test_done
+Exit $fail
