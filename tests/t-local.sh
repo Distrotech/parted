@@ -12,7 +12,11 @@ require_scsi_debug_module_()
 }
 
 scsi_debug_modprobe_succeeded_=
-cleanup_eval_="$cleanup_eval_; scsi_debug_cleanup_"
+
+# Replace the default clean-up function (from init.sh)
+# so that it also runs this scsi cleanup one.
+trap 'scsi_debug_cleanup_; remove_tmp_' 0
+
 scsi_debug_cleanup_()
 {
   rm -f $scsi_debug_lock_file_
@@ -45,7 +49,8 @@ scsi_debug_acquire_lock_()
 {
   local retries=20
   local lock_timeout_seconds=120
-  lockfile -1 -r $retries -l $lock_timeout_seconds $scsi_debug_lock_file_
+  lockfile -1 -r $retries -l $lock_timeout_seconds $scsi_debug_lock_file_ \
+    || warn_ "$ME_: failed to acquire lock: $scsi_debug_lock_file_"
 }
 
 print_sd_names_() { (cd /sys/block && printf '%s\n' sd*); }

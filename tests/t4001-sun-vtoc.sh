@@ -18,13 +18,7 @@
 
 # Written by Karel Zak <kzak@redhat.com>
 
-if test "$VERBOSE" = yes; then
-  set -x
-  parted --version
-fi
-
-: ${srcdir=.}
-. $srcdir/t-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../parted
 
 N=2M
 dev=loop-file
