@@ -31,8 +31,6 @@ dev=loop-file
 # create a file to simulate the underlying device
 dd if=/dev/null of=$dev bs=1 seek=$N || framework_failure
 
-fail=0
-
 # label the test disk
 parted -s $dev mklabel sun > out 2>&1 || fail=1
 # expect no output

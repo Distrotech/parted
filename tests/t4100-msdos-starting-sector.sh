@@ -36,7 +36,6 @@ parted -s $dev mklabel msdos > out 2>&1 || fail=1
 compare out /dev/null || fail=1
 
 # Test the output of print free with no partitions.
-fail=0
 cat <<EOF > exp || fail=1
 BYT;
 path:${N}s:file:$ss:$ss:msdos:;

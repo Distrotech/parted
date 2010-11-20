@@ -27,8 +27,6 @@ dev=loop-file
 nb=512
 n_sectors=$(expr $nb '*' 512 / $sector_size_)
 
-fail=0
-
 # create zeroed device
 dd if=/dev/zero bs=512 count=$nb of=$dev || fail=1
 

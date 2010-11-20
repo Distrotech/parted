@@ -29,7 +29,6 @@ dev=loop-file
 ss=$sector_size_
 n_sectors=5000
 
-fail=0
 dd if=/dev/null of=$dev bs=$ss seek=$n_sectors || fail=1
 
 # create gpt label

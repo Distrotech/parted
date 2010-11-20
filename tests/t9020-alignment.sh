@@ -41,8 +41,6 @@ scsi_debug_setup_ physblk_exp=3 lowest_aligned=7 num_parts=4 > dev-name ||
   skip_ 'failed to create scsi_debug device'
 scsi_dev=$(cat dev-name)
 
-fail=0
-
 # print alignment info
 "$abs_srcdir/print-align" $scsi_dev > out 2>&1 || fail=1
 

@@ -27,7 +27,6 @@ fi
 dev=loop-file
 bootcode_size=446
 
-fail=0
 dd if=/dev/null of=$dev bs=1 seek=1M || framework_failure
 
 # create a GPT partition table

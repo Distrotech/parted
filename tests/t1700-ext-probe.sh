@@ -29,8 +29,6 @@ dev=loop-file
 ss=$sector_size_
 n_sectors=8000
 
-fail=0
-
 for type in ext2 ext3 ext4; do
 
   ( mkfs.$type -V ) >/dev/null 2>&1 || skip_ "no $type support"

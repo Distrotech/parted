@@ -27,7 +27,6 @@ fi
 PATH="..:$PATH"
 export PATH
 
-fail=0
 dup-clobber || fail=1
 
 Exit $fail

@@ -28,7 +28,6 @@ fi
 
 N=1M
 dev=loop-file
-fail=0
 dd if=/dev/null of=$dev bs=1 seek=$N || fail=1
 
 mkswap $dev || fail=1

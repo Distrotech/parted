@@ -25,7 +25,6 @@ fi
 . $srcdir/t-lib.sh
 ss=$sector_size_
 
-fail=0
 dev=dev-file
 PATH="..:$PATH"
 export PATH

@@ -26,8 +26,6 @@ fi
 : ${srcdir=.}
 . $srcdir/t-lib.sh
 
-fail=0
-
 ss=$sector_size_
 n_sectors=400
 dev=dev-file

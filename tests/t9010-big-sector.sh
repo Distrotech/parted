@@ -37,8 +37,6 @@ scsi_debug_setup_ dev_size_mb=8 sector_size=4096 > dev-name ||
   skip_ 'failed to create scsi_debug device'
 scsi_dev=$(cat dev-name)
 
-fail=0
-
 # create partition table and print
 parted -s $scsi_dev mklabel gpt print > out 2>&1 || fail=1
 grep '^Sector' out > k 2>&1 || fail=1

@@ -28,7 +28,6 @@ ss=$sector_size_
 n_sectors=5000
 dev=loop-file
 
-fail=0
 dd if=/dev/null of=$dev bs=$ss seek=$n_sectors || fail=1
 
 parted -s $dev mklabel msdos > out 2>&1 || fail=1

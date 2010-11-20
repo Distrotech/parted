@@ -43,8 +43,6 @@ EOF
 # dash's builtin printf doesn't recognize such \xHH hexadecimal escapes.
 msdos_magic='\125\252'
 
-fail=0
-
 # The extra 3KB+ zero bytes at the end are to avoid triggering a failure
 # on linux-2.6.8 that's probably related to opening with O_DIRECT.
 # Note that the minimum number of appended zero bytes required to avoid

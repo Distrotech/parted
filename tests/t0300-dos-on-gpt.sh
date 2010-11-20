@@ -27,8 +27,6 @@ fi
 PARTED_SECTOR_SIZE=4096
 export PARTED_SECTOR_SIZE
 
-fail=0
-
 dev=loop-file
 # create a backing file large enough for a GPT partition table
 dd if=/dev/null of=$dev seek=4001 2> /dev/null || framework_failure

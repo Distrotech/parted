@@ -49,8 +49,6 @@ Error: Error informing the kernel about modifications to partition $p5 -- Device
 Error: Failed to add partition 5 (Device or resource busy)
 EOF
 
-fail=0
-
 # Create a DOS label with an extended partition starting at sector 64.
 parted -s $scsi_dev mklabel msdos || fail=1
 parted --align=min -s $scsi_dev mkpart extended 64s 128s> out 2>&1 || fail=1

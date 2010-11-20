@@ -40,7 +40,6 @@ scsi_dev=$(cat dev-name)
 # partition and ensure that parted doesn't "helpfully" change the partition
 # type to match the newly-detected FS type.
 
-fail=0
 parted -s $scsi_dev mklabel msdos mkpart primary fat32 64s 80000s || fail=1
 
 parted -s $scsi_dev u s p

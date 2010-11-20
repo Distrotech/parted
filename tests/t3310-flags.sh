@@ -25,8 +25,6 @@ fi
 : ${abs_top_srcdir=$(cd .. && pwd)}
 . $srcdir/t-lib.sh
 ss=$sector_size_
-
-fail=0
 dev=dev-file
 
 # Extract all msdos flag names from the texinfo documentation.

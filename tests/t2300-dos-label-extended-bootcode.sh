@@ -29,8 +29,6 @@ require_512_byte_sector_size_
 dev=loop-file
 bootcode_size=446
 
-fail=0
-
 # Create the test file
 dd if=/dev/zero of=$dev bs=1M count=4 || fail=1
 

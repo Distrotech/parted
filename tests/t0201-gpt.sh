@@ -25,8 +25,6 @@ fi
 : ${srcdir=.}
 . $srcdir/t-lib.sh
 
-fail=0
-
 dev=loop-file
 # create a backing file large enough for a GPT partition table
 dd if=/dev/null of=$dev seek=4001 2> /dev/null || fail=1

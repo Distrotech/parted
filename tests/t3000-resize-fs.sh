@@ -49,8 +49,6 @@ scsi_debug_setup_ dev_size_mb=550 > dev-name ||
   skip_ 'failed to create scsi_debug device'
 dev=$(cat dev-name)
 
-fail=0
-
 parted -s $dev mklabel gpt > out 2>&1 || fail=1
 # expect no output
 compare out /dev/null || fail=1

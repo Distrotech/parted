@@ -28,8 +28,6 @@ dev=loop-file
 ss=$sector_size_
 n_sectors=8000
 
-fail=0
-
 dd if=/dev/null of=$dev bs=$ss seek=$n_sectors || framework_failure
 
 # create a GPT partition table

@@ -36,8 +36,6 @@ scsi_debug_setup_ dev_size_mb=550 physblk_exp=3 lowest_aligned=7 > dev-name ||
 scsi_dev=$(cat dev-name)
 p1=${scsi_dev}1
 
-fail=0
-
 parted -s $scsi_dev mklabel gpt || fail=1
 
 i=60

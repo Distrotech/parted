@@ -29,8 +29,6 @@ dev=loop-file
 # create a file large enough to hold a GPT partition table
 dd if=/dev/null of=$dev bs=1 seek=$N || framework_failure
 
-fail=0
-
 # create a GPT partition table
 parted -s $dev mklabel gpt > out 2>&1 || fail=1
 # expect no output

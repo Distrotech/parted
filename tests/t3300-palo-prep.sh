@@ -31,7 +31,6 @@ cat > exp <<EOF || framework_failure
 1:2048s:4095s:2048s:::palo;
 EOF
 
-fail=0
 dev=dev-file
 
 n_sectors=5000

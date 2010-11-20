@@ -49,8 +49,6 @@ cleanup_() {
 f1=$(pwd)/1; d1=$(loop_setup_ "$f1") \
   || skip_ "is this partition mounted with 'nodev'?"
 
-fail=0
-
 # setup: create loop devices
 f2=$(pwd)/2 && d2=$(loop_setup_ "$f2") || fail=1
 f3=$(pwd)/3 && d3=$(loop_setup_ "$f3") || fail=1

@@ -32,8 +32,6 @@ cat <<EOF > exp-error || framework_failure
 Error: Partition ${dev}2 is being used. You must unmount it before you modify it with Parted.
 EOF
 
-fail=0
-
 parted -s "$dev" mklabel msdos > out 2>&1 || fail=1
 
 # expect no output

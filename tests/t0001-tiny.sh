@@ -27,8 +27,6 @@ fi
 ss=$sector_size_
 dev=loop-file
 
-fail=0
-
 for opt in '' -s; do
 
   dd if=/dev/null of=$dev bs=1 seek=$ss || framework_failure

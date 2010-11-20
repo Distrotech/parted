@@ -45,8 +45,6 @@ scsi_debug_setup_ sector_size=$ss dev_size_mb=$n_MiB > dev-name ||
   skip_ 'failed to create scsi_debug device'
 scsi_dev=$(cat dev-name)
 
-fail=0
-
 n=$((n_MiB * sectors_per_MiB))
 printf "BYT;\n$scsi_dev:${n}s:scsi:$ss:$ss:gpt:Linux scsi_debug;\n" \
   > exp || fail=1
