@@ -13,19 +13,24 @@ require_scsi_debug_module_()
 
 scsi_debug_modprobe_succeeded_=
 
-# Replace the default clean-up function (from init.sh)
-# so that it also runs this scsi cleanup one.
-trap 'scsi_debug_cleanup_; remove_tmp_' 0
+# Always run this cleanup function.
+cleanup_final_() { scsi_debug_cleanup_; }
 
 scsi_debug_cleanup_()
 {
+  # This function must always release the lock.
+  # If modprobe succeeded, it must be sure to run rmmod.
+  if test -n "$scsi_debug_modprobe_succeeded_"; then
+    # We have to insist.  Otherwise, a single rmmod usually fails to remove it,
+    # due either to "Resource temporarily unavailable" or to
+    # "Module scsi_debug is in use".
+    for i in 1 2 3; do
+      rmmod scsi_debug \
+	&& { test $VERBOSE = yes && warn_ $ME_ rrmod scsi_debug...; break; }
+      sleep .2 || sleep 1
+    done
+  fi
   rm -f $scsi_debug_lock_file_
-  test -z "$scsi_debug_modprobe_succeeded_" && return
-
-  # We have to insist.  Otherwise, a single rmmod usually fails to remove it,
-  # due either to "Resource temporarily unavailable" or to
-  # "Module scsi_debug is in use".
-  for i in 1 2 3; do rmmod scsi_debug && break; sleep .2 || sleep 1; done
 }
 
 # Helper function: wait 2s (via .1s increments) for FILE to appear.
@@ -66,6 +71,8 @@ scsi_debug_setup_()
   print_sd_names_ > before
   modprobe scsi_debug "$@" || { rm -f before; return 1; }
   scsi_debug_modprobe_succeeded_=1
+  test $VERBOSE = yes \
+    && warn_ $ME_ modprobe scsi_debug succeeded
 
   # Wait up to 2s (via .1s increments) for the list of devices to change.
   # Sleeping for a fraction of a second requires GNU sleep, so fall

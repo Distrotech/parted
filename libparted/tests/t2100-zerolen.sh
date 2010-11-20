@@ -38,7 +38,7 @@ test "x$ENABLE_DEVICE_MAPPER" = xyes \
 # the system
 linear_=plinear-$$
 
-cleanup_()
+cleanup_fn_()
 {
   # 'dmsetup remove' may fail because udev is still processing the device.
   # Try it repeatedly for 2s.

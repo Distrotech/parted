@@ -47,7 +47,7 @@ wait_for_dev_to_appear_ ${dev}2
 compare out /dev/null || fail=1
 
 # be sure to unmount upon interrupt, failure, etc.
-cleanup_() { umount "${dev}2" > /dev/null 2>&1; }
+cleanup_fn_() { umount "${dev}2" > /dev/null 2>&1; }
 
 mount_point=$(pwd)/mnt
 

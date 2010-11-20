@@ -22,7 +22,7 @@ require_root_
 lvm_init_root_dir_
 
 d1= f1=
-cleanup_()
+cleanup_fn_()
 {
   test -n "$d1" && losetup -d "$d1"
   rm -f "$f1"

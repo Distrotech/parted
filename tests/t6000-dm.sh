@@ -31,7 +31,7 @@ mpath_=mpath-$$
 
 d1= d2= d3=
 f1= f2= f3=
-cleanup_() {
+cleanup_fn_() {
     dmsetup remove $linear_
     dmsetup remove $mpath_
     test -n "$d1" && losetup -d "$d1"

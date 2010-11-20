@@ -42,7 +42,7 @@ mkfs.xfs -f -q $fs || fail=1
 mkdir "$mp" || fail=1
 
 # Unmount upon interrupt, failure, etc., as well as upon normal completion.
-cleanup_() { cd "$test_dir_" && umount "$mp" > /dev/null 2>&1; }
+cleanup_fn_() { cd "$test_dir_" && umount "$mp" > /dev/null 2>&1; }
 
 # mount it
 mount -o loop $fs "$mp" || fail=1

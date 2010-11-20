@@ -32,7 +32,7 @@ compare out /dev/null || fail=1
 mount_point="`pwd`/mnt"
 
 # Be sure to unmount upon interrupt, failure, etc.
-cleanup_() { umount "${dev}1" > /dev/null 2>&1; }
+cleanup_fn_() { umount "${dev}1" > /dev/null 2>&1; }
 
 # There's a race condition here: on udev-based systems, the partition#1
 # device, ${dev}1 (i.e., /dev/sdd1) is not created immediately, and
