@@ -1,5 +1,8 @@
 *.gmo
 *.po
+/Makefile.in.in
+/Makevars.template
+/Rules-quot
 LINGUAS
 Makefile.in
 Makefile.in.in
