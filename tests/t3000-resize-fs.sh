@@ -23,15 +23,6 @@ require_root_
 require_scsi_debug_module_
 require_512_byte_sector_size_
 
-cat <<EOF > exp-warning || framework_failure
-WARNING: you are attempting to use parted to operate on (resize) a file system.
-parted's file system manipulation code is not as robust as what you'll find in
-dedicated, file-system-specific packages like e2fsprogs.  We recommend
-you use parted only to manipulate partition tables, whenever possible.
-Support for performing most operations on most types of file systems
-will be removed in an upcoming release.
-EOF
-
 ss=$sector_size_
 
 start=63s
@@ -89,7 +80,7 @@ for fs_type in hfs+ fat32; do
   parted -s $dev resize 1 $start $new_end > out 2> err || fail=1
   # expect no output
   compare out /dev/null || fail=1
-  compare err exp-warning || fail=1
+  compare err /dev/null || fail=1
 
   # print partition table
   parted -m -s $dev u s p > out 2>&1 || fail=1
