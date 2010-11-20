@@ -1,5 +1,5 @@
 # Put test-related bits that are parted-specific here.
-# This file is sourced from near the end of t-lib.sh.
+# This file is sourced from the testing framework.
 sector_size_=${PARTED_SECTOR_SIZE:-512}
 
 scsi_debug_lock_file_="$abs_srcdir/scsi_debug.lock"

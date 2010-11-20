@@ -48,7 +48,7 @@ TESTS = \
   t9040-many-partitions.sh
 
 EXTRA_DIST = \
-  $(TESTS) t-lib.sh lvm-utils.sh t-local.sh t-lvm.sh \
+  $(TESTS) lvm-utils.sh t-local.sh t-lvm.sh \
   init.cfg init.sh t-lib-helpers.sh
 
 check_PROGRAMS = print-align print-max dup-clobber

@@ -1,4 +1,4 @@
-# Functions sourced by t-lib.sh and init.cfg
+# Functions sourced via testing framework.
 
 getlimits_()
 {
