@@ -312,12 +312,7 @@ emit_superuser_warning()
 
 require_mdadm_()
 {
-  ( mdadm --version ) > /dev/null 2>&1 ||
-    {
-      say "skipping $0: could not find mdadm executable"
-      test_done
-      exit
-    }
+  mdadm --version || skip_ "find mdadm executable"
 }
 
 # Will look for an md number that is not in use and create a md device with
@@ -358,12 +353,7 @@ normalize_part_diag_()
 
 require_xfs_()
 {
-  ( mkfs.xfs -V ) >/dev/null 2>&1 ||
-    {
-      say "skipping $0: this test requires XFS support"
-      test_done
-      exit
-    }
+  mkfs.xfs -V || skip_ "this test requires XFS support"
 }
 
 require_dvhtool_()
