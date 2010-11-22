@@ -72,11 +72,12 @@ for type in linear ; do
   compare out /dev/null || fail=1
 
   parted -s "$dev" print > out 2>&1 || fail=1
+  sed 's/^Disk .*: /Disk DEV: /' out > k; mv k out
 
   # Create expected output file.
   cat <<EOF >> exp || fail=1
 Model: Linux device-mapper ($type) (dm)
-Disk $dev: 524kB
+Disk DEV: 524kB
 Sector size (logical/physical): 512B/512B
 Partition Table: msdos
 
