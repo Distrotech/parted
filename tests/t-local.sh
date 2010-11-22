@@ -2,7 +2,7 @@
 # This file is sourced from the testing framework.
 sector_size_=${PARTED_SECTOR_SIZE:-512}
 
-scsi_debug_lock_file_="$abs_srcdir/scsi_debug.lock"
+scsi_debug_lock_dir_="$abs_srcdir/scsi_debug.lock"
 
 require_scsi_debug_module_()
 {
@@ -26,11 +26,11 @@ scsi_debug_cleanup_()
     # "Module scsi_debug is in use".
     for i in 1 2 3; do
       rmmod scsi_debug \
-	&& { test $VERBOSE = yes && warn_ $ME_ rrmod scsi_debug...; break; }
+	&& { test $VERBOSE = yes && warn_ $ME_ rmmod scsi_debug...; break; }
       sleep .2 || sleep 1
     done
   fi
-  rm -f $scsi_debug_lock_file_
+  rm -fr $scsi_debug_lock_dir_
 }
 
 # Helper function: wait 2s (via .1s increments) for FILE to appear.
@@ -53,9 +53,21 @@ wait_for_dev_to_appear_()
 scsi_debug_acquire_lock_()
 {
   local retries=20
-  local lock_timeout_seconds=120
-  lockfile -1 -r $retries -l $lock_timeout_seconds $scsi_debug_lock_file_ \
-    || warn_ "$ME_: failed to acquire lock: $scsi_debug_lock_file_"
+  local lock_timeout_stale_seconds=120
+
+  # If it was created more than $lock_timeout_stale_seconds ago, remove it.
+  # FIXME: implement this
+
+  local i=0
+  local incr=1
+  while :; do
+    mkdir "$scsi_debug_lock_dir_" && return 0
+    sleep .1 2>/dev/null || { sleep 1; incr=10; }
+    i=$(expr $i + $incr); test $i = $(expr $retries \* 10) && break
+  done
+
+  warn_ "$ME_: failed to acquire lock: $scsi_debug_lock_dir_"
+  return 1
 }
 
 print_sd_names_() { (cd /sys/block && printf '%s\n' sd*); }
