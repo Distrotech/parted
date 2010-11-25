@@ -906,7 +906,7 @@ dasd_alloc_metadata (PedDisk* disk)
 	PedSector vtoc_end;
 	LinuxSpecific* arch_specific;
 	DasdDiskSpecific* disk_specific;
-	PedPartition* part;
+	PedPartition* part = NULL; /* initialize solely to placate gcc */
 	PedPartition* new_part2;
 	PedSector trailing_meta_start, trailing_meta_end;
 	struct fdasd_anchor anchor;

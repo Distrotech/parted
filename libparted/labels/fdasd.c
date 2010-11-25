@@ -707,6 +707,7 @@ fdasd_valid_vtoc_pointer(fdasd_anchor_t *anc, unsigned long b, int fd)
 		return 0;
 
 	fdasd_error(anc, wrong_disk_format, _("Invalid VTOC."));
+	return 1;
 }
 
 /*

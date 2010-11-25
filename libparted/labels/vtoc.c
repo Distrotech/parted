@@ -290,7 +290,6 @@ vtoc_read_volume_label (int f, unsigned long vlabel_start,
 	bogus_label_t *bogus_ptr = &mybogus;
 	vollabel_t *union_ptr = &bogus_ptr->actual_label;
 	volume_label_t *cdl_ptr = &union_ptr->cdl;
-	cms_volume_label_t *cms_ptr = &union_ptr->cms;
 
 	PDEBUG
 	int rc;
