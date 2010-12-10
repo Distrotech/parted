@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1999 - 2001, 2005, 2007-2009 Free Software Foundation, Inc.
+    Copyright (C) 1999 - 2001, 2005, 2007-2010 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -554,7 +554,8 @@ ped_device_get_optimum_alignment(const PedDevice *dev)
                 default:
                         /* Align to a grain of 1MiB (like vista / win7) */
                         align = ped_alignment_new(0,
-                                                  1048576 / dev->sector_size);
+                                                  (PED_DEFAULT_ALIGNMENT
+						   / dev->sector_size));
                 }
         }
 

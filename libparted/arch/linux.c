@@ -2865,13 +2865,29 @@ linux_get_optimum_alignment(const PedDevice *dev)
         if (!tp)
                 return NULL;
 
-        /* If optimal_io_size is 0 _and_ alignment_offset is 0 _and_
-           minimum_io_size is a power of 2 then go with the device.c default */
-        unsigned long minimum_io_size = blkid_topology_get_minimum_io_size(tp);
-        if (blkid_topology_get_optimal_io_size(tp) == 0 &&
-            blkid_topology_get_alignment_offset(tp) == 0 &&
-            (minimum_io_size & (minimum_io_size - 1)) == 0)
-                return NULL;
+        /* When PED_DEFAULT_ALIGNMENT is divisible by the *_io_size or
+	   there are no *_io_size values, use the PED_DEFAULT_ALIGNMENT
+           If one or the other will not divide evenly, fall through to
+           previous logic. */
+        unsigned long optimal_io = blkid_topology_get_optimal_io_size(tp);
+        unsigned long minimum_io = blkid_topology_get_minimum_io_size(tp);
+        if (
+            (!optimal_io && !minimum_io)
+	    || (optimal_io && PED_DEFAULT_ALIGNMENT % optimal_io == 0
+		&& minimum_io && PED_DEFAULT_ALIGNMENT % minimum_io == 0)
+	    || (!minimum_io && optimal_io
+		&& PED_DEFAULT_ALIGNMENT % optimal_io == 0)
+	    || (!optimal_io && minimum_io
+		&& PED_DEFAULT_ALIGNMENT % minimum_io == 0)
+           ) {
+            /* DASD needs to use minimum alignment */
+            if (dev->type == PED_DEVICE_DASD)
+                return linux_get_minimum_alignment(dev);
+
+            return ped_alignment_new(
+                    blkid_topology_get_alignment_offset(tp) / dev->sector_size,
+                    PED_DEFAULT_ALIGNMENT / dev->sector_size);
+        }
 
         /* If optimal_io_size is 0 and we don't meet the other criteria
            for using the device.c default, return the minimum alignment. */

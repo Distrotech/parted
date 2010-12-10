@@ -20,6 +20,8 @@
 #ifndef PARTED_H_INCLUDED
 #define PARTED_H_INCLUDED
 
+#define PED_DEFAULT_ALIGNMENT (1024 * 1024)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
