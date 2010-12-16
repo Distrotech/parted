@@ -62,7 +62,7 @@ Your first commit: the quick and dirty way
 ==========================================
 First of all, realize that to "commit" a change in git is a purely
 local operation.  It affects only the local repository (the .git/ dir)
-in your current grep/ hierarchy.
+in your current parted/ hierarchy.
 
 To try this out, modify a file or two.  If you create a new file, you'll
 need to tell git about it with "git add new-file.c".  Commit all changes
@@ -92,11 +92,11 @@ process, read on about "topic" branches.
 
 Make your changes on a private "topic" branch
 =============================================
-So you checked out grep like this:
+So you checked out parted like this:
 
-  git clone git://git.sv.gnu.org/grep
+  git clone git://git.debian.org/git/parted/parted.git
 
-Now, cd into the grep/ directory and run:
+Now, cd into the parted/ directory and run:
 
   git checkout -b my-topic
 
@@ -131,7 +131,7 @@ Now, modify some file and commit it:
 Personally, no matter what package I'm working on, I find it useful to
 put the ChangeLog entries *only* in the commit log, initially, unless
 I plan to commit/push right away.  Otherwise, I tend to get unnecessary
-merge conflicts with each rebase (see below).  In grep, I've gone
+merge conflicts with each rebase (see below).  In parted, I've gone
 a step further, and no longer maintain an explicit ChangeLog file in
 version control.  Instead, in a git working directory, you can view
 ChangeLog information via "git log".  However, each distribution tarball
@@ -196,11 +196,11 @@ That replaces the most recent change-set with the revised one.
 
 
 
-grep-specific:
+Parted-specific:
 
 No more ChangeLog files
 =======================
-Do not modify any of the ChangeLog files in grep.  Starting in
+Do not modify any of the ChangeLog files in parted.  Starting in
 2008, the policy changed.  Before, we would insert the exact same text
 (or worse, sometimes slightly differing) into both the ChangeLog file
 and the commit log.  Now we put that information only in the commit log,
@@ -337,14 +337,14 @@ If you'd rather not negate the condition, then add braces:
 Use SPACE-only indentation in all[*] files
 ==========================================
 We use space-only indentation in nearly all files.
-If you use Emacs and your grep working directory name matches,
+If you use Emacs and your parted working directory name matches,
 this code enables the right mode:
 
-  ;; In grep, indent with spaces everywhere (not TABs).
+  ;; In parted, indent with spaces everywhere (not TABs).
   ;; Exceptions: Makefile and ChangeLog modes.
   (add-hook 'find-file-hook '(lambda ()
     (if (and buffer-file-name
-             (string-match "/grep\\>" (buffer-file-name))
+             (string-match "/parted\\>" (buffer-file-name))
              (not (string-equal mode-name "Change Log"))
              (not (string-equal mode-name "Makefile")))
         (setq indent-tabs-mode nil))))
@@ -475,7 +475,7 @@ Try not to add any more.
 
 Avoid trailing white space
 ==========================
-You may notice that the only trailing blanks in grep's
+You may notice that the only trailing blanks in parted's
 version-controlled files are in a single directory: tests/pr,
 which contains expected output from various invocations of pr.
 
@@ -572,10 +572,10 @@ to generate HTML coverage reports.  Follow these steps:
   # run whatever tests you want, i.e.:
   make check
   # run lcov
-  lcov -t grep -q -d lib -b lib -o lib.lcov -c
-  lcov -t grep -q -d src -b src -o src.lcov -c
+  lcov -t parted -q -d libparted -b lib -o lib.lcov -c
+  lcov -t parted -q -d parted    -b src -o src.lcov -c
   # generate HTML from the output
-  genhtml -p `pwd` -t grep -q --output-directory lcov-html *.lcov
+  genhtml -p `pwd` -t parted -q --output-directory lcov-html *.lcov
 
 Then just open the index.html file (in the generated lcov-html directory)
 in your favorite web browser.
