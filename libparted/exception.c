@@ -135,9 +135,9 @@ default_handler (PedException* e)
 			"for more information of what could be useful "
 			"for bug submitting!  "
 			"Please email a bug report to "
-			"bug-parted@gnu.org containing at least the "
+			"%s containing at least the "
 			"version (%s) and the following message:  "),
-			VERSION);
+			 PACKAGE_BUGREPORT, VERSION);
 	else
 		fprintf (stderr, "%s: ",
 			 ped_exception_get_type_string (e->type));

@@ -679,7 +679,7 @@ _parse_header (PedDisk *disk, const GuidPartitionTableHeader_t *gpt,
            PED_EXCEPTION_IGNORE_CANCEL,
            _("The format of the GPT partition table is version "
              "%x, which is newer than what Parted can "
-             "recognise.  Please tell us!  bug-parted@gnu.org"),
+             "recognise.  Please report this!"),
            PED_LE32_TO_CPU (gpt->Revision)) != PED_EXCEPTION_IGNORE)
         return 0;
     }
