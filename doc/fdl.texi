@@ -6,7 +6,7 @@
 @center Version 1.1, March 2000
 
 @display
-Copyright @copyright{} 2000, 2009-2010 Free Software Foundation, Inc.
+Copyright @copyright{} 2000, 2009-2011 Free Software Foundation, Inc.
 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
 
 Everyone is permitted to copy and distribute verbatim copies
