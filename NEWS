@@ -50,6 +50,15 @@ GNU parted NEWS                                    -*- outline -*-
   "parted $dev print" now prints information about the device (model, size,
   transport, sector size) even when it fails to recognize the disk label.
 
+  specifying partition start or end values using MiB, GiB, etc. suffixes
+  now makes parted do what I want, i.e., use that precise value, and not
+  some other that is up to 500KiB or 500MiB away from what I specified.
+  Before, to get that behavior, you would have had to use carefully chosen
+  values with units of bytes ("B") or sectors ("s") to obtain the same
+  result, and with sectors, your usage would not be portable between devices
+  with varying sector sizes.  This change does not affect how parted handles
+  suffixes like KB, MB, GB, etc.
+
 
 * Noteworthy changes in release 2.3 (2010-05-28) [stable]
 

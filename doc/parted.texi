@@ -1175,14 +1175,26 @@ which case this unit apply instead of the default unit for this
 particular number, but CHS and cylinder units are not supported as
 a suffix.  If no suffix is given, then the default unit is assumed.
 Parted will compute sensible ranges for the locations you specify
-(e.g. a range of +/- 500 MB when you specify the location in ``G'')
+(e.g. a range of +/- 500 MB when you specify the location in ``G'',
+and a range of +/- 500 KB when you specify the location in ``M'')
 and will select the nearest location in this range from the one you
 wrote that satisfies constraints from both the operation, the
 filesystem being worked on, the disk label, other partitions and so
 on.  Use the sector unit ``s'' to specify exact locations (if they
 do not satisfy all constraints, Parted will ask you for the nearest
 solution).  Note that negative numbers count back from the end of
-the disk, with ``-1s'' pointing to the end of the disk.
+the disk, with ``-1s'' pointing to the last sector of the disk.
+
+Note that as of parted-2.4, when you specify start and/or end values
+using IEC binary units like ``MiB'', ``GiB'', ``TiB'', etc., parted
+treats those values as exact, and equivalent to the same number
+specified in bytes (i.e., with the ``B'' suffix), in that it provides
+@emph{no} ``helpful'' range of sloppiness.  Contrast that with
+a partition start request of ``4GB'', which may actually resolve to
+some sector up to 500MB before or after that point.
+Thus, when creating a partition, you should prefer to specify
+units of bytes (``B''), sectors (``s''), or IEC binary units like ``MiB'',
+but not ``MB'', ``GB'', etc.
 
 Example:
 
