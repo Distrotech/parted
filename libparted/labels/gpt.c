@@ -4,7 +4,7 @@
     original version by Matt Domsch <Matt_Domsch@dell.com>
     Disclaimed into the Public Domain
 
-    Portions Copyright (C) 2001-2003, 2005-2010 Free Software Foundation, Inc.
+    Portions Copyright (C) 2001-2003, 2005-2011 Free Software Foundation, Inc.
 
     EFI GUID Partition Table handling
     Per Intel EFI Specification v1.02
@@ -281,6 +281,7 @@ typedef struct _GPTPartitionData
   int msftres;
   int atvrecv;
   int msftrecv;
+  int legacy_boot;
 } GPTPartitionData;
 
 static PedDiskType gpt_disk_type;
@@ -786,10 +787,13 @@ _parse_part_entry (PedDisk *disk, GuidPartitionEntry_t *pte)
     = gpt_part_data->boot = gpt_part_data->hp_service
     = gpt_part_data->hidden = gpt_part_data->msftres
     = gpt_part_data->msftrecv
+    = gpt_part_data->legacy_boot
     = gpt_part_data->bios_grub = gpt_part_data->atvrecv = 0;
 
   if (pte->Attributes.RequiredToFunction & 0x1)
     gpt_part_data->hidden = 1;
+  if (pte->Attributes.LegacyBIOSBootable & 0x1)
+    gpt_part_data->legacy_boot = 1;
 
   if (!guid_cmp (gpt_part_data->type, PARTITION_SYSTEM_GUID))
     gpt_part_data->boot = 1;
@@ -1166,6 +1170,8 @@ _partition_generate_part_entry (PedPartition *part, GuidPartitionEntry_t *pte)
 
   if (gpt_part_data->hidden)
     pte->Attributes.RequiredToFunction = 1;
+  if (gpt_part_data->legacy_boot)
+    pte->Attributes.LegacyBIOSBootable = 1;
 
   for (i = 0; i < 72 / sizeof (efi_char16_t); i++)
     pte->PartitionName[i]
@@ -1308,6 +1314,7 @@ gpt_partition_new (const PedDisk *disk,
   gpt_part_data->msftres = 0;
   gpt_part_data->msftrecv = 0;
   gpt_part_data->atvrecv = 0;
+  gpt_part_data->legacy_boot = 0;
   uuid_generate ((unsigned char *) &gpt_part_data->uuid);
   swap_uuid_and_efi_guid ((unsigned char *) (&gpt_part_data->uuid));
   memset (gpt_part_data->name, 0, sizeof gpt_part_data->name);
@@ -1595,6 +1602,9 @@ gpt_partition_set_flag (PedPartition *part, PedPartitionFlag flag, int state)
     case PED_PARTITION_HIDDEN:
       gpt_part_data->hidden = state;
       return 1;
+    case PED_PARTITION_LEGACY_BOOT:
+      gpt_part_data->legacy_boot = state;
+      return 1;
     case PED_PARTITION_SWAP:
     case PED_PARTITION_ROOT:
     case PED_PARTITION_LBA:
@@ -1631,6 +1641,8 @@ gpt_partition_get_flag (const PedPartition *part, PedPartitionFlag flag)
       return gpt_part_data->atvrecv;
     case PED_PARTITION_HIDDEN:
       return gpt_part_data->hidden;
+    case PED_PARTITION_LEGACY_BOOT:
+      return gpt_part_data->legacy_boot;
     case PED_PARTITION_SWAP:
     case PED_PARTITION_LBA:
     case PED_PARTITION_ROOT:
@@ -1655,6 +1667,7 @@ gpt_partition_is_flag_available (const PedPartition *part,
     case PED_PARTITION_DIAG:
     case PED_PARTITION_APPLE_TV_RECOVERY:
     case PED_PARTITION_HIDDEN:
+    case PED_PARTITION_LEGACY_BOOT:
       return 1;
     case PED_PARTITION_SWAP:
     case PED_PARTITION_ROOT:

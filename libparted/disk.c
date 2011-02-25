@@ -2442,6 +2442,8 @@ ped_partition_flag_get_name (PedPartitionFlag flag)
                 return N_("atvrecv");
         case PED_PARTITION_DIAG:
                 return N_("diag");
+        case PED_PARTITION_LEGACY_BOOT:
+                return N_("legacy_boot");
 
 	default:
 		ped_exception_throw (

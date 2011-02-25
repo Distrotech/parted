@@ -1049,6 +1049,10 @@ depending on what disk label you are using:
 (GPT) - Enable this to record that the selected partition is a
 GRUB BIOS partition.
 
+@item legacy_boot
+(GPT) - this flag is used to tell special purpose software that the GPT
+partition may be bootable.
+
 @item boot
 (Mac, MS-DOS, PC98) - should be enabled if you want to boot off the
 partition.  The semantics vary between disk labels.  For MS-DOS disk
