@@ -166,12 +166,16 @@ struct __attribute__ ((packed)) _GuidPartitionEntryAttributes_t
 {
 #ifdef __GNUC__			/* XXX narrow this down to !TinyCC */
   uint64_t RequiredToFunction:1;
-  uint64_t Reserved:47;
+  uint64_t NoBlockIOProtocol:1;
+  uint64_t LegacyBIOSBootable:1;
+  uint64_t Reserved:45;
   uint64_t GuidSpecific:16;
 #else
 #       warning "Using crippled partition entry type"
   uint32_t RequiredToFunction:1;
-  uint32_t Reserved:32;
+  uint32_t NoBlockIOProtocol:1;
+  uint32_t LegacyBIOSBootable:1;
+  uint32_t Reserved:30;
   uint32_t LOST:5;
   uint32_t GuidSpecific:16;
 #endif
