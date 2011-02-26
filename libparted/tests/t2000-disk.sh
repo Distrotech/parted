@@ -1,4 +1,5 @@
 #!/bin/sh
+# run the disk unit tests in a directory supporting O_DIRECT
 
 # Copyright (C) 2007-2011 Free Software Foundation, Inc.
 
@@ -15,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test_description='run the disk unit tests in a directory supporting O_DIRECT'
 # This wrapper around the ./label binary is used to find a directory
 # in which one can open a file with the O_DIRECT flag.
 

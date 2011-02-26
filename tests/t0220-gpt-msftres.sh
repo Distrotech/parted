@@ -1,4 +1,6 @@
 #!/bin/sh
+# gpt default "flag" for a partition must not be msftres
+
 # Copyright (C) 2009-2011 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
@@ -13,8 +15,6 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-test_description='gpt default "flag" for a partition must not be msftres'
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../parted
 
