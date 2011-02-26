@@ -20,11 +20,17 @@
 ss=$sector_size_
 dev=dev-file
 
-for table_type in msdos; do
+extract_flags()
+{
+  perl -nle '/^1:2048s:4095s:2048s::(?:P1)?:(.+);$/ and print $1' "$@"
+}
+
+for table_type in msdos gpt; do
 
   # Extract flag names of type $table_type from the texinfo documentation.
   case $table_type in
-      msdos) search_term=MS-DOS;;
+      msdos) search_term=MS-DOS; pri_or_name=pri;;
+      gpt)   search_term=GPT;    pri_or_name=P1;;
   esac
   flags=$(sed -n '/^@node set/,/^@node/p' \
                     "$abs_top_srcdir/doc/parted.texi" \
@@ -35,7 +41,7 @@ for table_type in msdos; do
   dd if=/dev/null of=$dev bs=$ss seek=$n_sectors || fail=1
 
   parted -s $dev mklabel $table_type \
-    mkpart pri ext2 $((1*2048))s $((2*2048-1))s \
+    mkpart $pri_or_name ext2 $((1*2048))s $((2*2048-1))s \
       > out 2> err || fail=1
   compare out /dev/null || fail=1
 
@@ -48,14 +54,17 @@ for table_type in msdos; do
 
       # Turn on each flag, one at a time.
       parted -m -s $dev set 1 $flag on u s print > raw 2> err || fail=1
-      perl -nle '/^1:2048s:4095s:2048s:::(\w+);$/ and print $1' raw > out
-      compare out exp || fail=1
+      extract_flags raw > out
+      grep -F "$flag" out \
+        || { warn_ "$ME: flag not turned on: $(cat out)"; fail=1; }
       compare err /dev/null || fail=1
 
       if test $mode = on_and_off; then
         # Turn it off
         parted -m -s $dev set 1 $flag off u s print > raw 2> err || fail=1
-        perl -nle '/^1:2048s:4095s:2048s:::.*;$/ and print $1' raw > out
+        extract_flags raw > out
+        grep -F "$flag" out \
+          && { warn_ "$ME: flag not turned off: $(cat out)"; fail=1; }
         compare err /dev/null || fail=1
       fi
     done
