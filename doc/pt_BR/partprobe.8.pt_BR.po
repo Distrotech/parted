@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-05-28 20:10+0300\n"
+"POT-Creation-Date: 2011-02-26 06:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Tassia Camoes Araujo <tassia@debian-ba.org>\n"
 "Language-Team: l10n portuguese <debian-l10n-portuguese@lists.debian.org>\n"
@@ -16,24 +16,28 @@ msgstr ""
 "pt_BR utf-8\n"
 
 # type: TH
+#. type: TH
 #: partprobe.8:5
 #, no-wrap
 msgid "PARTPROBE"
 msgstr "PARTPROBE"
 
 # type: TH
+#. type: TH
 #: partprobe.8:5
 #, no-wrap
 msgid "March 18, 2002"
 msgstr "18 de Março de 2002"
 
 # type: TH
+#. type: TH
 #: partprobe.8:5
 #, no-wrap
 msgid "parted"
 msgstr "parted"
 
 # type: TH
+#. type: TH
 #: partprobe.8:5
 #, no-wrap
 msgid "GNU Parted Manual"
@@ -51,12 +55,14 @@ msgstr "Manual do GNU Parted"
 #.  .br        insert line break
 #.  .sp <n>    insert n+1 empty lines
 #.  for manpage-specific macros, see man(7)
+#. type: SH
 #: partprobe.8:18
 #, no-wrap
 msgid "NAME"
 msgstr "NOME"
 
 # type: Plain text
+#. type: Plain text
 #: partprobe.8:20
 msgid "partprobe - inform the OS of partition table changes"
 msgstr ""
@@ -64,23 +70,27 @@ msgstr ""
 "partição"
 
 # type: SH
+#. type: SH
 #: partprobe.8:20
 #, no-wrap
 msgid "SYNOPSIS"
 msgstr "SINOPSE"
 
 # type: Plain text
+#. type: Plain text
 #: partprobe.8:25
 msgid "B<partprobe> [I<-d>] [I<-s>] [I<devices...>]"
 msgstr "B<partprobe> [I<-d>] [I<-s>] [I<dispositivos...>]"
 
 # type: SH
+#. type: SH
 #: partprobe.8:25
 #, no-wrap
 msgid "DESCRIPTION"
 msgstr "DESCRIÇÃO"
 
 # type: Plain text
+#. type: Plain text
 #: partprobe.8:29
 msgid "This manual page documents briefly the B<partprobe> command."
 msgstr "Esta página de manual documenta brevemente o comando B<partprobe>"
@@ -89,6 +99,7 @@ msgstr "Esta página de manual documenta brevemente o comando B<partprobe>"
 #.  TeX users may be more comfortable with the \fB<whatever>\fP and
 #.  \fI<whatever>\fP escape sequences to invode bold face and italics,
 #.  respectively.
+#. type: Plain text
 #: partprobe.8:36
 msgid ""
 "B<partprobe> is a program that informs the operating system kernel of "
@@ -100,78 +111,92 @@ msgstr ""
 "releia a tabela de partição."
 
 # type: SH
+#. type: SH
 #: partprobe.8:36
 #, no-wrap
 msgid "OPTIONS"
 msgstr "OPÇÕES"
 
 # type: Plain text
+#. type: Plain text
 #: partprobe.8:38
 msgid "This program uses short UNIX style options."
 msgstr "Este programa usa opções de estilo curtas do UNIX."
 
 # type: TP
+#. type: TP
 #: partprobe.8:38
 #, no-wrap
 msgid "B<-d>"
 msgstr "B<-d>"
 
 # type: Plain text
+#. type: Plain text
 #: partprobe.8:41
 msgid "Don't update the kernel."
 msgstr "Não atualiza o kernel."
 
 # type: TP
+#. type: TP
 #: partprobe.8:41
 #, no-wrap
 msgid "B<-s>"
 msgstr "B<-s>"
 
 # type: Plain text
+#. type: Plain text
 #: partprobe.8:44
 msgid "Show a summary of devices and their partitions."
 msgstr "Mostra um sumário dos dispositivos e suas partições."
 
 # type: TP
+#. type: TP
 #: partprobe.8:44
 #, no-wrap
 msgid "B<-h>"
 msgstr "B<-h>"
 
 # type: Plain text
+#. type: Plain text
 #: partprobe.8:47
 msgid "Show summary of options."
 msgstr "Mostra sumário de opções."
 
 # type: TP
+#. type: TP
 #: partprobe.8:47
 #, no-wrap
 msgid "B<-v>"
 msgstr "B<-v>"
 
 # type: Plain text
+#. type: Plain text
 #: partprobe.8:50
 msgid "Show version of program."
 msgstr "Mostra versão do programa."
 
 # type: SH
+#. type: SH
 #: partprobe.8:50
 #, no-wrap
 msgid "SEE ALSO"
 msgstr "VEJA TAMBÉM"
 
 # type: Plain text
+#. type: Plain text
 #: partprobe.8:52
 msgid "B<parted>(8)."
 msgstr "B<parted>(8)."
 
 # type: SH
+#. type: SH
 #: partprobe.8:52
 #, no-wrap
 msgid "AUTHOR"
 msgstr "AUTOR"
 
 # type: Plain text
+#. type: Plain text
 #: partprobe.8:54
 msgid ""
 "This manual page was written by Timshel Knoll E<lt>timshel@debian.orgE<gt>, "
