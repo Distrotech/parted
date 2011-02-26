@@ -38,7 +38,6 @@ for mode in on_only on_and_off ; do
     # Exclude the supplemental flags.
     # These are not boolean, like the others.
     case $flag in boot|lba|hidden) continue;; esac
-    echo $flag > exp || fail=1
 
     # Turn on each flag, one at a time.
     parted -m -s $dev set 1 $flag on u s print > raw 2> err || fail=1
@@ -48,7 +47,6 @@ for mode in on_only on_and_off ; do
 
     if test $mode = on_and_off; then
       # Turn it off
-      : > exp
       parted -m -s $dev set 1 $flag off u s print > raw 2> err || fail=1
       perl -nle '/^1:2048s:4095s:2048s:::.*;$/ and print $1' raw > out
       compare err /dev/null || fail=1
