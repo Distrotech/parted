@@ -720,8 +720,10 @@ probe_partition_for_geom (const PedPartition* part, PedCHSGeometry* bios_geom)
 	if (cyl_size * denum != a_*H - A_*h)
 		return 0;
 
-	PED_ASSERT (cyl_size > 0, return 0);
- 	PED_ASSERT (cyl_size <= 255 * 63, return 0);
+	if (!(cyl_size > 0))
+		return 0;
+	if (!(cyl_size <= 255 * 63))
+		return 0;
 
 	if (h > 0)
 		head_size = ( a_ - c * cyl_size ) / h;
@@ -732,18 +734,24 @@ probe_partition_for_geom (const PedPartition* part, PedCHSGeometry* bios_geom)
 		PED_ASSERT (0, return 0);
 	}
 
-	PED_ASSERT (head_size > 0, return 0);
-	PED_ASSERT (head_size <= 63, return 0);
+	if (!(head_size > 0))
+		return 0;
+	if (!(head_size <= 63))
+		return 0;
 
 	cylinders = part->disk->dev->length / cyl_size;
 	heads = cyl_size / head_size;
 	sectors = head_size;
 
-	PED_ASSERT (heads > 0, return 0);
-	PED_ASSERT (heads < 256, return 0);
+	if (!(heads > 0))
+		return 0;
+	if (!(heads < 256))
+		return 0;
 
-	PED_ASSERT (sectors > 0, return 0);
-	PED_ASSERT (sectors <= 63, return 0);
+	if (!(sectors > 0))
+		return 0;
+	if (!(sectors <= 63))
+		return 0;
 
 	/* Some broken OEM partitioning program(s) seem to have an out-by-one
 	 * error on the end of partitions.  We should offer to fix the
@@ -752,8 +760,10 @@ probe_partition_for_geom (const PedPartition* part, PedCHSGeometry* bios_geom)
 	if (((C + 1) * heads + H) * sectors + S == A)
 		C++;
 
-	PED_ASSERT ((c * heads + h) * sectors + s == a, return 0);
-	PED_ASSERT ((C * heads + H) * sectors + S == A, return 0);
+	if (!((c * heads + h) * sectors + s == a))
+		return 0;
+	if (!((C * heads + H) * sectors + S == A))
+		return 0;
 
 	bios_geom->cylinders = cylinders;
 	bios_geom->heads = heads;
