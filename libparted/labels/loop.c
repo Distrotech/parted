@@ -76,7 +76,7 @@ error:
 static PedDisk*
 loop_alloc (const PedDevice* dev)
 {
-	PED_ASSERT (dev != NULL, return 0);
+	PED_ASSERT (dev != NULL);
 
 	if (dev->length < 256)
 		return NULL;
@@ -92,7 +92,7 @@ loop_duplicate (const PedDisk* disk)
 static void
 loop_free (PedDisk* disk)
 {
-	PED_ASSERT (disk != NULL, return);
+	PED_ASSERT (disk != NULL);
 
 	_ped_disk_free (disk);
 }
@@ -106,7 +106,7 @@ loop_read (PedDisk* disk)
 	PedPartition*		part;
 	PedConstraint*		constraint_any;
 
-	PED_ASSERT (disk != NULL, return 0);
+	PED_ASSERT (disk != NULL);
 	dev = disk->dev;
 	constraint_any = ped_constraint_any (dev);
 

@@ -136,7 +136,7 @@ dasd_alloc (const PedDevice* dev)
 	DasdDiskSpecific *disk_specific;
 	char volser[7];
 
-	PED_ASSERT (dev != NULL, return NULL);
+	PED_ASSERT (dev != NULL);
 
 	arch_specific = LINUX_SPECIFIC (dev);
 	disk = _ped_disk_alloc (dev, &dasd_disk_type);
@@ -183,7 +183,7 @@ dasd_duplicate (const PedDisk* disk)
 static void
 dasd_free (PedDisk* disk)
 {
-	PED_ASSERT(disk != NULL, return);
+	PED_ASSERT(disk != NULL);
 	/* Don't free disk->disk_specific first, in case _ped_disk_free
 	   or one of its eventual callees ever accesses it.  */
 	void *p = disk->disk_specific;
@@ -210,7 +210,7 @@ dasd_probe (const PedDevice *dev)
 	LinuxSpecific* arch_specific;
 	struct fdasd_anchor anchor;
 
-	PED_ASSERT(dev != NULL, return 0);
+	PED_ASSERT(dev != NULL);
 
 	if (!(dev->type == PED_DEVICE_DASD
               || dev->type == PED_DEVICE_VIODASD
@@ -258,9 +258,9 @@ dasd_read (PedDisk* disk)
 
 	PDEBUG;
 
-	PED_ASSERT (disk != NULL, return 0);
+	PED_ASSERT (disk != NULL);
 	PDEBUG;
-	PED_ASSERT (disk->dev != NULL, return 0);
+	PED_ASSERT (disk->dev != NULL);
 	PDEBUG;
 
 	dev = disk->dev;
@@ -576,8 +576,8 @@ dasd_write (const PedDisk* disk)
 	struct fdasd_anchor anchor;
 	partition_info_t *part_info[USABLE_PARTITIONS];
 
-	PED_ASSERT(disk != NULL, return 0);
-	PED_ASSERT(disk->dev != NULL, return 0);
+	PED_ASSERT(disk != NULL);
+	PED_ASSERT(disk->dev != NULL);
 
 	arch_specific = LINUX_SPECIFIC (disk->dev);
 	disk_specific = disk->disk_specific;
@@ -685,7 +685,7 @@ dasd_partition_duplicate (const PedPartition *part)
 static void
 dasd_partition_destroy (PedPartition* part)
 {
-	PED_ASSERT(part != NULL, return);
+	PED_ASSERT(part != NULL);
 
 	if (ped_partition_is_active(part))
 		free(part->disk_specific);
@@ -697,8 +697,8 @@ dasd_partition_set_flag (PedPartition* part, PedPartitionFlag flag, int state)
 {
 	DasdPartitionData* dasd_data;
 
-	PED_ASSERT(part != NULL, return 0);
-	PED_ASSERT(part->disk_specific != NULL, return 0);
+	PED_ASSERT(part != NULL);
+	PED_ASSERT(part->disk_specific != NULL);
 	dasd_data = part->disk_specific;
 
 	switch (flag) {
@@ -722,8 +722,8 @@ dasd_partition_get_flag (const PedPartition* part, PedPartitionFlag flag)
 {
 	DasdPartitionData* dasd_data;
 
-	PED_ASSERT (part != NULL, return 0);
-	PED_ASSERT (part->disk_specific != NULL, return 0);
+	PED_ASSERT (part != NULL);
+	PED_ASSERT (part->disk_specific != NULL);
 	dasd_data = part->disk_specific;
 
 	switch (flag) {
@@ -815,7 +815,7 @@ dasd_partition_align (PedPartition* part, const PedConstraint* constraint)
 {
 	DasdDiskSpecific* disk_specific;
 
-	PED_ASSERT (part != NULL, return 0);
+	PED_ASSERT (part != NULL);
 
 	disk_specific = part->disk->disk_specific;
 	/* If formated in LDL, ignore metadata partition */
@@ -911,8 +911,8 @@ dasd_alloc_metadata (PedDisk* disk)
 	PedSector trailing_meta_start, trailing_meta_end;
 	struct fdasd_anchor anchor;
 
-	PED_ASSERT (disk != NULL, goto error);
-	PED_ASSERT (disk->dev != NULL, goto error);
+	PED_ASSERT (disk != NULL);
+	PED_ASSERT (disk->dev != NULL);
 
 	arch_specific = LINUX_SPECIFIC (disk->dev);
 	disk_specific = disk->disk_specific;

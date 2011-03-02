@@ -108,7 +108,7 @@ ped_log2 (int n)
 {
 	int x;
 
-        PED_ASSERT (n > 0, return -1);
+        PED_ASSERT (n > 0);
 
 	for (x=0; 1 << x <= n; x++);
 
@@ -304,7 +304,7 @@ ped_exception_fetch_all ()
 void
 ped_exception_leave_all ()
 {
-	PED_ASSERT (ex_fetch_count > 0, return);
+	PED_ASSERT (ex_fetch_count > 0);
 	ex_fetch_count--;
 }
 

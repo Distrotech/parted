@@ -102,8 +102,8 @@ ped_round_to_nearest (PedSector sector, PedSector grain_size)
 PedSector
 ped_greatest_common_divisor (PedSector a, PedSector b)
 {
-	PED_ASSERT (a >= 0, return 0);
-	PED_ASSERT (b >= 0, return 0);
+	PED_ASSERT (a >= 0);
+	PED_ASSERT (b >= 0);
 
 	/* Put the arguments in the "right" format.  (Recursive calls made by
 	 * this function are always in the right format.)
@@ -127,7 +127,7 @@ ped_greatest_common_divisor (PedSector a, PedSector b)
 int
 ped_alignment_init (PedAlignment* align, PedSector offset, PedSector grain_size)
 {
-	PED_ASSERT (align != NULL, return 0);
+	PED_ASSERT (align != NULL);
 
 	if (grain_size < 0)
 		return 0;
@@ -344,7 +344,7 @@ static PedSector
 _closest_inside_geometry (const PedAlignment* align, const PedGeometry* geom,
 			  PedSector sector)
 {
-	PED_ASSERT (align != NULL, return -1);
+	PED_ASSERT (align != NULL);
 
 	if (!align->grain_size) {
 		if (ped_alignment_is_aligned (align, geom, sector)
@@ -381,7 +381,7 @@ ped_alignment_align_up (const PedAlignment* align, const PedGeometry* geom,
 {
 	PedSector	result;
 
-	PED_ASSERT (align != NULL, return -1);
+	PED_ASSERT (align != NULL);
 
 	if (!align->grain_size)
 		result = align->offset;
@@ -409,7 +409,7 @@ ped_alignment_align_down (const PedAlignment* align, const PedGeometry* geom,
 {
 	PedSector	result;
 
-	PED_ASSERT (align != NULL, return -1);
+	PED_ASSERT (align != NULL);
 
 	if (!align->grain_size)
 		result = align->offset;
@@ -448,7 +448,7 @@ PedSector
 ped_alignment_align_nearest (const PedAlignment* align, const PedGeometry* geom,
 			     PedSector sector)
 {
-	PED_ASSERT (align != NULL, return -1);
+	PED_ASSERT (align != NULL);
 
 	return closest (sector, ped_alignment_align_up (align, geom, sector),
 			ped_alignment_align_down (align, geom, sector));

@@ -89,7 +89,7 @@ read_next_dir_buffer (FatTraverseInfo* trav_info)
 {
 	FatSpecific*	fs_info = FAT_SPECIFIC (trav_info->fs);
 
-	PED_ASSERT (!trav_info->is_legacy_root_dir, return 0);
+	PED_ASSERT (!trav_info->is_legacy_root_dir);
 
 	trav_info->this_buffer = trav_info->next_buffer;
 
@@ -252,7 +252,7 @@ fat_dir_entry_set_first_cluster (FatDirEntry* dir_entry, PedFileSystem* fs,
 
 	switch (fs_info->fat_type) {
                 case FAT_TYPE_FAT12:
-                PED_ASSERT (0, (void) 0);
+                PED_ASSERT (0);
                 break;
 
 		case FAT_TYPE_FAT16:

@@ -310,7 +310,7 @@ static PedFileSystemType ufs_type_hp = {
 void
 ped_file_system_ufs_init ()
 {
-	PED_ASSERT (sizeof (struct ufs_super_block) == 1380, return);
+	PED_ASSERT (sizeof (struct ufs_super_block) == 1380);
 
 	ped_file_system_type_register (&ufs_type_sun);
 	ped_file_system_type_register (&ufs_type_hp);

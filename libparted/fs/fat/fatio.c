@@ -38,7 +38,7 @@ fat_read_fragments (PedFileSystem* fs, char* buf, FatFragment frag,
 	PedSector	sector = fat_frag_to_sector (fs, frag);
 	PedSector	sector_count = count * fs_info->frag_sectors;
 
-	PED_ASSERT (frag >= 0 && frag < fs_info->frag_count, return 0);
+	PED_ASSERT (frag >= 0 && frag < fs_info->frag_count);
 
 	return ped_geometry_read (fs->geom, buf, sector, sector_count);
 }
@@ -57,7 +57,7 @@ fat_write_fragments (PedFileSystem* fs, char* buf, FatFragment frag,
 	PedSector	sector = fat_frag_to_sector (fs, frag);
 	PedSector	sector_count = count * fs_info->frag_sectors;
 
-	PED_ASSERT (frag >= 0 && frag < fs_info->frag_count, return 0);
+	PED_ASSERT (frag >= 0 && frag < fs_info->frag_count);
 
 	return ped_geometry_write (fs->geom, buf, sector, sector_count);
 }
@@ -94,8 +94,7 @@ fat_read_clusters (PedFileSystem* fs, char *buf, FatCluster cluster,
 	PedSector	sector_count = count * fs_info->cluster_sectors;
 
 	PED_ASSERT (cluster >= 2
-	    	    && cluster + count - 1 < fs_info->cluster_count + 2,
-		    return 0);
+	    	    && cluster + count - 1 < fs_info->cluster_count + 2);
 
 	return ped_geometry_read (fs->geom, buf, sector, sector_count);
 }
@@ -115,8 +114,7 @@ fat_write_clusters (PedFileSystem* fs, char *buf, FatCluster cluster,
 	PedSector	sector_count = count * fs_info->cluster_sectors;
 
 	PED_ASSERT (cluster >= 2
-	    	    && cluster + count - 1 < fs_info->cluster_count + 2,
-		    return 0);
+	    	    && cluster + count - 1 < fs_info->cluster_count + 2);
 
 	return ped_geometry_write (fs->geom, buf, sector, sector_count);
 }

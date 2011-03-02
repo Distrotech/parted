@@ -38,8 +38,8 @@
 int
 fat_boot_sector_read (FatBootSector* bs, const PedGeometry *geom)
 {
-	PED_ASSERT (bs != NULL, return 0);
-	PED_ASSERT (geom != NULL, return 0);
+	PED_ASSERT (bs != NULL);
+	PED_ASSERT (geom != NULL);
 
 	if (!ped_geometry_read (geom, bs, 0, 1))
 		return 0;
@@ -130,7 +130,7 @@ fat_boot_sector_analyse (FatBootSector* bs, PedFileSystem* fs)
 	FatSpecific*		fs_info = FAT_SPECIFIC (fs);
 	int			fat_entry_size;
 
-	PED_ASSERT (bs != NULL, return 0);
+	PED_ASSERT (bs != NULL);
 
 	if (PED_LE16_TO_CPU (bs->sector_size) != 512) {
 		if (ped_exception_throw (
@@ -290,7 +290,7 @@ fat_boot_sector_analyse (FatBootSector* bs, PedFileSystem* fs)
 int
 fat_boot_sector_set_boot_code (FatBootSector* bs)
 {
-	PED_ASSERT (bs != NULL, return 0);
+	PED_ASSERT (bs != NULL);
 
 	memset (bs, 0, 512);
 	memcpy (bs->boot_jump, FAT_BOOT_JUMP, 3);
@@ -303,7 +303,7 @@ fat_boot_sector_generate (FatBootSector* bs, const PedFileSystem* fs)
 {
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 
-	PED_ASSERT (bs != NULL, return 0);
+	PED_ASSERT (bs != NULL);
 
 	memcpy (bs->system_id, "MSWIN4.1", 8);
 	bs->sector_size = PED_CPU_TO_LE16 (fs_info->logical_sector_size * 512);
@@ -382,7 +382,7 @@ fat_boot_sector_write (const FatBootSector* bs, PedFileSystem* fs)
 {
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 
-	PED_ASSERT (bs != NULL, return 0);
+	PED_ASSERT (bs != NULL);
 
 	if (!ped_geometry_write (fs->geom, bs, 0, 1))
 		return 0;
@@ -400,7 +400,7 @@ fat_info_sector_read (FatInfoSector* is, const PedFileSystem* fs)
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 	int		status;
 
-	PED_ASSERT (is != NULL, return 0);
+	PED_ASSERT (is != NULL);
 
 	if (!ped_geometry_read (fs->geom, is, fs_info->info_sector_offset, 1))
 		return 0;
@@ -423,7 +423,7 @@ fat_info_sector_generate (FatInfoSector* is, const PedFileSystem* fs)
 {
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 
-	PED_ASSERT (is != NULL, return 0);
+	PED_ASSERT (is != NULL);
 
 	fat_table_count_stats (fs_info->fat);
 
@@ -443,7 +443,7 @@ fat_info_sector_write (const FatInfoSector* is, PedFileSystem *fs)
 {
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 
-	PED_ASSERT (is != NULL, return 0);
+	PED_ASSERT (is != NULL);
 
 	if (!ped_geometry_write (fs->geom, is, fs_info->info_sector_offset, 1))
 		return 0;

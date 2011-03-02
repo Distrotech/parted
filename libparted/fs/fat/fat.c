@@ -97,8 +97,7 @@ fat_set_frag_sectors (PedFileSystem* fs, PedSector frag_sectors)
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 
 	PED_ASSERT (fs_info->cluster_sectors % frag_sectors == 0
-			&& frag_sectors <= fs_info->cluster_sectors,
-		    return 0);
+			&& frag_sectors <= fs_info->cluster_sectors);
 
 	fs_info->frag_size = frag_sectors * 512;
 	fs_info->frag_sectors = frag_sectors;

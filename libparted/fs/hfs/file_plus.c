@@ -160,7 +160,7 @@ hfsplus_file_find_extent (HfsPPrivateFile* file, PedSector sector,
 	}
 
 	/* ret == {0,0} */
-	PED_ASSERT(file->start_cache && block >= file->start_cache, return ret);
+	PED_ASSERT(file->start_cache && block >= file->start_cache);
 
 	for (s = file->start_cache, i = 0; i < HFSP_EXT_NB; i++) {
 		if ((block >= s) && (block < s + PED_BE32_TO_CPU (

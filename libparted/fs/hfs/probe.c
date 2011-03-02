@@ -40,8 +40,8 @@ hfsc_can_use_geom (PedGeometry* geom)
 	PedDevice* dev;
 
 	dev = geom->dev;
-	PED_ASSERT (geom != NULL, return 0);
-	PED_ASSERT (dev != NULL, return 0);
+	PED_ASSERT (geom != NULL);
+	PED_ASSERT (dev != NULL);
 
 	if (dev->sector_size != PED_SECTOR_SIZE_DEFAULT) {
 		ped_exception_throw (
@@ -67,8 +67,8 @@ hfs_and_wrapper_probe (PedGeometry* geom)
 	PedGeometry*	geom_ret;
 	PedSector	search, max;
 
-	PED_ASSERT (geom != NULL, return NULL);
-	PED_ASSERT (hfsc_can_use_geom (geom), return NULL);
+	PED_ASSERT (geom != NULL);
+	PED_ASSERT (hfsc_can_use_geom (geom));
 
 	mdb = (HfsMasterDirectoryBlock *) buf;
 
@@ -103,7 +103,7 @@ hfsplus_probe (PedGeometry* geom)
 	PedGeometry*	geom_ret;
 	uint8_t		buf[PED_SECTOR_SIZE_DEFAULT];
 
-	PED_ASSERT (geom != NULL, return NULL);
+	PED_ASSERT (geom != NULL);
 
 	if (!hfsc_can_use_geom (geom))
 		return NULL;
@@ -173,7 +173,7 @@ hfs_probe (PedGeometry* geom)
 	PedGeometry*	geom_base;
 	PedGeometry*	geom_plus = NULL;
 
-	PED_ASSERT (geom != NULL, return NULL);
+	PED_ASSERT (geom != NULL);
 
 	if (!hfsc_can_use_geom (geom))
 		return NULL;
@@ -196,7 +196,7 @@ hfsx_probe (PedGeometry* geom)
 	PedSector	search, max;
 	HfsPVolumeHeader *vh = (HfsPVolumeHeader *) buf;
 
-	PED_ASSERT (geom != NULL, return NULL);
+	PED_ASSERT (geom != NULL);
 
 	if (!hfsc_can_use_geom (geom))
 		return NULL;

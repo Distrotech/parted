@@ -141,7 +141,7 @@ ped_unit_get_size (const PedDevice* dev, PedUnit unit)
 	}
 
 	/* never reached */
-	PED_ASSERT(0, return 0);
+	PED_ASSERT(0);
 	return 0;
 }
 
@@ -198,7 +198,7 @@ ped_unit_format_custom_byte (const PedDevice* dev, PedSector byte, PedUnit unit)
 	double d, w;
 	int p;
 
-	PED_ASSERT (dev != NULL, return NULL);
+	PED_ASSERT (dev != NULL);
 
 	/* CHS has a special comma-separated format. */
 	if (unit == PED_UNIT_CHS) {
@@ -266,7 +266,7 @@ ped_unit_format_custom_byte (const PedDevice* dev, PedSector byte, PedUnit unit)
 char*
 ped_unit_format_byte (const PedDevice* dev, PedSector byte)
 {
-	PED_ASSERT (dev != NULL, return NULL);
+	PED_ASSERT (dev != NULL);
 	return ped_unit_format_custom_byte (dev, byte, default_unit);
 }
 
@@ -279,7 +279,7 @@ ped_unit_format_byte (const PedDevice* dev, PedSector byte)
 char*
 ped_unit_format_custom (const PedDevice* dev, PedSector sector, PedUnit unit)
 {
-	PED_ASSERT (dev != NULL, return NULL);
+	PED_ASSERT (dev != NULL);
 	return ped_unit_format_custom_byte(dev, sector*dev->sector_size, unit);
 }
 
@@ -293,7 +293,7 @@ ped_unit_format_custom (const PedDevice* dev, PedSector sector, PedUnit unit)
 char*
 ped_unit_format (const PedDevice* dev, PedSector sector)
 {
-	PED_ASSERT (dev != NULL, return NULL);
+	PED_ASSERT (dev != NULL);
 	return ped_unit_format_custom_byte (dev, sector * dev->sector_size,
 					    default_unit);
 }

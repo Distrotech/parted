@@ -224,7 +224,7 @@ flag_traverse_dir (FatTraverseInfo* trav_info) {
 	FatCluster		first_cluster;
 	PedSector		size;
 
-	PED_ASSERT (trav_info != NULL, return 0);
+	PED_ASSERT (trav_info != NULL);
 
 	strcpy (file_name, trav_info->dir_name);
 	file_name_start = file_name + strlen (file_name);
@@ -370,8 +370,7 @@ fat_get_fragment_flag (PedFileSystem* fs, FatFragment frag)
 	FatFragment	last_frag_used;
 	FatClusterFlag	flag;
 
-	PED_ASSERT (cluster >= 2 && cluster < fs_info->cluster_count + 2,
-		    return 0);
+	PED_ASSERT (cluster >= 2 && cluster < fs_info->cluster_count + 2);
 
 	flag = fat_get_cluster_flag (fs, cluster);
 	if (flag != FAT_FLAG_FILE && flag != FAT_FLAG_DIRECTORY)

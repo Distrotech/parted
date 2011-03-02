@@ -66,7 +66,7 @@ ped_timer_new (PedTimerHandler* handler, void* context)
 {
 	PedTimer*	timer;
 
-	PED_ASSERT (handler != NULL, return NULL);
+	PED_ASSERT (handler != NULL);
 
 	timer = (PedTimer*) ped_malloc (sizeof (PedTimer));
 	if (!timer)
@@ -127,8 +127,8 @@ ped_timer_new_nested (PedTimer* parent, float nest_frac)
 	if (!parent)
 		return NULL;
 
-	PED_ASSERT (nest_frac >= 0.0, return NULL);
-	PED_ASSERT (nest_frac <= 1.0, return NULL);
+	PED_ASSERT (nest_frac >= 0.0);
+	PED_ASSERT (nest_frac <= 1.0);
 
 	context = (NestedContext*) ped_malloc (sizeof (NestedContext));
 	if (!context)

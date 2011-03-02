@@ -217,8 +217,8 @@ static __inline__ int ext2_is_data_block(struct ext2_fs *fs, blk_t block)
 	blk_t blk;
 	int   group;
 
-	PED_ASSERT (block >= EXT2_SUPER_FIRST_DATA_BLOCK(fs->sb), return 0);
-	PED_ASSERT (block < EXT2_SUPER_BLOCKS_COUNT(fs->sb), return 0);
+	PED_ASSERT (block >= EXT2_SUPER_FIRST_DATA_BLOCK(fs->sb));
+	PED_ASSERT (block < EXT2_SUPER_BLOCKS_COUNT(fs->sb));
 
 	blk = block - EXT2_SUPER_FIRST_DATA_BLOCK(fs->sb);
 

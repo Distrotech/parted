@@ -52,8 +52,8 @@ hfs_effect_move_extent (PedFileSystem *fs, unsigned int *ptr_fblock,
 	unsigned int		next_to_fblock;
 	unsigned int		start, stop;
 
-	PED_ASSERT (hfs_block != NULL, return -1);
-	PED_ASSERT (*ptr_to_fblock <= *ptr_fblock, return -1);
+	PED_ASSERT (hfs_block != NULL);
+	PED_ASSERT (*ptr_to_fblock <= *ptr_fblock);
 	/* quiet gcc */
 	start = stop = 0;
 
@@ -230,8 +230,7 @@ hfs_do_move (PedFileSystem* fs, unsigned int *ptr_src,
 			file = priv_data->catalog_file;
 		    CR_BTREE:
 			PED_ASSERT(ref->sect_by_block == 1
-			           && ref->ref_offset < PED_SECTOR_SIZE_DEFAULT,
-				   return -1);
+			           && ref->ref_offset < PED_SECTOR_SIZE_DEFAULT);
 			if (!hfs_file_read_sector(file, node, ref->ref_block))
 				return -1;
 			extent = ( HfsExtDescriptor* ) (node + ref->ref_offset);
@@ -257,7 +256,7 @@ hfs_do_move (PedFileSystem* fs, unsigned int *ptr_src,
 		/* Update the cache */
 		move = hfsc_cache_move_extent(cache, ref->ext_start, new_start);
 		if (!move) return -1; /* "cleanly" fail */
-		PED_ASSERT(move == ref, return -1); /* generate a bug */
+		PED_ASSERT(move == ref); /* generate a bug */
 	}
 
 	return new_start;
@@ -596,7 +595,7 @@ hfs_pack_free_space_from_block (PedFileSystem *fs, unsigned int fblock,
 				          + 1 - start - to_free;
 	int			ret;
 
-	PED_ASSERT (!hfs_block, return 0);
+	PED_ASSERT (!hfs_block);
 
 	cache = hfs_cache_extents (fs, timer);
 	if (!cache)

@@ -420,7 +420,7 @@ static int ext2_mkfs_init_sb (struct ext2_super_block *sb, blk_t numblocks,
 			      int reserved_block_percentage)
 {
 	/* catch a bug in gcc 2.95.2 */
-	PED_ASSERT(numgroups != 0, return 0);
+	PED_ASSERT(numgroups != 0);
 
 	memset(sb, 0, 1024);
 

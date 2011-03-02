@@ -56,8 +56,8 @@ int
 ped_geometry_init (PedGeometry* geom, const PedDevice* dev,
 		   PedSector start, PedSector length)
 {
-	PED_ASSERT (geom != NULL, return 0);
-	PED_ASSERT (dev != NULL, return 0);
+	PED_ASSERT (geom != NULL);
+	PED_ASSERT (dev != NULL);
 
 	geom->dev = (PedDevice*) dev;
 	return ped_geometry_set (geom, start, length);
@@ -74,7 +74,7 @@ ped_geometry_new (const PedDevice* dev, PedSector start, PedSector length)
 {
 	PedGeometry*	geom;
 
-	PED_ASSERT (dev != NULL, return NULL);
+	PED_ASSERT (dev != NULL);
 
 	geom = (PedGeometry*) ped_malloc (sizeof (PedGeometry));
 	if (!geom)
@@ -102,7 +102,7 @@ error:
 PedGeometry*
 ped_geometry_duplicate (const PedGeometry* geom)
 {
-	PED_ASSERT (geom != NULL, return NULL);
+	PED_ASSERT (geom != NULL);
 	return ped_geometry_new (geom->dev, geom->start, geom->length);
 }
 
@@ -138,7 +138,7 @@ ped_geometry_intersect (const PedGeometry* a, const PedGeometry* b)
 void
 ped_geometry_destroy (PedGeometry* geom)
 {
-	PED_ASSERT (geom != NULL, return);
+	PED_ASSERT (geom != NULL);
 
 	free (geom);
 }
@@ -151,8 +151,8 @@ ped_geometry_destroy (PedGeometry* geom)
 int
 ped_geometry_set (PedGeometry* geom, PedSector start, PedSector length)
 {
-	PED_ASSERT (geom != NULL, return 0);
-	PED_ASSERT (geom->dev != NULL, return 0);
+	PED_ASSERT (geom != NULL);
+	PED_ASSERT (geom->dev != NULL);
 
 	if (length < 1) {
 		ped_exception_throw (
@@ -209,8 +209,8 @@ ped_geometry_set_end (PedGeometry* geom, PedSector end)
 int
 ped_geometry_test_overlap (const PedGeometry* a, const PedGeometry* b)
 {
-	PED_ASSERT (a != NULL, return 0);
-	PED_ASSERT (b != NULL, return 0);
+	PED_ASSERT (a != NULL);
+	PED_ASSERT (b != NULL);
 
 	if (a->dev != b->dev)
 		return 0;
@@ -231,8 +231,8 @@ ped_geometry_test_overlap (const PedGeometry* a, const PedGeometry* b)
 int
 ped_geometry_test_inside (const PedGeometry* a, const PedGeometry* b)
 {
-	PED_ASSERT (a != NULL, return 0);
-	PED_ASSERT (b != NULL, return 0);
+	PED_ASSERT (a != NULL);
+	PED_ASSERT (b != NULL);
 
 	if (a->dev != b->dev)
 		return 0;
@@ -249,8 +249,8 @@ ped_geometry_test_inside (const PedGeometry* a, const PedGeometry* b)
 int
 ped_geometry_test_equal (const PedGeometry* a, const PedGeometry* b)
 {
-	PED_ASSERT (a != NULL, return 0);
-	PED_ASSERT (b != NULL, return 0);
+	PED_ASSERT (a != NULL);
+	PED_ASSERT (b != NULL);
 
 	return a->dev == b->dev
 	       && a->start == b->start
@@ -265,7 +265,7 @@ ped_geometry_test_equal (const PedGeometry* a, const PedGeometry* b)
 int
 ped_geometry_test_sector_inside (const PedGeometry* geom, PedSector sector)
 {
-	PED_ASSERT (geom != NULL, return 0);
+	PED_ASSERT (geom != NULL);
 
 	return sector >= geom->start && sector <= geom->end;
 }
@@ -290,10 +290,10 @@ ped_geometry_read (const PedGeometry* geom, void* buffer, PedSector offset,
 {
 	PedSector	real_start;
 
-	PED_ASSERT (geom != NULL, return 0);
-	PED_ASSERT (buffer != NULL, return 0);
-	PED_ASSERT (offset >= 0, return 0);
-	PED_ASSERT (count >= 0, return 0);
+	PED_ASSERT (geom != NULL);
+	PED_ASSERT (buffer != NULL);
+	PED_ASSERT (offset >= 0);
+	PED_ASSERT (count >= 0);
 
 	real_start = geom->start + offset;
 
@@ -335,7 +335,7 @@ ped_geometry_read_alloc (const PedGeometry* geom, void** buffer,
 int
 ped_geometry_sync (PedGeometry* geom)
 {
-	PED_ASSERT (geom != NULL, return 0);
+	PED_ASSERT (geom != NULL);
 	return ped_device_sync (geom->dev);
 }
 
@@ -352,7 +352,7 @@ ped_geometry_sync (PedGeometry* geom)
 int
 ped_geometry_sync_fast (PedGeometry* geom)
 {
-	PED_ASSERT (geom != NULL, return 0);
+	PED_ASSERT (geom != NULL);
 	return ped_device_sync_fast (geom->dev);
 }
 
@@ -370,10 +370,10 @@ ped_geometry_write (PedGeometry* geom, const void* buffer, PedSector offset,
 	int		exception_status;
 	PedSector	real_start;
 
-	PED_ASSERT (geom != NULL, return 0);
-	PED_ASSERT (buffer != NULL, return 0);
-	PED_ASSERT (offset >= 0, return 0);
-	PED_ASSERT (count >= 0, return 0);
+	PED_ASSERT (geom != NULL);
+	PED_ASSERT (buffer != NULL);
+	PED_ASSERT (offset >= 0);
+	PED_ASSERT (count >= 0);
 
 	real_start = geom->start + offset;
 
@@ -417,8 +417,8 @@ ped_geometry_check (PedGeometry* geom, void* buffer, PedSector buffer_size,
 	PedSector	i;
 	PedSector	read_len;
 
-	PED_ASSERT (geom != NULL, return 0);
-	PED_ASSERT (buffer != NULL, return 0);
+	PED_ASSERT (geom != NULL);
+	PED_ASSERT (buffer != NULL);
 
 	ped_timer_reset (timer);
 	ped_timer_set_state_name (timer, _("checking for bad blocks"));
@@ -474,8 +474,8 @@ ped_geometry_map (const PedGeometry* dst, const PedGeometry* src,
 {
 	PedSector	result;
 
-	PED_ASSERT (dst != NULL, return 0);
-	PED_ASSERT (src != NULL, return 0);
+	PED_ASSERT (dst != NULL);
+	PED_ASSERT (src != NULL);
 
 	if (!ped_geometry_test_sector_inside (src, sector))
 		return -1;

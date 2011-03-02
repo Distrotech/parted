@@ -199,7 +199,7 @@ static PedGeometry *reiserfs_probe(PedGeometry *geom)
 	int i;
 	reiserfs_super_block_t sb;
 
-	PED_ASSERT(geom != NULL, return NULL);
+	PED_ASSERT(geom != NULL);
 
 	for (i = 0; reiserfs_super_offset[i] != -1; i++) {
 		if (reiserfs_super_offset[i] >= geom->length)
@@ -233,7 +233,7 @@ static int reiserfs_clobber(PedGeometry *geom)
 	int i;
 	char buf[512];
 
-	PED_ASSERT(geom != NULL, return 0);
+	PED_ASSERT(geom != NULL);
 
 	memset(buf, 0, 512);
 	for (i = 0; reiserfs_super_offset[i] != -1; i++) {
@@ -256,7 +256,7 @@ static PedFileSystem *reiserfs_open(PedGeometry *geom)
 	dal_t *dal;
 	reiserfs_fs_t *fs_info;
 
-	PED_ASSERT(geom != NULL, return NULL);
+	PED_ASSERT(geom != NULL);
 
 	if (!(fs_geom = ped_geometry_duplicate(geom)))
 		goto error;
@@ -300,7 +300,7 @@ static PedFileSystem *reiserfs_create(PedGeometry *geom, PedTimer *timer)
 	reiserfs_fs_t *fs_info;
 	reiserfs_gauge_t *gauge = NULL;
 
-	PED_ASSERT(geom != NULL, return NULL);
+	PED_ASSERT(geom != NULL);
 
 	fs_geom = ped_geometry_duplicate(geom);
 
@@ -357,7 +357,7 @@ static int reiserfs_close(PedFileSystem *fs)
 {
 	dal_t *dal;
 
-	PED_ASSERT(fs != NULL, return 0);
+	PED_ASSERT(fs != NULL);
 
 	dal = reiserfs_fs_host_dal(fs->type_specific);
 	reiserfs_fs_close(fs->type_specific);
@@ -391,7 +391,7 @@ static int reiserfs_check(PedFileSystem *fs, PedTimer *timer)
 	reiserfs_gauge_t *gauge = NULL;
 #endif
 
-	PED_ASSERT(fs != NULL, return 0);
+	PED_ASSERT(fs != NULL);
 
 	fs_info = fs->type_specific;
 
@@ -461,11 +461,11 @@ static int reiserfs_resize(PedFileSystem *fs, PedGeometry *geom,
 	reiserfs_fs_t *fs_info;
 	reiserfs_gauge_t *gauge = NULL;
 
-	PED_ASSERT(fs != NULL, return 0);
+	PED_ASSERT(fs != NULL);
 
 	old_length = fs->geom->length;
 
-	PED_ASSERT (fs->geom->dev == geom->dev, return 0);
+	PED_ASSERT (fs->geom->dev == geom->dev);
 
 	if (fs->geom->start != geom->start) {
 		ped_exception_throw(PED_EXCEPTION_ERROR,
@@ -547,7 +547,7 @@ static PedConstraint *reiserfs_get_resize_constraint(const PedFileSystem *
 	PedAlignment start_align;
 	PedGeometry start_sector;
 
-	PED_ASSERT(fs != NULL, return NULL);
+	PED_ASSERT(fs != NULL);
 
 	fs_info = fs->type_specific;
 	dev = fs->geom->dev;
@@ -651,8 +651,8 @@ static PedConstraint *reiserfs_get_copy_constraint(const PedFileSystem *fs,
 {
 	PedGeometry full_dev;
 
-	PED_ASSERT(fs != NULL, return NULL);
-	PED_ASSERT(dev != NULL, return NULL);
+	PED_ASSERT(fs != NULL);
+	PED_ASSERT(dev != NULL);
 
 	if (!ped_geometry_init(&full_dev, dev, 0, dev->length - 1))
 		return NULL;

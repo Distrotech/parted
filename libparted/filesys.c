@@ -46,9 +46,9 @@ static PedFileSystemAlias*	fs_aliases = NULL;
 void
 ped_file_system_type_register (PedFileSystemType* fs_type)
 {
-	PED_ASSERT (fs_type != NULL, return);
-	PED_ASSERT (fs_type->ops != NULL, return);
-	PED_ASSERT (fs_type->name != NULL, return);
+	PED_ASSERT (fs_type != NULL);
+	PED_ASSERT (fs_type->ops != NULL);
+	PED_ASSERT (fs_type->name != NULL);
 
         fs_type->next = fs_types;
         fs_types = fs_type;
@@ -60,13 +60,13 @@ ped_file_system_type_unregister (PedFileSystemType* fs_type)
 	PedFileSystemType*	walk;
 	PedFileSystemType*	last = NULL;
 
-	PED_ASSERT (fs_types != NULL, return);
-	PED_ASSERT (fs_type != NULL, return);
+	PED_ASSERT (fs_types != NULL);
+	PED_ASSERT (fs_type != NULL);
 
 	for (walk = fs_types; walk && walk != fs_type;
                 last = walk, walk = walk->next);
 
-	PED_ASSERT (walk != NULL, return);
+	PED_ASSERT (walk != NULL);
 	if (last)
 		((struct _PedFileSystemType*) last)->next = fs_type->next;
 	else
@@ -79,8 +79,8 @@ ped_file_system_alias_register (PedFileSystemType* fs_type, const char* alias,
 {
 	PedFileSystemAlias*	fs_alias;
 
-	PED_ASSERT (fs_type != NULL, return);
-	PED_ASSERT (alias != NULL, return);
+	PED_ASSERT (fs_type != NULL);
+	PED_ASSERT (alias != NULL);
 
 	fs_alias = ped_malloc (sizeof *fs_alias);
 	if (!fs_alias)
@@ -100,16 +100,16 @@ ped_file_system_alias_unregister (PedFileSystemType* fs_type,
 	PedFileSystemAlias*	walk;
 	PedFileSystemAlias*	last = NULL;
 
-	PED_ASSERT (fs_aliases != NULL, return);
-	PED_ASSERT (fs_type != NULL, return);
-	PED_ASSERT (alias != NULL, return);
+	PED_ASSERT (fs_aliases != NULL);
+	PED_ASSERT (fs_type != NULL);
+	PED_ASSERT (alias != NULL);
 
 	for (walk = fs_aliases; walk; last = walk, walk = walk->next) {
 		if (walk->fs_type == fs_type && !strcmp (walk->alias, alias))
 			break;
 	}
 
-	PED_ASSERT (walk != NULL, return);
+	PED_ASSERT (walk != NULL);
 	if (last)
 		last->next = walk->next;
 	else
@@ -128,7 +128,7 @@ ped_file_system_type_get (const char* name)
 	PedFileSystemType*	walk;
 	PedFileSystemAlias*	alias_walk;
 
-	PED_ASSERT (name != NULL, return NULL);
+	PED_ASSERT (name != NULL);
 
 	for (walk = fs_types; walk != NULL; walk = walk->next) {
 		if (!strcasecmp (walk->name, name))
@@ -194,9 +194,9 @@ ped_file_system_probe_specific (
 {
 	PedGeometry*	result;
 
-	PED_ASSERT (fs_type != NULL, return NULL);
-	PED_ASSERT (fs_type->ops->probe != NULL, return NULL);
-	PED_ASSERT (geom != NULL, return NULL);
+	PED_ASSERT (fs_type != NULL);
+	PED_ASSERT (fs_type->ops->probe != NULL);
+	PED_ASSERT (geom != NULL);
 
         /* Fail all fs-specific probe-related tests when sector size
            is not the default.  */
@@ -326,7 +326,7 @@ ped_file_system_probe (PedGeometry* geom)
 	int			detected_count = 0;
 	PedFileSystemType*	walk = NULL;
 
-	PED_ASSERT (geom != NULL, return NULL);
+	PED_ASSERT (geom != NULL);
 
 	if (!ped_device_open (geom->dev))
 		return NULL;
@@ -372,7 +372,7 @@ ped_file_system_clobber (PedGeometry* geom)
 {
 	PedFileSystemType*	fs_type = NULL;
 
-	PED_ASSERT (geom != NULL, return 0);
+	PED_ASSERT (geom != NULL);
 
 	if (!ped_device_open (geom->dev))
 		goto error;
@@ -451,7 +451,7 @@ ped_file_system_open (PedGeometry* geom)
 	PedFileSystem*		fs;
 	PedGeometry*		probed_geom;
 
-	PED_ASSERT (geom != NULL, return NULL);
+	PED_ASSERT (geom != NULL);
 
 	if (!ped_device_open (geom->dev))
 		goto error;
@@ -514,8 +514,8 @@ ped_file_system_create (PedGeometry* geom, const PedFileSystemType* type,
 {
 	PedFileSystem*	fs;
 
-	PED_ASSERT (geom != NULL, return NULL);
-	PED_ASSERT (type != NULL, return NULL);
+	PED_ASSERT (geom != NULL);
+	PED_ASSERT (type != NULL);
 
 	if (!type->ops->create) {
 		ped_exception_throw (PED_EXCEPTION_NO_FEATURE,
@@ -552,7 +552,7 @@ ped_file_system_close (PedFileSystem* fs)
 {
 	PedDevice*	dev = fs->geom->dev;
 
-	PED_ASSERT (fs != NULL, goto error_close_dev);
+	PED_ASSERT (fs != NULL);
 
 	if (!fs->type->ops->close (fs))
 		goto error_close_dev;
@@ -575,7 +575,7 @@ error_close_dev:
 int
 ped_file_system_check (PedFileSystem* fs, PedTimer* timer)
 {
-	PED_ASSERT (fs != NULL, return 0);
+	PED_ASSERT (fs != NULL);
 
 	if (!fs->type->ops->check) {
 		ped_exception_throw (PED_EXCEPTION_NO_FEATURE,
@@ -594,9 +594,9 @@ _raw_copy (const PedGeometry* src, PedGeometry* dest, PedTimer* timer)
 	char*		buf;
 	PedSector	pos;
 
-	PED_ASSERT (src != NULL, goto error);
-	PED_ASSERT (dest != NULL, goto error);
-	PED_ASSERT (src->length <= dest->length, goto error);
+	PED_ASSERT (src != NULL);
+	PED_ASSERT (dest != NULL);
+	PED_ASSERT (src->length <= dest->length);
 
 	buf = ped_malloc (BUFFER_SIZE * 512);		/* FIXME */
 	if (!buf)
@@ -688,8 +688,8 @@ ped_file_system_copy (PedFileSystem* fs, PedGeometry* geom, PedTimer* timer)
 {
 	PedFileSystem* new_fs;
 
-	PED_ASSERT (fs != NULL, return 0);
-	PED_ASSERT (geom != NULL, return 0);
+	PED_ASSERT (fs != NULL);
+	PED_ASSERT (geom != NULL);
 
 	if (!ped_device_open (geom->dev))
 		goto error;
@@ -765,8 +765,8 @@ error:
 int
 ped_file_system_resize (PedFileSystem* fs, PedGeometry* geom, PedTimer* timer)
 {
-	PED_ASSERT (fs != NULL, return 0);
-	PED_ASSERT (geom != NULL, return 0);
+	PED_ASSERT (fs != NULL);
+	PED_ASSERT (geom != NULL);
 
 	if (!fs->type->ops->resize) {
 		ped_exception_throw (PED_EXCEPTION_NO_FEATURE,
@@ -798,8 +798,8 @@ PedConstraint*
 ped_file_system_get_create_constraint (const PedFileSystemType* fs_type,
 				       const PedDevice* dev)
 {
-	PED_ASSERT (fs_type != NULL, return NULL);
-	PED_ASSERT (dev != NULL, return NULL);
+	PED_ASSERT (fs_type != NULL);
+	PED_ASSERT (dev != NULL);
 
 	if (!fs_type->ops->get_create_constraint)
 		return NULL;
@@ -821,7 +821,7 @@ ped_file_system_get_create_constraint (const PedFileSystemType* fs_type,
 PedConstraint*
 ped_file_system_get_resize_constraint (const PedFileSystem* fs)
 {
-	PED_ASSERT (fs != NULL, return 0);
+	PED_ASSERT (fs != NULL);
 
 	if (!fs->type->ops->get_resize_constraint)
 		return NULL;
@@ -840,8 +840,8 @@ ped_file_system_get_copy_constraint (const PedFileSystem* fs,
 {
 	PedGeometry	full_dev;
 
-	PED_ASSERT (fs != NULL, return NULL);
-	PED_ASSERT (dev != NULL, return NULL);
+	PED_ASSERT (fs != NULL);
+	PED_ASSERT (dev != NULL);
 
 	if (fs->type->ops->get_copy_constraint)
 		return fs->type->ops->get_copy_constraint (fs, dev);

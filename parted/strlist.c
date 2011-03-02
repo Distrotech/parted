@@ -441,7 +441,7 @@ str_list_print_wrap (const StrList* list, int line_length, int offset,
 	int		search_result;
 	int		line_break;
 
-	PED_ASSERT (line_length - indent > 10, return);
+	PED_ASSERT (line_length - indent > 10);
 
 	line_left = line_length - offset;
 

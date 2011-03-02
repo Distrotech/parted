@@ -113,7 +113,7 @@ fat_check_resize_geometry (const PedFileSystem* fs,
 	PedSector	new_total_space;
 	PedSector	dir_space;
 
-	PED_ASSERT (geom != NULL, return 0);
+	PED_ASSERT (geom != NULL);
 
 	dir_space = fs_info->total_dir_clusters * fs_info->cluster_sectors;
 	free_space = fs_info->fat->free_cluster_count
@@ -123,8 +123,7 @@ fat_check_resize_geometry (const PedFileSystem* fs,
 	min_free_space = total_space - new_total_space + dir_space;
 
 	PED_ASSERT (new_cluster_count
-			<= fat_max_cluster_count (FAT_TYPE_FAT32),
-		    return 0);
+		    <= fat_max_cluster_count (FAT_TYPE_FAT32));
 
 	if (free_space < min_free_space) {
 		char* needed = ped_unit_format (geom->dev, min_free_space);
@@ -182,8 +181,8 @@ calc_sizes (PedSector size, PedSector align, FatType fat_type,
 	FatCluster	cluster_count;
 	int		i;
 
-	PED_ASSERT (out_cluster_count != NULL, return 0);
-	PED_ASSERT (out_fat_size != NULL, return 0);
+	PED_ASSERT (out_cluster_count != NULL);
+	PED_ASSERT (out_fat_size != NULL);
 
 	data_fat_space = size - fat_min_reserved_sector_count (fat_type)
 			 - align;
@@ -234,9 +233,9 @@ fat_calc_sizes (PedSector size, PedSector align, FatType fat_type,
 {
 	PedSector	cluster_sectors;
 
-	PED_ASSERT (out_cluster_sectors != NULL, return 0);
-	PED_ASSERT (out_cluster_count != NULL, return 0);
-	PED_ASSERT (out_fat_size != NULL, return 0);
+	PED_ASSERT (out_cluster_sectors != NULL);
+	PED_ASSERT (out_cluster_count != NULL);
+	PED_ASSERT (out_fat_size != NULL);
 
 	for (cluster_sectors = fat_recommend_min_cluster_size (fat_type, size);
 	     cluster_sectors <= fat_max_cluster_size (fat_type);
@@ -291,10 +290,10 @@ fat_calc_resize_sizes (
 	FatCluster* out_cluster_count,
 	PedSector* out_fat_size)
 {
-	PED_ASSERT (geom != NULL, return 0);
-	PED_ASSERT (out_cluster_sectors != NULL, return 0);
-	PED_ASSERT (out_cluster_count != NULL, return 0);
-	PED_ASSERT (out_fat_size != NULL, return 0);
+	PED_ASSERT (geom != NULL);
+	PED_ASSERT (out_cluster_sectors != NULL);
+	PED_ASSERT (out_cluster_count != NULL);
+	PED_ASSERT (out_fat_size != NULL);
 
 /* libparted can only reduce the cluster size at this point */
 	for (*out_cluster_sectors = cluster_sectors;
@@ -375,8 +374,7 @@ fat_cluster_to_frag (const PedFileSystem* fs, FatCluster cluster)
 {
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 
-	PED_ASSERT (cluster >= 2 && cluster < fs_info->cluster_count + 2,
-		    return 0);
+	PED_ASSERT (cluster >= 2 && cluster < fs_info->cluster_count + 2);
 
 	return (cluster - 2) * fs_info->cluster_frags;
 }
@@ -386,7 +384,7 @@ fat_frag_to_cluster (const PedFileSystem* fs, FatFragment frag)
 {
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 
-	PED_ASSERT (frag >= 0 && frag < fs_info->frag_count, return 0);
+	PED_ASSERT (frag >= 0 && frag < fs_info->frag_count);
 
 	return frag / fs_info->cluster_frags + 2;
 }
@@ -396,7 +394,7 @@ fat_frag_to_sector (const PedFileSystem* fs, FatFragment frag)
 {
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 
-	PED_ASSERT (frag >= 0 && frag < fs_info->frag_count, return 0);
+	PED_ASSERT (frag >= 0 && frag < fs_info->frag_count);
 
 	return frag * fs_info->frag_sectors + fs_info->cluster_offset;
 }
@@ -406,7 +404,7 @@ fat_sector_to_frag (const PedFileSystem* fs, PedSector sector)
 {
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 
-	PED_ASSERT (sector >= fs_info->cluster_offset, return 0);
+	PED_ASSERT (sector >= fs_info->cluster_offset);
 
 	return (sector - fs_info->cluster_offset) / fs_info->frag_sectors;
 }
@@ -416,8 +414,7 @@ fat_cluster_to_sector (const PedFileSystem* fs, FatCluster cluster)
 {
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 
-	PED_ASSERT (cluster >= 2 && cluster < fs_info->cluster_count + 2,
-		    return 0);
+	PED_ASSERT (cluster >= 2 && cluster < fs_info->cluster_count + 2);
 
 	return (cluster - 2) * fs_info->cluster_sectors
 		+ fs_info->cluster_offset;
@@ -428,7 +425,7 @@ fat_sector_to_cluster (const PedFileSystem* fs, PedSector sector)
 {
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 
-	PED_ASSERT (sector >= fs_info->cluster_offset, return 0);
+	PED_ASSERT (sector >= fs_info->cluster_offset);
 
 	return (sector - fs_info->cluster_offset) / fs_info->cluster_sectors
 		+ 2;

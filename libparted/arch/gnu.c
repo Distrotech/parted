@@ -240,7 +240,7 @@ gnu_new (const char* path)
 	error_t         ro_err, rw_err;
 	int             ispath;
 
-	PED_ASSERT (path != NULL, return NULL);
+	PED_ASSERT (path != NULL);
 
 	dev = _init_device (path);
 	if (!dev)
@@ -309,7 +309,7 @@ ped_device_new_from_store (struct store *source)
         PedDevice*      dev;
 	GNUSpecific*    arch_specific;
 
-	PED_ASSERT (source != NULL, return NULL);
+	PED_ASSERT (source != NULL);
 
 	dev = _init_device (source->name ?: "(unknown)");
 	if (!dev)
@@ -671,7 +671,7 @@ doggy_first_block_write:
 	/* We are now left with (strictly) less then a store block to write
 	   to disk.  Thus, we read the block, overlay the buffer and flush.  */
 	PED_ASSERT (count * PED_SECTOR_SIZE_DEFAULT
-			< arch_specific->store->block_size, return 0);
+		    < arch_specific->store->block_size);
 
 doggy_last_block_read:
 	/* We do not bother looping as we are only reading a
@@ -753,9 +753,9 @@ gnu_check (PedDevice* dev, void* buffer, PedSector start, PedSector count)
 	int			status;
 	int			done = 0;
 
-	PED_ASSERT (dev != NULL, return 0);
-	PED_ASSERT (!dev->external_mode, return 0);
-	PED_ASSERT (buffer != NULL, return 0);
+	PED_ASSERT (dev != NULL);
+	PED_ASSERT (!dev->external_mode);
+	PED_ASSERT (buffer != NULL);
 
 	return count;
 }
@@ -768,8 +768,8 @@ gnu_sync (PedDevice* dev)
 	PedExceptionOption	ex_status;
 	static char *last_failure = NULL;
 
-	PED_ASSERT (dev != NULL, return 0);
-	PED_ASSERT (!dev->external_mode, return 0);
+	PED_ASSERT (dev != NULL);
+	PED_ASSERT (!dev->external_mode);
 
 	arch_specific = GNU_SPECIFIC (dev);
 

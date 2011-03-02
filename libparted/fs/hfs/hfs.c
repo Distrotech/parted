@@ -203,17 +203,17 @@ hfs_resize (PedFileSystem* fs, PedGeometry* geom, PedTimer* timer)
 	PedSector		hgee;
 
 	/* check preconditions */
-	PED_ASSERT (fs != NULL, return 0);
-	PED_ASSERT (fs->geom != NULL, return 0);
-	PED_ASSERT (geom != NULL, return 0);
+	PED_ASSERT (fs != NULL);
+	PED_ASSERT (fs->geom != NULL);
+	PED_ASSERT (geom != NULL);
 #ifdef DEBUG
-        PED_ASSERT ((hgee = hfs_get_empty_end(fs)) != 0, return 0);
+        PED_ASSERT ((hgee = hfs_get_empty_end(fs)) != 0);
 #else
         if ((hgee = hfs_get_empty_end(fs)) == 0)
                 return 0;
 #endif
 
-	PED_ASSERT ((hgee = hfs_get_empty_end(fs)) != 0, return 0);
+	PED_ASSERT ((hgee = hfs_get_empty_end(fs)) != 0);
 
 	if (ped_geometry_test_equal(fs->geom, geom))
 		return 1;
@@ -915,12 +915,12 @@ hfsplus_resize (PedFileSystem* fs, PedGeometry* geom, PedTimer* timer)
 	PedSector		hgms;
 
 	/* check preconditions */
-	PED_ASSERT (fs != NULL, return 0);
-	PED_ASSERT (fs->geom != NULL, return 0);
-	PED_ASSERT (geom != NULL, return 0);
-	PED_ASSERT (fs->geom->dev == geom->dev, return 0);
+	PED_ASSERT (fs != NULL);
+	PED_ASSERT (fs->geom != NULL);
+	PED_ASSERT (geom != NULL);
+	PED_ASSERT (fs->geom->dev == geom->dev);
 #ifdef DEBUG
-        PED_ASSERT ((hgms = hfsplus_get_min_size (fs)) != 0, return 0);
+        PED_ASSERT ((hgms = hfsplus_get_min_size (fs)) != 0);
 #else
         if ((hgms = hfsplus_get_min_size (fs)) == 0)
                 return 0;

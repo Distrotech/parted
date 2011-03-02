@@ -170,7 +170,7 @@ _calc_fat_entry_offset (PedFileSystem* fs, FatCluster cluster)
 
 	switch (fs_info->fat_type) {
                 case FAT_TYPE_FAT12:
-                        PED_ASSERT (0, (void) 0);
+                        PED_ASSERT (0);
                         break;
 
 		case FAT_TYPE_FAT16:

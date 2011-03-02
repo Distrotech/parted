@@ -19,7 +19,7 @@ PT_type##_partition_max_start_sector (void)			\
 {								\
   PedSector max;						\
   int err = ptt_partition_max_start_sector (#PT_type, &max);	\
-  PED_ASSERT (err == 0, return 0);				\
+  PED_ASSERT (err == 0);					\
   return max;							\
 }								\
 								\
@@ -28,7 +28,7 @@ PT_type##_partition_max_length (void)				\
 {								\
   PedSector max;						\
   int err = ptt_partition_max_length (#PT_type, &max);		\
-  PED_ASSERT (err == 0, return 0);				\
+  PED_ASSERT (err == 0);					\
   return max;							\
 }
 

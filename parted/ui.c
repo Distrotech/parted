@@ -353,7 +353,7 @@ sa_sigsegv_handler (int signum, siginfo_t* info, void* ucontext)
                 case SEGV_MAPERR:
                         fputs(_("\nError: SEGV_MAPERR (Address not mapped "
                                 "to object)\n"), stdout);
-                        PED_ASSERT(0, break); /* Force a backtrace */
+                        PED_ASSERT(0); /* Force a backtrace */
                         break;
 
                 case SEGV_ACCERR:
@@ -364,7 +364,7 @@ sa_sigsegv_handler (int signum, siginfo_t* info, void* ucontext)
                 default:
                         fputs(_("\nError: A general SIGSEGV signal was "
                                 "encountered.\n"), stdout);
-                        PED_ASSERT(0, break); /* Force a backtrace */
+                        PED_ASSERT(0); /* Force a backtrace */
                         break;
         }
 
@@ -672,7 +672,7 @@ command_line_pop_word ()
         char*       result;
         StrList*    next;
 
-        PED_ASSERT (command_line != NULL, return NULL);
+        PED_ASSERT (command_line != NULL);
 
         result = str_list_convert_node (command_line);
         next = command_line->next;
@@ -785,8 +785,7 @@ _construct_prompt (const char* head, const char* def,
         char*    prompt = strdup (head);
 
         if (def && possibilities)
-                PED_ASSERT (str_list_match_any (possibilities, def),
-                            return NULL);
+                PED_ASSERT (str_list_match_any (possibilities, def));
 
         if (possibilities && str_list_length (possibilities) < 8) {
                 const StrList*    walk;
@@ -1107,7 +1106,7 @@ command_line_get_disk_type (const char* prompt, const PedDiskType*(* value))
 
         *value = ped_disk_type_get (disk_type_name);
         free (disk_type_name);
-        PED_ASSERT (*value != NULL, return 0);
+        PED_ASSERT (*value != NULL);
         return 1;
 }
 

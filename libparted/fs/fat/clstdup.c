@@ -30,8 +30,7 @@ needs_duplicating (const FatOpContext* ctx, FatFragment frag)
 	FatCluster	cluster = fat_frag_to_cluster (ctx->old_fs, frag);
 	FatClusterFlag	flag;
 
-	PED_ASSERT (cluster >= 2 && cluster < old_fs_info->cluster_count + 2,
-		    return 0);
+	PED_ASSERT (cluster >= 2 && cluster < old_fs_info->cluster_count + 2);
 
 	flag = fat_get_fragment_flag (ctx->old_fs, frag);
 	switch (flag) {
@@ -132,7 +131,7 @@ get_first_underlay (const FatOpContext* ctx, int first, int last)
 	int		old;
 	FatFragment	new;
 
-	PED_ASSERT (first <= last, return 0);
+	PED_ASSERT (first <= last);
 
 	new = ctx->buffer_map [first];
 	for (old = first + 1; old <= last; old++) {
@@ -153,7 +152,7 @@ get_last_underlay (const FatOpContext* ctx, int first, int last)
 	int		old;
 	FatFragment	new;
 
-	PED_ASSERT (first <= last, return 0);
+	PED_ASSERT (first <= last);
 
 	new = ctx->buffer_map [last];
 	for (old = last - 1; old >= first; old--) {
@@ -178,14 +177,14 @@ quick_group_write_read_underlay (FatOpContext* ctx, int first, int last)
 	FatFragment	last_underlay;
 	FatFragment	underlay_length;
 
-	PED_ASSERT (first <= last, return 0);
+	PED_ASSERT (first <= last);
 
 	first_underlay = get_first_underlay (ctx, first, last);
 	if (first_underlay == -1)
 		return 1;
 	last_underlay = get_last_underlay (ctx, first, last);
 
-	PED_ASSERT (first_underlay <= last_underlay, return 0);
+	PED_ASSERT (first_underlay <= last_underlay);
 
 	underlay_length = last_underlay - first_underlay + 1;
 	if (!fat_read_fragments (ctx->new_fs,
@@ -214,7 +213,7 @@ quick_group_write (FatOpContext* ctx, int first, int last)
 	int			i;
 	int			offset;
 
-	PED_ASSERT (first <= last, return 0);
+	PED_ASSERT (first <= last);
 
 	ped_exception_fetch_all ();
 	if (!quick_group_write_read_underlay (ctx, first, last))
@@ -256,7 +255,7 @@ slow_group_write (FatOpContext* ctx, int first, int last)
 	FatSpecific*		new_fs_info = FAT_SPECIFIC (ctx->new_fs);
 	int			i;
 
-	PED_ASSERT (first <= last, return 0);
+	PED_ASSERT (first <= last);
 
 	for (i = first; i <= last; i++) {
 		if (ctx->buffer_map [i] == -1)
@@ -281,7 +280,7 @@ update_remap (FatOpContext* ctx, int first, int last)
 {
 	int		i;
 
-	PED_ASSERT (first <= last, return 0);
+	PED_ASSERT (first <= last);
 
 	for (i = first; i <= last; i++) {
 		if (ctx->buffer_map [i] == -1)
@@ -295,7 +294,7 @@ update_remap (FatOpContext* ctx, int first, int last)
 static int
 group_write (FatOpContext* ctx, int first, int last)
 {
-	PED_ASSERT (first <= last, return 0);
+	PED_ASSERT (first <= last);
 
 	if (!quick_group_write (ctx, first, last)) {
 		if (!slow_group_write (ctx, first, last))
@@ -318,7 +317,7 @@ write_fragments (FatOpContext* ctx)
 	FatFragment		i;
 	FatCluster		new_cluster;
 
-	PED_ASSERT (ctx->buffer_offset < old_fs_info->frag_count, return 0);
+	PED_ASSERT (ctx->buffer_offset < old_fs_info->frag_count);
 
 	group_start = -1;
 	for (i = 0; i < ctx->buffer_frags; i++) {
@@ -338,8 +337,7 @@ write_fragments (FatOpContext* ctx)
 			group_start = group_end = i;
 
 		PED_ASSERT (ctx->buffer_map [i]
-				>= ctx->buffer_map [group_start],
-			    return 0);
+				>= ctx->buffer_map [group_start]);
 
 		mapped_length = ctx->buffer_map [i]
 				- ctx->buffer_map [group_start] + 1;
@@ -355,7 +353,7 @@ write_fragments (FatOpContext* ctx)
 		}
 	}
 
-	PED_ASSERT (group_start != -1, return 0);
+	PED_ASSERT (group_start != -1);
 
 	if (!group_write (ctx, group_start, group_end))
 		return 0;

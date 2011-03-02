@@ -60,8 +60,8 @@ _asfs_probe (PedGeometry* geom)
         PedSector root;
         int found = 0;
 
-	PED_ASSERT (geom != NULL, return NULL);
-	PED_ASSERT (geom->dev != NULL, return NULL);
+	PED_ASSERT (geom != NULL);
+	PED_ASSERT (geom->dev != NULL);
 
 	/* Finds the blocksize of the partition block */
 	if (!(part = ped_malloc (PED_SECTOR_SIZE_DEFAULT*blocksize))) {

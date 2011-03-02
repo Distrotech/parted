@@ -123,7 +123,7 @@ hfsc_cache_add_extent(HfsCPrivateCache* cache, uint32_t start, uint32_t length,
 	HfsCPrivateExtent*	ext;
 	unsigned int		idx = start >> CR_SHIFT;
 
-	PED_ASSERT(idx < cache->linked_ref_size, return NULL);
+	PED_ASSERT(idx < cache->linked_ref_size);
 
 	for (ext = cache->linked_ref[idx];
 	     ext && start != ext->ext_start;
@@ -178,7 +178,7 @@ hfsc_cache_search_extent(HfsCPrivateCache* cache, uint32_t start)
 	HfsCPrivateExtent*	ret;
 	unsigned int	idx = start >> CR_SHIFT;
 
-	PED_ASSERT(idx < cache->linked_ref_size, return NULL);
+	PED_ASSERT(idx < cache->linked_ref_size);
 
 	for (ret = cache->linked_ref[idx];
 	     ret && start != ret->ext_start;
@@ -199,8 +199,8 @@ hfsc_cache_move_extent(HfsCPrivateCache* cache, uint32_t old_start,
 	unsigned int 		idx1 = old_start >> CR_SHIFT;
 	unsigned int		idx2 = new_start >> CR_SHIFT;
 
-	PED_ASSERT(idx1 < cache->linked_ref_size, return NULL);
-	PED_ASSERT(idx2 < cache->linked_ref_size, return NULL);
+	PED_ASSERT(idx1 < cache->linked_ref_size);
+	PED_ASSERT(idx2 < cache->linked_ref_size);
 
 	for (pext = cache->linked_ref[idx2];
 	     pext && new_start != pext->ext_start;

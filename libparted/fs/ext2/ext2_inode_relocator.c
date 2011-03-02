@@ -145,7 +145,7 @@ static int doblock(struct ext2_fs *fs, struct ext2_inode_relocator_state *state,
 				    offset))
 				return 0;
 
-		PED_ASSERT (ptr->rec_len > 0, return 0);
+		PED_ASSERT (ptr->rec_len > 0);
 		offset += EXT2_DIRENT_REC_LEN (*ptr);
 	} while (offset < fs->blocksize);
 

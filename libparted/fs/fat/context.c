@@ -228,7 +228,7 @@ fat_op_context_create_initial_fat (FatOpContext* ctx)
 			continue;
 
 		new_clst = fat_frag_to_cluster (ctx->new_fs, new_frag);
-		PED_ASSERT (new_clst != 0, return 0);
+		PED_ASSERT (new_clst != 0);
 
 		if (frag_flag == FAT_FLAG_BAD) {
 			if (!fat_table_set_bad (new_fs_info->fat, new_clst))
@@ -248,7 +248,7 @@ fat_op_context_create_initial_fat (FatOpContext* ctx)
 			continue;
 
 		clst = fat_sector_to_cluster (ctx->new_fs, new_sect);
-		PED_ASSERT (clst != 0, return 0);
+		PED_ASSERT (clst != 0);
 
 		if (!fat_table_set_eof (new_fs_info->fat, clst))
 			return 0;

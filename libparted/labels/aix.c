@@ -54,7 +54,7 @@ aix_label_magic_set (char *label, int magic_val)
 static int
 aix_probe (const PedDevice *dev)
 {
-	PED_ASSERT (dev != NULL, return 0);
+	PED_ASSERT (dev != NULL);
 
 	void *label;
 	if (!ptt_read_sector (dev, 0, &label))
@@ -142,7 +142,7 @@ aix_partition_duplicate (const PedPartition* part)
 static void
 aix_partition_destroy (PedPartition* part)
 {
-	PED_ASSERT (part != NULL, return);
+	PED_ASSERT (part != NULL);
 
 	_ped_partition_free (part);
 }
@@ -198,7 +198,7 @@ aix_get_max_supported_partition_count (const PedDisk* disk, int *max_n)
 static int
 aix_partition_align (PedPartition* part, const PedConstraint* constraint)
 {
-        PED_ASSERT (part != NULL, return 0);
+        PED_ASSERT (part != NULL);
 
         return 1;
 }

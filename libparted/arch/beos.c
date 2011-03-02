@@ -273,7 +273,7 @@ beos_new (const char* path)
 	struct stat stat_info;
 	PedDevice* dev;
 
-	PED_ASSERT(path != NULL, return NULL);
+	PED_ASSERT(path != NULL);
 
 	dev = (PedDevice*) ped_malloc (sizeof (PedDevice));
 	if (!dev)
@@ -404,7 +404,7 @@ beos_read (const PedDevice* dev, void* buffer, PedSector start, PedSector count)
 	PedExceptionOption ex_status;
 	size_t read_length = count * dev->sector_size;
 
-	PED_ASSERT(dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0, return 0);
+	PED_ASSERT(dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0);
 
 	/* First, try to seek */
 	while(1)
@@ -478,7 +478,7 @@ beos_write (PedDevice* dev, const void* buffer, PedSector start,
 	PedExceptionOption      ex_status;
 	size_t                  write_length = count * dev->sector_size;
 
-	PED_ASSERT(dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0, return 0);
+	PED_ASSERT(dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0);
 
 	if (dev->read_only)
 	{
@@ -565,7 +565,7 @@ beos_check (PedDevice* dev, void* buffer, PedSector start, PedSector count)
 	PedSector		done = 0;
 	int				status;
 
-	PED_ASSERT(dev != NULL, return 0);
+	PED_ASSERT(dev != NULL);
 
 	if (lseek(arch_specific->fd, start * dev->sector_size, SEEK_SET)
 		!= start * dev->sector_size)

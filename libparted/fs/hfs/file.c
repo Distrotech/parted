@@ -146,7 +146,7 @@ hfs_file_find_sector (HfsPrivateFile* file, PedSector sector)
 	}
 
 	/* in the three cached extent */
-	PED_ASSERT(file->start_cache && block >= file->start_cache, return 0);
+	PED_ASSERT(file->start_cache && block >= file->start_cache);
 	for (s = file->start_cache, i = 0; i < HFS_EXT_NB; i++) {
 		if ((block >= s) && (block < s + PED_BE16_TO_CPU (
 						file->cache[i].block_count))) {

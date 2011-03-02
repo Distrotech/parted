@@ -278,7 +278,7 @@ _disk_warn_loss (PedDisk* disk)
 static int
 snap (PedSector* sector, PedSector new_sector, PedGeometry* range)
 {
-        PED_ASSERT (ped_geometry_test_sector_inside (range, *sector), return 0);
+        PED_ASSERT (ped_geometry_test_sector_inside (range, *sector));
         if (!ped_geometry_test_sector_inside (range, new_sector))
                 return 0;
         *sector = new_sector;
@@ -314,7 +314,7 @@ prefer_snap (PedSector s, int what, PedGeometry* range, EMoves* allow,
         PedSector new_sect;
         EMoves move;
 
-        PED_ASSERT (what == SECT_START || what == SECT_END, return 0);
+        PED_ASSERT (what == SECT_START || what == SECT_END);
 
         if (!(*allow & (MOVE_UP | MOVE_DOWN))) {
                 *dist = 0;
@@ -346,7 +346,7 @@ prefer_snap (PedSector s, int what, PedGeometry* range, EMoves* allow,
                                                  && what == SECT_END) )
                         move = MOVE_UP;
                 else
-                        PED_ASSERT (0, return 0);
+                        PED_ASSERT (0);
         } else if (*allow & MOVE_UP)
                 move = MOVE_UP;
         else if (*allow & MOVE_DOWN)
@@ -407,7 +407,7 @@ snap_to_boundaries (PedGeometry* new_geom, PedGeometry* old_geom,
         end_want = prefer_snap (end, SECT_END, end_range, &end_allow,
                                 end_part, &end_dist );
 
-        PED_ASSERT (start_dist >= 0 && end_dist >= 0, return);
+        PED_ASSERT (start_dist >= 0 && end_dist >= 0);
 
         /* If start and end are on adjacent partitions,    */
         /* and if they would prefer crossing, then refrain */
@@ -418,13 +418,13 @@ snap_to_boundaries (PedGeometry* new_geom, PedGeometry* old_geom,
                         start_want = prefer_snap (start, SECT_START,
                                                   start_range, &start_allow,
                                                   start_part, &start_dist );
-                        PED_ASSERT (start_dist >= 0, return);
+                        PED_ASSERT (start_dist >= 0);
                 } else {
                         end_allow &= ~MOVE_DOWN;
                         end_want = prefer_snap (end, SECT_END,
                                                 end_range, &end_allow,
                                                 end_part, &end_dist );
-                        PED_ASSERT (end_dist >= 0, return);
+                        PED_ASSERT (end_dist >= 0);
                 }
         }
 
@@ -435,10 +435,9 @@ snap_to_boundaries (PedGeometry* new_geom, PedGeometry* old_geom,
         end = ( end_want == MOVE_DOWN ? end_part->geom.start - 1 :
               ( end_want == MOVE_UP ? end_part->geom.end :
                 end ) );
-        PED_ASSERT (ped_geometry_test_sector_inside(start_range,start), return);
-        PED_ASSERT (ped_geometry_test_sector_inside (end_range, end), return);
-        PED_ASSERT (start <= end,
-                    PED_DEBUG (0, "start = %d, end = %d\n", start, end));
+        PED_ASSERT (ped_geometry_test_sector_inside(start_range,start));
+        PED_ASSERT (ped_geometry_test_sector_inside (end_range, end));
+        PED_ASSERT (start <= end);
         ped_geometry_set (new_geom, start, end - start + 1);
 }
 
@@ -806,7 +805,7 @@ do_mkpart (PedDevice** dev)
         /* create constraints */
         user_constraint = constraint_from_start_end (*dev, range_start,
                         range_end);
-        PED_ASSERT (user_constraint != NULL, return 0);
+        PED_ASSERT (user_constraint != NULL);
 
         if (alignment == ALIGNMENT_OPTIMAL)
                 dev_constraint =
@@ -816,7 +815,7 @@ do_mkpart (PedDevice** dev)
                         ped_device_get_minimal_aligned_constraint(*dev);
         else
                 dev_constraint = ped_device_get_constraint(*dev);
-        PED_ASSERT (dev_constraint != NULL, return 0);
+        PED_ASSERT (dev_constraint != NULL);
 
         final_constraint = ped_constraint_intersect (user_constraint,
                         dev_constraint);
@@ -900,7 +899,7 @@ do_mkpart (PedDevice** dev)
 
         /* set minor attributes */
         if (part_name)
-                PED_ASSERT (ped_partition_set_name (part, part_name), return 0);
+                PED_ASSERT (ped_partition_set_name (part, part_name));
         free (part_name);  /* avoid double-free upon failure */
         part_name = NULL;
         if (!ped_partition_set_system (part, fs_type))
@@ -1015,7 +1014,7 @@ do_mkpartfs (PedDevice** dev)
         /* create constraints */
         user_constraint = constraint_from_start_end (*dev, range_start,
                                                                 range_end);
-        PED_ASSERT (user_constraint != NULL, return 0);
+        PED_ASSERT (user_constraint != NULL);
 
         if (alignment == ALIGNMENT_OPTIMAL)
                 dev_constraint =
@@ -1025,7 +1024,7 @@ do_mkpartfs (PedDevice** dev)
                         ped_device_get_minimal_aligned_constraint(*dev);
         else
                 dev_constraint = ped_device_get_constraint(*dev);
-        PED_ASSERT (dev_constraint != NULL, return 0);
+        PED_ASSERT (dev_constraint != NULL);
 
         final_constraint = ped_constraint_intersect (user_constraint,
                                                      dev_constraint);
@@ -1113,7 +1112,7 @@ do_mkpartfs (PedDevice** dev)
         ped_file_system_close (fs);
 
         if (part_name)
-                PED_ASSERT (ped_partition_set_name (part, part_name), return 0);
+                PED_ASSERT (ped_partition_set_name (part, part_name));
         if (!ped_partition_set_system (part, fs_type))
                 goto error_destroy_disk;
 
@@ -2058,7 +2057,7 @@ static bool
 partition_align_check (PedDisk const *disk, PedPartition const *part,
 		       enum AlignmentType a_type)
 {
-  PED_ASSERT (part->disk == disk, return false);
+  PED_ASSERT (part->disk == disk);
   PedDevice const *dev = disk->dev;
 
   PedAlignment *pa = (a_type == PA_MINIMUM
@@ -2067,7 +2066,7 @@ partition_align_check (PedDisk const *disk, PedPartition const *part,
   if (pa == NULL)
     return true;
 
-  PED_ASSERT (pa->grain_size != 0, return false);
+  PED_ASSERT (pa->grain_size != 0);
   bool ok = (part->geom.start % pa->grain_size == pa->offset);
   free (pa);
   return ok;

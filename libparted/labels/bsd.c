@@ -153,7 +153,7 @@ bsd_probe (const PedDevice *dev)
 {
 	BSDRawLabel	*partition;
 
-	PED_ASSERT (dev != NULL, return 0);
+	PED_ASSERT (dev != NULL);
 
         if (dev->sector_size < 512)
                 return 0;
@@ -179,7 +179,7 @@ bsd_alloc (const PedDevice* dev)
 	BSDDiskData*	bsd_specific;
 	BSDRawLabel*	label;
 
-	PED_ASSERT(dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0, return 0);
+	PED_ASSERT(dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0);
 
 	disk = _ped_disk_alloc ((PedDevice*)dev, &bsd_disk_type);
 	if (!disk)
@@ -336,8 +336,8 @@ bsd_write (const PedDisk* disk)
 	int			i;
 	int			max_part = 0;
 
-	PED_ASSERT (disk != NULL, return 0);
-	PED_ASSERT (disk->dev != NULL, return 0);
+	PED_ASSERT (disk != NULL);
+	PED_ASSERT (disk->dev != NULL);
 
 	bsd_specific = (BSDDiskData*) disk->disk_specific;
 	label = (BSDRawLabel *) (bsd_specific->boot_code + BSD_LABEL_OFFSET);
@@ -434,7 +434,7 @@ bsd_partition_duplicate (const PedPartition* part)
 static void
 bsd_partition_destroy (PedPartition* part)
 {
-	PED_ASSERT (part != NULL, return);
+	PED_ASSERT (part != NULL);
 
 	if (ped_partition_is_active (part))
 		free (part->disk_specific);
@@ -464,9 +464,9 @@ bsd_partition_set_flag (PedPartition* part, PedPartitionFlag flag, int state)
 //	PedPartition*		walk; // since -Werror, this unused variable would break build
 	BSDPartitionData*	bsd_data;
 
-	PED_ASSERT (part != NULL, return 0);
-	PED_ASSERT (part->disk_specific != NULL, return 0);
-	PED_ASSERT (part->disk != NULL, return 0);
+	PED_ASSERT (part != NULL);
+	PED_ASSERT (part->disk_specific != NULL);
+	PED_ASSERT (part->disk != NULL);
 
 	bsd_data = part->disk_specific;
 
@@ -496,8 +496,8 @@ bsd_partition_get_flag (const PedPartition* part, PedPartitionFlag flag)
 {
 	BSDPartitionData*		bsd_data;
 
-	PED_ASSERT (part != NULL, return 0);
-	PED_ASSERT (part->disk_specific != NULL, return 0);
+	PED_ASSERT (part != NULL);
+	PED_ASSERT (part->disk_specific != NULL);
 
 	bsd_data = part->disk_specific;
 	switch (flag) {
@@ -601,8 +601,8 @@ bsd_alloc_metadata (PedDisk* disk)
 	PedPartition*		new_part;
 	PedConstraint*		constraint_any = NULL;
 
-	PED_ASSERT (disk != NULL, goto error);
-	PED_ASSERT (disk->dev != NULL, goto error);
+	PED_ASSERT (disk != NULL);
+	PED_ASSERT (disk->dev != NULL);
 
 	constraint_any = ped_constraint_any (disk->dev);
 
@@ -646,8 +646,8 @@ static PedDiskType bsd_disk_type = {
 void
 ped_disk_bsd_init ()
 {
-	PED_ASSERT (sizeof (BSDRawPartition) == 16, return);
-	PED_ASSERT (sizeof (BSDRawLabel) == 276, return);
+	PED_ASSERT (sizeof (BSDRawPartition) == 16);
+	PED_ASSERT (sizeof (BSDRawLabel) == 276);
 
 	ped_disk_type_register (&bsd_disk_type);
 }

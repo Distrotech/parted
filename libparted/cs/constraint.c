@@ -63,11 +63,11 @@ ped_constraint_init (
 	PedSector min_size,
 	PedSector max_size)
 {
-	PED_ASSERT (constraint != NULL, return 0);
-	PED_ASSERT (start_range != NULL, return 0);
-	PED_ASSERT (end_range != NULL, return 0);
-	PED_ASSERT (min_size > 0, return 0);
-	PED_ASSERT (max_size > 0, return 0);
+	PED_ASSERT (constraint != NULL);
+	PED_ASSERT (start_range != NULL);
+	PED_ASSERT (end_range != NULL);
+	PED_ASSERT (min_size > 0);
+	PED_ASSERT (max_size > 0);
 
 	constraint->start_align = ped_alignment_duplicate (start_align);
 	constraint->end_align = ped_alignment_duplicate (end_align);
@@ -125,9 +125,9 @@ ped_constraint_new_from_min_max (
 	PedGeometry	start_range;
 	PedGeometry	end_range;
 
-	PED_ASSERT (min != NULL, return NULL);
-	PED_ASSERT (max != NULL, return NULL);
-	PED_ASSERT (ped_geometry_test_inside (max, min), return NULL);
+	PED_ASSERT (min != NULL);
+	PED_ASSERT (max != NULL);
+	PED_ASSERT (ped_geometry_test_inside (max, min));
 
 	ped_geometry_init (&start_range, min->dev, max->start,
 			   min->start - max->start + 1);
@@ -150,7 +150,7 @@ ped_constraint_new_from_min (const PedGeometry* min)
 {
 	PedGeometry	full_dev;
 
-	PED_ASSERT (min != NULL, return NULL);
+	PED_ASSERT (min != NULL);
 
 	ped_geometry_init (&full_dev, min->dev, 0, min->dev->length);
 	return ped_constraint_new_from_min_max (min, &full_dev);
@@ -165,7 +165,7 @@ ped_constraint_new_from_min (const PedGeometry* min)
 PedConstraint*
 ped_constraint_new_from_max (const PedGeometry* max)
 {
-	PED_ASSERT (max != NULL, return NULL);
+	PED_ASSERT (max != NULL);
 
 	return ped_constraint_new (
 			ped_alignment_any, ped_alignment_any,
@@ -180,7 +180,7 @@ ped_constraint_new_from_max (const PedGeometry* max)
 PedConstraint*
 ped_constraint_duplicate (const PedConstraint* constraint)
 {
-	PED_ASSERT (constraint != NULL, return NULL);
+	PED_ASSERT (constraint != NULL);
 
 	return ped_constraint_new (
 		constraint->start_align,
@@ -260,7 +260,7 @@ empty:
 void
 ped_constraint_done (PedConstraint* constraint)
 {
-	PED_ASSERT (constraint != NULL, return);
+	PED_ASSERT (constraint != NULL);
 
 	ped_alignment_destroy (constraint->start_align);
 	ped_alignment_destroy (constraint->end_align);
@@ -416,8 +416,8 @@ ped_constraint_solve_nearest (
 	if (constraint == NULL)
 		return NULL;
 
-	PED_ASSERT (geom != NULL, return NULL);
-	PED_ASSERT (constraint->start_range->dev == geom->dev, return NULL);
+	PED_ASSERT (geom != NULL);
+	PED_ASSERT (constraint->start_range->dev == geom->dev);
 
 	start = _constraint_get_nearest_start_soln (constraint, geom->start);
 	if (start == -1)
@@ -429,8 +429,7 @@ ped_constraint_solve_nearest (
 	result = ped_geometry_new (geom->dev, start, end - start + 1);
 	if (!result)
 		return NULL;
-	PED_ASSERT (ped_constraint_is_solution (constraint, result),
-		    return NULL);
+	PED_ASSERT (ped_constraint_is_solution (constraint, result));
 	return result;
 }
 
@@ -462,8 +461,8 @@ int
 ped_constraint_is_solution (const PedConstraint* constraint,
 	       		    const PedGeometry* geom)
 {
-	PED_ASSERT (constraint != NULL, return 0);
-	PED_ASSERT (geom != NULL, return 0);
+	PED_ASSERT (constraint != NULL);
+	PED_ASSERT (geom != NULL);
 
 	if (!ped_alignment_is_aligned (constraint->start_align, NULL,
 				       geom->start))

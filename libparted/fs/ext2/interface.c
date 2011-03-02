@@ -234,7 +234,7 @@ _ext2_resize (PedFileSystem* fs, PedGeometry* geom, PedTimer* timer)
 	struct ext2_fs* f;
 	PedSector	old_length = fs->geom->length;
 
-	PED_ASSERT (fs->geom->dev == geom->dev, return 0);
+	PED_ASSERT (fs->geom->dev == geom->dev);
 
 	if (fs->geom->start != geom->start)
 	{

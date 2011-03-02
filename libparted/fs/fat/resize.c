@@ -84,7 +84,7 @@ duplicate_legacy_root_dir (FatOpContext* ctx)
 	FatSpecific*		new_fs_info = FAT_SPECIFIC (ctx->new_fs);
 
 	PED_ASSERT (old_fs_info->root_dir_sector_count
-			== new_fs_info->root_dir_sector_count, return 0);
+			== new_fs_info->root_dir_sector_count);
 
 	if (!ped_geometry_read (ctx->old_fs->geom, old_fs_info->buffer,
 				old_fs_info->root_dir_offset,
@@ -224,7 +224,7 @@ alloc_root_dir (FatOpContext* ctx)
 	FatCluster		cluster;
 	FatCluster		cluster_count;
 
-	PED_ASSERT (new_fs_info->fat_type == FAT_TYPE_FAT32, return 0);
+	PED_ASSERT (new_fs_info->fat_type == FAT_TYPE_FAT32);
 
 	cluster_count = ped_div_round_up (
 			   PED_MAX (16, old_fs_info->root_dir_sector_count),
@@ -258,8 +258,8 @@ free_root_dir (FatOpContext* ctx)
 	FatCluster		old_cluster;
 	FatFragment		i;
 
-	PED_ASSERT (old_fs_info->fat_type == FAT_TYPE_FAT32, return 0);
-	PED_ASSERT (new_fs_info->fat_type == FAT_TYPE_FAT16, return 0);
+	PED_ASSERT (old_fs_info->fat_type == FAT_TYPE_FAT32);
+	PED_ASSERT (new_fs_info->fat_type == FAT_TYPE_FAT16);
 
 	for (old_cluster = old_fs_info->root_cluster;
 	     !fat_table_is_eof (old_fs_info->fat, old_cluster);
@@ -286,8 +286,8 @@ fat_clear_root_dir (PedFileSystem* fs)
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 	int		i;
 
-	PED_ASSERT (fs_info->fat_type == FAT_TYPE_FAT16, return 0);
-	PED_ASSERT (fs_info->root_dir_sector_count, return 0);
+	PED_ASSERT (fs_info->fat_type == FAT_TYPE_FAT16);
+	PED_ASSERT (fs_info->root_dir_sector_count);
 
 	memset (fs_info->buffer, 0, 512);
 
@@ -343,7 +343,7 @@ fat_construct_dir_tree (FatOpContext* ctx)
 	if (new_fs_info->fat_type == old_fs_info->fat_type) {
 		switch (old_fs_info->fat_type) {
                         case FAT_TYPE_FAT12:
-                        PED_ASSERT (0, (void) 0);
+                        PED_ASSERT (0);
                         break;
 
 			case FAT_TYPE_FAT16:
@@ -430,11 +430,11 @@ fat_construct_new_fat (FatOpContext* ctx)
 
 		new_next_frag = fat_op_context_map_fragment (ctx,
 							     old_next_frag);
-		PED_ASSERT (new_next_frag != -1, return 0);
+		PED_ASSERT (new_next_frag != -1);
 
 		new_next_cluster = fat_frag_to_cluster (ctx->new_fs,
 							new_next_frag);
-		PED_ASSERT (new_next_cluster != new_cluster, return 0);
+		PED_ASSERT (new_next_cluster != new_cluster);
 
 		fat_table_set (new_fs_info->fat, new_cluster, new_next_cluster);
 	}
@@ -536,7 +536,7 @@ ask_type (PedFileSystem* fs, int fat16_ok, int fat32_ok, FatType* out_fat_type)
 			return 0;
 
                 default:
-                        PED_ASSERT (0, (void) 0);
+                        PED_ASSERT (0);
                         break;
 		}
 	}
@@ -811,7 +811,7 @@ _copy_hidden_sectors (FatOpContext* ctx)
 	last = PED_MIN (old_fs_info->fat_offset, new_fs_info->fat_offset) - 1;
 	count = last - first + 1;
 
-	PED_ASSERT (count < BUFFER_SIZE, return 0);
+	PED_ASSERT (count < BUFFER_SIZE);
 
 	if (!ped_geometry_read (ctx->old_fs->geom, old_fs_info->buffer,
 				first, count))

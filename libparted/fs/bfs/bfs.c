@@ -48,8 +48,8 @@ bfs_probe (PedGeometry* geom)
 {
 	uint8_t*        buf;
 
-        PED_ASSERT (geom      != NULL, return NULL);
-        PED_ASSERT (geom->dev != NULL, return NULL);
+        PED_ASSERT (geom      != NULL);
+        PED_ASSERT (geom->dev != NULL);
 
         buf = ped_malloc (geom->dev->sector_size);
 
@@ -71,8 +71,8 @@ bfs_clobber (PedGeometry* geom)
 {
 	uint8_t*  buf;
 
-        PED_ASSERT (geom      != NULL, return 0);
-        PED_ASSERT (geom->dev != NULL, return 0);
+        PED_ASSERT (geom      != NULL);
+        PED_ASSERT (geom->dev != NULL);
 
         buf = ped_malloc (geom->dev->sector_size);
 
@@ -132,8 +132,8 @@ bfs_open (PedGeometry *geom)
         struct BfsSpecific* bfs;
         uint8_t* buf;
 
-        PED_ASSERT (geom      != NULL, return NULL);
-        PED_ASSERT (geom->dev != NULL, return NULL);
+        PED_ASSERT (geom      != NULL);
+        PED_ASSERT (geom->dev != NULL);
 
         buf = ped_malloc (geom->dev->sector_size);
 

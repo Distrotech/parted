@@ -507,8 +507,8 @@ _probe_dm_devices ()
 static int
 _device_stat (PedDevice* dev, struct stat * dev_stat)
 {
-        PED_ASSERT (dev != NULL, return 0);
-        PED_ASSERT (!dev->external_mode, return 0);
+        PED_ASSERT (dev != NULL);
+        PED_ASSERT (!dev->external_mode);
 
         while (1) {
                 if (!stat (dev->path, dev_stat)) {
@@ -655,7 +655,7 @@ _device_set_sector_size (PedDevice* dev)
         dev->sector_size = PED_SECTOR_SIZE_DEFAULT;
         dev->phys_sector_size = PED_SECTOR_SIZE_DEFAULT;
 
-        PED_ASSERT (dev->open_count, return);
+        PED_ASSERT (dev->open_count);
 
         if (_get_linux_version() < KERNEL_VERSION (2,3,0)) {
                 dev->sector_size = PED_SECTOR_SIZE_DEFAULT;
@@ -725,8 +725,8 @@ _device_get_length (PedDevice* dev)
         PedSector               test_size;
 
 
-        PED_ASSERT (dev->open_count > 0, return 0);
-        PED_ASSERT (dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0, return 0);
+        PED_ASSERT (dev->open_count > 0);
+        PED_ASSERT (dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0);
 
         test_str = getenv ("PARTED_TEST_DEVICE_LENGTH");
         if (test_str
@@ -761,7 +761,7 @@ _device_probe_geometry (PedDevice* dev)
 
         if (!_device_stat (dev, &dev_stat))
                 return 0;
-        PED_ASSERT (S_ISBLK (dev_stat.st_mode), return 0);
+        PED_ASSERT (S_ISBLK (dev_stat.st_mode));
 
         _device_set_sector_size (dev);
 
@@ -841,7 +841,7 @@ init_ide (PedDevice* dev)
                                 dev->model = strdup(_("Generic IDE"));
                                 break;
                         default:
-                                PED_ASSERT (0, (void) 0);
+                                PED_ASSERT (0);
                                 break;
                 }
         } else {
@@ -877,7 +877,7 @@ init_ide (PedDevice* dev)
                                 case PED_EXCEPTION_IGNORE:
                                         break;
                                 default:
-                                        PED_ASSERT (0, (void) 0);
+                                        PED_ASSERT (0);
                                         break;
                         }
                 }
@@ -1137,7 +1137,7 @@ init_dasd (PedDevice* dev, const char* model_name)
 
         LinuxSpecific* arch_specific = LINUX_SPECIFIC (dev);
 
-        PED_ASSERT (S_ISBLK (dev_stat.st_mode), return 0);
+        PED_ASSERT (S_ISBLK (dev_stat.st_mode));
 
         _device_set_sector_size (dev);
         if (!dev->sector_size)
@@ -1224,7 +1224,7 @@ init_generic (PedDevice* dev, const char* model_name)
                         case PED_EXCEPTION_IGNORE:
                                 break;
                         default:
-                                PED_ASSERT (0, (void) 0);
+                                PED_ASSERT (0);
                                 break;
                 }
 
@@ -1282,7 +1282,7 @@ linux_new (const char* path)
         PedDevice*      dev;
         LinuxSpecific*  arch_specific;
 
-        PED_ASSERT (path != NULL, return NULL);
+        PED_ASSERT (path != NULL);
 
         dev = (PedDevice*) ped_malloc (sizeof (PedDevice));
         if (!dev)
@@ -1630,9 +1630,9 @@ _device_seek (const PedDevice* dev, PedSector sector)
 {
         LinuxSpecific*  arch_specific;
 
-        PED_ASSERT (dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0, return 0);
-        PED_ASSERT (dev != NULL, return 0);
-        PED_ASSERT (!dev->external_mode, return 0);
+        PED_ASSERT (dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0);
+        PED_ASSERT (dev != NULL);
+        PED_ASSERT (!dev->external_mode);
 
         arch_specific = LINUX_SPECIFIC (dev);
 
@@ -1654,8 +1654,8 @@ _read_lastoddsector (const PedDevice* dev, void* buffer)
         LinuxSpecific*                  arch_specific;
         struct blkdev_ioctl_param       ioctl_param;
 
-        PED_ASSERT(dev != NULL, return 0);
-        PED_ASSERT(buffer != NULL, return 0);
+        PED_ASSERT(dev != NULL);
+        PED_ASSERT(buffer != NULL);
 
         arch_specific = LINUX_SPECIFIC (dev);
 
@@ -1689,8 +1689,8 @@ linux_read (const PedDevice* dev, void* buffer, PedSector start,
         PedExceptionOption      ex_status;
         void*                   diobuf = NULL;
 
-        PED_ASSERT (dev != NULL, return 0);
-        PED_ASSERT (dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0, return 0);
+        PED_ASSERT (dev != NULL);
+        PED_ASSERT (dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0);
 
         if (_get_linux_version() < KERNEL_VERSION (2,6,0)) {
                 /* Kludge.  This is necessary to read/write the last
@@ -1724,7 +1724,7 @@ linux_read (const PedDevice* dev, void* buffer, PedSector start,
                         case PED_EXCEPTION_CANCEL:
                                 return 0;
                         default:
-                                PED_ASSERT (0, (void) 0);
+                                PED_ASSERT (0);
                                 break;
                 }
         }
@@ -1768,7 +1768,7 @@ linux_read (const PedDevice* dev, void* buffer, PedSector start,
                                 free(diobuf);
                                 return 0;
                         default:
-                                PED_ASSERT (0, (void) 0);
+                                PED_ASSERT (0);
                                 break;
                 }
         }
@@ -1784,8 +1784,8 @@ _write_lastoddsector (PedDevice* dev, const void* buffer)
         LinuxSpecific*                  arch_specific;
         struct blkdev_ioctl_param       ioctl_param;
 
-        PED_ASSERT(dev != NULL, return 0);
-        PED_ASSERT(buffer != NULL, return 0);
+        PED_ASSERT(dev != NULL);
+        PED_ASSERT(buffer != NULL);
 
         arch_specific = LINUX_SPECIFIC (dev);
 
@@ -1820,7 +1820,7 @@ linux_write (PedDevice* dev, const void* buffer, PedSector start,
         void*                   diobuf;
         void*                   diobuf_start;
 
-        PED_ASSERT(dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0, return 0);
+        PED_ASSERT(dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0);
 
         if (dev->read_only) {
                 if (ped_exception_throw (
@@ -1866,7 +1866,7 @@ linux_write (PedDevice* dev, const void* buffer, PedSector start,
                         case PED_EXCEPTION_CANCEL:
                                 return 0;
                         default:
-                                PED_ASSERT (0, (void) 0);
+                                PED_ASSERT (0);
                                 break;
                 }
         }
@@ -1910,7 +1910,7 @@ linux_write (PedDevice* dev, const void* buffer, PedSector start,
                                 free(diobuf_start);
                                 return 0;
                         default:
-                                PED_ASSERT (0, (void) 0);
+                                PED_ASSERT (0);
                                 break;
                 }
         }
@@ -1929,7 +1929,7 @@ linux_check (PedDevice* dev, void* buffer, PedSector start, PedSector count)
         int             status;
         void*           diobuf;
 
-        PED_ASSERT(dev != NULL, return 0);
+        PED_ASSERT(dev != NULL);
 
         if (!_device_seek (dev, start))
                 return 0;
@@ -1980,7 +1980,7 @@ _do_fsync (PedDevice* dev)
                         case PED_EXCEPTION_CANCEL:
                                 return 0;
                         default:
-                                PED_ASSERT (0, (void) 0);
+                                PED_ASSERT (0);
                                 break;
                 }
         }
@@ -1990,8 +1990,8 @@ _do_fsync (PedDevice* dev)
 static int
 linux_sync (PedDevice* dev)
 {
-        PED_ASSERT (dev != NULL, return 0);
-        PED_ASSERT (!dev->external_mode, return 0);
+        PED_ASSERT (dev != NULL);
+        PED_ASSERT (!dev->external_mode);
 
         if (dev->read_only)
                 return 1;
@@ -2004,8 +2004,8 @@ linux_sync (PedDevice* dev)
 static int
 linux_sync_fast (PedDevice* dev)
 {
-        PED_ASSERT (dev != NULL, return 0);
-        PED_ASSERT (!dev->external_mode, return 0);
+        PED_ASSERT (dev != NULL);
+        PED_ASSERT (!dev->external_mode);
 
         if (dev->read_only)
                 return 1;
@@ -2302,7 +2302,7 @@ _partition_is_mounted (const PedPartition *part)
 static int
 _has_partitions (const PedDisk* disk)
 {
-        PED_ASSERT(disk != NULL, return 0);
+        PED_ASSERT(disk != NULL);
 
         /* Some devices can't be partitioned. */
         if (!strcmp (disk->type->name, "loop"))
@@ -2316,7 +2316,7 @@ linux_partition_is_busy (const PedPartition* part)
 {
         PedPartition*   walk;
 
-        PED_ASSERT (part != NULL, return 0);
+        PED_ASSERT (part != NULL);
 
         if (_partition_is_mounted (part))
                 return 1;
@@ -2350,9 +2350,8 @@ _blkpg_add_partition (PedDisk* disk, const PedPartition *part)
         const char*             vol_name;
         char*                   dev_name;
 
-        PED_ASSERT(disk != NULL, return 0);
-        PED_ASSERT(disk->dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0,
-                   return 0);
+        PED_ASSERT(disk != NULL);
+        PED_ASSERT(disk->dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0);
 
         if (!_has_partitions (disk))
                 return 0;
@@ -2460,8 +2459,8 @@ _device_get_partition_range(PedDevice* dev)
 static int
 _disk_sync_part_table (PedDisk* disk)
 {
-        PED_ASSERT(disk != NULL, return 0);
-        PED_ASSERT(disk->dev != NULL, return 0);
+        PED_ASSERT(disk != NULL);
+        PED_ASSERT(disk->dev != NULL);
         int lpn;
 
         /* lpn = largest partition number. */

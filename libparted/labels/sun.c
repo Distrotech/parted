@@ -140,7 +140,7 @@ sun_verify_checksum (SunRawLabel const *label)
 static int
 sun_probe (const PedDevice *dev)
 {
-	PED_ASSERT (dev != NULL, return 0);
+	PED_ASSERT (dev != NULL);
 
 	void *s0;
 	if (!ptt_read_sector (dev, 0, &s0))
@@ -175,7 +175,7 @@ sun_alloc (const PedDevice* dev)
 	SunDiskData*	sun_specific;
 	const PedCHSGeometry*	bios_geom = &dev->bios_geom;
 	PedSector	cyl_size = bios_geom->sectors * bios_geom->heads;
-	PED_ASSERT (cyl_size != 0, return NULL);
+	PED_ASSERT (cyl_size != 0);
 
         disk = _ped_disk_alloc (dev, &sun_disk_type);
 	if (!disk)
@@ -186,8 +186,7 @@ sun_alloc (const PedDevice* dev)
 		goto error_free_disk;
 	sun_specific = (SunDiskData*) disk->disk_specific;
 
-	PED_ASSERT (bios_geom->cylinders == (PedSector) (dev->length / cyl_size),
-                    return NULL);
+	PED_ASSERT (bios_geom->cylinders == (PedSector) (dev->length / cyl_size));
 	sun_specific->length = ped_round_down_to (dev->length, cyl_size);
 
 	label = &sun_specific->raw_label;
@@ -316,9 +315,9 @@ sun_read (PedDisk* disk)
 	PedSector end, start, block;
 	PedConstraint* constraint_exact;
 
-	PED_ASSERT (disk != NULL, return 0);
-	PED_ASSERT (disk->dev != NULL, return 0);
-	PED_ASSERT (disk->disk_specific != NULL, return 0);
+	PED_ASSERT (disk != NULL);
+	PED_ASSERT (disk->dev != NULL);
+	PED_ASSERT (disk->disk_specific != NULL);
 
 	disk_data = (SunDiskData*) disk->disk_specific;
 
@@ -405,8 +404,8 @@ sun_write (const PedDisk* disk)
 	PedPartition*		part;
 	int			i;
 
-	PED_ASSERT (disk != NULL, return 0);
-	PED_ASSERT (disk->dev != NULL, return 0);
+	PED_ASSERT (disk != NULL);
+	PED_ASSERT (disk->dev != NULL);
 
 	void *s0;
 	if (!ptt_read_sector (disk->dev, 0, &s0))
@@ -553,7 +552,7 @@ sun_partition_duplicate (const PedPartition* part)
 static void
 sun_partition_destroy (PedPartition* part)
 {
-	PED_ASSERT (part != NULL, return);
+	PED_ASSERT (part != NULL);
 
 	if (ped_partition_is_active (part))
 		free (part->disk_specific);
@@ -600,9 +599,9 @@ sun_partition_set_flag (PedPartition* part, PedPartitionFlag flag, int state)
 {
 	SunPartitionData*		sun_data;
 
-	PED_ASSERT (part != NULL, return 0);
-	PED_ASSERT (part->disk_specific != NULL, return 0);
-	PED_ASSERT (ped_partition_is_flag_available (part, flag), return 0);
+	PED_ASSERT (part != NULL);
+	PED_ASSERT (part->disk_specific != NULL);
+	PED_ASSERT (ped_partition_is_flag_available (part, flag));
 
 	sun_data = part->disk_specific;
 
@@ -654,8 +653,8 @@ sun_partition_get_flag (const PedPartition* part, PedPartitionFlag flag)
 {
 	SunPartitionData*       sun_data;
 
-	PED_ASSERT (part != NULL, return 0);
-	PED_ASSERT (part->disk_specific != NULL, return 0);
+	PED_ASSERT (part != NULL);
+	PED_ASSERT (part->disk_specific != NULL);
 
 	sun_data = part->disk_specific;
 
@@ -763,7 +762,7 @@ _get_lax_constraint (PedDisk* disk)
 static int
 sun_partition_align (PedPartition* part, const PedConstraint* constraint)
 {
-        PED_ASSERT (part != NULL, return 0);
+        PED_ASSERT (part != NULL);
 
         if (_ped_partition_attempt_align (part, constraint,
                                           _get_strict_constraint (part->disk)))
@@ -835,9 +834,9 @@ sun_alloc_metadata (PedDisk* disk)
 	SunDiskData*	disk_data;
 	PedConstraint*	constraint_any;
 
-	PED_ASSERT (disk != NULL, return 0);
-	PED_ASSERT (disk->disk_specific != NULL, return 0);
-	PED_ASSERT (disk->dev != NULL, return 0);
+	PED_ASSERT (disk != NULL);
+	PED_ASSERT (disk->disk_specific != NULL);
+	PED_ASSERT (disk->dev != NULL);
 
 	constraint_any = ped_constraint_any (disk->dev);
 
@@ -897,7 +896,7 @@ static PedDiskType sun_disk_type = {
 void
 ped_disk_sun_init ()
 {
-	PED_ASSERT (sizeof (SunRawLabel) == 512, return);
+	PED_ASSERT (sizeof (SunRawLabel) == 512);
 	ped_disk_type_register (&sun_disk_type);
 }
 

@@ -26,7 +26,7 @@
 #include <parted/debug.h>
 
 static blk_t __len(dal_t *dal) {
-    PED_ASSERT(dal != NULL, return 0);
+    PED_ASSERT(dal != NULL);
 
     return ((PedGeometry *)dal->dev)->length /
 	(dal->block_size / PED_SECTOR_SIZE_DEFAULT);
@@ -37,7 +37,7 @@ static int __read(dal_t *dal, void *buff, blk_t block, blk_t count) {
     PedSector block_pos;
     PedSector block_count;
 
-    PED_ASSERT(dal != NULL, return 0);
+    PED_ASSERT(dal != NULL);
 
     k = dal->block_size / PED_SECTOR_SIZE_DEFAULT;
     block_pos = (PedSector)(block * k);
@@ -51,7 +51,7 @@ static int __write(dal_t *dal, void *buff, blk_t block, blk_t count) {
     PedSector block_pos;
     PedSector block_count;
 
-    PED_ASSERT(dal != NULL, return 0);
+    PED_ASSERT(dal != NULL);
 
     k = dal->block_size / PED_SECTOR_SIZE_DEFAULT;
     block_pos = (PedSector)(block * k);
@@ -62,18 +62,18 @@ static int __write(dal_t *dal, void *buff, blk_t block, blk_t count) {
 }
 
 static int __sync(dal_t *dal) {
-    PED_ASSERT(dal != NULL, return 0);
+    PED_ASSERT(dal != NULL);
     return ped_geometry_sync((PedGeometry *)dal->dev);
 }
 
 static int __flags(dal_t *dal) {
-    PED_ASSERT(dal != NULL, return 0);
+    PED_ASSERT(dal != NULL);
     return dal->flags;
 }
 
 static int __equals(dal_t *dal1, dal_t *dal2) {
-    PED_ASSERT(dal1 != NULL, return 0);
-    PED_ASSERT(dal2 != NULL, return 0);
+    PED_ASSERT(dal1 != NULL);
+    PED_ASSERT(dal2 != NULL);
 
     return ped_geometry_test_equal((PedGeometry *)dal1->dev,
 	(PedGeometry *)dal2->dev);
@@ -81,8 +81,8 @@ static int __equals(dal_t *dal1, dal_t *dal2) {
 
 static int __stat(dal_t *dal, struct stat *st) {
 
-    PED_ASSERT(dal != NULL, return 0);
-    PED_ASSERT(st != NULL, return 0);
+    PED_ASSERT(dal != NULL);
+    PED_ASSERT(st != NULL);
 
     if (stat(((PedGeometry *)dal->dev)->dev->path, st))
 	return 0;
@@ -131,7 +131,7 @@ int geom_dal_reopen(dal_t *dal, int flags) {
 }
 
 void geom_dal_free(dal_t *dal) {
-    PED_ASSERT(dal != NULL, return);
+    PED_ASSERT(dal != NULL);
     free(dal);
 }
 

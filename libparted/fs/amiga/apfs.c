@@ -46,8 +46,8 @@ _generic_apfs_probe (PedGeometry* geom, uint32_t kind)
 	struct PartitionBlock * part;
 	uint32_t blocksize = 1, reserved = 2;
 
-	PED_ASSERT (geom != NULL, return NULL);
-	PED_ASSERT (geom->dev != NULL, return NULL);
+	PED_ASSERT (geom != NULL);
+	PED_ASSERT (geom->dev != NULL);
 
 	/* Finds the blocksize and reserved values of the partition block */
 	if (!(part = ped_malloc (PED_SECTOR_SIZE_DEFAULT*blocksize))) {

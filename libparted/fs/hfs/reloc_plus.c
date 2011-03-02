@@ -56,8 +56,8 @@ hfsplus_effect_move_extent (PedFileSystem *fs, unsigned int *ptr_fblock,
 	unsigned int		next_to_fblock;
 	unsigned int		start, stop;
 
-	PED_ASSERT (hfsp_block != NULL, return -1);
-	PED_ASSERT (*ptr_to_fblock <= *ptr_fblock, return -1);
+	PED_ASSERT (hfsp_block != NULL);
+	PED_ASSERT (*ptr_to_fblock <= *ptr_fblock);
 	/* quiet GCC */
 	start = stop = 0;
 
@@ -282,7 +282,7 @@ hfsplus_do_move (PedFileSystem* fs, unsigned int *ptr_src,
 
 		    CR_BTREE :
 			PED_ASSERT(PED_SECTOR_SIZE_DEFAULT * ref->sect_by_block
-				   > ref->ref_offset, return -1 );
+				   > ref->ref_offset);
 			if (!hfsplus_file_read(file, hfsp_block,
 				(PedSector)ref->ref_block * ref->sect_by_block,
 				ref->sect_by_block))
@@ -312,7 +312,7 @@ hfsplus_do_move (PedFileSystem* fs, unsigned int *ptr_src,
 
 		move = hfsc_cache_move_extent(cache, ref->ext_start, new_start);
 		if (!move) return -1;
-		PED_ASSERT(move == ref, return -1);
+		PED_ASSERT(move == ref);
 	}
 
 	return new_start;
@@ -502,7 +502,7 @@ hfsplus_cache_from_catalog(HfsCPrivateCache* cache, PedFileSystem* fs,
 	leaf_node = PED_BE32_TO_CPU (header->first_leaf_node);
 	bsize = PED_BE16_TO_CPU (header->node_size);
 	size = bsize / PED_SECTOR_SIZE_DEFAULT;
-	PED_ASSERT(size < 256, return 0);
+	PED_ASSERT(size < 256);
 
 	node = (uint8_t*) ped_malloc(bsize);
 	if (!node) return 0;
@@ -624,7 +624,7 @@ hfsplus_cache_from_extent(HfsCPrivateCache* cache, PedFileSystem* fs,
 	leaf_node = PED_BE32_TO_CPU (header->first_leaf_node);
 	bsize = PED_BE16_TO_CPU (header->node_size);
 	size = bsize / PED_SECTOR_SIZE_DEFAULT;
-	PED_ASSERT(size < 256, return 0);
+	PED_ASSERT(size < 256);
 
 	node = (uint8_t*) ped_malloc (bsize);
 	if (!node) return -1;
@@ -735,7 +735,7 @@ hfsplus_cache_from_attributes(HfsCPrivateCache* cache, PedFileSystem* fs,
 	leaf_node = PED_BE32_TO_CPU (header->first_leaf_node);
 	bsize = PED_BE16_TO_CPU (header->node_size);
 	size = bsize / PED_SECTOR_SIZE_DEFAULT;
-	PED_ASSERT(size < 256, return 0);
+	PED_ASSERT(size < 256);
 
 	node = (uint8_t*) ped_malloc(bsize);
 	if (!node) return 0;
@@ -866,7 +866,7 @@ hfsplus_pack_free_space_from_block (PedFileSystem *fs, unsigned int fblock,
 				          + 1 - start - to_free;
 	int			ret;
 
-	PED_ASSERT (!hfsp_block, return 0);
+	PED_ASSERT (!hfsp_block);
 
 	cache = hfsplus_cache_extents (fs, timer);
 	if (!cache)

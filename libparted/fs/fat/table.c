@@ -89,7 +89,7 @@ fat_table_clear (FatTable* ft)
 int
 fat_table_set_cluster_count (FatTable* ft, FatCluster new_cluster_count)
 {
-	PED_ASSERT (new_cluster_count + 2 <= ft->size, return 0);
+	PED_ASSERT (new_cluster_count + 2 <= ft->size);
 
 	ft->cluster_count = new_cluster_count;
 	return fat_table_count_stats (ft);
@@ -100,7 +100,7 @@ fat_table_count_stats (FatTable* ft)
 {
 	FatCluster	i;
 
-	PED_ASSERT (ft->cluster_count + 2 <= ft->size, return 0);
+	PED_ASSERT (ft->cluster_count + 2 <= ft->size);
 
 	ft->free_cluster_count = 0;
 	ft->bad_cluster_count = 0;
@@ -119,7 +119,7 @@ fat_table_read (FatTable* ft, const PedFileSystem* fs, int table_num)
 {
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 
-	PED_ASSERT (ft->raw_size >= fs_info->fat_sectors * 512, return 0);
+	PED_ASSERT (ft->raw_size >= fs_info->fat_sectors * 512);
 
 	memset (ft->table, 0, ft->raw_size);
 
@@ -154,7 +154,7 @@ fat_table_write (const FatTable* ft, PedFileSystem* fs, int table_num)
 {
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 
-	PED_ASSERT (ft->raw_size >= fs_info->fat_sectors * 512, return 0);
+	PED_ASSERT (ft->raw_size >= fs_info->fat_sectors * 512);
 
         if (!ped_geometry_write (fs->geom, (void *) ft->table,
 				 fs_info->fat_offset
@@ -275,7 +275,7 @@ fat_table_set (FatTable* ft, FatCluster cluster, FatCluster value)
 
 	switch (ft->fat_type) {
                 case FAT_TYPE_FAT12:
-                PED_ASSERT (0, (void) 0);
+                PED_ASSERT (0);
                 break;
 
 		case FAT_TYPE_FAT16:
@@ -305,7 +305,7 @@ fat_table_get (const FatTable* ft, FatCluster cluster)
 
 	switch (ft->fat_type) {
                 case FAT_TYPE_FAT12:
-                PED_ASSERT (0, (void) 0);
+                PED_ASSERT (0);
                 break;
 
 		case FAT_TYPE_FAT16:
@@ -415,7 +415,7 @@ fat_table_set_eof (FatTable* ft, FatCluster cluster)
 
 	switch (ft->fat_type) {
                 case FAT_TYPE_FAT12:
-                PED_ASSERT (0, (void) 0);
+                PED_ASSERT (0);
                 break;
 
 		case FAT_TYPE_FAT16:
