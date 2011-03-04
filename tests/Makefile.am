@@ -20,7 +20,7 @@ TESTS = \
   t0500-dup-clobber.sh \
   t1100-busy-label.sh \
   t1101-busy-partition.sh \
-  t1700-ext-probe.sh \
+  t1700-probe-fs.sh \
   t2100-mkswap.sh \
   t2200-dos-label-recog.sh \
   t2300-dos-label-extended-bootcode.sh \
