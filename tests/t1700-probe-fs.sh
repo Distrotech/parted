@@ -21,19 +21,22 @@ require_512_byte_sector_size_
 
 dev=loop-file
 ss=$sector_size_
-n_sectors=8000
 
-for type in ext2 ext3 ext4; do
+for type in ext2 ext3 ext4 nilfs2; do
 
-  ( mkfs.$type -V ) >/dev/null 2>&1 || skip_ "no $type support"
+  ( mkfs.$type -V ) >/dev/null 2>&1 \
+      || { warn_ "$ME: no $type support"; continue; }
+
+  case $type in ext*) n_sectors=8000 force=-F;;
+      *) n_sectors=$((257*1024)) force=;; esac
 
   # create an $type file system
-  dd if=/dev/zero of=$dev bs=1024 count=4096 >/dev/null || fail=1
-  mkfs.$type -F $dev >/dev/null || fail=1
+  dd if=/dev/zero of=$dev bs=$ss count=$n_sectors >/dev/null || fail=1
+  mkfs.$type $force $dev || { warn_ $ME: mkfs.$type failed; fail=1; continue; }
 
   # probe the $type file system
   parted -m -s $dev u s print >out 2>&1 || fail=1
-  grep '^1:.*:'$type'::;$' out || fail=1
+  grep '^1:.*:'$type'::;$' out || { cat out; fail=1; }
 
 done
 
