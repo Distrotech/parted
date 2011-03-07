@@ -1041,11 +1041,11 @@ do_mkpartfs (PedDevice** dev)
                 ped_exception_leave_all();
 
                 PedConstraint *constraint_any = ped_constraint_any (*dev);
-                bool added_ok = ped_disk_add_partition (disk, part,
+                bool add_ok = ped_disk_add_partition (disk, part,
                                                         constraint_any);
                 ped_constraint_destroy (constraint_any);
 
-                if (!added_ok)
+                if (!add_ok)
                         goto error_remove_part;
 
                 if (!ped_geometry_test_sector_inside(range_start, part->geom.start) ||
