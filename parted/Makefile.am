@@ -36,9 +36,6 @@ version.h: Makefile
 DISTCLEANFILES = version.c version.h
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 
-#parted_CFLAGS = -DBUILDINFO='"\"'$(BUILDINFO)'\""'
-parted_CFLAGS = -DBUILDINFO=
-
 parted_LDADD = \
   libver.a \
   $(top_builddir)/libparted/libparted.la \
