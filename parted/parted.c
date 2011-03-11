@@ -1381,6 +1381,27 @@ partition_print (PedPartition* part)
         return 1;
 }
 
+static void
+_print_disk_geometry (const PedDevice *dev)
+{
+        PED_ASSERT (dev != NULL);
+        const PedCHSGeometry* chs = &dev->bios_geom;
+        char* cyl_size = ped_unit_format_custom (dev,
+                                chs->heads * chs->sectors,
+                                PED_UNIT_KILOBYTE);
+
+        if (opt_machine_mode) {
+            printf ("%d:%d:%d:%s;\n",
+                    chs->cylinders, chs->heads, chs->sectors, cyl_size);
+        } else {
+            printf (_("BIOS cylinder,head,sector geometry: %d,%d,%d.  "
+                      "Each cylinder is %s.\n"),
+                    chs->cylinders, chs->heads, chs->sectors, cyl_size);
+        }
+
+        free (cyl_size);
+}
+
 static int
 do_print (PedDevice** dev)
 {
@@ -1511,23 +1532,8 @@ do_print (PedDevice** dev)
         free (end);
 
         if (ped_unit_get_default () == PED_UNIT_CHS
-            || ped_unit_get_default () == PED_UNIT_CYLINDER) {
-                PedCHSGeometry* chs = &(*dev)->bios_geom;
-                char* cyl_size = ped_unit_format_custom (*dev,
-                                        chs->heads * chs->sectors,
-                                        PED_UNIT_KILOBYTE);
-
-                if (opt_machine_mode) {
-                    printf ("%d:%d:%d:%s;\n",
-                            chs->cylinders, chs->heads, chs->sectors, cyl_size);
-                } else {
-                    printf (_("BIOS cylinder,head,sector geometry: %d,%d,%d.  "
-                              "Each cylinder is %s.\n"),
-                            chs->cylinders, chs->heads, chs->sectors, cyl_size);
-                }
-
-                free (cyl_size);
-        }
+            || ped_unit_get_default () == PED_UNIT_CYLINDER)
+                _print_disk_geometry (*dev);
 
         if (!opt_machine_mode) {
             printf (_("Partition Table: %s\n"), disk->type->name);
