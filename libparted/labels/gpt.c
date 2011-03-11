@@ -639,9 +639,10 @@ _header_is_valid (PedDisk const *disk, GuidPartitionTableHeader_t *gpt,
      no smaller than the size of the PartitionEntry structure.
      We also require that be no larger than 1/16th of UINT32_MAX,
      as an additional sanity check.  */
-  uint32_t sope = PED_LE32_TO_CPU (gpt->SizeOfPartitionEntry);
-  if (sope % 8 != 0
-      || sope < sizeof (GuidPartitionEntry_t) || (UINT32_MAX >> 4) < sope)
+  uint32_t pe_size = PED_LE32_TO_CPU (gpt->SizeOfPartitionEntry);
+  if (pe_size % 8 != 0
+      || ! (sizeof (GuidPartitionEntry_t) <= pe_size
+            && pe_size <= (UINT32_MAX >> 4)))
     return 0;
 
   if (PED_LE64_TO_CPU (gpt->MyLBA) != my_lba)
