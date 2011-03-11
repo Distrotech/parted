@@ -40,6 +40,11 @@ GNU parted NEWS                                    -*- outline -*-
   libparted: zero-length devices (other than files) are ignored rather than
   throwing an exception.
 
+  libparted: gpt label creation can no longer divide by zero with a
+  defective device or when a concurrent writer modifies the PE-size
+  bytes in the small interval between the write and subsequent read
+  of the primary GPT header.
+
 ** Changes in behavior
 
   "parted $dev print" now prints information about the device (model, size,

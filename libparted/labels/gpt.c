@@ -660,6 +660,10 @@ _header_is_valid (PedDisk const *disk, GuidPartitionTableHeader_t *gpt,
   if (check_PE_array_CRC (disk, gpt, &crc_match) != 0 || !crc_match)
     return 0;
 
+  PedSector first_usable = PED_LE64_TO_CPU (gpt->FirstUsableLBA);
+  if (first_usable < 3)
+    return 0;
+
   origcrc = gpt->HeaderCRC32;
   gpt->HeaderCRC32 = 0;
   if (pth_crc32 (dev, gpt, &crc) != 0)
@@ -1740,6 +1744,13 @@ gpt_get_max_supported_partition_count (const PedDisk *disk, int *max_n)
 
   if (pth == NULL)
     return false;
+
+  if (!_header_is_valid (disk, pth, 1))
+    {
+      pth->FirstUsableLBA = 34;
+      pth->SizeOfPartitionEntry
+        = PED_CPU_TO_LE32 (sizeof (GuidPartitionEntry_t));
+    }
 
   *max_n = (disk->dev->sector_size * (pth->FirstUsableLBA - 2)
             / PED_LE32_TO_CPU (pth->SizeOfPartitionEntry));
