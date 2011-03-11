@@ -7,6 +7,7 @@ TESTS = \
   t0001-tiny.sh \
   t0010-script-no-ctrl-chars.sh \
   t0100-print.sh \
+  t0101-print-empty.sh \
   t0200-gpt.sh \
   t0201-gpt.sh \
   t0202-gpt-pmbr.sh \
