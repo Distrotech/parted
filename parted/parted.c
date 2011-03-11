@@ -1402,11 +1402,61 @@ _print_disk_geometry (const PedDevice *dev)
         free (cyl_size);
 }
 
+static void
+_print_disk_info (const PedDevice *dev, const PedDisk *disk)
+{
+        char *const transport[] = {"unknown", "scsi", "ide", "dac960",
+                                         "cpqarray", "file", "ataraid", "i2o",
+                                         "ubd", "dasd", "viodasd", "sx8", "dm",
+                                         "xvd", "sd/mmc", "virtblk", "aoe",
+                                         "md"};
+
+        char* start = ped_unit_format (dev, 0);
+        PedUnit default_unit = ped_unit_get_default ();
+        char* end = ped_unit_format_byte (dev, dev->length * dev->sector_size
+                                    - (default_unit == PED_UNIT_CHS ||
+                                       default_unit == PED_UNIT_CYLINDER));
+
+        const char* pt_name = disk ? disk->type->name : "unknown";
+
+        if (opt_machine_mode) {
+            switch (default_unit) {
+                case PED_UNIT_CHS:      puts ("CHS;");
+                                        break;
+                case PED_UNIT_CYLINDER: puts ("CYL;");
+                                        break;
+                default:                puts ("BYT;");
+                                        break;
+
+            }
+            printf ("%s:%s:%s:%lld:%lld:%s:%s;\n",
+                    dev->path, end, transport[dev->type],
+                    dev->sector_size, dev->phys_sector_size,
+                    pt_name, dev->model);
+        } else {
+            printf (_("Model: %s (%s)\n"),
+                    dev->model, transport[dev->type]);
+            printf (_("Disk %s: %s\n"), dev->path, end);
+            printf (_("Sector size (logical/physical): %lldB/%lldB\n"),
+                    dev->sector_size, dev->phys_sector_size);
+        }
+
+        free (start);
+        free (end);
+
+        if (ped_unit_get_default () == PED_UNIT_CHS
+            || ped_unit_get_default () == PED_UNIT_CYLINDER)
+                _print_disk_geometry (dev);
+
+        if (!opt_machine_mode) {
+            printf (_("Partition Table: %s\n"), pt_name);
+        }
+}
+
 static int
 do_print (PedDevice** dev)
 {
-        PedUnit         default_unit;
-        PedDisk*        disk;
+        PedDisk*        disk = NULL;
         Table*          table;
         int             has_extended;
         int             has_name;
@@ -1414,11 +1464,6 @@ do_print (PedDevice** dev)
         int             has_free_arg = 0;
         int             has_list_arg = 0;
         int             has_num_arg = 0;
-        const char *const transport[] = {"unknown", "scsi", "ide", "dac960",
-                                         "cpqarray", "file", "ataraid", "i2o",
-                                         "ubd", "dasd", "viodasd", "sx8", "dm",
-                                         "xvd", "sd/mmc", "virtblk", "aoe",
-                                         "md"};
         char*           peek_word;
         char*           start;
         char*           end;
@@ -1426,15 +1471,6 @@ do_print (PedDevice** dev)
         const char*     name;
         char*           tmp;
         wchar_t*        table_rendered;
-
-        disk = ped_disk_new (*dev);
-        if (!disk)
-                goto error;
-
-        if (ped_disk_is_flag_available(disk, PED_DISK_CYLINDER_ALIGNMENT))
-                if (!ped_disk_set_flag(disk, PED_DISK_CYLINDER_ALIGNMENT,
-                                       alignment == ALIGNMENT_CYLINDER))
-                        goto error_destroy_disk;
 
         peek_word = command_line_peek_word ();
         if (peek_word) {
@@ -1459,6 +1495,14 @@ do_print (PedDevice** dev)
 
                 free (peek_word);
         }
+
+        if (!has_devices_arg && !has_list_arg)
+                disk = ped_disk_new (*dev);
+        if (disk &&
+            ped_disk_is_flag_available(disk, PED_DISK_CYLINDER_ALIGNMENT))
+                if (!ped_disk_set_flag(disk, PED_DISK_CYLINDER_ALIGNMENT,
+                                       alignment == ALIGNMENT_CYLINDER))
+                        goto error_destroy_disk;
 
         if (has_devices_arg) {
                 char*           dev_name;
@@ -1491,7 +1535,7 @@ do_print (PedDevice** dev)
         else if (has_list_arg)
                 return _print_list ();
 
-        else if (has_num_arg) {
+        else if (disk && has_num_arg) {
                 PedPartition*   part = NULL;
                 int             status = 0;
                 if (command_line_get_partition ("", disk, &part))
@@ -1500,51 +1544,16 @@ do_print (PedDevice** dev)
                 return status;
         }
 
-        start = ped_unit_format (*dev, 0);
-        default_unit = ped_unit_get_default ();
-        end = ped_unit_format_byte (*dev, (*dev)->length * (*dev)->sector_size
-                                    - (default_unit == PED_UNIT_CHS ||
-                                       default_unit == PED_UNIT_CYLINDER));
-
-        if (opt_machine_mode) {
-            switch (default_unit) {
-                case PED_UNIT_CHS:      puts ("CHS;");
-                                        break;
-                case PED_UNIT_CYLINDER: puts ("CYL;");
-                                        break;
-                default:                puts ("BYT;");
-                                        break;
-
-            }
-            printf ("%s:%s:%s:%lld:%lld:%s:%s;\n",
-                    (*dev)->path, end, transport[(*dev)->type],
-                    (*dev)->sector_size, (*dev)->phys_sector_size,
-                    disk->type->name, (*dev)->model);
-        } else {
-            printf (_("Model: %s (%s)\n"),
-                    (*dev)->model, transport[(*dev)->type]);
-            printf (_("Disk %s: %s\n"), (*dev)->path, end);
-            printf (_("Sector size (logical/physical): %lldB/%lldB\n"),
-                    (*dev)->sector_size, (*dev)->phys_sector_size);
-        }
-
-        free (start);
-        free (end);
-
-        if (ped_unit_get_default () == PED_UNIT_CHS
-            || ped_unit_get_default () == PED_UNIT_CYLINDER)
-                _print_disk_geometry (*dev);
-
-        if (!opt_machine_mode) {
-            printf (_("Partition Table: %s\n"), disk->type->name);
-            putchar ('\n');
-        }
+        _print_disk_info (*dev, disk);
+        if (!disk)
+                goto nopt;
+        if (!opt_machine_mode)
+                putchar ('\n');
 
         has_extended = ped_disk_type_check_feature (disk->type,
                                          PED_DISK_TYPE_EXTENDED);
         has_name = ped_disk_type_check_feature (disk->type,
                                          PED_DISK_TYPE_PARTITION_NAME);
-
 
         PedPartition* part;
         if (!opt_machine_mode) {
@@ -1707,6 +1716,8 @@ error_destroy_disk:
         ped_disk_destroy (disk);
 error:
         return 0;
+nopt:
+        return 1;
 }
 
 static int
