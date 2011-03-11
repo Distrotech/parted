@@ -44,10 +44,10 @@ done
 for feature in uninit_bg flex_bg; do
   # create an ext3 file system
   dd if=/dev/zero of=$dev bs=1024 count=4096 >/dev/null || fail=1
-  mkfs.ext3 -F $dev >/dev/null || fail=1
+  mkfs.ext3 -F $dev >/dev/null || skip_ "mkfs.ext3 failed"
 
   # set the feature
-  tune2fs -O $feature $dev || fail=1
+  tune2fs -O $feature $dev || skip_ "tune2fs failed"
 
   # probe the file system, which should now be ext4
   parted -m -s $dev u s print >out 2>&1 || fail=1
