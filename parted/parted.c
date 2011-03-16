@@ -1405,7 +1405,7 @@ _print_disk_geometry (const PedDevice *dev)
 static void
 _print_disk_info (const PedDevice *dev, const PedDisk *disk)
 {
-        char *const transport[] = {"unknown", "scsi", "ide", "dac960",
+        char const *const transport[] = {"unknown", "scsi", "ide", "dac960",
                                          "cpqarray", "file", "ataraid", "i2o",
                                          "ubd", "dasd", "viodasd", "sx8", "dm",
                                          "xvd", "sd/mmc", "virtblk", "aoe",
@@ -1714,7 +1714,6 @@ do_print (PedDevice** dev)
 
 error_destroy_disk:
         ped_disk_destroy (disk);
-error:
         return 0;
 nopt:
         return 1;
