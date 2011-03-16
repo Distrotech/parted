@@ -137,35 +137,9 @@ nilfs2_probe (PedGeometry* geom)
 	return ped_geometry_new(geom->dev, geom->start, length);
 }
 
-#ifndef DISCOVER_ONLY
-static int
-nilfs2_clobber (PedGeometry* geom)
-{
-	char buf[512];
-	int ret[2];
-
-	printf("nilfs2_clobber\n");
-	memset (buf, 0, 512);
-
-	ret[0] = ped_geometry_write (geom, buf, NILFS_SB_OFFSET, 1);
-	ret[1] = ped_geometry_write (geom, buf,
-				     NILFS_SB2_OFFSET(geom->length), 1);
-
-	return ret[0]|ret[1];
-}
-#endif /* !DISCOVER_ONLY */
-
 static PedFileSystemOps nilfs2_ops = {
 	probe:			nilfs2_probe,
-#ifndef DISCOVER_ONLY
- #if 0
-	clobber:		nilfs2_clobber,
- #else
 	clobber:		NULL,
- #endif
-#else
-	clobber:		NULL,
-#endif
 	open:			NULL,
 	create:			NULL,
 	close:			NULL,
