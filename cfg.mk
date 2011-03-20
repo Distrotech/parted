@@ -57,3 +57,14 @@ bootstrap-tools = autoconf,automake,gettext,gnulib,gperf
 update-copyright-env = \
   UPDATE_COPYRIGHT_USE_INTERVALS=1 \
   UPDATE_COPYRIGHT_MAX_LINE_LENGTH=79
+
+#==> .j/.x-sc_GPL_version <==
+#build-aux/vc-list-files
+
+exclude_file_name_regexp--sc_bindtextdomain = ^(libparted/)?tests/.*\.c$$
+
+exclude_file_name_regexp--sc_cross_check_PATH_usage_in_tests = \
+  ^libparted/tests/t.*\.sh$$
+
+exclude_file_name_regexp--sc_prohibit_always-defined_macros = \
+  ^parted/(strlist|table)\.h$$
