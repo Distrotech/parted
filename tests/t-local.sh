@@ -70,7 +70,18 @@ scsi_debug_acquire_lock_()
   return 1
 }
 
-print_sd_names_() { (cd /sys/block && printf '%s\n' sd*); }
+# If there is a scsi_debug device, print the corresponding "sdN" and return 0.
+# Otherwise, return 1.
+new_sdX_()
+{
+  local m=$(grep -lw scsi_debug /sys/block/sd*/device/model) || return 1
+
+  # Remove the /sys/block/ prefix, and then the /device/model suffix.
+  m=${m#/sys/block/}
+  m=${m%/device/model}
+  echo "$m"
+  return 0
+}
 
 # Create a device using the scsi_debug module with the options passed to
 # this function as arguments.  Upon success, print the name of the new device.
@@ -80,8 +91,8 @@ scsi_debug_setup_()
 
   # It is not trivial to determine the name of the device we're creating.
   # Record the names of all /sys/block/sd* devices *before* probing:
-  print_sd_names_ > before
-  modprobe scsi_debug "$@" || { rm -f before; return 1; }
+  touch stamp
+  modprobe scsi_debug "$@" || { rm -f stamp; return 1; }
   scsi_debug_modprobe_succeeded_=1
   test $VERBOSE = yes \
     && warn_ $ME_ modprobe scsi_debug succeeded
@@ -92,18 +103,13 @@ scsi_debug_setup_()
   # FIXME-portability: using "cmp - ..." probably requires GNU cmp.
   local incr=1
   local i=0
-  while print_sd_names_ | cmp -s - before; do
+  local new_dev
+  while :; do
+    new_dev=$(new_sdX_) && break
     sleep .1 2>/dev/null || { sleep 1; incr=10; }
     i=$(expr $i + $incr); test $i = 20 && break
   done
 
-  # Record the names of all /sys/block/sd* devices *after* probe+wait.
-  print_sd_names_ > after
-
-  # Determine which device names (if any) are new.
-  # There could be more than one new device, and there have been a removal.
-  local new_dev=$(comm -13 before after)
-  rm -f before after
   case $new_dev in
     sd[a-z]) ;;
     sd[a-z][a-z]) ;;
