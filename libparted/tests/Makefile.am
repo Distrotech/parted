@@ -34,6 +34,13 @@ old-init.sh: Makefile.in
 	chmod a-w $@-t
 	mv $@-t $@
 
+# Arrange to symlink to tests/init.sh.
+CLEANFILES = init.sh
+.PHONY: prereq
+prereq:
+	$(AM_V_GEN)ln -sf $(abs_top_srcdir)/tests/init.sh .
+$(TEST_LOGS): prereq
+
 TESTS_ENVIRONMENT = \
   top_srcdir='$(top_srcdir)' \
   abs_top_srcdir='$(abs_top_srcdir)' \

@@ -184,4 +184,4 @@ gpt_restore_primary_table_()
   poke_ $dev $(gpt1_pte_name_offset_ $ss) "$orig_byte" || return 1
 }
 
-. $srcdir/t-lvm.sh
+. "$abs_top_srcdir/tests/t-lvm.sh"
