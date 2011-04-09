@@ -41,10 +41,10 @@ parted -s "$dev" mkpartfs primary fat32 1 40 > out 2>&1 || fail=1
 compare out /dev/null || fail=1
 
 parted -s "$dev" mkpartfs primary fat32 40 80 > out 2>&1 || fail=1
+compare out /dev/null || fail=1
 
 # wait for new partition device to appear
-wait_for_dev_to_appear_ ${dev}2
-compare out /dev/null || fail=1
+wait_for_dev_to_appear_ ${dev}2 || fail_ ${dev}2 did not appear
 
 # be sure to unmount upon interrupt, failure, etc.
 cleanup_fn_() { umount "${dev}2" > /dev/null 2>&1; }
