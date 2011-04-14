@@ -812,7 +812,7 @@ ped_file_system_get_create_constraint (const PedFileSystemType* fs_type,
  * the filesystem \p fs and the capabilities of the resize algorithm.
  * Hints:
  * -# if constraint->start_align->grain_size == 0, or
- *    constraint->start_geom->length == 1, then the start can not be moved
+ *    constraint->start_geom->length == 1, then the start cannot be moved
  * -# constraint->min_size is the minimum size you can resize the partition
  *    to.  You might want to tell the user this ;-).
  *

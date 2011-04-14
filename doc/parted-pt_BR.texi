@@ -1380,7 +1380,7 @@ none           /dev/pts     devpts  gid=5,mode=620  0 0
 thing.  However, on PC and PC98 based computers, the word BIOS is more
 common.  On Apple Macintosh and Sun computers, the word ``firmware'' is
 more common.  The BIOS or firmware program is built into a ROM chip
-inside your computer, that does memory checks, etc.  You can not
+inside your computer, that does memory checks, etc.  You cannot
 (easily) change this program.  Since BIOSes today are generally
 compatible with BIOSes in use 20 years ago, these programs tend to have
 an antiquated design.  Features have been added in counter-intuitive
