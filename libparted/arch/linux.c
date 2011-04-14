@@ -2195,32 +2195,39 @@ linux_probe_all ()
                 _probe_proc_partitions ();
 }
 
-static char*
-_device_get_part_path (PedDevice* dev, int num)
+static char * _GL_ATTRIBUTE_FORMAT ((__printf__, 1, 2))
+zasprintf (const char *format, ...)
 {
-        int             path_len = strlen (dev->path);
-        int             result_len = path_len + 16;
-        char*           result;
+  va_list args;
+  char *resultp;
+  va_start (args, format);
+  int r = vasprintf (&resultp, format, args);
+  va_end (args);
+  return r < 0 ? NULL : resultp;
+}
 
-        result = (char*) ped_malloc (result_len);
-        if (!result)
-                return NULL;
+static char*
+_device_get_part_path (PedDevice *dev, int num)
+{
+        size_t path_len = strlen (dev->path);
 
+        char *result;
         /* Check for devfs-style /disc => /partN transformation
            unconditionally; the system might be using udev with devfs rules,
            and if not the test is harmless. */
         if (5 < path_len && !strcmp (dev->path + path_len - 5, "/disc")) {
                 /* replace /disc with /path%d */
-                strcpy (result, dev->path);
-                snprintf (result + path_len - 5, 16, "/part%d", num);
-        } else if (dev->type == PED_DEVICE_DAC960
-                        || dev->type == PED_DEVICE_CPQARRAY
-                        || dev->type == PED_DEVICE_ATARAID
-                        || dev->type == PED_DEVICE_DM
-                        || isdigit (dev->path[path_len - 1]))
-                snprintf (result, result_len, "%sp%d", dev->path, num);
-        else
-                snprintf (result, result_len, "%s%d", dev->path, num);
+                result = zasprintf ("%.*s/part%d",
+                                    (int) (path_len - 5), dev->path, num);
+        } else {
+                char const *p = (dev->type == PED_DEVICE_DAC960
+                                 || dev->type == PED_DEVICE_CPQARRAY
+                                 || dev->type == PED_DEVICE_ATARAID
+                                 || dev->type == PED_DEVICE_DM
+                                 || isdigit (dev->path[path_len - 1])
+                                 ? "p" : "");
+                result = zasprintf ("%s%s%d", dev->path, p, num);
+        }
 
         return result;
 }
