@@ -2209,7 +2209,7 @@ _device_get_part_path (PedDevice* dev, int num)
         /* Check for devfs-style /disc => /partN transformation
            unconditionally; the system might be using udev with devfs rules,
            and if not the test is harmless. */
-        if (!strcmp (dev->path + path_len - 5, "/disc")) {
+        if (5 < path_len && !strcmp (dev->path + path_len - 5, "/disc")) {
                 /* replace /disc with /path%d */
                 strcpy (result, dev->path);
                 snprintf (result + path_len - 5, 16, "/part%d", num);
