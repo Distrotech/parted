@@ -2740,15 +2740,15 @@ _dm_add_partition (PedDisk* disk, PedPartition* part)
 
         dev_name = dm_task_get_name (task);
 
-        if (asprintf (&vol_name, "%sp%d", dev_name, part->num) == -1)
+        if ( ! (vol_name = zasprintf ("%sp%d", dev_name, part->num)))
                 goto err;
 
         /* Caution: dm_task_destroy frees dev_name.  */
         dm_task_destroy (task);
         task = NULL;
 
-        if (asprintf (&params, "%d:%d %lld", arch_specific->major,
-                      arch_specific->minor, part->geom.start) == -1)
+        if ( ! (params = zasprintf ("%d:%d %lld", arch_specific->major,
+                                    arch_specific->minor, part->geom.start)))
                 goto err;
 
         task = dm_task_create (DM_DEVICE_CREATE);
