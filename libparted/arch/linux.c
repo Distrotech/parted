@@ -2216,7 +2216,7 @@ _device_get_part_path (PedDevice *dev, int num)
            unconditionally; the system might be using udev with devfs rules,
            and if not the test is harmless. */
         if (5 < path_len && !strcmp (dev->path + path_len - 5, "/disc")) {
-                /* replace /disc with /path%d */
+                /* replace /disc with /part%d */
                 result = zasprintf ("%.*s/part%d",
                                     (int) (path_len - 5), dev->path, num);
         } else {
