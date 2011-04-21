@@ -754,7 +754,7 @@ fdasd_check_api_version (fdasd_anchor_t *anc, int f)
 {
 	PDEBUG
 	int api;
-	char s[LINE_LENGTH];
+	char s[2*LINE_LENGTH];
 
         struct stat st;
         if (fstat (f, &st) == 0 && S_ISREG (st.st_mode)) {
