@@ -4,6 +4,11 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  parted no longer allows the modification of certain in-use partitions.
+  In particular, before this fix, parted would permit removal or modification
+  of any in-use partition on a dmraid and any in-use partition beyond the 15th
+  on a regular scsi disk.
+
   Improve support of DASD devices on the s390 architecture.
   Parted now supports all DASD types (CKD and FBA), DASD formats (CDL,
   LDL, CMS non-reserved, and CMS reserved), and DASD drivers (ECKD, FBA,

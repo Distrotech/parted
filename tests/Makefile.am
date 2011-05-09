@@ -47,7 +47,8 @@ TESTS = \
   t9020-alignment.sh \
   t9021-maxima.sh \
   t9030-align-check.sh \
-  t9040-many-partitions.sh
+  t9040-many-partitions.sh \
+  t9041-undetected-in-use-16th-partition.sh
 
 EXTRA_DIST = \
   $(TESTS) lvm-utils.sh t-local.sh t-lvm.sh \
