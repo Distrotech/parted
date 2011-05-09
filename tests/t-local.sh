@@ -74,7 +74,7 @@ scsi_debug_acquire_lock_()
 # Otherwise, return 1.
 new_sdX_()
 {
-  local m=$(grep -lw scsi_debug /sys/block/sd*/device/model) || return 1
+  local m; m=$(grep -lw scsi_debug /sys/block/sd*/device/model) || return 1
 
   # Remove the /sys/block/ prefix, and then the /device/model suffix.
   m=${m#/sys/block/}
@@ -113,7 +113,7 @@ scsi_debug_setup_()
   case $new_dev in
     sd[a-z]) ;;
     sd[a-z][a-z]) ;;
-    *) return 1 ;;
+    *) warn_ $ME_ unexpected device name: $new_dev; return 1 ;;
   esac
   local t=/dev/$new_dev
   wait_for_dev_to_appear_ $t
@@ -162,7 +162,8 @@ gpt_corrupt_primary_table_()
   case $ss in *[^0-9]*) echo "$0: invalid sector size: $ss">&2; return 1;; esac
 
   # get the first byte of the name
-  local orig_pte_name_byte=$(peek_ $dev $(gpt1_pte_name_offset_ $ss)) || return 1
+  local orig_pte_name_byte
+  orig_pte_name_byte=$(peek_ $dev $(gpt1_pte_name_offset_ $ss)) || return 1
 
   local new_byte
   test x"$orig_pte_name_byte" = xA && new_byte=B || new_byte=A
