@@ -54,12 +54,13 @@ mount_point=$(pwd)/mnt
 mkdir $mount_point || fail=1
 mount "${dev}2" "$mount_point" || fail=1
 
-# removal of unmounted partition, must work.
+# Removal of unmounted partition must succeed.
 parted -s "$dev" rm 1 > out 2>&1 || fail=1
 
+# Removal of mounted partition must fail.
 parted -s "$dev" rm 2 > out 2>&1 && fail=1
 
 # expect error
-compare out exp-error
+compare out exp-error || fail=1
 
 Exit $fail
