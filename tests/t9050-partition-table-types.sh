@@ -36,7 +36,7 @@ sun
 mkswap
 '
 
-dd if=/dev/null of=f bs=1 seek=3M || framework_failure_
+dd if=/dev/null of=f bs=1 seek=30M || framework_failure_
 
 for i in $types; do
   for j in $types; do
