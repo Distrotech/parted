@@ -172,198 +172,48 @@ _amufs5_probe (PedGeometry* geom) {
 
 static PedFileSystemOps _affs0_ops = {
 	probe:		_affs0_probe,
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
 };
 static PedFileSystemOps _affs1_ops = {
 	probe:		_affs1_probe,
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
 };
 static PedFileSystemOps _affs2_ops = {
 	probe:		_affs2_probe,
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
 };
 static PedFileSystemOps _affs3_ops = {
 	probe:		_affs3_probe,
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
 };
 static PedFileSystemOps _affs4_ops = {
 	probe:		_affs4_probe,
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
 };
 static PedFileSystemOps _affs5_ops = {
 	probe:		_affs5_probe,
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
 };
 static PedFileSystemOps _affs6_ops = {
 	probe:		_affs6_probe,
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
 };
 static PedFileSystemOps _affs7_ops = {
 	probe:		_affs7_probe,
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
 };
 static PedFileSystemOps _amufs_ops = {
 	probe:		_amufs_probe,
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
 };
 static PedFileSystemOps _amufs0_ops = {
 	probe:		_amufs0_probe,
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
 };
 static PedFileSystemOps _amufs1_ops = {
 	probe:		_amufs1_probe,
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
 };
 static PedFileSystemOps _amufs2_ops = {
 	probe:		_amufs2_probe,
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
 };
 static PedFileSystemOps _amufs3_ops = {
 	probe:		_amufs3_probe,
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
 };
 static PedFileSystemOps _amufs4_ops = {
 	probe:		_amufs4_probe,
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
 };
 static PedFileSystemOps _amufs5_ops = {
 	probe:		_amufs5_probe,
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
 };
 
 #define AFFS_BLOCK_SIZES        ((int[5]){512, 1024, 2048, 4096, 0})

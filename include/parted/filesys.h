@@ -38,20 +38,6 @@ typedef const struct _PedFileSystemOps	PedFileSystemOps;
 
 struct _PedFileSystemOps {
 	PedGeometry* (*probe) (PedGeometry* geom);
-	int (*clobber) (PedGeometry* geom);
-
-	PedFileSystem* (*open) (PedGeometry* geom);
-	PedFileSystem* (*create) (PedGeometry* geom, PedTimer* timer);
-	int (*close) (PedFileSystem* fs);
-	int (*check) (PedFileSystem* fs, PedTimer* timer);
-	PedFileSystem* (*copy) (const PedFileSystem* fs, PedGeometry* geom,
-				PedTimer* timer);
-	int (*resize) (PedFileSystem* fs, PedGeometry* geom, PedTimer* timer);
-
-	PedConstraint* (*get_create_constraint) (const PedDevice* dev);
-	PedConstraint* (*get_resize_constraint) (const PedFileSystem* fs);
-	PedConstraint* (*get_copy_constraint) (const PedFileSystem* fs,
-		       			       const PedDevice* dev);
 };
 
 /**

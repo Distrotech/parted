@@ -82,20 +82,6 @@ xfs_clobber (PedGeometry* geom)
 
 static PedFileSystemOps xfs_ops = {
 	probe:		xfs_probe,
-#ifndef DISCOVER_ONLY
-	clobber:	xfs_clobber,
-#else
-	clobber:	NULL,
-#endif
-	open:		NULL,
-	create:		NULL,
-	close:		NULL,
-	check:		NULL,
-	copy:		NULL,
-	resize:		NULL,
-	get_create_constraint:	NULL,
-	get_resize_constraint:	NULL,
-	get_copy_constraint:	NULL
 };
 
 static PedFileSystemType xfs_type = {

@@ -139,16 +139,6 @@ nilfs2_probe (PedGeometry* geom)
 
 static PedFileSystemOps nilfs2_ops = {
 	probe:			nilfs2_probe,
-	clobber:		NULL,
-	open:			NULL,
-	create:			NULL,
-	close:			NULL,
-	check:			NULL,
-	copy:			NULL,
-	resize:			NULL,
-	get_create_constraint:	NULL,
-	get_resize_constraint:	NULL,
-	get_copy_constraint:	NULL
 };
 
 #define NILFS2_BLOCK_SIZES ((int[5]){1024, 2048, 4096, 8192, 0})

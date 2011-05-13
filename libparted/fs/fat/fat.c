@@ -432,25 +432,6 @@ fat_close (PedFileSystem* fs)
 	return 1;
 }
 
-/* Hack: just resize the file system outside of its boundaries! */
-PedFileSystem*
-fat_copy (const PedFileSystem* fs, PedGeometry* geom, PedTimer* timer)
-{
-	PedFileSystem*		new_fs;
-
-	new_fs = ped_file_system_open (fs->geom);
-	if (!new_fs)
-		goto error;
-	if (!ped_file_system_resize (new_fs, geom, timer))
-		goto error_close_new_fs;
-	return new_fs;
-
-error_close_new_fs:
-	ped_file_system_close (new_fs);
-error:
-	return 0;
-}
-
 static int
 _compare_fats (PedFileSystem* fs)
 {
@@ -799,56 +780,10 @@ fat_get_create_constraint_fat32 (const PedDevice* dev)
 
 static PedFileSystemOps fat16_ops = {
 	probe:		fat_probe_fat16,
-#ifndef DISCOVER_ONLY
-	clobber:	fat_clobber,
-	open:		fat_open,
-	create:		fat_create_fat16,
-	close:		fat_close,
-	check:		fat_check,
-	resize:		fat_resize,
-	copy:		fat_copy,
-	get_create_constraint:	fat_get_create_constraint_fat16,
-	get_resize_constraint:	fat_get_resize_constraint,
-	get_copy_constraint:	fat_get_copy_constraint,
-#else /* !DISCOVER_ONLY */
-	clobber:	NULL,
-	open:		NULL,
-	create:		NULL,
-	close:		NULL,
-	check:		NULL,
-	resize:		NULL,
-	copy:		NULL,
-	get_create_constraint:	NULL,
-	get_resize_constraint:	NULL,
-	get_copy_constraint:	NULL,
-#endif /* !DISCOVER_ONLY */
 };
 
 static PedFileSystemOps fat32_ops = {
 	probe:		fat_probe_fat32,
-#ifndef DISCOVER_ONLY
-	clobber:	fat_clobber,
-	open:		fat_open,
-	create:		fat_create_fat32,
-	close:		fat_close,
-	check:		fat_check,
-	resize:		fat_resize,
-	copy:		fat_copy,
-	get_create_constraint:	fat_get_create_constraint_fat32,
-	get_resize_constraint:	fat_get_resize_constraint,
-	get_copy_constraint:	fat_get_copy_constraint,
-#else /* !DISCOVER_ONLY */
-	clobber:	NULL,
-	open:		NULL,
-	create:		NULL,
-	close:		NULL,
-	check:		NULL,
-	resize:		NULL,
-	copy:		NULL,
-	get_create_constraint:	NULL,
-	get_resize_constraint:	NULL,
-	get_copy_constraint:	NULL,
-#endif /* !DISCOVER_ONLY */
 };
 
 #define FAT_BLOCK_SIZES ((int[2]){512, 0})

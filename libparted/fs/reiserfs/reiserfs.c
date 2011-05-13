@@ -791,16 +791,6 @@ static void reiserfs_ops_done()
 #ifdef REISER_FULL_SUPPORT
 static PedFileSystemOps reiserfs_full_ops = {
 	probe:		reiserfs_probe,
-	clobber:	reiserfs_clobber,
-	open:		reiserfs_open,
-	create:		reiserfs_create,
-	close:		reiserfs_close,
-	check:		reiserfs_check,
-	copy:		reiserfs_copy,
-	resize:		reiserfs_resize,
-	get_create_constraint:	reiserfs_get_create_constraint,
-	get_resize_constraint:	reiserfs_get_resize_constraint,
-	get_copy_constraint:	reiserfs_get_copy_constraint
 };
 
 static PedFileSystemType reiserfs_full_type = {
@@ -813,20 +803,6 @@ static PedFileSystemType reiserfs_full_type = {
 
 static PedFileSystemOps reiserfs_simple_ops = {
 	probe:		reiserfs_probe,
-#ifdef DISCOVER_ONLY
-	clobber:	NULL,
-#else
-	clobber:	reiserfs_clobber,
-#endif
-	open:		NULL,
-	create:		NULL,
-	close:		NULL,
-	check:		NULL,
-	copy:		NULL,
-	resize:		NULL,
-	get_create_constraint:	NULL,
-	get_resize_constraint:	NULL,
-	get_copy_constraint:	NULL
 };
 
 static PedFileSystemType reiserfs_simple_type = {

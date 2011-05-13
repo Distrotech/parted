@@ -108,29 +108,9 @@ _apfs2_probe (PedGeometry* geom) {
 
 static PedFileSystemOps _apfs1_ops = {
 	probe:		_apfs1_probe,
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
 };
 static PedFileSystemOps _apfs2_ops = {
 	probe:		_apfs2_probe,
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
 };
 
 #define APFS_BLOCK_SIZES ((int[2]){512, 0})

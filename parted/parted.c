@@ -819,66 +819,9 @@ partition_print_flags (PedPartition* part)
         return res;
 }
 
-/* Prints a sector out, first in compact form, and then with a percentage.
- * Eg: 32Gb (40%)
- */
-static void
-print_sector_compact_and_percent (PedSector sector, PedDevice* dev)
-{
-        char* compact;
-        char* percent;
-
-        if (ped_unit_get_default() == PED_UNIT_PERCENT)
-                compact = ped_unit_format (dev, sector);
-        else
-                compact = ped_unit_format_custom (dev, sector,
-                                                  PED_UNIT_COMPACT);
-
-        percent = ped_unit_format_custom (dev, sector, PED_UNIT_PERCENT);
-
-        printf ("%s (%s)\n", compact, percent);
-
-        free (compact);
-        free (percent);
-}
-
 static int
 partition_print (PedPartition* part)
 {
-        PedFileSystem*  fs;
-        PedConstraint*  resize_constraint;
-        char*           flags;
-
-        fs = ped_file_system_open (&part->geom);
-        if (!fs)
-                return 1;
-
-        putchar ('\n');
-
-        flags = partition_print_flags (part);
-
-        printf (_("Minor: %d\n"), part->num);
-        printf (_("Flags: %s\n"), flags);
-        printf (_("File System: %s\n"), fs->type->name);
-        fputs (_("Size:         "), stdout);
-        print_sector_compact_and_percent (part->geom.length, part->geom.dev);
-
-        resize_constraint = ped_file_system_get_resize_constraint (fs);
-        if (resize_constraint) {
-                fputs (_("Minimum size: "), stdout);
-                print_sector_compact_and_percent (resize_constraint->min_size,
-                        part->geom.dev);
-                fputs (_("Maximum size: "), stdout);
-                print_sector_compact_and_percent (resize_constraint->max_size,
-                        part->geom.dev);
-                ped_constraint_destroy (resize_constraint);
-        }
-
-        putchar ('\n');
-
-        free (flags);
-        ped_file_system_close (fs);
-
         return 1;
 }
 
@@ -1663,37 +1606,6 @@ _init_messages ()
         str_list_append (list, "\n");
 
         label_type_msg = str_list_convert (list);
-        str_list_destroy (list);
-
-/* mkfs - file system types and aliases */
-        list = str_list_create (_(fs_type_msg_start), NULL);
-
-        first = 1;
-        for (fs_type = ped_file_system_type_get_next (NULL);
-             fs_type; fs_type = ped_file_system_type_get_next (fs_type)) {
-                if (fs_type->ops->create == NULL)
-                        continue;
-
-                if (first)
-                        first = 0;
-                else
-                        str_list_append (list, ", ");
-                str_list_append (list, fs_type->name);
-        }
-        for (fs_alias = ped_file_system_alias_get_next (NULL);
-             fs_alias; fs_alias = ped_file_system_alias_get_next (fs_alias)) {
-                if (fs_alias->fs_type->ops->create == NULL)
-                        continue;
-
-                if (first)
-                        first = 0;
-                else
-                        str_list_append (list, ", ");
-                str_list_append (list, fs_alias->alias);
-        }
-        str_list_append (list, "\n");
-
-        mkfs_fs_type_msg = str_list_convert (list);
         str_list_destroy (list);
 
 /* mkpart - file system types and aliases */

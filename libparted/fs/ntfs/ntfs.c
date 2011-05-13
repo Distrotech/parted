@@ -63,20 +63,6 @@ ntfs_clobber (PedGeometry* geom)
 
 static PedFileSystemOps ntfs_ops = {
 	probe:		ntfs_probe,
-#ifndef DISCOVER_ONLY
-	clobber:	ntfs_clobber,
-#else
-	clobber:	NULL,
-#endif
-	open:		NULL,
-	create:		NULL,
-	close:		NULL,
-	check:		NULL,
-	copy:		NULL,
-	resize:		NULL,
-	get_create_constraint:	NULL,
-	get_resize_constraint:	NULL,
-	get_copy_constraint:	NULL
 };
 
 static PedFileSystemType ntfs_type = {

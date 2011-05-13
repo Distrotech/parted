@@ -17,7 +17,6 @@ lib/xalloc-die.c
 lib/xstrtol-error.c
 libparted/arch/beos.c
 
-debug/clearfat/clearfat.c
 partprobe/partprobe.c
 
 # libparted
@@ -27,7 +26,6 @@ libparted/cs/geom.c
 libparted/debug.c
 libparted/disk.c
 libparted/exception.c
-libparted/filesys.c
 libparted/fs/reiserfs/reiserfs.c
 libparted/labels/aix.c
 libparted/labels/bsd.c

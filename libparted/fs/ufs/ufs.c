@@ -259,38 +259,10 @@ ufs_clobber (PedGeometry* geom)
 
 static PedFileSystemOps ufs_ops_sun = {
 	probe:		ufs_probe_sun,
-#ifndef DISCOVER_ONLY
-	clobber:	ufs_clobber,
-#else
-	clobber:	NULL,
-#endif
-	open:		NULL,
-	create:		NULL,
-	close:		NULL,
-	check:		NULL,
-	copy:		NULL,
-	resize:		NULL,
-	get_create_constraint:	NULL,
-	get_resize_constraint:	NULL,
-	get_copy_constraint:	NULL
 };
 
 static PedFileSystemOps ufs_ops_hp = {
 	probe:		ufs_probe_hp,
-#ifndef DISCOVER_ONLY
-	clobber:	ufs_clobber,
-#else
-	clobber:	NULL,
-#endif
-	open:		NULL,
-	create:		NULL,
-	close:		NULL,
-	check:		NULL,
-	copy:		NULL,
-	resize:		NULL,
-	get_create_constraint:	NULL,
-	get_resize_constraint:	NULL,
-	get_copy_constraint:	NULL
 };
 
 static PedFileSystemType ufs_type_sun = {

@@ -77,20 +77,6 @@ jfs_clobber (PedGeometry* geom)
 
 static PedFileSystemOps jfs_ops = {
 	probe:		jfs_probe,
-#ifndef DISCOVER_ONLY
-	clobber:	jfs_clobber,
-#else
-	clobber:	NULL,
-#endif
-	open:		NULL,
-	create:		NULL,
-	close:		NULL,
-	check:		NULL,
-	copy:		NULL,
-	resize:		NULL,
-	get_create_constraint:	NULL,
-	get_resize_constraint:	NULL,
-	get_copy_constraint:	NULL
 };
 
 static PedFileSystemType jfs_type = {

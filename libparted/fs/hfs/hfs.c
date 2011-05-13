@@ -1223,96 +1223,14 @@ hfsplus_extract (PedFileSystem* fs, PedTimer* timer)
 
 static PedFileSystemOps hfs_ops = {
 	probe:		hfs_probe,
-#ifndef DISCOVER_ONLY
-	clobber:	hfs_clobber,
-	open:		hfs_open,
-	create:		NULL,
-	close:		hfs_close,
-#ifndef HFS_EXTRACT_FS
-	check:		NULL,
-#else
-	check:		hfs_extract,
-#endif
-	copy:		NULL,
-	resize:		hfs_resize,
-	get_create_constraint:	NULL,
-	get_resize_constraint:	hfs_get_resize_constraint,
-	get_copy_constraint:	NULL,
-#else /* DISCOVER_ONLY */
-	clobber:	NULL,
-	open:		NULL,
-	create:		NULL,
-	close:		NULL,
-	check:		NULL,
-	copy:		NULL,
-	resize:		NULL,
-	get_create_constraint:	NULL,
-	get_resize_constraint:	NULL,
-	get_copy_constraint:	NULL,
-#endif /* DISCOVER_ONLY */
 };
 
 static PedFileSystemOps hfsplus_ops = {
 	probe:		hfsplus_probe,
-#ifndef DISCOVER_ONLY
-	clobber:	hfsplus_clobber,
-	open:		hfsplus_open,
-	create:		NULL,
-	close:		hfsplus_close,
-#ifndef HFS_EXTRACT_FS
-	check:		NULL,
-#else
-	check:		hfsplus_extract,
-#endif
-	copy:		NULL,
-	resize:		hfsplus_resize,
-	get_create_constraint:	NULL,
-	get_resize_constraint:	hfsplus_get_resize_constraint,
-	get_copy_constraint:	NULL,
-#else /* DISCOVER_ONLY */
-	clobber:	NULL,
-	open:		NULL,
-	create:		NULL,
-	close:		NULL,
-	check:		NULL,
-	copy:		NULL,
-	resize:		NULL,
-	get_create_constraint:	NULL,
-	get_resize_constraint:	NULL,
-	get_copy_constraint:	NULL,
-#endif /* DISCOVER_ONLY */
 };
 
 static PedFileSystemOps hfsx_ops = {
 	probe:		hfsx_probe,
-#ifndef DISCOVER_ONLY
-	clobber:	hfs_clobber, /* NOT hfsplus_clobber !
-					HFSX can't be embedded */
-	open:		hfsplus_open,
-	create:		NULL,
-	close:		hfsplus_close,
-#ifndef HFS_EXTRACT_FS
-	check:		NULL,
-#else
-	check:		hfsplus_extract,
-#endif
-	copy:		NULL,
-	resize:		hfsplus_resize,
-	get_create_constraint:	NULL,
-	get_resize_constraint:	hfsplus_get_resize_constraint,
-	get_copy_constraint:	NULL,
-#else /* DISCOVER_ONLY */
-	clobber:	NULL,
-	open:		NULL,
-	create:		NULL,
-	close:		NULL,
-	check:		NULL,
-	copy:		NULL,
-	resize:		NULL,
-	get_create_constraint:	NULL,
-	get_resize_constraint:	NULL,
-	get_copy_constraint:	NULL,
-#endif /* DISCOVER_ONLY */
 };
 
 

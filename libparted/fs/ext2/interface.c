@@ -312,70 +312,14 @@ _ext2_get_resize_constraint (const PedFileSystem* fs)
 
 static PedFileSystemOps _ext2_ops = {
 	probe:		_ext2_probe,
-#ifndef DISCOVER_ONLY
-	clobber:	_ext2_clobber,
-	open:		_ext2_open,
-	create:         _ext2_create,
-	close:		_ext2_close,
-	check:          _ext2_check,
-	resize:		_ext2_resize,
-	copy:           NULL,
-	get_create_constraint:	_ext2_get_create_constraint,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	_ext2_get_resize_constraint
-#else /* !DISCOVER_ONLY */
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
-#endif /* !DISCOVER_ONLY */
 };
 
 static PedFileSystemOps _ext3_ops = {
 	probe:		_ext3_probe,
-#ifndef DISCOVER_ONLY
-	clobber:	_ext2_clobber,
-	open:		_ext2_open,
-	create:         NULL,
-	close:		_ext2_close,
-	check:          _ext2_check,
-	resize:		_ext2_resize,
-	copy:           NULL,
-	get_create_constraint:	_ext2_get_create_constraint,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	_ext2_get_resize_constraint
-#else /* !DISCOVER_ONLY */
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
-#endif /* !DISCOVER_ONLY */
 };
 
 static PedFileSystemOps _ext4_ops = {
 	probe:		_ext4_probe,
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
 };
 
 #define EXT23_BLOCK_SIZES ((int[6]){512, 1024, 2048, 4096, 8192, 0})

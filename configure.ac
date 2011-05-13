@@ -643,7 +643,6 @@ doc/Makefile
 doc/C/Makefile
 doc/pt_BR/Makefile
 debug/Makefile
-debug/clearfat/Makefile
 debug/test/Makefile
 tests/Makefile
 po/Makefile.in

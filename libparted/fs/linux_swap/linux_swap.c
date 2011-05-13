@@ -638,83 +638,14 @@ _swap_swsusp_clobber (PedGeometry* geom) {
 
 static PedFileSystemOps _swap_v0_ops = {
 	probe:		_swap_v0_probe,
-#ifndef DISCOVER_ONLY
-	clobber:	_swap_v0_clobber,
-	open:		_swap_v0_open,
-	create:		swap_create,
-	close:		swap_close,
-	check:		swap_check,
-	copy:		swap_copy,
-	resize:		swap_resize,
-	get_create_constraint:	swap_get_create_constraint,
-	get_resize_constraint:	swap_get_resize_constraint,
-	get_copy_constraint:	swap_get_copy_constraint
-#else
-	clobber:	NULL,
-	open:		NULL,
-	create:		NULL,
-	close:		NULL,
-	check:		NULL,
-	copy:		NULL,
-	resize:		NULL,
-	get_create_constraint:	NULL,
-	get_resize_constraint:	NULL,
-	get_copy_constraint:	NULL
-#endif /* !DISCOVER_ONLY */
 };
 
 static PedFileSystemOps _swap_v1_ops = {
 	probe:		_swap_v1_probe,
-#ifndef DISCOVER_ONLY
-	clobber:	_swap_v1_clobber,
-	open:		_swap_v1_open,
-	create:		swap_create,
-	close:		swap_close,
-	check:		swap_check,
-	copy:		swap_copy,
-	resize:		swap_resize,
-	get_create_constraint:	swap_get_create_constraint,
-	get_resize_constraint:	swap_get_resize_constraint,
-	get_copy_constraint:	swap_get_copy_constraint
-#else
-	clobber:	NULL,
-	open:		NULL,
-	create:		NULL,
-	close:		NULL,
-	check:		NULL,
-	copy:		NULL,
-	resize:		NULL,
-	get_create_constraint:	NULL,
-	get_resize_constraint:	NULL,
-	get_copy_constraint:	NULL
-#endif /* !DISCOVER_ONLY */
 };
 
 static PedFileSystemOps _swap_swsusp_ops = {
   probe:		_swap_swsusp_probe,
-#ifndef DISCOVER_ONLY
-	clobber:	_swap_swsusp_clobber,
-	open:		_swap_swsusp_open,
-	create:		swap_create,
-	close:		swap_close,
-	check:		swap_check,
-	copy:		swap_copy,
-	resize:		swap_resize,
-	get_create_constraint:	swap_get_create_constraint,
-	get_resize_constraint:	swap_get_resize_constraint,
-	get_copy_constraint:	swap_get_copy_constraint
-#else
-	clobber:	NULL,
-	open:		NULL,
-	create:		NULL,
-	close:		NULL,
-	check:		NULL,
-	copy:		NULL,
-	resize:		NULL,
-	get_create_constraint:	NULL,
-	get_resize_constraint:	NULL,
-	get_copy_constraint:	NULL
-#endif /* !DISCOVER_ONLY */
 };
 
 static PedFileSystemType _swap_v0_type = {

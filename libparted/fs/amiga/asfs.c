@@ -118,16 +118,6 @@ error_part:
 
 static PedFileSystemOps _asfs_ops = {
 	probe:		_asfs_probe,
-	clobber:	NULL,
-	open:		NULL,
-	create:         NULL,
-	close:		NULL,
-	check:          NULL,
-	resize:		NULL,
-	copy:           NULL,
-	get_create_constraint:	NULL,
-	get_copy_constraint:	NULL,
-	get_resize_constraint:	NULL
 };
 
 PedFileSystemType _asfs_type = {
