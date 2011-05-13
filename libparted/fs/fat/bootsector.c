@@ -117,6 +117,23 @@ fat_boot_sector_probe_type (const FatBootSector* bs, const PedGeometry* geom)
 		return FAT_TYPE_FAT12;
 }
 
+static int
+_fat_table_entry_size (FatType fat_type)
+{
+	switch (fat_type) {
+		case FAT_TYPE_FAT12:
+		return 2;		/* FIXME: how? */
+
+		case FAT_TYPE_FAT16:
+		return 2;
+
+		case FAT_TYPE_FAT32:
+		return 4;
+	}
+
+	return 0;
+}
+
 /* Analyses the boot sector, and sticks appropriate numbers in
    fs->type_specific.
 
@@ -275,7 +292,7 @@ fat_boot_sector_analyse (FatBootSector* bs, PedFileSystem* fs)
 		= (fs_info->sector_count - fs_info->cluster_offset)
 		  / fs_info->cluster_sectors;
 
-	fat_entry_size = fat_table_entry_size (fs_info->fat_type);
+	fat_entry_size = _fat_table_entry_size (fs_info->fat_type);
 	if (fs_info->cluster_count + 2
 			> fs_info->fat_sectors * 512 / fat_entry_size)
 		fs_info->cluster_count
@@ -415,26 +432,6 @@ fat_info_sector_read (FatInfoSector* is, const PedFileSystem* fs)
 				PED_LE32_TO_CPU (is->signature_2));
 		if (status == PED_EXCEPTION_CANCEL) return 0;
 	}
-	return 1;
-}
-
-int
-fat_info_sector_generate (FatInfoSector* is, const PedFileSystem* fs)
-{
-	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
-
-	PED_ASSERT (is != NULL);
-
-	fat_table_count_stats (fs_info->fat);
-
-	memset (is, 0, 512);
-
-	is->signature_1 = PED_CPU_TO_LE32 (FAT32_INFO_MAGIC1);
-	is->signature_2 = PED_CPU_TO_LE32 (FAT32_INFO_MAGIC2);
-	is->free_clusters = PED_CPU_TO_LE32 (fs_info->fat->free_cluster_count);
-	is->next_cluster = PED_CPU_TO_LE32 (fs_info->fat->last_alloc);
-	is->signature_3 = PED_CPU_TO_LE16 (FAT32_INFO_MAGIC3);
-
 	return 1;
 }
 

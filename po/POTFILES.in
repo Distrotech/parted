@@ -59,13 +59,8 @@ libparted/fs/ext2/ext2_buffer.c
 libparted/fs/ext2/ext2_mkfs.c
 
 # libparted/fs/fat
-libparted/fs/fat/calc.c
-libparted/fs/fat/context.c
 libparted/fs/fat/fat.c
-libparted/fs/fat/resize.c
 libparted/fs/fat/bootsector.c
-libparted/fs/fat/count.c
-libparted/fs/fat/table.c
 
 # libparted/fs/linux_swap
 libparted/fs/linux_swap/linux_swap.c

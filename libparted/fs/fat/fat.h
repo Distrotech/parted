@@ -50,15 +50,22 @@ typedef enum _FatType		FatType;
 typedef struct _FatSpecific	FatSpecific;
 typedef struct _FatDirEntry	FatDirEntry;
 
-/* FIXME: YUCKY */
-#include "table.h"
 #include "bootsector.h"
-#include "context.h"
-#include "fatio.h"
-#include "traverse.h"
-#include "calc.h"
 #include "count.h"
-#include "clstdup.h"
+
+struct _FatTable {
+	void*		table;
+	FatCluster	size;
+	int		raw_size;
+
+	FatType		fat_type;
+	FatCluster	cluster_count;
+	FatCluster	free_cluster_count;
+	FatCluster	bad_cluster_count;
+
+	FatCluster	last_alloc;
+};
+typedef struct _FatTable	FatTable;
 
 struct __attribute__ ((packed)) _FatDirEntry {
 	char		name[8];
