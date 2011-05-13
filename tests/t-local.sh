@@ -26,7 +26,7 @@ scsi_debug_cleanup_()
     # "Module scsi_debug is in use".
     for i in 1 2 3; do
       rmmod scsi_debug \
-	&& { test $VERBOSE = yes && warn_ $ME_ rmmod scsi_debug...; break; }
+	&& { test "$VERBOSE" = yes && warn_ $ME_ rmmod scsi_debug...; break; }
       sleep .2 || sleep 1
     done
   fi
