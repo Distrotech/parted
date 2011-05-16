@@ -1,3 +1,4 @@
+AM_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
 partedincludedir      =	-I$(top_srcdir)/include
 
 noinst_LTLIBRARIES    =	libamigafs.la
