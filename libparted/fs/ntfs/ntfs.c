@@ -50,17 +50,6 @@ ntfs_probe (PedGeometry* geom)
 		return NULL;
 }
 
-#ifndef DISCOVER_ONLY
-static int
-ntfs_clobber (PedGeometry* geom)
-{
-	char	buf[512];
-
-	memset (buf, 0, 512);
-	return ped_geometry_write (geom, buf, 0, 1);
-}
-#endif /* !DISCOVER_ONLY */
-
 static PedFileSystemOps ntfs_ops = {
 	probe:		ntfs_probe,
 };
