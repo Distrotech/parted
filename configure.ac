@@ -519,6 +519,7 @@ If you can't find one try:
 )
 
 AC_CHECK_HEADERS([getopt.h])
+AC_CHECK_HEADERS([linux/ext2_fs.h])
 
 dnl required for libparted/llseek.c  (TODO: make linux-x86 only)
 if test "$OS" = linux; then
