@@ -64,17 +64,6 @@ jfs_probe (PedGeometry* geom)
 	}
 }
 
-#ifndef DISCOVER_ONLY
-static int
-jfs_clobber (PedGeometry* geom)
-{
-	char	buf[512];
-
-	memset (buf, 0, 512);
-	return ped_geometry_write (geom, buf, JFS_SUPER_SECTOR, 1);
-}
-#endif /* !DISCOVER_ONLY */
-
 static PedFileSystemOps jfs_ops = {
 	probe:		jfs_probe,
 };
