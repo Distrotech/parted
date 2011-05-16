@@ -242,21 +242,6 @@ ufs_probe_hp (PedGeometry* geom)
 	return NULL;
 }
 
-#ifndef DISCOVER_ONLY
-static int
-ufs_clobber (PedGeometry* geom)
-{
-	char	buf[1536];
-
-	if (!ped_geometry_read (geom, buf, 16, 3))
-		return 0;
-
-	memset (buf, 0, sizeof(struct ufs_super_block));
-
-	return ped_geometry_write (geom, buf, 16, 3);
-}
-#endif /* !DISCOVER_ONLY */
-
 static PedFileSystemOps ufs_ops_sun = {
 	probe:		ufs_probe_sun,
 };
