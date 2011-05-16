@@ -1098,7 +1098,7 @@ init_file (PedDevice* dev)
                 ped_exception_throw (
                         PED_EXCEPTION_ERROR,
                         PED_EXCEPTION_CANCEL,
-                        _("The device %s has zero length, and can't possibly "
+                        _("The device %s is so small that it cannot possibly "
                           "store a file system or partition table.  Perhaps "
                           "you selected the wrong device?"),
                         dev->path);
