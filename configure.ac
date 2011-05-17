@@ -117,15 +117,6 @@ if test "$enable_discover_only" = yes \
 	)
 fi
 
-AC_ARG_ENABLE([fs],
-	[  --enable-fs             include filesystem support [default=yes]], ,
-	enable_fs=yes
-)
-if test "$enable_fs" = yes; then
-	AC_DEFINE([ENABLE_FS], [1],
-		  [Include file system support.  i.e. libparted/fs_...])
-fi
-
 AC_ARG_ENABLE([debug],
 	[  --enable-debug          compile in assertions [default=yes]], ,
 	enable_debug=yes
@@ -156,11 +147,6 @@ if test "$enable_pc98" = yes; then
 		  [Include PC98 partition tables.  (Sometimes excluded to avoid
 		   collisions with msdos partition tables])
 fi
-
-AC_ARG_ENABLE([Werror],
-	[  --enable-Werror         build with gcc -Werror [default=yes]], ,
-	enable_Werror=yes
-)
 
 AC_ARG_ENABLE([hfs-extract-fs],
 	[  --enable-hfs-extract-fs Extract special HFS files for debugging [default=no]], ,
@@ -592,12 +578,6 @@ if test "$with_readline" = yes; then
 fi
 
 AC_CHECK_FUNCS([canonicalize_file_name])
-
-# CFLAGS="$CFLAGS -W -Wall -Wno-unused -Wno-switch -Wno-format"
-
-if test "$enable_Werror" = yes; then
-	CFLAGS="$CFLAGS -Werror"
-fi
 
 DATE=$(date '+%d %b %Y %H:%M')
 USER=$(whoami)

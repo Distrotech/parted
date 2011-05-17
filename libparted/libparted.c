@@ -98,7 +98,6 @@ init_disk_types ()
 	ped_disk_aix_init ();
 }
 
-#ifdef ENABLE_FS
 extern void ped_file_system_amiga_init (void);
 extern void ped_file_system_xfs_init (void);
 extern void ped_file_system_ufs_init (void);
@@ -126,7 +125,6 @@ init_file_system_types ()
 	ped_file_system_ext2_init ();
 	ped_file_system_nilfs2_init ();
 }
-#endif /* ENABLE_FS */
 
 extern void ped_disk_aix_done ();
 extern void ped_disk_bsd_done ();
@@ -170,17 +168,13 @@ _init()
 #endif
 
 	init_disk_types ();
-
-#ifdef ENABLE_FS
 	init_file_system_types ();
-#endif
 	ped_set_architecture ();
 #ifdef DEBUG
 	memset (dodgy_memory_active, 0, sizeof (dodgy_memory_active));
 #endif
 }
 
-#ifdef ENABLE_FS
 extern void ped_file_system_nilfs2_done (void);
 extern void ped_file_system_ext2_done (void);
 extern void ped_file_system_fat_done (void);
@@ -208,7 +202,6 @@ done_file_system_types ()
 	ped_file_system_xfs_done ();
 	ped_file_system_amiga_done ();
 }
-#endif /* ENABLE_FS */
 
 static void _done() __attribute__ ((destructor));
 
@@ -216,12 +209,8 @@ static void
 _done()
 {
 	ped_device_free_all ();
-
 	done_disk_types ();
-
-#ifdef ENABLE_FS
 	done_file_system_types ();
-#endif
 }
 
 const char*

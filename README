@@ -68,10 +68,3 @@ not a "requires".
 
 (3) When space is important, we suggest --without-readline, --disable-shared,
 and possibly --disable-nls and --disable-dynamic-loading.
-
-If Parted is only going to be used for probing / discovery (and not
-"editing"), there is a --enable-discovery-only and --disable-fs (when you're
-only interested in partition tables).  Since it's readonly, --enable-debug
-gains you nothing wrt safety, so use --disable-debug ;)  The "discover"
-program is about 35k (gzipped) when compiled this way (not counting libc
-and libuuid).
