@@ -7,8 +7,8 @@
 @c %**end of header
 
 @ifinfo
-This file documents the use of GNU Parted, a program for creating,
-resizing, checking and copy partitions and file systems on them.
+This file documents the use of GNU Parted, a program for creating
+and manipulating partition tables.
 @end ifinfo
 
 @ifnottex @c texi2pdf don't understand copying and insertcopying ???
@@ -65,9 +65,8 @@ Free Documentation License''.
 @insertcopying
 @end ifhtml
 
-This document describes the use of GNU Parted, a program for creating,
-destroying, resizing, checking and copying hard drive partitions, and
-the file systems on them.
+This file documents the use of GNU Parted, a program for creating
+and manipulating partition tables.
 
 This document applies roughly to version @strong{@value{VERSION}} of GNU Parted.
 
@@ -96,8 +95,6 @@ edited by Leslie P. Polzer in 2006.
 * Supported Platforms::         Where you can use GNU Parted
 * License::                     What you may and may not do with GNU Parted
 * Compiling::                   How to build GNU Parted
-* Static binaries::             How to get and use a static version of GNU
-                                Parted
 @end menu
 
 @node Overview
@@ -109,26 +106,16 @@ edited by Leslie P. Polzer in 2006.
 @cindex reporting bugs
 @cindex contacting developers
 
-GNU Parted is a program for creating, destroying, resizing, checking
-and copying partitions, and the file systems on them.
-
-This is useful for creating space for new operating systems, for
-reorganizing disk usage, for copying data between hard disks and for
-``disk imaging'' --- replicating an installation on another computer.
+GNU Parted is a program for creating and manipulating partition tables.
 
 This documentation is written with the assumption that the reader
-has some understanding of partitioning and file systems.  If you want to
-learn more about these, the upcoming GNU Storage Guide is recommended
-reading.
+has some understanding of partitioning and file systems.
 
 GNU Parted was designed to minimize the chance of data loss.  For
 example, it was designed to avoid data loss during interruptions (like
 power failure) and performs many safety checks.  However, there could
 be bugs in GNU Parted, so you should back up your important files before
 running Parted.
-Also note that reiserfs support relies on libreiserfs, which does not
-fulfil the aforementioned requirement.  The same holds for any external
-tools like @kbd{ntfsresize}.
 
 The GNU Parted homepage is @uref{http://www.gnu.org/software/parted}.  The
 library and frontend themselves can be downloaded from
@@ -207,7 +194,6 @@ reiserfs support.  libreiserfs is new, and hasn't been widely tested yet.
 
 Hopefully, this list will grow a lot.  If you do not have one of these
 platforms, then you can use a rescue disk and a static binary of GNU Parted.
-@xref{Static binaries}.
 
 @table @asis
 @item GNU/Linux
@@ -269,9 +255,6 @@ if some libraries will be available.  It has a small overhead (mainly
 linking with libdl), so it may be useful to disable it on bootdisks if
 you don't need the flexibility.
 
-@item --disable-fs
-disable all file system support
-
 @item --disable-nls
 turns off native language support.  This is useful for use with old
 versions of glibc, or a trimmed down version of glibc suitable for
@@ -281,9 +264,6 @@ rescue disks.
 turns off shared libraries.  This may be necessary for use with old
 versions of GNU libc, if you get a compile error about a ``spilled
 register''.  Also useful for boot/rescue disks.
-
-@item --disable-Werror
-ignore warning messages in compilation
 
 @item --enable-discover-only
 support only reading/probing (reduces size considerably)
@@ -296,77 +276,10 @@ disable writing (for debugging)
 
 @end table
 
-@node Static binaries
-@section Using static binaries of GNU Parted
-@cindex static binary
-@cindex unsupported platforms
-@cindex resizing root device
-
 @subsection Introduction
-If you want to run GNU Parted on a machine without GNU/Linux installed, or you
-want to resize a root or boot partition, you will need to use a boot disk.
-
-Special boot disk images for GNU Parted used to be available, but with the
-emergence of a plethora of rescue disks and Live CDs that all
-include GNU Parted this is no longer necessary.
-However, please note that these disks often ship with out-of-date
-versions of Parted.  To compensate for this a static binary
-of the latest GNU Parted version is available, which you can use thus:
-
-@c There should be instructions for CD and USB here.
-
-@subsection Creating the Parted disk
-@enumerate
-@item Boot your system
-
-@item Download @file{parted-static-VERSION.tgz} from @uref{ftp://ftp.gnu.org/gnu/parted/static}
-@item Unpack the tarball, resulting in a file called ``parted.static".
-
-@item Insert a floppy.
-
-@item Do a low-level format on it (on GNU/Linux this can be achieved with
-      the tool ``fdformat" from the ``util-linux" package.
-      This is basically a sanity check because floppy disks often
-      contain bad blocks.
-
-@item Create a file system. Example:
-
-@example
-$ @kbd{parted /dev/fd0 mklabel loop mkpartfs ext2 0 1.4}
-@end example
-
-@item Mount the floppy disk, e.g.,
-
-@example
-$ @kbd{mount -t ext2 /dev/fd0 /mnt/floppy}
-@end example
-
-@item Copy @file{parted.static} to the floppy, e.g.,
-
-@example
-$ @kbd{cp parted.static /mnt/floppy}
-@end example
-
-@item Unmount the floppy, e.g.,
-
-@example
-$ @kbd{umount /mnt/floppy}
-@end example
-@end enumerate
-
-@subsection Using the Parted disk
-@enumerate
-@item Choose a rescue disk that suits you.
-
-@item Boot off your rescue disk.  Mount the disk you copied Parted onto.
-
-@item Run Parted.  For example,
-
-@example
-# @kbd{cd /mnt/floppy}
-# @kbd{./parted-static}
-@end example
-@end enumerate
+If you want to run GNU Parted on a machine without GNU/Linux installed,
+or you want to modify a root or boot partition, use GParted Live:
+@uref{http://gparted.sourceforge.net/livecd.php}.
 
 @node    Using Parted
 @chapter Using Parted
