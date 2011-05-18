@@ -94,7 +94,7 @@ scsi_debug_setup_()
   touch stamp
   modprobe scsi_debug "$@" || { rm -f stamp; return 1; }
   scsi_debug_modprobe_succeeded_=1
-  test $VERBOSE = yes \
+  test "$VERBOSE" = yes \
     && warn_ $ME_ modprobe scsi_debug succeeded
 
   # Wait up to 2s (via .1s increments) for the list of devices to change.
