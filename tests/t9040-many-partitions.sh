@@ -68,4 +68,16 @@ $AWK "BEGIN {d = $t_final - $t0; n = $n_partitions; st = 60 < d;"\
 parted -m -s $scsi_dev u s p > out || fail=1
 compare out exp || fail=1
 
+# We must remove these partitions before terminating.
+# Otherwise, even though cleanup-driven rmmod will eventually cause
+# them to be removed, they may continue to be removed long after
+# the rmmod cleanup lock has been released, and such removals
+# can (and regularly did) interfere with the following test.
+i=1
+while :; do
+    parted -s $scsi_dev rm $i || fail=1
+    test $i = $n_partitions && break
+    i=$((i+1))
+done
+
 Exit $fail
