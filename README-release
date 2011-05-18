@@ -4,6 +4,9 @@ Here are most of the steps we (maintainers) follow when making a release.
 
     git checkout master; git pull
 
+* Adjust shared-library settings, CURRENT:REVISION:AGE in
+  libparted/Makefile.am, following instructions in the comments there.
+
 * Run ./configure && make maintainer-clean
 
 * Ensure that the desired versions of autoconf, automake, etc.

@@ -22,9 +22,10 @@ partedincludedir      = -I$(top_srcdir)/lib -I$(top_srcdir)/include
 lib_LTLIBRARIES	      =	libparted.la
 
 # Set the shared library version, per Libtool's guidelines.
-# For details, see the "Libtool's versioning system" section of "info libtool"
+# For details, see the "Updating library version information" section of
+# "info libtool".
 CURRENT = 0
-REVISION = 1
+REVISION = 2
 AGE = 0
 
 libparted_la_LDFLAGS  = -version-info $(CURRENT):$(REVISION):$(AGE)
