@@ -54,20 +54,17 @@ compare out /dev/null || fail=1
 
 printf "BYT;\n$dev:${n_sectors}s:file:$ss:$ss:gpt:;\n" > exp
 i=1
-rm -f out
 for type in $fs_types; do
   end=$(expr $start + $part_size - 1)
   echo "$i:${start}s:${end}s:${part_size}s::$type:;" >> exp || fail=1
-  parted -s $dev mkpart primary $type ${start}s ${end}s >> out 2>&1 || fail=1
-  parted -s $dev name $i $type >> out 2>&1 || fail=1
+  parted -s $dev mkpart primary $type ${start}s ${end}s > err 2>&1 || fail=1
+  compare err /dev/null || fail=1
+  parted -s $dev name $i $type > err 2>&1 || fail=1
+  compare err /dev/null || fail=1
   start=$(expr $end + 1)
   i=$(expr $i + 1)
 done
 
-# expect no output
-compare out /dev/null || fail=1
-
-rm -f out
 # print partition table
 parted -m -s $dev u s p > out 2>&1 || fail=1
 
