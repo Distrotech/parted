@@ -135,7 +135,7 @@ void table_add_row (Table* t, wchar_t** row)
                 printf("[%s]", row[i]);
         putchar ('\n');*/
 
-        t->rows = xrealloc (t->rows, (t->nrows + 1) * sizeof(wchar_t***));
+        t->rows = xrealloc (t->rows, (t->nrows + 1) * sizeof(*(t->rows)));
 
         t->rows[t->nrows] = row;
 
