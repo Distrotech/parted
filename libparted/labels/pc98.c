@@ -541,7 +541,6 @@ pc98_partition_new (
 	}
 	return part;
 
-	free (pc98_data);
 error_free_part:
 	free (part);
 error:

@@ -518,7 +518,6 @@ sun_partition_new (const PedDisk* disk, PedPartitionType part_type,
 
 	return part;
 
-	free (sun_data);
 error_free_part:
 	free (part);
 error:
