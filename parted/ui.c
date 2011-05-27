@@ -946,6 +946,7 @@ command_line_get_sector (const char* prompt, PedDevice* dev, PedSector* value,
                 }
 
                 free (def_str);
+                free (input);
                 return 1;
         }
 
