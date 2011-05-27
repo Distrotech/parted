@@ -17,17 +17,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../parted
-require_erasable_
 require_root_
-require_512_byte_sector_size_
+require_scsi_debug_module_
+ss=$sector_size_
 
-dev=$DEVICE_TO_ERASE
+scsi_debug_setup_ sector_size=$ss dev_size_mb=40 > dev-name ||
+  skip_ 'failed to create scsi_debug device'
+dev=$(cat dev-name)
 
-# setup: create a fat32 file system on $dev
-dd if=/dev/zero "of=$dev" bs=1k count=1 2> /dev/null || fail=1
-parted -s "$dev" mklabel msdos                > out 2>&1 || fail=1
-parted -s "$dev" mkpartfs primary fat32 1 40 >> out 2>&1 || fail=1
+parted -s "$dev" mklabel msdos mkpart primary fat32 1 40 > out 2>&1 || fail=1
 compare out /dev/null || fail=1
+mkfs.vfat ${dev}1 || skip_ "mkfs.vfat failed"
 
 mount_point="`pwd`/mnt"
 
