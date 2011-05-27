@@ -914,8 +914,10 @@ read_device_sysfs_file (PedDevice *dev, const char *file)
         if ((f = fopen (name_buf, "r")) == NULL)
                 return NULL;
 
-        if (fgets (buf, 255, f) == NULL)
+        if (fgets (buf, 255, f) == NULL) {
+                fclose (f);
                 return NULL;
+        }
 
         fclose (f);
         return strip_name (buf);
