@@ -202,11 +202,6 @@ Linux versions 2.0 and up, on Alpha, x86 PCs, PC98, Macintosh PowerPC, Sun hardw
 @item GNU/Hurd
 @end table
 
-GNU libc 2.1 or higher is required.  You can probably use older versions
-by using the @samp{--disable-nls} option. @xref{Compiling, Building GNU
-Parted}. (Note: I think we have now dropped this requirement.  TODO:
-check if libc 2.0 works!)
-
 @node License
 @section Terms of distribution for GNU Parted
 @cindex license terms
@@ -322,7 +317,7 @@ In command line mode, this is followed by one or more commands.  For
 example:
 
 @example
-# @kbd{parted /dev/sda resize 1 52Mb 104Mb mkfs 2 fat16}
+# @kbd{parted /dev/sda mklabel gpt mkpart P1 ext3 1MiB 8MiB }
 @end example
 
 @noindent Options (like @kbd{--help}) can only be specified on the
@@ -332,12 +327,12 @@ In interactive mode, commands are entered one at a time at a prompt, and
 modify the disk immediately.  For example:
 
 @example
-(parted) @kbd{resize 1 52.0005Mb 104.5Mb}
-(parted) @kbd{mkfs 2 fat16}
+(parted) @kbd{mklabel gpt}
+(parted) @kbd{mkpart P1 ext3 1MiB 8MiB }
 @end example
 
 @noindent Unambiguous abbreviations are allowed.  For example, you can
-type ``p'' instead of ``print'', and ``resi'' instead of ``resize''.
+type ``p'' instead of ``print'', and ``u'' instead of ``units''.
 Commands can be typed either in English, or your native language (if
 your language has been translated).  This may create ambiguities.
 Commands are case-insensitive.
@@ -346,39 +341,31 @@ Numbers indicating partition locations can be whole numbers or decimals.
 The suffix selects the unit, which may be one of those described in
 @ref{unit}, except CHS and compact.  If no suffix is given, then the default
 unit is assumed.  Negative numbers count back from the end of the disk,
-with ``-1s'' indicating the end of the disk.  Parted will compute sensible
+with ``-1s'' indicating the sector at the end of the disk.
+Parted will compute sensible
 ranges for the locations you specify (e.g. a range of +/- 500 MB when you
 specify the location in ``G''). Use the sector unit ``s'' to specify exact
-locations.
+locations.  With parted-2.4 and newer,
+IEC binary units like ``MiB'', ``GiB'', ``TiB'', etc., specify
+exact locations as well.
+See @xref{IEC binary units}.
 
 If you don't give a parameter to a command, Parted will prompt you for it.
 For example:
 
 @example
-(parted) @kbd{resize 1}
-Start? @kbd{0Gb}
-End? @kbd{40Gb}
+(parted) @kbd{mklabel}
+New disk label type? @kbd{gpt}
 @end example
 
 Parted will always warn you before doing something that is potentially
 dangerous, unless the command is one of those that is inherently
-dangerous (viz., rm, mklabel and mkfs).  For example, if you attempt to
-shrink a partition ``too much'' (i.e., by more than the free space
-available), Parted will automatically reduce the shrinkage so that the
-partition is the smallest it can be without losing data.  If this size is
-significantly different from the size requested, Parted will warn you.
+dangerous (viz., rm, mklabel and mkpart).
 Since many partitioning systems have complicated constraints, Parted will
 usually do something slightly different to what you asked.  (For example,
 create a partition starting at 10.352Mb, not 10.4Mb)
 If the calculated values differ too much, Parted will ask you for
 confirmation.
-
-Currently ext3 filesystem functionality does not work. To manage ext3 type
-filesystems use tools like resize2fs or mke2fs.  Note that the currently
-supported ext2 filesystem will be deprecated once ext3 support is finalized.
-Further note that ext3 support will have limited functionality that is yet
-to be defined.  Use tools like resize2fs (8) and mke2fs (8) to manage these
-types of filesystems.
 
 
 @node Invoking Parted
@@ -428,24 +415,21 @@ GNU Parted provides the following commands:
 
 @menu
 * align-check::
-* check::
-* cp::
 * help::
 * mklabel::
-* mkfs::
 * mkpart::
-* mkpartfs::
-* move::
 * name::
 * print::
 * quit::
 * rescue::
-* resize::
 * rm::
 * select::
 * set::
 * unit::
 @end menu
+
+Note that after version 2.4, the following commands were removed:
+check, cp, mkfs, mkpartfs, move, resize.
 
 @node align-check
 @subsection align-check
@@ -474,63 +458,6 @@ Example:
 
 @end deffn
 
-@node check
-@subsection check
-@cindex check, command description
-@cindex command description, check
-
-@deffn Command check @var{number}
-
-Checks if the file system on partition @var{number} has
-any errors.
-
-Example:
-
-@example
-(parted) @kbd{check 1}
-@end example
-
-Check the file system on partition 1.
-@end deffn
-
-@node cp
-@subsection cp
-@cindex cp, command description
-@cindex command description, cp
-
-@deffn Command cp [@var{from-device}] @var{from-number} @var{to-number}
-
-Copies the file system on the partition @var{from-number} to partition
-@var{to-number}, deleting the original contents of the destination
-partition.
-
-An optional device parameter, @var{from-device} can be given, which
-specifies which device the source partition is on.
-
-Supported file systems:
-@itemize @bullet
-@item ext2
-(provided the destination partition is larger than the source partition)
-
-@item fat16, fat32
-@item linux-swap
-(equivalent to mkswap on destination partition)
-@item reiserfs (if libreiserfs is installed)
-
-@end itemize
-
-Example:
-
-@example
-(parted) @kbd{cp /dev/hdb 2 3}
-@end example
-
-@c FIXME: this doesn't format right.
-Copy partition 2 of @file{/dev/hdb} (i.e., @file{/dev/hdb2}) to partition
-on 3, on the device Parted was loaded with, destroying the original
-contents of partition 3.
-@end deffn
-
 @node help
 @subsection help
 @cindex help, command description
@@ -543,10 +470,10 @@ Prints general help, or help on @var{command}.
 Example:
 
 @example
-(parted) @kbd{help resize}
+(parted) @kbd{help mklabel}
 @end example
 
-Print help for the resize command.
+Print help for the mklabel command.
 @end deffn
 
 @node mklabel
@@ -584,33 +511,6 @@ Example:
 
 Create an MS-DOS disk label.  This is still the most common disk label for
 PCs.
-@end deffn
-
-@node mkfs
-@subsection mkfs
-@cindex mkfs, command description
-@cindex command description, mkfs
-
-@deffn Command mkfs @var{number} @var{fs-type}
-
-Makes a file system @var{fs-type} on partition @var{number}, destroying
-all data that resides on that partition.
-
-Supported file systems:
-@itemize @bullet
-@item ext2
-@item fat16, fat32
-@item linux-swap
-@item reiserfs (if libreiserfs is installed)
-@end itemize
-
-Example:
-
-@example
-(parted) @kbd{mkfs 2 fat32}
-@end example
-
-Make a @var{fat32} file system on partition 2.
 @end deffn
 
 @node mkpart
@@ -655,79 +555,6 @@ Example:
 Create a logical partition that will contain an ext2 file system.  The
 partition will start at the beginning of the disk, and end 692.1
 megabytes into the disk.
-
-@end deffn
-
-@node mkpartfs
-@subsection mkpartfs
-@cindex mkpartfs, command description
-@cindex command description, mkpartfs
-
-@deffn Command mkpartfs @var{part-type} @var{fs-type} @var{start} @var{end}
-
-Creates a new partition of type @var{part-type} with a new file system
-of type @var{fs-type} on it.  The new partition will start @var{start}
-megabytes, and end @var{end} megabytes from the beginning of the disk.
-Do not use this command to recover a deleted partition (use mkpart
-instead).  Using this command is discouraged.  Instead use mkpart
-to create an empty partition, and then use external tools like mke2fs (8)
-to create the filesystem.
-
-@var{part-type} is one of: primary, extended, logical.  Extended and logical
-are only used for msdos and dvh disk labels.
-
-@var{fs-type} must be one of these supported file systems:
-@itemize @bullet
-@item ext2
-@item fat16, fat32
-@item linux-swap
-@item reiserfs (if libreiserfs is installed)
-@end itemize
-
-Example:
-
-@example
-(parted) @kbd{mkpartfs logical ext2 440 670}
-@end example
-
-Make a logical partition and write an ext2 file system, starting 440
-megabytes and ending 670 megabytes from the beginning of the disk.
-@end deffn
-
-@node move
-@subsection move
-@cindex move, command description
-@cindex command description, move
-
-@deffn Command move @var{number} @var{start} @var{end}
-
-Moves partition on the disk, by moving its beginning to @var{start}.
-You can't move a partition so that the old and new positions overlap.
-That is, you can only move partitions into free space.  If you want
-to resize a partition in-place, use @command{resize}.
-
-Move never changes the partition number.
-
-Supported file systems:
-@itemize @bullet
-@item ext2
-(provided the destination partition is larger than the source partition)
-
-@item fat16, fat32
-
-@item linux-swap
-
-@item reiserfs (if libreiserfs is installed)
-@end itemize
-
-Example:
-
-@example
-(parted) move 2 150M 500M
-@end example
-
-Move the partition numbered 2 so that it begins 150 megabytes from the start of
-the disk, and ends 500 megabytes from the start.
 
 @end deffn
 
@@ -856,45 +683,6 @@ It's back!  :)
 
 @end deffn
 
-@node resize
-@subsection resize
-@cindex resize, command description
-@cindex command description, resize
-
-@deffn Command resize @var{number} @var{start} @var{end}
-
-Resizes the partition with number @var{number}.  The partition will start
-@var{start} from the beginning of the disk, and end @var{end} from the
-beginning of the disk.  resize never changes the partition number.  Extended
-partitions can be resized only so long as the new extended partition
-completely contains all logical partitions.
-
-Note that Parted can manipulate partitions whether or not they have been
-defragmented, so you do not need to defragment the disk before
-using Parted.
-
-Supported file systems:
-@itemize @bullet
-@item ext2 -- restriction: the new @var{start} must be the same as
-the old @var{start}.
-@item fat16, fat32
-@item hfs, hfs+, hfsx -- restriction: the new @var{start} must be the same as
-the old @var{start} and the new @var{end} must be smaller than the old
-@var{end}.
-@item linux-swap
-@item reiserfs (if libreiserfs is installed)
-@end itemize
-
-Example:
-
-@example
-(parted) @kbd{resize 3 200M 850M}
-@end example
-
-Resize partition 3, so that it begins 200 megabytes and ends 850
-megabytes from the beginning of the disk.
-@end deffn
-
 @node rm
 @subsection rm
 @cindex rm, command description
@@ -904,7 +692,7 @@ megabytes from the beginning of the disk.
 @deffn Command rm @var{number}
 
 Removes the partition with number @var{number}.  If you accidently delete
-a partition with this command, use mkpart (@emph{not} mkpartfs) to
+a partition with this command, use mkpart to
 recover it.  Also, you can use the gpart program (@pxref{Related information})
 to recover damaged disk labels.
 
@@ -1098,6 +886,7 @@ do not satisfy all constraints, Parted will ask you for the nearest
 solution).  Note that negative numbers count back from the end of
 the disk, with ``-1s'' pointing to the last sector of the disk.
 
+@anchor{IEC binary units}
 Note that as of parted-2.4, when you specify start and/or end values
 using IEC binary units like ``MiB'', ``GiB'', ``TiB'', etc., parted
 treats those values as exact, and equivalent to the same number

@@ -3,25 +3,20 @@ GNU Parted
 
 GNU Parted is a program for manipulating partition tables.
 
-WARNING: USING PARTED TO PERFORM FILE SYSTEM OPERATIONS IS DEPRECATED
----------------------------------------------------------------------
+WARNING: USING PARTED TO PERFORM FILE SYSTEM OPERATIONS IS NO LONGER SUPPORTED
+------------------------------------------------------------------------------
 
-Parted retains (for now) the ability to create and modify a few types of
-file systems, but that functionality is deprecated.  Whenever possible,
-we recommend that you use file-system-specific tools to create and
-operate on file systems.  For example, use the e2fsprogs programs
-to operate on ext2, ext3 and ext4 file systems.  Use programs from
-the reiserfsprogs package if you want to manipulate reiserfs file
-systems.  Although Parted lets you do some of the same things, the
-file-system-related code in parted is not as robust as the code in
-more specialized, FS-specific packages.
+Parted (post-2.4) no longer has the ability to create and modify file systems.
+Use file-system-specific tools to create and operate on file systems.
+For example, use the e2fsprogs programs to operate on ext2, ext3 and ext4
+file systems.  Use programs from the reiserfsprogs package if you want to
+manipulate reiserfs file systems.  Although Parted lets you do some of the
+same things, the file-system-related code in parted is not as robust as the
+code in more specialized, FS-specific packages.
 
-So far, we have good arguments for retaining the capability to resize
-FAT and HFS file systems: as far as we know, no other free software
-provides that functionality.  However, all other FS-related functionality
-will be removed from an upcoming release of Parted.  Thus, you should
-now avoid using the following commands: mkpartfs, mkfs, cp, move, check
-since support for them will be removed.
+Most FS-related functionality was removed after Parted 2.4.
+Thus, the following commands are no longer supported:
+mkpartfs, mkfs, cp, move, check, resize.
 
 
 See the file NEWS for a list of major changes in the current release.
