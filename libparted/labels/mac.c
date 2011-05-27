@@ -728,7 +728,6 @@ mac_read (PedDisk* disk)
 	PedPartition*		part;
 	int			num;
 	PedSector		ghost_size;
-	PedConstraint*		constraint_exact;
 	int			last_part_entry_num = 0;
 
 	PED_ASSERT (disk != NULL);
@@ -795,10 +794,14 @@ mac_read (PedDisk* disk)
 			goto error_delete_all;
 		part->num = num;
 		part->fs_type = ped_file_system_probe (&part->geom);
-		constraint_exact = ped_constraint_exact (&part->geom);
-		if (!ped_disk_add_partition (disk, part, constraint_exact))
+		PedConstraint *constraint_exact
+			= ped_constraint_exact (&part->geom);
+		if (constraint_exact == NULL)
 			goto error_delete_all;
+		bool ok = ped_disk_add_partition (disk, part, constraint_exact);
 		ped_constraint_destroy (constraint_exact);
+		if (!ok)
+			goto error_delete_all;
 
 		if (_rawpart_is_partition_map (raw_part)) {
 			if (mac_disk_data->part_map_entry_num
