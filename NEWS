@@ -2,6 +2,40 @@ GNU parted NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  Fix numerous small leaks in both the library and the UI.
+
+** Changes in behavior
+
+  Remove all FS-related (file system-related) sub-commands; these commands
+  are no longer recognized because they were all dependent on parted "knowing"
+  too much about file system: mkpartfs, mkfs, cp, move, check, resize.
+  This change removes not just the user interface bits, but also the
+  library functions and nearly all of the underlying FS-munging code.
+  The code embedded in Parted by which it knew about those file systems
+  was so old, unmaintainable and buggy that while seemingly drastic,
+  this change is like removing a gangrenous toe.
+
+  Here is the list of removed functions:
+
+    ped_file_system_clobber
+    ped_file_system_open
+    ped_file_system_create
+    ped_file_system_close
+    ped_file_system_check
+    ped_file_system_copy
+    ped_file_system_resize
+    ped_file_system_get_create_constraint
+    ped_file_system_get_resize_constraint
+    ped_file_system_get_copy_constraint
+
+  This change also removes the corresponding function members
+  from "struct _PedFileSystemOps":
+
+    clobber open create close check copy resize get_create_constraint
+    get_resize_constraint get_copy_constraint
+
 
 * Noteworthy changes in release 2.4 (2011-05-18) [stable]
 
