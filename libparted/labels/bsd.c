@@ -277,7 +277,6 @@ bsd_read (PedDisk* disk)
 		BSDPartitionData*	bsd_part_data;
 		PedSector		start;
 		PedSector		end;
-		PedConstraint*		constraint_exact;
 
 		if (!label->d_partitions[i - 1].p_size
 		    || !label->d_partitions[i - 1].p_fstype)
@@ -294,10 +293,14 @@ bsd_read (PedDisk* disk)
 		part->num = i;
 		part->fs_type = ped_file_system_probe (&part->geom);
 
-		constraint_exact = ped_constraint_exact (&part->geom);
-		if (!ped_disk_add_partition (disk, part, constraint_exact))
+		PedConstraint *constraint_exact
+			= ped_constraint_exact (&part->geom);
+		if (constraint_exact == NULL)
 			goto error;
+		bool ok = ped_disk_add_partition (disk, part, constraint_exact);
 		ped_constraint_destroy (constraint_exact);
+		if (!ok)
+			goto error;
 	}
 
 	return 1;
