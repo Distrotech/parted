@@ -1082,6 +1082,7 @@ command_line_get_fs_type (const char* prompt, const PedFileSystemType*(* value))
                 ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
                                      _("Unknown file system type \"%s\"."),
                                      fs_type_name);
+                free (fs_type_name);
                 return 0;
         }
 
