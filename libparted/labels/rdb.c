@@ -509,7 +509,6 @@ amiga_read (PedDisk* disk)
 	{
 		PedPartition *part;
 		PedSector start, end;
-		PedConstraint *constraint_exact;
 
 		/* Let's look for loops in the partition table */
 		if (_amiga_loop_check(partblock, partlist, i)) {
@@ -542,13 +541,17 @@ amiga_read (PedDisk* disk)
 		/* Let's probe what file system is present on the disk */
 		part->fs_type = ped_file_system_probe (&part->geom);
 
-		constraint_exact = ped_constraint_exact (&part->geom);
-		if (!ped_disk_add_partition (disk, part, constraint_exact)) {
+		PedConstraint *constraint_exact
+			= ped_constraint_exact (&part->geom);
+		if (constraint_exact == NULL)
+			return 0;
+		bool ok = ped_disk_add_partition (disk, part, constraint_exact);
+		ped_constraint_destroy (constraint_exact);
+		if (!ok) {
 			ped_partition_destroy(part);
 			free(partition);
 			return 0;
 		}
-		ped_constraint_destroy (constraint_exact);
 	}
 	free(partition);
 	return 1;
