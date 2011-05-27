@@ -2064,16 +2064,17 @@ _probe_proc_partitions ()
         char            buf [512];
         char            part_name [256];
         char            dev_name [256];
+        int ok = 0;
 
         proc_part_file = fopen ("/proc/partitions", "r");
         if (!proc_part_file)
                 return 0;
 
         if (fgets (buf, 256, proc_part_file) == NULL)
-                return 0;
+                goto done;
 
         if (fgets (buf, 256, proc_part_file) == NULL)
-                return 0;
+                goto done;
 
         while (fgets (buf, 512, proc_part_file)
                && sscanf (buf, "%d %d %d %255s", &major, &minor, &size,
@@ -2090,8 +2091,10 @@ _probe_proc_partitions ()
                 _ped_device_probe (dev_name);
         }
 
+        ok = 1;
+ done:
         fclose (proc_part_file);
-        return 1;
+        return ok;
 }
 
 struct _entry {
