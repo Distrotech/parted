@@ -313,7 +313,6 @@ sun_read (PedDisk* disk)
 	int i;
 	PedPartition* part;
 	PedSector end, start, block;
-	PedConstraint* constraint_exact;
 
 	PED_ASSERT (disk != NULL);
 	PED_ASSERT (disk->dev != NULL);
@@ -366,10 +365,14 @@ sun_read (PedDisk* disk)
 		part->num = i + 1;
 		part->fs_type = ped_file_system_probe (&part->geom);
 
-		constraint_exact = ped_constraint_exact (&part->geom);
-		if (!ped_disk_add_partition (disk, part, constraint_exact))
+		PedConstraint *constraint_exact
+			= ped_constraint_exact (&part->geom);
+		if (constraint_exact == NULL)
 			goto error;
+		bool ok = ped_disk_add_partition (disk, part, constraint_exact);
 		ped_constraint_destroy (constraint_exact);
+		if (!ok)
+			goto error;
 	}
 
 	return 1;
