@@ -21,7 +21,7 @@ require_root_
 require_scsi_debug_module_
 ss=$sector_size_
 
-scsi_debug_setup_ sector_size=$ss dev_size_mb=40 > dev-name ||
+scsi_debug_setup_ sector_size=$ss dev_size_mb=90 > dev-name ||
   skip_ 'failed to create scsi_debug device'
 dev=$(cat dev-name)
 
@@ -51,6 +51,12 @@ parted -s "$dev" mklabel msdos > out 2>&1; test $? = 1 || fail=1
 # create expected output file
 echo "Error: Partition(s) on $dev are being used." > exp
 compare out exp || fail=1
+
+# Adding a partition must succeed, even though another
+# on this same device is mounted (active).
+parted -s "$dev" mkpart primary fat32 41 85 > out 2>&1 || fail=1
+compare out /dev/null || fail=1
+parted -s "$dev" u s print
 
 # ==================================================
 # Repeat the test in interactive mode.
