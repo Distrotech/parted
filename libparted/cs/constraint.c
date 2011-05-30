@@ -46,6 +46,7 @@
 #include <config.h>
 #include <parted/parted.h>
 #include <parted/debug.h>
+#include <assert.h>
 
 /**
  * Initializes a pre-allocated piece of memory to contain a constraint
@@ -511,11 +512,20 @@ ped_constraint_exact (const PedGeometry* geom)
 	PedAlignment	end_align;
 	PedGeometry	start_sector;
 	PedGeometry	end_sector;
+	int ok;
 
-	ped_alignment_init (&start_align, geom->start, 0);
-	ped_alignment_init (&end_align, geom->end, 0);
-	ped_geometry_init (&start_sector, geom->dev, geom->start, 1);
-	ped_geometry_init (&end_sector, geom->dev, geom->end, 1);
+	/* With grain size of 0, it always succeeds.  */
+	ok = ped_alignment_init (&start_align, geom->start, 0);
+	assert (ok);
+	ok = ped_alignment_init (&end_align, geom->end, 0);
+	assert (ok);
+
+	ok = ped_geometry_init (&start_sector, geom->dev, geom->start, 1);
+	if (!ok)
+	  return NULL;
+	ok = ped_geometry_init (&end_sector, geom->dev, geom->end, 1);
+	if (!ok)
+	  return NULL;
 
 	return ped_constraint_new (&start_align, &end_align,
 				   &start_sector, &end_sector, 1,
