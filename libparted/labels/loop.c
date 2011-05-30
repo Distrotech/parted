@@ -203,6 +203,8 @@ loop_partition_duplicate (const PedPartition* part)
 
 	result = ped_partition_new (part->disk, part->type, part->fs_type,
 				    part->geom.start, part->geom.end);
+	if (result == NULL)
+		return NULL;
 	result->num = part->num;
 	return result;
 }
