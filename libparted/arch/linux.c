@@ -610,7 +610,11 @@ _get_linux_version ()
 
         if (uname (&uts))
                 return kver = 0;
-        if (sscanf (uts.release, "%u.%u.%u", &major, &minor, &teeny) != 3)
+        if (sscanf (uts.release, "%u.%u.%u", &major, &minor, &teeny) == 3)
+                ; /* ok */
+        else if (sscanf (uts.release, "%u.%u", &major, &minor) == 2)
+                teeny = 0;
+        else
                 return kver = 0;
 
         return kver = KERNEL_VERSION (major, minor, teeny);

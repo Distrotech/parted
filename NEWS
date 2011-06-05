@@ -2,6 +2,10 @@ GNU parted NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  libparted: works with a two-component linux kernel version number like 3.0
+
 
 * Noteworthy changes in release 3.0 (2011-05-30) [stable]
 
