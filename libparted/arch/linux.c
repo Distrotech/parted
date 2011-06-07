@@ -601,22 +601,17 @@ _get_linux_version ()
         static int kver = -1;
 
         struct utsname uts;
-        int major;
-        int minor;
-        int teeny;
+        int major = 0;
+        int minor = 0;
+        int teeny = 0;
 
         if (kver != -1)
                 return kver;
 
         if (uname (&uts))
                 return kver = 0;
-        if (sscanf (uts.release, "%u.%u.%u", &major, &minor, &teeny) == 3)
-                ; /* ok */
-        else if (sscanf (uts.release, "%u.%u", &major, &minor) == 2)
-                teeny = 0;
-        else
-                return kver = 0;
-
+        int n = sscanf (uts.release, "%u.%u.%u", &major, &minor, &teeny);
+        assert (n == 2 || n == 3);
         return kver = KERNEL_VERSION (major, minor, teeny);
 }
 
