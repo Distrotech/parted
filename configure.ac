@@ -279,7 +279,7 @@ off_t is less than 8 bytes.  Using llseek syscall, and disabling shared
 libraries.)
 	AM_DISABLE_SHARED
 fi
-AM_PROG_LIBTOOL
+AC_PROG_LIBTOOL
 
 AM_GNU_GETTEXT_VERSION([0.18])
 AM_GNU_GETTEXT([external])
