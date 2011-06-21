@@ -531,6 +531,12 @@ ped_unit_parse_custom (const char* str, const PedDevice* dev, PedUnit unit,
 				_("Invalid number."));
 		goto error_free_copy;
 	}
+        if (num > 0 && num < 1) {
+            ped_exception_throw (
+                    PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
+                    _("Use a smaller unit instead of a value < 1"));
+            goto error_free_copy;
+        }
 
 	unit_size = ped_unit_get_size (dev, unit);
 	radius = (ped_div_round_up (unit_size, dev->sector_size) / 2) - 1;
