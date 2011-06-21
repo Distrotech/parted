@@ -44,6 +44,7 @@ TESTS = \
   t9010-big-sector.sh \
   t9020-alignment.sh \
   t9021-maxima.sh \
+  t9022-one-unit-snap.sh \
   t9030-align-check.sh \
   t9040-many-partitions.sh \
   t9041-undetected-in-use-16th-partition.sh \
