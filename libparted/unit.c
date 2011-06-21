@@ -533,7 +533,7 @@ ped_unit_parse_custom (const char* str, const PedDevice* dev, PedUnit unit,
 	}
 
 	unit_size = ped_unit_get_size (dev, unit);
-	radius = ped_div_round_up (unit_size, dev->sector_size) - 1;
+	radius = (ped_div_round_up (unit_size, dev->sector_size) / 2) - 1;
 	if (radius < 0)
 		radius = 0;
 	/* If the user specifies units in a power of 2, e.g., 4MiB, as in
