@@ -4,6 +4,8 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  libparted: no longer aborts when reading a truncated GPT-formatted device
+
   libparted: works with a two-component linux kernel version number like 3.0
 
 

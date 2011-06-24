@@ -517,13 +517,19 @@ gpt_alloc (const PedDevice *dev)
   disk = _ped_disk_alloc ((PedDevice *) dev, &gpt_disk_type);
   if (!disk)
     goto error;
-  disk->disk_specific = gpt_disk_data = ped_malloc (sizeof (GPTDiskData));
-  if (!disk->disk_specific)
-    goto error_free_disk;
 
   data_start = 2 + GPT_DEFAULT_PARTITION_ENTRY_ARRAY_SIZE / dev->sector_size;
   data_end = dev->length - 2
     - GPT_DEFAULT_PARTITION_ENTRY_ARRAY_SIZE / dev->sector_size;
+
+  /* If the device is too small to have room for data, reject it.  */
+  if (data_end <= data_start)
+    goto error_free_disk;
+
+  disk->disk_specific = gpt_disk_data = ped_malloc (sizeof (GPTDiskData));
+  if (!disk->disk_specific)
+    goto error_free_disk;
+
   ped_geometry_init (&gpt_disk_data->data_area, dev, data_start,
                      data_end - data_start + 1);
   gpt_disk_data->entry_count = GPT_DEFAULT_PARTITION_ENTRIES;
@@ -663,6 +669,10 @@ _header_is_valid (PedDisk const *disk, GuidPartitionTableHeader_t *gpt,
 
   PedSector first_usable = PED_LE64_TO_CPU (gpt->FirstUsableLBA);
   if (first_usable < 3)
+    return 0;
+
+  PedSector last_usable = PED_LE64_TO_CPU (gpt->LastUsableLBA);
+  if (disk->dev->length < last_usable)
     return 0;
 
   origcrc = gpt->HeaderCRC32;
