@@ -4,6 +4,9 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  libparted: no longer aborts (failed assertion) due to a nilfs2_probe bug
+  [bug introduced in parted-2.4 with the addition of nilfs2 support]
+
   libparted: no longer aborts when reading a truncated GPT-formatted device
 
   libparted: works with a two-component linux kernel version number like 3.0

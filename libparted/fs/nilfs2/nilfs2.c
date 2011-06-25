@@ -108,13 +108,14 @@ nilfs2_probe (PedGeometry* geom)
 	struct nilfs2_super_block *sb = NULL;
 	struct nilfs2_super_block *sb2 = NULL;
 	PedSector length = geom->length;
-	PedSector sb2off;
 
 	/* ignore if sector size is not 512bytes for now  */
 	if (geom->dev->sector_size != PED_SECTOR_SIZE_DEFAULT)
 		return NULL;
 
-	sb2off = NILFS_SB2_OFFSET(length);
+	PedSector sb2off = NILFS_SB2_OFFSET(length);
+	if (sb2off <= 2)
+		return NULL;
 
 	if (ped_geometry_read_alloc(geom, &sb_v, 2, 1))
 		sb = sb_v;
