@@ -8,8 +8,10 @@ GNU parted NEWS                                    -*- outline -*-
   [bug introduced in parted-2.4 with the addition of nilfs2 support]
 
   libparted: no longer aborts when reading a truncated GPT-formatted device
+  [bug present at least as far back as RHEL4's parted-1.6.19]
 
   libparted: works with a two-component linux kernel version number like 3.0
+  [bug present since the beginning]
 
 
 * Noteworthy changes in release 3.0 (2011-05-30) [stable]
