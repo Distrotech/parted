@@ -4,6 +4,8 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** New Features
 
+  Add resizepart command to resize a partition
+
   Add support for EAV DASD partitions, which are ECKD's with more than
   65520 cylinders.
 
