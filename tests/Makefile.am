@@ -50,6 +50,7 @@ TESTS = \
   t2400-dos-hfs-partition-type.sh \
   t2500-probe-corrupt-hfs.sh \
   t3000-resize-fs.sh \
+  t3200-resize-partition.sh \
   t3200-type-change.sh \
   t3300-palo-prep.sh \
   t3310-flags.sh \
