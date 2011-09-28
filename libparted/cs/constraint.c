@@ -449,7 +449,7 @@ ped_constraint_solve_max (const PedConstraint* constraint)
 	if (!constraint)
 		return NULL;
 	dev = constraint->start_range->dev;
-	ped_geometry_init (&full_dev, dev, 0, dev->length - 1);
+	ped_geometry_init (&full_dev, dev, 0, dev->length);
 	return ped_constraint_solve_nearest (constraint, &full_dev);
 }
 
