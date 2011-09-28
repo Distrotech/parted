@@ -2521,11 +2521,13 @@ _disk_sync_part_table (PedDisk* disk)
         PED_ASSERT(disk->dev != NULL);
         int lpn;
 
+        unsigned int part_range = _device_get_partition_range(disk->dev);
+
         /* lpn = largest partition number. */
         if (ped_disk_get_max_supported_partition_count(disk, &lpn))
-                lpn = PED_MIN(lpn, _device_get_partition_range(disk->dev));
+                lpn = PED_MIN(lpn, part_range);
         else
-                lpn = _device_get_partition_range(disk->dev);
+                lpn = part_range;
 
         /* Its not possible to support largest_partnum < 0.
          * largest_partnum == 0 would mean does not support partitions.
