@@ -29,7 +29,6 @@
 /** We can address 2^63 sectors */
 typedef long long PedSector;
 
-/** \deprecated Removal from API planned */
 typedef enum {
         PED_DEVICE_UNKNOWN      = 0,
         PED_DEVICE_SCSI         = 1,
@@ -75,8 +74,7 @@ struct _PedDevice {
                                              (manufacturer, model) */
         char*           path;           /**< device /dev entry */
 
-        PedDeviceType   type;           /**< SCSI, IDE, etc.
-                                             \deprecated \sa PedDeviceType */
+        PedDeviceType   type;           /**< SCSI, IDE, etc. \sa PedDeviceType */
         long long       sector_size;            /**< logical sector size */
         long long       phys_sector_size;       /**< physical sector size */
         PedSector       length;                 /**< device length (LBA) */
