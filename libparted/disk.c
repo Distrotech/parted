@@ -2171,7 +2171,8 @@ ped_disk_set_partition_geom (PedDisk* disk, PedPartition* part,
 	PED_ASSERT (part->disk == disk);
 
 	old_geom = part->geom;
-	ped_geometry_init (&new_geom, part->geom.dev, start, end - start + 1);
+	if (!ped_geometry_init (&new_geom, part->geom.dev, start, end - start + 1))
+		return 0;
 
 	if (!_disk_push_update_mode (disk))
 		return 0;
