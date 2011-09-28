@@ -56,6 +56,15 @@
 #  define _(String) (String)
 #endif /* ENABLE_NLS */
 
+/* The __attribute__ feature is available in gcc versions 2.5 and later.
+   The __-protected variants of the attributes 'format' and 'printf' are
+   accepted by gcc versions 2.6.4 (effectively 2.7) and later.  */
+#if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7)
+# define _GL_ATTRIBUTE_FORMAT(spec) __attribute__ ((__format__ spec))
+#else
+# define _GL_ATTRIBUTE_FORMAT(spec) /* empty */
+#endif
+
 #define KERNEL_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + (c))
 
 #ifndef __NR__llseek
