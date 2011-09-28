@@ -38,6 +38,7 @@ TESTS = \
   t4100-dvh-partition-limits.sh \
   t4100-msdos-starting-sector.sh \
   t4200-partprobe.sh \
+  t4300-nilfs2-tiny.sh \
   t5000-tags.sh \
   t6000-dm.sh \
   t7000-scripting.sh \
