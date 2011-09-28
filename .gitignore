@@ -38,6 +38,8 @@ libparted/tests/init.sh
 libparted/tests/label
 libparted/tests/t*.sh.log
 libparted/tests/test-suite.log
+libparted/tests/symlink
+libparted/tests/zerolen
 libtool
 m4
 maint.mk
@@ -46,11 +48,16 @@ parted-*.tar.bz2.sig
 parted-*.tar.gz
 parted-*.tar.gz.sig
 parted.spec
+parted/version.c
+parted/version.h
 partprobe/partprobe
 po/.reference
 stamp-h1
 tags
+tests/dup-clobber
+tests/help-version.log
 tests/old-init.sh
 tests/print-align
+tests/print-max
 tests/t*.sh.log
 tests/test-suite.log
