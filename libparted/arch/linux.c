@@ -2530,7 +2530,7 @@ _disk_sync_part_table (PedDisk* disk)
         /* Its not possible to support largest_partnum < 0.
          * largest_partnum == 0 would mean does not support partitions.
          * */
-        if (lpn < 0)
+        if (lpn < 1)
                 return 0;
         int ret = 0;
         int *ok = calloc (lpn, sizeof *ok);
