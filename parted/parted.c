@@ -425,13 +425,6 @@ snap_to_boundaries (PedGeometry* new_geom, PedGeometry* old_geom,
         ped_geometry_set (new_geom, start, end - start + 1);
 }
 
-/* This functions constructs a constraint from the following information:
- *      start, is_start_exact, end, is_end_exact.
- *
- * If is_start_exact == 1, then the constraint requires start be as given in
- * "start".  Otherwise, the constraint does not set any requirements on the
- * start.
- */
 static PedConstraint*
 constraint_from_start_end (PedDevice* dev, PedGeometry* range_start,
                            PedGeometry* range_end)
