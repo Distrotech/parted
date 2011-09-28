@@ -68,3 +68,6 @@ exclude_file_name_regexp--sc_cross_check_PATH_usage_in_tests = \
 
 exclude_file_name_regexp--sc_prohibit_always-defined_macros = \
   ^parted/(strlist|table)\.h$$
+
+exclude_file_name_regexp--sc_prohibit_path_max_allocation = \
+  ^libparted/arch/beos\.c$$
