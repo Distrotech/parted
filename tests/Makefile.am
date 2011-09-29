@@ -43,6 +43,7 @@ TESTS = \
   t6000-dm.sh \
   t7000-scripting.sh \
   t8000-loop.sh \
+  t8001-loop-blkpg.sh \
   t9010-big-sector.sh \
   t9020-alignment.sh \
   t9021-maxima.sh \
