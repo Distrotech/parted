@@ -594,7 +594,7 @@ _device_probe_type (PedDevice* dev)
         } else if (_is_virtblk_major(dev_major)) {
                 dev->type = PED_DEVICE_VIRTBLK;
         } else if (dev_major == LOOP_MAJOR) {
-                dev->type = PED_DEVICE_FILE;
+                dev->type = PED_DEVICE_LOOP;
         } else if (dev_major == MD_MAJOR) {
                 dev->type = PED_DEVICE_MD;
         } else {
@@ -1382,6 +1382,11 @@ linux_new (const char* path)
 
         case PED_DEVICE_FILE:
                 if (!init_file (dev))
+                        goto error_free_arch_specific;
+                break;
+
+        case PED_DEVICE_LOOP:
+                if (!init_generic (dev, _("Loopback device")))
                         goto error_free_arch_specific;
                 break;
 
