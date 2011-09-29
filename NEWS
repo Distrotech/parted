@@ -2,6 +2,10 @@ GNU parted NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New features
+
+  parted has improved support for partitionable loopback devices
+
 ** Bug fixes
 
   libparted: no longer aborts (failed assertion) due to a nilfs2_probe bug

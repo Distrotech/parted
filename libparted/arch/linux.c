@@ -2428,32 +2428,75 @@ _blkpg_remove_partition (PedDisk* disk, int n)
                                     BLKPG_DEL_PARTITION);
 }
 
+/* Read the integer from /sys/block/DEV_BASE/ENTRY and set *VAL
+   to that value, where DEV_BASE is the last component of DEV->path.
+   Upon success, return true.  Otherwise, return false. */
+static bool
+_sysfs_int_entry_from_dev(PedDevice const* dev, const char *entry, int *val)
+{
+        char        path[128];
+        int r = snprintf(path, sizeof(path), "/sys/block/%s/%s",
+			 last_component(dev->path), entry);
+        if (r < 0 || r >= sizeof(path))
+                return false;
+
+        FILE *fp = fopen(path, "r");
+        if (!fp)
+                return false;
+
+        bool ok = fscanf(fp, "%d", val) == 1;
+        fclose(fp);
+
+        return ok;
+}
+
+/* Return the maximum number of partitions that the loopback device can hold.
+   First, check the loop-module-exported max_part parameter (since linux-3.0).
+   If that is not available, fall back to checking ext_range, which seems to
+   have (for some reason) different semantics compared to other devices;
+   specifically, ext_range <= 1 means that the loopback device does
+   not support partitions.  */
+static unsigned int
+_loop_get_partition_range(PedDevice const* dev)
+{
+        int         max_part;
+        bool        ok = false;
+
+        /* max_part module param is exported since kernel 3.0 */
+        FILE *fp = fopen("/sys/module/loop/parameters/max_part", "r");
+        if (fp) {
+                ok = fscanf(fp, "%d", &max_part) == 1;
+                fclose(fp);
+        }
+
+        if (ok)
+                return max_part > 0 ? max_part : 0;
+
+        /*
+         * max_part is not exported - check ext_range;
+         * device supports partitions if ext_range > 1
+         */
+        int range;
+        ok = _sysfs_int_entry_from_dev(dev, "range", &range);
+
+        return ok && range > 1 ? range : 0;
+}
+
 /*
  * The number of partitions that a device can have depends on the kernel.
  * If we don't find this value in /sys/block/DEV/range, we will use our own
  * value.
  */
 static unsigned int
-_device_get_partition_range(PedDevice* dev)
+_device_get_partition_range(PedDevice const* dev)
 {
-        int         range, r;
-        char        path[128];
-        FILE*       fp;
-        bool        ok;
+        /* loop handling is special */
+        if (dev->type == PED_DEVICE_LOOP)
+                return _loop_get_partition_range(dev);
 
-        r = snprintf(path, sizeof(path), "/sys/block/%s/range",
-                     last_component(dev->path));
-        if (r < 0 || r >= sizeof(path))
-                return MAX_NUM_PARTS;
+        int range;
+        bool ok = _sysfs_int_entry_from_dev(dev, "range", &range);
 
-        fp = fopen(path, "r");
-        if (!fp)
-                return MAX_NUM_PARTS;
-
-        ok = fscanf(fp, "%d", &range) == 1;
-        fclose(fp);
-
-        /* (range <= 0) is none sense.*/
         return ok && range > 0 ? range : MAX_NUM_PARTS;
 }
 
