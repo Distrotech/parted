@@ -60,31 +60,13 @@ typedef struct _DVHPartData {
 
 static PedDiskType dvh_disk_type;
 
-/* FIXME: factor out this function: copied from aix.c, with changes to
-   the description, and an added sector number argument.
-   Read sector, SECTOR_NUM (which has length DEV->sector_size) into malloc'd
-   storage.  If the read fails, free the memory and return zero without
-   modifying *BUF.  Otherwise, set *BUF to the new buffer and return 1.  */
-static int
-read_sector (const PedDevice *dev, PedSector sector_num, char **buf)
-{
-	char *b = ped_malloc (dev->sector_size);
-	PED_ASSERT (b != NULL);
-	if (!ped_device_read (dev, b, sector_num, 1)) {
-		free (b);
-		return 0;
-	}
-	*buf = b;
-	return 1;
-}
-
 static int
 dvh_probe (const PedDevice *dev)
 {
 	struct volume_header *vh;
 
-	char *label;
-	if (!read_sector (dev, 0, &label))
+	void *label;
+	if (!ptt_read_sector (dev, 0, &label))
 		return 0;
 
 	vh = (struct volume_header *) label;
@@ -313,8 +295,8 @@ dvh_read (PedDisk* disk)
 
 	ped_disk_delete_all (disk);
 
-	char *s0;
-	if (!read_sector (disk->dev, 0, &s0))
+	void *s0;
+	if (!ptt_read_sector (disk->dev, 0, &s0))
 		return 0;
 	memcpy (&vh, s0, sizeof vh);
 	free (s0);
