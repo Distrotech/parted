@@ -19,6 +19,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../parted
 
 require_root_
+require_udevadm_settle_
 
 cleanup_fn_()
 {
