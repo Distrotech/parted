@@ -6,14 +6,13 @@ GNU Parted \- a partition manipulation program
 [options] [device [command [options...]...]]
 .SH DESCRIPTION
 .B parted
-is a disk partitioning and partition resizing program.  It allows you to
-create, destroy, resize, move and copy ext2, linux-swap, FAT, FAT32, and reiserfs
-partitions.  It can create, resize, and move Macintosh HFS partitions, as well as detect jfs,
-ntfs, ufs, and xfs partitions.  It is useful for creating space for new operating systems,
-reorganising disk usage, and copying data to new hard disks.
+is a program to manipulate disk partitions.  It supports multiple partition
+table formats, including MS-DOS and GPT.  It is useful for creating space for
+new operating systems, reorganising disk usage, and copying data to new hard
+disks.
 .PP
 This manual page documents \fBparted\fP briefly.  Complete documentation is
-distributed with the package in GNU Info format; see near the bottom.
+distributed with the package in GNU Info format.
 .SH OPTIONS
 .TP
 .B -h, --help
@@ -42,7 +41,7 @@ Align partitions to cylinders.
 Use minimum alignment as given by the disk topology information. This and
 the opt value will use layout information provided by the disk to align the
 logical partition table addresses to actual physical blocks on the disks.
-The min value is the minimum aligment needed to align the partition properly to
+The min value is the minimum alignment needed to align the partition properly to
 physical blocks, which avoids performance degradation.
 .IP optimal
 Use optimum alignment as given by the disk topology information. This
@@ -62,45 +61,22 @@ Specifies the command to be executed.  If no command is given,
 will present a command prompt.  Possible commands are:
 .RS
 .TP
-.B check \fIpartition\fP
-Do a simple check on \fIpartition\fP.
-.TP
-.B cp \fI[source-device]\fP \fIsource\fP \fIdest\fP
-Copy the \fIsource\fP partition's filesystem on \fIsource-device\fP (or the
-current device if no other device was specified) to the \fIdest\fP partition
-on the current device.
-.TP
 .B help \fI[command]\fP
 Print general help, or help on \fIcommand\fP if specified.
 .TP
-.B mkfs \fIpartition\fP \fIfs-type\fP
-Make a filesystem \fIfs-type\fP on \fIpartition\fP. \fIfs-type\fP can be one
-of "fat16", "fat32", "ext2", "linux-swap", or "reiserfs".
+.B align-check \fItype\fP \fIpartition\fP
+Check if \fIpartition\fP satisfies the alignment constraint of \fItype\fP.
+\fItype\fP must be "minimal" or "optimal".
 .TP
 .B mklabel \fIlabel-type\fP
-Create a new disklabel (partition table) of \fIlabel-type\fP.
-\fIlabel-type\fP should be one of "bsd", "dvh", "gpt", "loop", "mac", "msdos",
+Create a new disklabel (partition table) of \fIlabel-type\fP.  \fIlabel-type\fP
+should be one of "aix", "amiga", "bsd", "dvh", "gpt", "loop", "mac", "msdos",
 "pc98", or "sun".
 .TP
 .B mkpart \fIpart-type\fP \fI[fs-type]\fP \fIstart\fP \fIend\fP
-Make a \fIpart-type\fP partition with filesystem \fIfs-type\fP (if specified),
+Make a \fIpart-type\fP partition for filesystem \fIfs-type\fP (if specified),
 beginning at \fIstart\fP and ending at \fIend\fP (by default in megabytes).
-\fIfs-type\fP can be one of
-"fat16", "fat32", "ext2", "HFS", "linux-swap", "NTFS", "reiserfs", or "ufs".
 \fIpart-type\fP should be one of "primary", "logical", or "extended".
-.TP
-.B mkpartfs \fIpart-type\fP \fIfs-type\fP \fIstart\fP \fIend\fP
-Make a \fIpart-type\fP partition with filesystem \fIfs-type\fP beginning at
-\fIstart\fP and ending at \fIend\fP (by default in megabytes).  Using
-this command is discouraged.  Instead use
-.BR mkpart
-to create an empty partition, and then use external tools like
-.BR mke2fs (8)
-to create the filesystem.
-.TP
-.B move \fIpartition\fP \fIstart\fP \fIend\fP
-Move \fIpartition\fP so that it begins at \fIstart\fP and ends at \fIend\fP.
-Note: \fBmove\fP never changes the minor number.
 .TP
 .B name \fIpartition\fP \fIname\fP
 Set the name of \fIpartition\fP to \fIname\fP. This option works only on Mac,
@@ -117,10 +93,6 @@ Rescue a lost partition that was located somewhere between \fIstart\fP and
 \fIend\fP.  If a partition is found, \fBparted\fP will ask if you want to
 create an entry for it in the partition table.
 .TP
-.B resize \fIpartition\fP \fIstart\fP \fIend\fP
-Resize the filesystem on \fIpartition\fP so that it begins at \fIstart\fP and
-ends at \fIend\fP (by default in megabytes).
-.TP
 .B rm \fIpartition\fP
 Delete \fIpartition\fP.
 .TP
@@ -136,35 +108,19 @@ Supported flags are: "boot", "root", "swap", "hidden", "raid", "lvm", "lba",
 \fIstate\fP should be either "on" or "off".
 .TP
 .B unit \fIunit\fP
-Set \fIunit\fP as the unit to use when displaying locations and sizes,
-and for interpreting those given by the user when not suffixed with an
-explicit unit.  \fIunit\fP can be one of "s" (sectors), "B" (bytes), "kB",
-"MB", "GB", "TB", "%" (percentage of device size), "cyl" (cylinders),
-"chs" (cylinders, heads, sectors), or "compact" (megabytes for input,
-and a human-friendly form for output).
+Set \fIunit\fP as the unit to use when displaying locations and sizes, and for
+interpreting those given by the user when not suffixed with an explicit unit.
+\fIunit\fP can be one of "s" (sectors), "B" (bytes), "kB", "MB", "MiB", "GB",
+"GiB", "TB", "TiB", "%" (percentage of device size), "cyl" (cylinders), "chs"
+(cylinders, heads, sectors), or "compact" (megabytes for input, and a
+human-friendly form for output).
+.TP
+.B toggle \fIpartition\fP \fIflag\fP
+Toggle the state of \fIflag\fP on \fIpartition\fP.
 .TP
 .B version
 Display version information and a copyright message.
 .RE
-.SH KNOWN ISSUES
-ext3 filesystem functionality does not currently work.  To manage ext3
-type filesystems use tools like
-.BR resize2fs (8)
-or
-.BR mke2fs (8).
-Note that the currently supported ext2 filesystem will be deprecated
-once ext3 support is finalized.  Further note that ext3 support will
-have limited functionality that is yet to be defined.  Use tools like
-.BR resize2fs (8)
-and
-.BR mke2fs (8)
-to manage these types of filesystems.
-
-To manually resize an ext3 filesystem and/or a partition use
-.BR resize2fs (8),
-.BR fdisk (8)
-or similar tools.  For LVM situations, you will need to use the LVM commands
-to resize the LVM elements.
 .SH REPORTING BUGS
 Report bugs to <bug-parted@gnu.org>
 .SH SEE ALSO
