@@ -28,6 +28,7 @@ TESTS = \
   t1101-busy-partition.sh \
   t1700-probe-fs.sh \
   t2200-dos-label-recog.sh \
+  t2201-pc98-label-recog.sh \
   t2300-dos-label-extended-bootcode.sh \
   t2310-dos-extended-2-sector-min-offset.sh \
   t2400-dos-hfs-partition-type.sh \
