@@ -140,45 +140,20 @@ pc98_check_magic (const PC98RawTable *part_table)
 static int
 pc98_check_ipl_signature (const PC98RawTable *part_table)
 {
-	return !memcmp (part_table->boot_code + 4, "IPL1", 4);
-}
-
-static int
-check_partition_consistency (const PedDevice* dev,
-	       		     const PC98RawPartition* raw_part)
-{
-	if (raw_part->ipl_sect >= dev->hw_geom.sectors
-	   || raw_part->sector >= dev->hw_geom.sectors
-	   || raw_part->end_sector >= dev->hw_geom.sectors
-	   || raw_part->ipl_head >= dev->hw_geom.heads
-	   || raw_part->head >= dev->hw_geom.heads
-	   || raw_part->end_head >= dev->hw_geom.heads
-	   || PED_LE16_TO_CPU(raw_part->ipl_cyl) >= dev->hw_geom.cylinders
-	   || PED_LE16_TO_CPU(raw_part->cyl) >= dev->hw_geom.cylinders
-	   || PED_LE16_TO_CPU(raw_part->end_cyl) >= dev->hw_geom.cylinders
-	   || PED_LE16_TO_CPU(raw_part->cyl)
-	   	> PED_LE16_TO_CPU(raw_part->end_cyl)
-#if 0
-	   || !chs_to_sector(dev, PED_LE16_TO_CPU(raw_part->ipl_cyl),
-			     raw_part->ipl_head, raw_part->ipl_sect)
-	   || !chs_to_sector(dev, PED_LE16_TO_CPU(raw_part->cyl),
-			     raw_part->head, raw_part->sector)
-	   || !chs_to_sector(dev, PED_LE16_TO_CPU(raw_part->end_cyl),
-			     raw_part->end_head, raw_part->end_sector)
-#endif
-	   || PED_LE16_TO_CPU(raw_part->end_cyl)
-	  		< PED_LE16_TO_CPU(raw_part->cyl))
+	if (memcmp (part_table->boot_code + 4, "IPL1", 4) == 0)
+		return 1;
+	else if (memcmp (part_table->boot_code + 4, "Linux 98", 8) == 0)
+		return 1;
+	else if (memcmp (part_table->boot_code + 4, "GRUB/98 ", 8) == 0)
+		return 1;
+	else
 		return 0;
-
-	return 1;
 }
 
 static int
 pc98_probe (const PedDevice *dev)
 {
 	PC98RawTable		part_table;
-	int			empty;
-	const PC98RawPartition*	p;
 
 	PED_ASSERT (dev != NULL);
 
@@ -192,30 +167,8 @@ pc98_probe (const PedDevice *dev)
 	if (!pc98_check_magic (&part_table))
 		return 0;
 
-	/* check consistency */
-	empty = 1;
-	for (p = part_table.partitions;
-	     p < part_table.partitions + MAX_PART_COUNT;
-	     p++)
-	{
-		if (p->mid == 0 && p->sid == 0)
-			continue;
-		empty = 0;
-		if (!check_partition_consistency (dev, p))
-			return 0;
-	}
-
-	/* check boot loader */
-	if (pc98_check_ipl_signature (&part_table))
-		return 1;
-	else if (part_table.boot_code[0])	/* invalid boot loader */
-		return 0;
-
-	/* Not to mistake msdos disk map for PC-9800's empty disk map  */
-	if (empty)
-		return 0;
-
-	return 1;
+	/* check for boot loader signatures */
+	return pc98_check_ipl_signature (&part_table);
 }
 
 static PedDisk*

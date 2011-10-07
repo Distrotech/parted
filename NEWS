@@ -17,6 +17,10 @@ GNU parted NEWS                                    -*- outline -*-
   libparted: works with a two-component linux kernel version number like 3.0
   [bug present since the beginning]
 
+  libparted: strengthen the pc98 test so that it is much less likely to
+  cause an MSDOS partition table to be mistakenly identified as pc98.
+  [bug present since the beginning]
+
 
 * Noteworthy changes in release 3.0 (2011-05-30) [stable]
 
