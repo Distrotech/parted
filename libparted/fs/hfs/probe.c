@@ -82,7 +82,8 @@ hfs_and_wrapper_probe (PedGeometry* geom)
 		  + ((PedSector) PED_BE16_TO_CPU (mdb->total_blocks)
 		     * (PED_BE32_TO_CPU (mdb->block_size) / PED_SECTOR_SIZE_DEFAULT )));
 	max = search + (PED_BE32_TO_CPU (mdb->block_size) / PED_SECTOR_SIZE_DEFAULT);
-	if (!(geom_ret = ped_geometry_new (geom->dev, geom->start, search + 2)))
+	if ((search < 0)
+	    || !(geom_ret = ped_geometry_new (geom->dev, geom->start, search + 2)))
 		return NULL;
 
 	for (; search < max; search++) {
@@ -141,8 +142,9 @@ hfsplus_probe (PedGeometry* geom)
 		      - 2;
 		search = max - 2 * ( PED_BE32_TO_CPU (vh->block_size)
 				     / PED_SECTOR_SIZE_DEFAULT ) + 2;
-		if (!(geom_ret = ped_geometry_new (geom->dev, geom->start,
-						   search + 2)))
+		if ((search < 0)
+		    || !(geom_ret = ped_geometry_new (geom->dev, geom->start,
+						      search + 2)))
 			return NULL;
 
 		for (; search < max; search++) {
@@ -156,8 +158,9 @@ hfsplus_probe (PedGeometry* geom)
 		search = ((PedSector) PED_BE32_TO_CPU (vh->total_blocks) - 1)
 		      * ( PED_BE32_TO_CPU (vh->block_size) / PED_SECTOR_SIZE_DEFAULT )
 		      - 1;
-		if (!ped_geometry_set (geom_ret, geom_ret->start,
-					       search + 2)
+		if ((search < 0)
+		    || !ped_geometry_set (geom_ret, geom_ret->start,
+					  search + 2)
 		    || !ped_geometry_read (geom_ret, buf, search, 1)
 		    || vh->signature != PED_CPU_TO_BE16 (HFSP_SIGNATURE)) {
 		    	ped_geometry_destroy (geom_ret);
@@ -213,8 +216,9 @@ hfsx_probe (PedGeometry* geom)
 		      * ( PED_BE32_TO_CPU (vh->block_size) / PED_SECTOR_SIZE_DEFAULT )
 		      - 2;
 	search = max - ( PED_BE32_TO_CPU (vh->block_size) / PED_SECTOR_SIZE_DEFAULT );
-	if (!(geom_ret = ped_geometry_new (geom->dev, geom->start,
-					   search + 2)))
+	if ((search < 0)
+	    || !(geom_ret = ped_geometry_new (geom->dev, geom->start,
+					      search + 2)))
 		return NULL;
 	for (; search < max; search++) {
 		if (!ped_geometry_set (geom_ret, geom_ret->start,
