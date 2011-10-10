@@ -1,8 +1,11 @@
 XFAIL_TESTS = \
   t3200-type-change.sh
 
+TEST_EXTENSIONS = .sh
+SH_LOG_COMPILER = $(SHELL)
+
 TESTS = \
-  help-version \
+  help-version.sh \
   t0000-basic.sh \
   t0001-tiny.sh \
   t0010-script-no-ctrl-chars.sh \
@@ -78,21 +81,6 @@ TESTS_ENVIRONMENT =				\
   tmp__=$$TMPDIR; test -d "$$tmp__" || tmp__=.;	\
   TMPDIR=$$tmp__; export TMPDIR;		\
   exec 9>&2;					\
-  shell_or_perl_() {				\
-    if grep '^\#!/usr/bin/perl' "$$1" > /dev/null; then			\
-      if $(PERL) -e 'use warnings' > /dev/null 2>&1; then		\
-	grep '^\#!/usr/bin/perl -T' "$$1" > /dev/null && T_=T || T_=;	\
-        $(PERL) -w$$T_ -I$(srcdir) -MCoreutils				\
-	      -M"CuTmpdir qw($$f)" -- "$$1";	\
-      else					\
-	echo 1>&2 "$$tst: configure did not find a usable version of Perl," \
-	  "so skipping this test";		\
-	(exit 77);				\
-      fi;					\
-    else					\
-      $(SHELL) "$$1";				\
-    fi;						\
-  };						\
   export					\
   abs_top_builddir='$(abs_top_builddir)'	\
   abs_top_srcdir='$(abs_top_srcdir)'		\
@@ -112,6 +100,6 @@ TESTS_ENVIRONMENT =				\
   REPLACE_GETCWD=$(REPLACE_GETCWD)		\
   PATH='$(abs_top_builddir)/parted$(PATH_SEPARATOR)'"$$PATH" \
   VERSION=$(VERSION)				\
-  ; shell_or_perl_
+  ;
 
 VERBOSE = yes
