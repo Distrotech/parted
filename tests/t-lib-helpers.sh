@@ -337,8 +337,8 @@ mdadm_create_linear_device_()
 # Often, when parted cannot use the specified size or start/endpoints
 # of a partition, it outputs a warning or error like this:
 #
-# Error: You requested a partition from 512B to 50.7kB.
-# The closest location we can manage is 17.4kB to 33.8kB.
+# Error: You requested a partition from 512B to 50.7kB (...).
+# The closest location we can manage is 17.4kB to 33.8kB (...).
 #
 # But those numbers depend on sector size, so
 # replace the specific values with place-holders,
@@ -346,7 +346,7 @@ mdadm_create_linear_device_()
 normalize_part_diag_()
 {
   local file=$1
-  sed 's/ [0-9.k]*B to [0-9.k]*B\.$/ X to Y./' $file > $file.t \
+  sed 's/ [0-9.k]*B to [0-9.k]*B (sectors .*$/ X to Y./' $file > $file.t \
     && mv $file.t $file && return 0
   return 1
 }

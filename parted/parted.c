@@ -651,10 +651,14 @@ do_mkpart (PedDevice** dev)
                                 (opt_script_mode
                                  ? PED_EXCEPTION_CANCEL
                                  : PED_EXCEPTION_YES_NO),
-                                _("You requested a partition from %s to %s.\n"
+                                _("You requested a partition from %s to %s "
+                                  "(sectors %llu..%llu).\n"
                                   "The closest location we can manage is "
-                                  "%s to %s.%s"),
-                                start_usr, end_usr, start_sol, end_sol,
+                                  "%s to %s (sectors %llu..%llu).%s"),
+                                start_usr, end_usr,
+                                start, end,
+                                start_sol, end_sol,
+                                part->geom.start, part->geom.end,
                                 (opt_script_mode ? ""
                                  : _("\nIs this still acceptable to you?"))))
                         {
