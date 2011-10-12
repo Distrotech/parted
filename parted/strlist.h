@@ -53,9 +53,9 @@ extern StrList* str_list_join (StrList* a, StrList* b);
 extern char* str_list_convert (const StrList* list);
 extern char* str_list_convert_node (const StrList* list);
 
-extern void str_list_print (const StrList* list);
+extern void str_list_print (const StrList* list, FILE *fp);
 extern void str_list_print_wrap (const StrList* list, int line_length,
-				 int offset, int indent);
+				 int offset, int indent, FILE *fp);
 extern int str_list_match_any (const StrList* list, const char* str);
 extern int str_list_match_node (const StrList* list, const char* str);
 extern StrList* str_list_match (const StrList* list, const char* str);

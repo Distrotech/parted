@@ -625,7 +625,7 @@ _print_exception_text (PedException* ex)
                            ": ", ex->message, "\n", NULL);
         }
 
-        str_list_print_wrap (text, screen_width (), 0, 0);
+        str_list_print_wrap (text, screen_width (), 0, 0, stderr);
         str_list_destroy (text);
 }
 
@@ -1541,7 +1541,7 @@ interactive_mode (PedDevice** dev, Command* cmd_list[])
         print_using_dev (*dev);
 
         list = str_list_create (_(banner_msg), NULL);
-        str_list_print_wrap (list, screen_width (), 0, 0);
+        str_list_print_wrap (list, screen_width (), 0, 0, stdout);
         str_list_destroy (list);
 
         while (1) {

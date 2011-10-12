@@ -119,7 +119,7 @@ void
 command_print_summary (Command* cmd)
 {
         fputs ("  ", stdout);
-	str_list_print_wrap (cmd->summary, screen_width(), 2, 8);
+	str_list_print_wrap (cmd->summary, screen_width(), 2, 8, stdout);
 	putchar ('\n');
 }
 
@@ -129,7 +129,7 @@ command_print_help (Command* cmd)
 	command_print_summary (cmd);
 	if (cmd->help) {
                 fputs ("\n\t", stdout);
-		str_list_print_wrap (cmd->help, screen_width(), 8, 8);
+		str_list_print_wrap (cmd->help, screen_width(), 8, 8, stdout);
 	}
 }
 
