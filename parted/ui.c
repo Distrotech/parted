@@ -340,7 +340,7 @@ sa_sigint_handler (int signum, siginfo_t* info, void *ucontext)
 static void
 sa_sigsegv_handler (int signum, siginfo_t* info, void* ucontext)
 {
-        printf (bug_msg, VERSION);
+        fprintf (stderr, bug_msg, VERSION);
         _dump_history ();
 
         if (!info)
@@ -375,7 +375,7 @@ sa_sigsegv_handler (int signum, siginfo_t* info, void* ucontext)
 static void
 sa_sigfpe_handler (int signum, siginfo_t* info, void* ucontext)
 {
-        printf (bug_msg, VERSION);
+        fprintf (stderr, bug_msg, VERSION);
         _dump_history ();
 
         if (!info)
@@ -439,7 +439,7 @@ sa_sigfpe_handler (int signum, siginfo_t* info, void* ucontext)
 static void
 sa_sigill_handler (int signum, siginfo_t* info, void* ucontext)
 {
-        printf (bug_msg, VERSION);
+        fprintf (stderr, bug_msg, VERSION);
         _dump_history ();
 
         if (!info)
@@ -617,7 +617,7 @@ _print_exception_text (PedException* ex)
         wipe_line ();
 
         if (ex->type == PED_EXCEPTION_BUG) {
-                printf (bug_msg, VERSION);
+                fprintf (stderr, bug_msg, VERSION);
                 text = str_list_create ("\n", ex->message, "\n\n", NULL);
         } else {
                 text = str_list_create (

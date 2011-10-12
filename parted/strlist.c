@@ -119,7 +119,7 @@ gettext_to_wchar (const char* str)
 	return result;
 
 error:
-	printf ("Error during translation: %s\n", strerror (errno));
+	fprintf (stderr, "Error during translation: %s\n", strerror (errno));
 	exit (EXIT_FAILURE);
 }
 
@@ -168,7 +168,7 @@ wchar_to_str (const wchar_t* str, size_t count)
 	return result;
 
 error:
-	printf ("Error during translation: %s\n", strerror (errno));
+	fprintf (stderr, "Error during translation: %s\n", strerror (errno));
 	exit (EXIT_FAILURE);
 }
 

@@ -1930,8 +1930,8 @@ if (!opt_script_mode)
 
 #ifdef HAVE_GETUID
         if (getuid() != 0 && !opt_script_mode) {
-            puts (_("WARNING: You are not superuser.  Watch out for "
-                    "permissions."));
+            fputs (_("WARNING: You are not superuser.  Watch out for "
+                     "permissions.\n"), stderr);
         }
 #endif
 
