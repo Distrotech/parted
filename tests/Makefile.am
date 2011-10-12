@@ -80,7 +80,6 @@ sep = $(PATH_SEPARATOR)
 TESTS_ENVIRONMENT =				\
   tmp__=$$TMPDIR; test -d "$$tmp__" || tmp__=.;	\
   TMPDIR=$$tmp__; export TMPDIR;		\
-  exec 9>&2;					\
   export					\
   abs_top_builddir='$(abs_top_builddir)'	\
   abs_top_srcdir='$(abs_top_srcdir)'		\
@@ -100,6 +99,6 @@ TESTS_ENVIRONMENT =				\
   REPLACE_GETCWD=$(REPLACE_GETCWD)		\
   PATH='$(abs_top_builddir)/parted$(PATH_SEPARATOR)'"$$PATH" \
   VERSION=$(VERSION)				\
-  ;
+  ; 9>&2
 
 VERBOSE = yes
