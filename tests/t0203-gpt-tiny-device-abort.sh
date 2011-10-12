@@ -37,8 +37,6 @@ for i in 33 34 35 67 68 69 101 102 103; do
   printf 'i\no\n' > in
   parted ---pretend-input-tty bad u s p < in > out 2> err || fail=1
   # don't bother comparing stdout
-  # expect no stderr
-  compare err /dev/null || fail=1
 done
 
 Exit $fail

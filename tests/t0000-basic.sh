@@ -61,7 +61,7 @@ parted ---pretend-input-tty $dev mklabel msdos < in > out 2>&1 || fail=1
 # Transform the actual output, to avoid spurious differences when
 # $PWD contains a symlink-to-dir.  Also, remove the ^M      ...^M bogosity.
 # normalize the actual output
-mv out o2 && sed -e "s,on /.*/$dev,on DEVICE,;s,   *,,;s, $,," \
+mv out o2 && sed -e "s,on /.*/$dev,on DEVICE,;s,   *,,g;s, $,," \
                       -e "s,^.*/lt-parted: ,parted: ," o2 > out
 
 # Create expected output file.

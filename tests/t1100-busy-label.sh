@@ -74,7 +74,7 @@ EOF
 
 # Transform the actual output, removing ^M   ...^M.
 # normalize the actual output
-mv out o2 && sed -e 's,   *,,;s, $,,;s/^.*Warning/Warning/' \
+mv out o2 && sed -e 's,   *,,g;s, $,,;s/^.*Warning/Warning/' \
                  -e 's,^.*/lt-parted: ,parted: ,' o2 > out
 
 # check for expected failure diagnostic
