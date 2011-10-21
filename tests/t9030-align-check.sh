@@ -1,5 +1,5 @@
 #!/bin/sh
-# exercise the new align-check command
+# exercise the align-check command
 
 # Copyright (C) 2009-2011 Free Software Foundation, Inc.
 
@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../parted
+ss=$sector_size_
 
 require_root_
 require_scsi_debug_module_
@@ -25,7 +26,7 @@ grep '^#define USE_BLKID 1' "$CONFIG_HEADER" > /dev/null ||
   skip_ 'this system lacks a new-enough libblkid'
 
 # create memory-backed device
-scsi_debug_setup_ dev_size_mb=550 physblk_exp=3 lowest_aligned=7 > dev-name ||
+scsi_debug_setup_ physblk_exp=3 lowest_aligned=7 sector_size=$ss > dev-name ||
   skip_ 'failed to create scsi_debug device'
 scsi_dev=$(cat dev-name)
 p1=${scsi_dev}1
@@ -34,7 +35,7 @@ parted -s $scsi_dev mklabel gpt || fail=1
 
 i=60
 while :; do
-  parted -s $scsi_dev mkpart p1 ext2 ${i}s 80000s || fail=1
+  parted -s $scsi_dev mkpart p1 ext2 ${i}s 800s || fail=1
   wait_for_dev_to_appear_ $p1 || fail=1
   parted -s $scsi_dev align-check min 1 > out 2>&1
   result=$?
@@ -46,6 +47,9 @@ while :; do
   parted -s $scsi_dev rm 1
   i=$(expr $i + 1)
   test $i = 70 && break
+
+  # Wait up to 10s for the partition file to disappear.
+  wait_for_dev_to_disappear_ $p1 10 || { fail=1; warn $p1 failed to disappear; }
 done
 
 Exit $fail
