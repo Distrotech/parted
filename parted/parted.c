@@ -53,6 +53,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
+#include "c-ctype.h"
+#include "c-strcase.h"
 #include "xalloc.h"
 
 #ifdef ENABLE_MTRACE
@@ -523,6 +525,78 @@ error:
         return 0;
 }
 
+/* Strip blanks from the end of string STR, in place.  */
+void _strip_trailing_spaces(char *str)
+{
+        if (!str)
+                return;
+        size_t i = strlen(str);
+        while (i && c_isblank(str[--i]))
+                str[i]='\0';
+}
+
+/* Return true, if str ends with [kMGTPEZY]iB, i.e. IEC units.  */
+static bool
+_string_ends_with_iec_unit(const char *str)
+{
+        /* 3 characters for the IEC unit and at least 1 digit */
+        if (!str || strlen(str) < 4)
+                return false;
+
+        char const *p = str + strlen(str) - 3;
+        return strchr ("kMGTPEZY", *p) && c_strcasecmp (p+1, "iB") == 0;
+}
+
+/* Return true if str ends with explicit unit identifier.
+ * Do not parse the unit, just check if the unit is specified.
+ * This function expects trailing spaces to be already stripped.
+ */
+static bool
+_string_has_unit_suffix(const char *str)
+{
+        /* At least 1 digit and 1 character to meet the condition */
+        if (!str || strlen(str) < 2)
+                return false;
+
+        if (!isdigit(str[strlen(str) - 1]))
+                return true;
+
+        return false;
+}
+
+/* If the selected unit is one of kiB, MiB, GiB or TiB and the partition is not
+ * only 1 sector long, then adjust the end so that it is one sector before the
+ * given position. Also adjust range_end accordingly. Thus next partition can
+ * start immediately after this one.
+ *
+ * To be called after end sector is read from the user.
+ *
+ * https://lists.gnu.org/archive/html/bug-parted/2011-10/msg00009.html
+ */
+static void
+_adjust_end_if_iec (PedSector* start, PedSector* end,
+                    PedGeometry* range_end, char* end_input)
+{
+        PED_ASSERT(start);
+        PED_ASSERT(end);
+        PED_ASSERT(range_end);
+
+        /* 1s partition - do not move the end */
+        if (*start == *end)
+                return;
+
+        _strip_trailing_spaces(end_input);
+        PedUnit unit = ped_unit_get_default();
+        if (_string_ends_with_iec_unit(end_input) ||
+            (!_string_has_unit_suffix(end_input) &&
+             ((unit == PED_UNIT_KIBIBYTE) || (unit == PED_UNIT_MEBIBYTE) ||
+              (unit == PED_UNIT_GIBIBYTE) || (unit == PED_UNIT_TEBIBYTE)))) {
+                *end -= 1;
+                range_end->start -= 1;
+                range_end->end -= 1;
+        }
+}
+
 static int
 do_mkpart (PedDevice** dev)
 {
@@ -584,10 +658,14 @@ do_mkpart (PedDevice** dev)
         }
         free (peek_word);
 
-        if (!command_line_get_sector (_("Start?"), *dev, &start, &range_start))
+        if (!command_line_get_sector (_("Start?"), *dev, &start, &range_start, NULL))
                 goto error_destroy_disk;
-        if (!command_line_get_sector (_("End?"), *dev, &end, &range_end))
+        char *end_input;
+        if (!command_line_get_sector (_("End?"), *dev, &end, &range_end, &end_input))
                 goto error_destroy_disk;
+
+        _adjust_end_if_iec(&start, &end, range_end, end_input);
+        free(end_input);
 
         /* processing starts here */
         part = ped_partition_new (disk, part_type, fs_type, start, end);
@@ -1336,9 +1414,9 @@ do_rescue (PedDevice** dev)
         if (!disk)
                 goto error;
 
-        if (!command_line_get_sector (_("Start?"), *dev, &start, NULL))
+        if (!command_line_get_sector (_("Start?"), *dev, &start, NULL, NULL))
                 goto error_destroy_disk;
-        if (!command_line_get_sector (_("End?"), *dev, &end, NULL))
+        if (!command_line_get_sector (_("End?"), *dev, &end, NULL, NULL))
                 goto error_destroy_disk;
 
         fuzz = PED_MAX (PED_MIN ((end - start) / 10, MEGABYTE_SECTORS(*dev)),

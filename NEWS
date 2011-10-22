@@ -21,6 +21,12 @@ GNU parted NEWS                                    -*- outline -*-
   cause an MSDOS partition table to be mistakenly identified as pc98.
   [bug present since the beginning]
 
+** Changes in behavior
+
+  parted: mkpart command has changed semantics with regard to specifying end
+  of the partition. If the end is specified using MiB, GiB, etc. unit, parted
+  subtracts one sector from the specified value. With this change, it is now
+  possible to create partitions like 1MiB-2MiB, 2MiB-3MiB and so on.
 
 * Noteworthy changes in release 3.0 (2011-05-30) [stable]
 

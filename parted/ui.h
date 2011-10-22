@@ -52,7 +52,7 @@ extern char* command_line_get_word (const char* prompt, const char* def,
 				    int multi_word);
 extern int command_line_get_integer (const char* prompt, int* value);
 extern int command_line_get_sector (const char* prompt, PedDevice* dev,
-				    PedSector* value, PedGeometry** range);
+				    PedSector* value, PedGeometry** range, char** raw_input);
 extern int command_line_get_state (const char* prompt, int* value);
 extern int command_line_get_device (const char* prompt, PedDevice** value);
 extern int command_line_get_disk (const char* prompt, PedDisk** value)

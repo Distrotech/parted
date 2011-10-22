@@ -924,7 +924,7 @@ command_line_get_integer (const char* prompt, int* value)
 
 int
 command_line_get_sector (const char* prompt, PedDevice* dev, PedSector* value,
-                         PedGeometry** range)
+                         PedGeometry** range, char** raw_input)
 {
         char*    def_str;
         char*    input;
@@ -960,7 +960,10 @@ command_line_get_sector (const char* prompt, PedDevice* dev, PedSector* value,
 
         valid = ped_unit_parse (input, dev, value, range);
 
-        free (input);
+        if (raw_input)
+            *raw_input = input;
+        else
+            free (input);
         return valid;
 }
 
