@@ -581,9 +581,8 @@ static void *
 gpt_read_PE_array (PedDisk const *disk, GuidPartitionTableHeader_t const *gpt,
                    size_t *ptes_bytes)
 {
-  GPTDiskData *gpt_disk_data = disk->disk_specific;
   uint32_t p_ent_size = PED_LE32_TO_CPU (gpt->SizeOfPartitionEntry);
-  *ptes_bytes = p_ent_size * gpt_disk_data->entry_count;
+  *ptes_bytes = p_ent_size * PED_LE32_TO_CPU(gpt->NumberOfPartitionEntries);
   size_t ptes_sectors = ped_div_round_up (*ptes_bytes,
                                           disk->dev->sector_size);
 
