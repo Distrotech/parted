@@ -643,7 +643,7 @@ _header_is_valid (PedDisk const *disk, GuidPartitionTableHeader_t *gpt,
 
   /* The SizeOfPartitionEntry must be a multiple of 8 and
      no smaller than the size of the PartitionEntry structure.
-     We also require that be no larger than 1/16th of UINT32_MAX,
+     We also require that it be no larger than 1/16th of UINT32_MAX,
      as an additional sanity check.  */
   uint32_t pe_size = PED_LE32_TO_CPU (gpt->SizeOfPartitionEntry);
   if (pe_size % 8 != 0
@@ -837,7 +837,7 @@ _parse_part_entry (PedDisk *disk, GuidPartitionEntry_t *pte)
    Return 1 if any read fails.
    Upon successful verification of the primary GPT, set *PRIMARY_GPT, else NULL.
    Upon successful verification of the backup GPT, set *BACKUP_GPT, else NULL.
-   If we've set *BACKUP_GPT to non-NULL, set *BACKUP_LBA to the sector
+   If we've set *BACKUP_GPT to non-NULL, set *BACKUP_SECTOR_NUM_P to the sector
    number in which it was found.  */
 static int
 gpt_read_headers (PedDisk const *disk,
