@@ -1362,9 +1362,7 @@ gpt_partition_duplicate (const PedPartition *part)
   if (!result_data)
     goto error_free_part;
 
-  result_data->type = part_data->type;
-  result_data->uuid = part_data->uuid;
-  strcpy (result_data->name, part_data->name);
+  *result_data = *part_data;
   return result;
 
 error_free_part:

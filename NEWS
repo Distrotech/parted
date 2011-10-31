@@ -8,6 +8,9 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  libparted: gpt_disk_duplicate now copies the flags over to the new
+  disk object. Previously the flags would be undefined.
+
   libparted: no longer aborts (failed assertion) due to a nilfs2_probe bug
   [bug introduced in parted-2.4 with the addition of nilfs2 support]
 
