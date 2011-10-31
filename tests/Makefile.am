@@ -25,6 +25,7 @@ TESTS = \
   t0300-dos-on-gpt.sh \
   t0400-loop-clobber-infloop.sh \
   t0500-dup-clobber.sh \
+  t0501-duplicate.sh \
   t1100-busy-label.sh \
   t1101-busy-partition.sh \
   t1700-probe-fs.sh \
@@ -63,7 +64,7 @@ EXTRA_DIST = \
   $(TESTS) lvm-utils.sh t-local.sh t-lvm.sh \
   init.cfg init.sh t-lib-helpers.sh
 
-check_PROGRAMS = print-align print-max dup-clobber
+check_PROGRAMS = print-align print-max dup-clobber duplicate
 LDADD = \
   $(top_builddir)/libparted/libparted.la
 AM_CPPFLAGS = \
