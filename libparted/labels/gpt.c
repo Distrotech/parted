@@ -1137,13 +1137,15 @@ _generate_header (const PedDisk *disk, int alternate, uint32_t ptes_crc,
 
   if (alternate)
     {
-      PedSector ptes_size = gpt_disk_data->entry_count
-        * sizeof (GuidPartitionEntry_t) / disk->dev->sector_size;
+      size_t ss = disk->dev->sector_size;
+      PedSector ptes_bytes = (gpt_disk_data->entry_count
+			      * sizeof (GuidPartitionEntry_t));
+      PedSector ptes_sectors = (ptes_bytes + ss - 1) / ss;
 
       gpt->MyLBA = PED_CPU_TO_LE64 (disk->dev->length - 1);
       gpt->AlternateLBA = PED_CPU_TO_LE64 (1);
       gpt->PartitionEntryLBA
-        = PED_CPU_TO_LE64 (disk->dev->length - 1 - ptes_size);
+        = PED_CPU_TO_LE64 (disk->dev->length - 1 - ptes_sectors);
     }
   else
     {

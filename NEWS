@@ -16,6 +16,11 @@ GNU parted NEWS                                    -*- outline -*-
   libparted: gpt_disk_duplicate now copies the flags over to the new
   disk object. Previously the flags would be undefined.
 
+  libparted can now read partition tables with a number of partition
+  array entries that is different from the default of 128.  Before,
+  it would fail to recognize them and could even read beyond the end
+  of a heap-allocated buffer.
+
   libparted: no longer aborts (failed assertion) due to a nilfs2_probe bug
   [bug introduced in parted-2.4 with the addition of nilfs2 support]
 
