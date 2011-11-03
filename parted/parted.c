@@ -990,6 +990,7 @@ do_print (PedDevice** dev)
         const char*     name;
         char*           tmp;
         wchar_t*        table_rendered;
+        int ok = 1; /* default to success */
 
         peek_word = command_line_peek_word ();
         if (peek_word) {
@@ -1015,8 +1016,18 @@ do_print (PedDevice** dev)
                 free (peek_word);
         }
 
-        if (!has_devices_arg && !has_list_arg)
+        if (!has_devices_arg && !has_list_arg) {
                 disk = ped_disk_new (*dev);
+                /* Returning NULL here is an indication of failure, when in
+                   script mode.  Otherwise (interactive mode) it may indicate
+                   a real error, but it may also indicate that the user
+                   declined when asked to perform some operation.  FIXME:
+                   what this really needs is an API change, but a reliable
+                   exit code is less important in interactive mode.  */
+                if (disk == NULL && opt_script_mode)
+                        ok = 0;
+        }
+
         if (disk &&
             ped_disk_is_flag_available(disk, PED_DISK_CYLINDER_ALIGNMENT))
                 if (!ped_disk_set_flag(disk, PED_DISK_CYLINDER_ALIGNMENT,
@@ -1229,13 +1240,13 @@ do_print (PedDevice** dev)
 
         ped_disk_destroy (disk);
 
-        return 1;
+        return ok;
 
 error_destroy_disk:
         ped_disk_destroy (disk);
         return 0;
 nopt:
-        return 1;
+        return ok;
 }
 
 static int

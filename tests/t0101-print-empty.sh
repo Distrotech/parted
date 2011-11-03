@@ -34,8 +34,8 @@ EOF
 # create 'empty' device
 dd if=/dev/zero of=$dev bs=$(expr 8 '*' $ss) count=1 >/dev/null 2>&1 || fail=1
 
-# print the empty table
-parted -s $dev unit s print >out 2>&1 || fail=1
+# print the empty table; expect nonzero exit status
+parted -s $dev unit s print >out 2>&1 && fail=1
 
 # prepare actual and expected output
 mv out o2 && sed "s,^Disk .*/$dev:,Disk .../$dev:,; \

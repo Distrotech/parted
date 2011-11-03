@@ -8,6 +8,11 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  parted now exits nonzero for certain failures already diagnosed as "Error".
+  For example, before this change, parted would exit successfully in spite
+  of "Error: ...unrecognised disk label" and "Error:... both GPT primary
+  and backup partition tables are corrupted".
+
   libparted: gpt_disk_duplicate now copies the flags over to the new
   disk object. Previously the flags would be undefined.
 
