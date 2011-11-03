@@ -19,6 +19,7 @@ TESTS = \
   t0206-gpt-print-with-corrupt-primary-clobbers-pmbr.sh \
   t0207-IEC-binary-notation.sh \
   t0208-mkpart-end-in-IEC.sh \
+  t0210-gpt-resized-partition-entry-array.sh \
   t0220-gpt-msftres.sh \
   t0250-gpt.sh \
   t0280-gpt-corrupt.sh \
@@ -62,7 +63,7 @@ TESTS = \
 
 EXTRA_DIST = \
   $(TESTS) lvm-utils.sh t-local.sh t-lvm.sh \
-  init.cfg init.sh t-lib-helpers.sh
+  init.cfg init.sh t-lib-helpers.sh gpt-header-munge
 
 check_PROGRAMS = print-align print-max dup-clobber duplicate
 LDADD = \
