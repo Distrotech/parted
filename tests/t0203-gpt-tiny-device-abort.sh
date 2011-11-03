@@ -35,7 +35,7 @@ for i in 33 34 35 67 68 69 101 102 103; do
 
   # Print the partition table.  Before, this would evoke a failed assertion.
   printf 'i\no\n' > in
-  parted ---pretend-input-tty bad u s p < in > out 2> err || fail=1
+  parted ---pretend-input-tty bad u s p < in > out 2> err || { fail=1; cat err; }
   # don't bother comparing stdout
 done
 
