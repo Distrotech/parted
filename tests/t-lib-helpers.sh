@@ -378,6 +378,21 @@ wait_for_dev_to_appear_()
   return 1
 }
 
+# Like the above, but don't hard-code the max timeout.
+wait_for_dev_to_disappear_()
+{
+  local file=$1
+  local n_sec=$2
+  local i=0
+  local incr=1
+  while :; do
+    ls "$file" > /dev/null 2>&1 || return 0
+    sleep .1 2>/dev/null || { sleep 1; incr=10; }
+    i=$(expr $i + $incr); test $i -ge $($n_sec \* 10) && break
+  done
+  return 1
+}
+
 device_mapper_required_()
 {
   . "$abs_top_srcdir/tests/lvm-utils.sh" \
