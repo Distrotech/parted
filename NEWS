@@ -34,6 +34,10 @@ GNU parted NEWS                                    -*- outline -*-
   cause an MSDOS partition table to be mistakenly identified as pc98.
   [bug present since the beginning]
 
+  libparted no longer gets a failed assertion when probing a partition
+  with an HFS or HFS+ signature, but with invalid ->total_blocks and/or
+  ->block_size values.
+
 ** Changes in behavior
 
   parted: mkpart command has changed semantics with regard to specifying end

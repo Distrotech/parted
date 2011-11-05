@@ -36,9 +36,9 @@ libparted.pc
 libparted/tests/disk
 libparted/tests/init.sh
 libparted/tests/label
+libparted/tests/symlink
 libparted/tests/t*.sh.log
 libparted/tests/test-suite.log
-libparted/tests/symlink
 libparted/tests/zerolen
 libtool
 m4
