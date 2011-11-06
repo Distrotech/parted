@@ -45,6 +45,13 @@ GNU parted NEWS                                    -*- outline -*-
   subtracts one sector from the specified value. With this change, it is now
   possible to create partitions like 1MiB-2MiB, 2MiB-3MiB and so on.
 
+** Build-related
+
+  "make dist" no longer builds .tar.gz files.
+  xz is portable enough and in wide-enough use that distributing
+  only .tar.xz files is enough.
+
+
 * Noteworthy changes in release 3.0 (2011-05-30) [stable]
 
 ** Bug fixes
