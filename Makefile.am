@@ -28,7 +28,15 @@ parted.spec: parted.spec.in
 	mv $@-tmp $@
 MAINTAINERCLEANFILES = parted.spec
 
-distcheck-hook:
+.PHONY: root-check
+root-check:
+	sudo $(MAKE) check
+
+# Not everyone who runs "make distcheck" will want to or even
+# be able to run the root tests.  If you want to skip them,
+# run make like this: "make distcheck root-check="
+root-check ?= root-check
+distcheck-hook: $(root-check)
 	$(MAKE) my-distcheck
 
 ### ABI Checking scripts ###
