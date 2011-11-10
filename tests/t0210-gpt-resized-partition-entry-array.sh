@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../parted $srcdir
+require_perl_digest_crc_
 
 ss=$sector_size_
 
