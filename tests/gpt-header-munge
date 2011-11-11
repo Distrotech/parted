@@ -64,6 +64,7 @@ sub partition_array_start_offset ($$)
 sub partition_array_crc ($$$)
 {
   my ($pri_or_backup, $n_pe, $in) = @_;
+  local *F;
   open F, '<', $in
     or die "$ME: failed to open $in: $!\n";
 
@@ -78,7 +79,6 @@ sub partition_array_crc ($$$)
   my $n = $n_pe * $pe_size;
   ($p = sysread F, $pe_buf, $n) && $p == $n
     or die "$ME: $in: failed to read $pri_or_backup partition array:($p:$n) $!\n";
-  close F;
 
   return crc32 $pe_buf;
 }
@@ -220,6 +220,7 @@ EOF
     or (warn "$ME: no file specified\n"), usage 1;
 
   my $in = $ARGV[0];
+  local *F;
   open F, '<', $in
     or die "$ME: failed to open $in: $!\n";
 
