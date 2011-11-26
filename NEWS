@@ -38,6 +38,10 @@ GNU parted NEWS                                    -*- outline -*-
   with an HFS or HFS+ signature, but with invalid ->total_blocks and/or
   ->block_size values.
 
+  parted now uses ext_range device sysfs attribute to determine maximum number
+  of partitions the device can hold.  With this change, parted now correctly
+  informs kernel about new partitions on partitionable MD RAID devices.
+
 ** Changes in behavior
 
   parted: mkpart command has changed semantics with regard to specifying end

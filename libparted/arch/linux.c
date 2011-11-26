@@ -2484,7 +2484,7 @@ _loop_get_partition_range(PedDevice const* dev)
 
 /*
  * The number of partitions that a device can have depends on the kernel.
- * If we don't find this value in /sys/block/DEV/range, we will use our own
+ * If we don't find this value in /sys/block/DEV/ext_range, we will use our own
  * value.
  */
 static unsigned int
@@ -2495,7 +2495,7 @@ _device_get_partition_range(PedDevice const* dev)
                 return _loop_get_partition_range(dev);
 
         int range;
-        bool ok = _sysfs_int_entry_from_dev(dev, "range", &range);
+        bool ok = _sysfs_int_entry_from_dev(dev, "ext_range", &range);
 
         return ok && range > 0 ? range : MAX_NUM_PARTS;
 }
