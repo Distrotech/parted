@@ -49,6 +49,7 @@ TESTS = \
   t4300-nilfs2-tiny.sh \
   t5000-tags.sh \
   t6000-dm.sh \
+  t6100-mdraid-partitions.sh \
   t7000-scripting.sh \
   t8000-loop.sh \
   t8001-loop-blkpg.sh \
