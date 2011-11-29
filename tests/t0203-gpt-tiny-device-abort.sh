@@ -27,7 +27,7 @@ dd if=/dev/null of=$dev bs=1 seek=$N || framework_failure
 # create a GPT partition table
 parted -s $dev mklabel gpt > out 2>&1 || fail=1
 # expect no output
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 # truncate it to 34 sectors.
 for i in 33 34 35 67 68 69 101 102 103; do

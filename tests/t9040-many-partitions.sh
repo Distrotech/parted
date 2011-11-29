@@ -66,7 +66,7 @@ $AWK "BEGIN {d = $t_final - $t0; n = $n_partitions; st = 60 < d;"\
     || fail=1
 
 parted -m -s $scsi_dev u s p > out || fail=1
-compare out exp || fail=1
+compare exp out || fail=1
 
 # We must remove these partitions before terminating.
 # Otherwise, even though cleanup-driven rmmod will eventually cause

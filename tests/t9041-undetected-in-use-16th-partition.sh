@@ -66,7 +66,7 @@ $AWK "BEGIN {d = $t_final - $t0; n = $n_partitions; st = 60 < d;"\
     || fail=1
 
 parted -m -s $scsi_dev u s p > out || fail=1
-compare out exp || fail=1
+compare exp out || fail=1
 
 wait_for_dev_to_appear_ ${scsi_dev}16 || fail_ ${scsi_dev}16 did not appear
 
@@ -92,7 +92,7 @@ for part_dev in $partitions; do
     > exp-error || framework_failure_
 
   # expect error
-  compare out exp-error || fail=1
+  compare exp-error out || fail=1
 
 done
 

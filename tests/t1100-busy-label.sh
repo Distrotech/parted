@@ -26,7 +26,7 @@ scsi_debug_setup_ sector_size=$ss dev_size_mb=90 > dev-name ||
 dev=$(cat dev-name)
 
 parted -s "$dev" mklabel msdos mkpart primary fat32 1 40 > out 2>&1 || fail=1
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 mkfs.vfat ${dev}1 || skip_ "mkfs.vfat failed"
 
 mount_point="`pwd`/mnt"
@@ -50,12 +50,12 @@ parted -s "$dev" mklabel msdos > out 2>&1; test $? = 1 || fail=1
 
 # create expected output file
 echo "Error: Partition(s) on $dev are being used." > exp
-compare out exp || fail=1
+compare exp out || fail=1
 
 # Adding a partition must succeed, even though another
 # on this same device is mounted (active).
 parted -s "$dev" mkpart primary fat32 41 85 > out 2>&1 || fail=1
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 parted -s "$dev" u s print
 
 # ==================================================
@@ -78,6 +78,6 @@ mv out o2 && sed -e 's,   *,,g;s, $,,;s/^.*Warning/Warning/' \
                  -e 's,^.*/lt-parted: ,parted: ,' o2 > out
 
 # check for expected failure diagnostic
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

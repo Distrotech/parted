@@ -26,7 +26,7 @@ dd if=/dev/null of=$dev bs=$ss seek=$n_sectors || fail=1
 
 parted -s $dev mklabel msdos > out 2>&1 || fail=1
 # expect no output
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 # print partition table in --script mode
 TERM=xterm parted -m -s $dev u s p > out 2>&1 || fail=1
@@ -34,6 +34,6 @@ TERM=xterm parted -m -s $dev u s p > out 2>&1 || fail=1
 sed "s,.*/$dev:,$dev:," out > k && mv k out || fail=1
 printf "BYT;\n$dev:${n_sectors}s:file:$ss:$ss:msdos:;\n" > exp || fail=1
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

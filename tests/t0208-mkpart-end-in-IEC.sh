@@ -26,22 +26,22 @@ dev=dev-file
 dd if=/dev/null of=$dev bs=1M seek=$n_mbs || fail=1
 # create 1st partition
 parted --align=none -s $dev mklabel gpt mkpart p1 1MiB 2MiB > err 2>&1 || fail=1
-compare err /dev/null || fail=1  # expect no output
+compare /dev/null err || fail=1  # expect no output
 #parted -m -s $dev u s p > exp || fail=1
 
 # create 2nd partition - they should not overlap
 # this time specify default unit
 parted --align=none -s $dev unit MiB mkpart p2 2 3 > err 2>&1 || fail=1
-compare err /dev/null || fail=1  # expect no output
+compare /dev/null err || fail=1  # expect no output
 
 # create 3rd partition - expect no overlap
 # specify default unit, but explicitly override it
 parted --align=none -s $dev unit TB mkpart p3 3MiB 4MiB > err 2>&1 || fail=1
-compare err /dev/null || fail=1  # expect no output
+compare /dev/null err || fail=1  # expect no output
 
 # Specify default unit of MiB, yet use explicit ending sector number.
 parted --align=none -s $dev unit MiB mkpart p4 4MiB 10239s > err 2>&1 || fail=1
-compare err /dev/null || fail=1  # expect no output
+compare /dev/null err || fail=1  # expect no output
 
 # check boundaries of the partitions
 parted -m -s $dev u s p > out || fail=1
@@ -56,6 +56,6 @@ EOF
 
 # compare expected and actual outputs
 sed -e "1,2d" out > k; mv k out
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

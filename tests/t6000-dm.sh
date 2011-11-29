@@ -69,7 +69,7 @@ for type in linear ; do
 
   # Create msdos partition table
   parted -s $dev mklabel msdos > out 2>&1 || fail=1
-  compare out /dev/null || fail=1
+  compare /dev/null out || fail=1
 
   parted -s "$dev" print > out 2>&1 || fail=1
   sed 's/^Disk .*: /Disk DEV: /' out > k; mv k out
@@ -85,7 +85,7 @@ Number  Start  End  Size  Type  File system  Flags
 
 EOF
 
-  compare out exp || fail=1
+  compare exp out || fail=1
 done
 
 Exit $fail

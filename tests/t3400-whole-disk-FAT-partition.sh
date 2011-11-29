@@ -27,6 +27,6 @@ mkfs.vfat -F 16 $dev_file || skip_ "mkfs.vfat failed"
 
 parted -m -s $dev_file u s print > out 2>&1 || fail=1
 grep '^1:' out > k; mv k out
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

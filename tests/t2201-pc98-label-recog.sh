@@ -29,7 +29,7 @@ dd if=/dev/null of=$dev bs=$ss seek=$N 2> /dev/null || fail=1
 
 # label the test disk
 parted -s $dev mklabel pc98 > out 2>&1 || fail=1
-compare out /dev/null || fail=1 # expect no output
+compare /dev/null out || fail=1 # expect no output
 
 parted -s $dev p | grep "^Partition Table: pc98" || fail=1
 

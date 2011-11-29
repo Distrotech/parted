@@ -35,13 +35,13 @@ EOF
 parted -s "$dev" mklabel msdos > out 2>&1 || fail=1
 
 # expect no output
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 parted -s "$dev" mkpart primary fat32 1 40 > out 2>&1 || fail=1
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 parted -s "$dev" mkpart primary fat32 40 80 > out 2>&1 || fail=1
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 # wait for new partition device to appear
 wait_for_dev_to_appear_ ${dev}2 || fail_ ${dev}2 did not appear
@@ -63,6 +63,6 @@ parted -s "$dev" rm 1 > out 2>&1 || fail=1
 parted -s "$dev" rm 2 > out 2>&1 && fail=1
 
 # expect error
-compare out exp-error || fail=1
+compare exp-error out || fail=1
 
 Exit $fail

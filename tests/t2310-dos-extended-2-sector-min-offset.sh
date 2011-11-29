@@ -47,7 +47,7 @@ EOF
 parted -s $scsi_dev mklabel msdos || fail=1
 parted --align=min -s $scsi_dev mkpart extended 64s 128s> out 2>&1 || fail=1
 parted -m -s $scsi_dev u s print
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 # Provoke a failure by trying to create a partition that starts just
 # one sector after the start of the extended partition.
@@ -58,9 +58,9 @@ compare err err.exp || fail=1
 parted -s $scsi_dev rm 5 || fail=1
 
 parted --align=min -s $scsi_dev mkpart logical 66s 128s > out 2>&1 || fail=1
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 parted -m -s $scsi_dev u s print > out 2>&1
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

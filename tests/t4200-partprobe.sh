@@ -44,8 +44,8 @@ grep "^17:.*::data:;\$" out || fail=1
 # Parted 1.8.9 and earlier would mistakenly try to access partition #17.
 # ensure that partprobe succeeds and produces no output"
 partprobe -s $dev > out 2>err || fail=1
-compare err /dev/null || fail=1
+compare /dev/null err || fail=1
 echo "$dev: dvh partitions 9 <17>" > exp || fail=1
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

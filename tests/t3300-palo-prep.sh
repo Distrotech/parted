@@ -39,6 +39,6 @@ parted -m -s $dev mklabel msdos \
 
 grep -E '^1:2048s:4095s:2048s:::p...;$' out > k; mv k out
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

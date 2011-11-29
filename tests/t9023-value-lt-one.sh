@@ -27,6 +27,6 @@ echo 'Error: Use a smaller unit instead of a value < 1' > exp
 dd if=/dev/null of=$dev bs=$ss seek=$n_sectors || fail=1
 parted --align=none -s $dev mklabel msdos mkpart pri 0 0.5MB \
     > err 2>&1
-compare err exp || fail=1
+compare exp err || fail=1
 
 Exit $fail

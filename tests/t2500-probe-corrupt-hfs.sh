@@ -25,7 +25,7 @@ dev=loop-file
 dd if=/dev/null of=$dev bs=1 seek=$N || framework_failure
 
 parted -s "$dev" mklabel gpt mkpart p1 1MiB 2MiB > out 2>&1 || fail=1
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 parted -s "$dev" u s p || fail=1
 

@@ -37,7 +37,7 @@ for opt in '' -s; do
   # When run as root, there are just curses-related control chars. Remove them.
   sed 's/^.\{1,12\}$//;/^$/d' out > k && mv k out \
       || fail=1
-  compare out /dev/null || fail=1
+  compare /dev/null out || fail=1
 
   parted -s $dev p || fail=1
   rm -f $dev

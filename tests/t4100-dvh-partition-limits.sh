@@ -82,7 +82,7 @@ do_mkpart $n $end || fail=1
 parted -s $dev unit s p > out 2>&1 || fail=1
 sed -n "/^  *1  *$n/s/  */ /gp" out|sed "s/  *\$//" > k && mv k out || fail=1
 echo " 1 ${n}s ${end}s 4294967295s primary" > exp || fail=1
-compare out exp || fail=1
+compare exp out || fail=1
 
 # a partition length of exactly 2^32 sectors provokes failure.
 do_mkpart $n $(echo $n+2^32-1|bc) > err 2>&1
@@ -94,7 +94,7 @@ bad_part_length()
 
 # check for new diagnostic
 bad_part_length 4294967296 > exp || fail=1
-compare err exp || fail=1
+compare exp err || fail=1
 
 # FIXME: investigate this.
 # Unexpectedly to me, both of these failed with this same diagnostic:
@@ -113,7 +113,7 @@ test $? = 1 || fail=1
 
 # check for new diagnostic
 bad_part_length 4294967297 > exp || fail=1
-compare err exp || fail=1
+compare exp err || fail=1
 
 # =========================================================
 # Now consider partition starting sector numbers.
@@ -142,7 +142,7 @@ EOF
 # print the result
 parted -s $dev unit s p > out 2>&1 || fail=1
 sed "s/Disk .*:/Disk:/;s/ *$//" out > k && mv k out || fail=1
-compare out exp || fail=1
+compare exp out || fail=1
 
 # a partition start sector number of 2^32 must fail
 do_mkpart_start_and_len $(echo 2^32|bc) 1000 > err 2>&1
@@ -150,7 +150,7 @@ test $? = 1 || fail=1
 
 # check for new diagnostic
 bad_start_sector 4294967296 > exp || fail=1
-compare err exp || fail=1
+compare exp err || fail=1
 
 # a partition start sector number of 2^32+1 must fail, too.
 do_mkpart_start_and_len $(echo 2^32+1|bc) 1000 > err 2>&1
@@ -158,7 +158,7 @@ test $? = 1 || fail=1
 
 # check for new diagnostic
 bad_start_sector 4294967297 > exp || fail=1
-compare err exp || fail=1
+compare exp err || fail=1
 
 done
 

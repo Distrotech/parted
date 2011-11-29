@@ -32,12 +32,12 @@ dd if=/dev/null of=$dev bs=$ss seek=$N 2> /dev/null || fail=1
 
 # label the test disk
 parted -s $dev mklabel msdos > out 2>&1 || fail=1
-compare out /dev/null || fail=1 # expect no output
+compare /dev/null out || fail=1 # expect no output
 
 # create two partitions
 parted -s $dev mkpart primary 2048s 4095s \
                mkpart primary 4096s 8191s > out 2>&1 || fail=1
-compare out /dev/null || fail=1 # expect no output
+compare /dev/null out || fail=1 # expect no output
 
 # write "FAT" where it would cause trouble
 printf FAT | dd bs=1c seek=82 count=3 of=$dev conv=notrunc || fail=1
@@ -47,6 +47,6 @@ parted -m -s $dev unit s p > out || fail=1
 tail -2 out > k && mv k out || fail=1
 printf "1:2048s:4095s:2048s:::;\n2:4096s:8191s:4096s:::;\n" > exp || fail=1
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

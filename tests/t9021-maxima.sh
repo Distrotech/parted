@@ -42,7 +42,7 @@ for t in msdos gpt dvh sun mac bsd amiga loop pc98; do
     print-max $dev > out 2>&1 || fail=1
     printf '%s\n' "max len: $max_len" \
 	"max start sector: $max_start" > exp || fail=1
-    compare out exp || fail=1
+    compare exp out || fail=1
 done
 
 Exit $fail

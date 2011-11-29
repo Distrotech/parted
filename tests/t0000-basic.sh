@@ -32,7 +32,7 @@ dd if=/dev/null of=$dev bs=1 seek=$N 2> /dev/null || fail=1
 
 # run parted -s FILE mklabel msdos
 parted -s $dev mklabel msdos > out 2>&1 || fail=1
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 # ----------------------------------------------
 # Now, ensure that a simple mklabel command succeeds.
@@ -49,7 +49,7 @@ parted $dev mklabel msdos > out 2>&1 || fail=1
 emit_superuser_warning > exp || fail=1
 
 # check its "interactive" output
-compare out exp || fail=1
+compare exp out || fail=1
 
 # create interactive input
 printf 'y\n' > in || fail=1
@@ -73,6 +73,6 @@ Yes/No? y
 EOF
 
 # check its output -- slightly different here, due to prompts
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

@@ -29,13 +29,13 @@ dd if=/dev/null of=$dev bs=1 seek=$N || framework_failure
 # create a GPT partition table
 parted -s $dev mklabel gpt > out 2>&1 || fail=1
 # expect no output
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 gpt-header-munge --sector-size=$ss --n=9 $dev || fail=1
 
 parted -m -s $dev u s p > out 2>&1 || fail=1
 sed 's/.*:gpt:/:gpt:/' out > k && mv k out
 printf 'BYT;\n:gpt:;\n' > exp || fail=1
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

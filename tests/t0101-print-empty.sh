@@ -42,6 +42,6 @@ mv out o2 && sed "s,^Disk .*/$dev:,Disk .../$dev:,; \
                   s,^Error: .*/$dev:,Error: .../$dev:," o2 > out || fail=1
 
 # check for expected output
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

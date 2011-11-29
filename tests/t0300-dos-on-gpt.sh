@@ -28,11 +28,11 @@ dd if=/dev/null of=$dev seek=4001 2> /dev/null || framework_failure
 # create a GPT partition table
 parted -s $dev mklabel gpt > out 2>&1 || fail=1
 # expect no output
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 # create a DOS partition table on top of it
 parted -s $dev mklabel msdos > out 2>&1 || fail=1
 # expect no output
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 Exit $fail

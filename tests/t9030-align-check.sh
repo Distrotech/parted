@@ -42,7 +42,7 @@ while :; do
 
   test $(expr $i % 8) = 7 && exp_result=0 || exp_result=1
   test $result = $exp_result || fail=1
-  compare out /dev/null || fail=1
+  compare /dev/null out || fail=1
 
   parted -s $scsi_dev rm 1
   i=$(expr $i + 1)

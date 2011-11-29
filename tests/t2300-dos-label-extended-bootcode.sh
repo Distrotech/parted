@@ -28,15 +28,15 @@ dd if=/dev/zero of=$dev bs=1M count=4 || fail=1
 
 # Create msdos label
 parted -s $dev mklabel msdos > out 2>&1 || fail=1
-compare out /dev/null || fail=1 # Expect no output
+compare /dev/null out || fail=1 # Expect no output
 
 # Create extended partition
 parted -s $dev mkpart extended 2048s 8191s > out 2>&1 || fail=1
-compare out /dev/null || fail=1 # Expect no output
+compare /dev/null out || fail=1 # Expect no output
 
 # Create logical partition
 parted -s $dev mkpart logical 4096s 8191s > out 2>&1 || fail=1
-compare out /dev/null || fail=1 # Expect no output
+compare /dev/null out || fail=1 # Expect no output
 
 # Install fake bootcode
 printf %0${bootcode_size}d 0 > in || fail=1
@@ -48,7 +48,7 @@ dd if=$dev of=before bs=1 skip=1M count=$bootcode_size || fail=1
 
 # Do something to the label
 parted -s $dev rm 5 > out 2>&1 || fail=1
-compare out /dev/null || fail=1 # Expect no output
+compare /dev/null out || fail=1 # Expect no output
 
 # Extract the bootcode for comparison
 dd if=$dev of=after bs=1 skip=1M count=$bootcode_size || fail=1

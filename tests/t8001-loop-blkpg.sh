@@ -43,7 +43,7 @@ test -z "$loopdev" && fail=1
 
 # Expect this to succeed
 parted -s "$loopdev" mklabel msdos > err 2>&1 || fail=1
-compare err /dev/null || fail=1     # expect no output
+compare /dev/null err || fail=1     # expect no output
 
 # Create a partition
 parted -s "$loopdev" mkpart primary 1M 2M > err 2>&1 || fail=1

@@ -33,10 +33,10 @@ f1=$(pwd)/1; d1=$(loop_setup_ "$f1") \
 
 # Expect this to succeed.
 parted -s $d1 mklabel msdos > err 2>&1 || fail=1
-compare err /dev/null || fail=1     # expect no output
+compare /dev/null err || fail=1     # expect no output
 
 # Create a partition
 parted -s $d1 mkpart primary 1 10 > err 2>&1 || fail=1
-compare err /dev/null || fail=1     # expect no output
+compare /dev/null err || fail=1     # expect no output
 
 Exit $fail

@@ -30,6 +30,6 @@ mkswap $dev || fail=1
 # create a dos partition table
 parted -s $dev mklabel msdos > out 2>&1 || fail=1
 
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 Exit $fail

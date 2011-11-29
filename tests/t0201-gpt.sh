@@ -26,7 +26,7 @@ dd if=/dev/null of=$dev seek=4001 2> /dev/null || fail=1
 # create a GPT partition table
 parted -s $dev mklabel gpt > out 2>&1 || fail=1
 # expect no output
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 # shrink the backing file
 dd if=/dev/null of=$dev seek=4000 2> /dev/null || fail=1
@@ -34,6 +34,6 @@ dd if=/dev/null of=$dev seek=4000 2> /dev/null || fail=1
 # create a new GPT table on top of the shrunken backing file
 parted -s $dev mklabel gpt > out 2>&1 || fail=1
 # expect no output
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 Exit $fail

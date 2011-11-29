@@ -36,6 +36,6 @@ parted -s $scsi_dev mklabel gpt print > out 2>&1 || fail=1
 grep '^Sector' out > k 2>&1 || fail=1
 mv k out || fail=1
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

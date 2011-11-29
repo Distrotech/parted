@@ -50,7 +50,7 @@ dd if=/dev/null of=$dev bs=$ss seek=$n_sectors || fail=1
 # create a gpt partition table
 parted -s $dev mklabel gpt > out 2>&1 || fail=1
 # expect no output
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 printf "BYT;\n$dev:${n_sectors}s:file:$ss:$ss:gpt:;\n" > exp
 i=1
@@ -58,9 +58,9 @@ for type in $fs_types; do
   end=$(expr $start + $part_size - 1)
   echo "$i:${start}s:${end}s:${part_size}s::$type:;" >> exp || fail=1
   parted -s $dev mkpart primary $type ${start}s ${end}s > err 2>&1 || fail=1
-  compare err /dev/null || fail=1
+  compare /dev/null err || fail=1
   parted -s $dev name $i $type > err 2>&1 || fail=1
-  compare err /dev/null || fail=1
+  compare /dev/null err || fail=1
   start=$(expr $end + 1)
   i=$(expr $i + 1)
 done
@@ -70,6 +70,6 @@ parted -m -s $dev u s p > out 2>&1 || fail=1
 
 sed "s,.*/$dev:,$dev:," out > k && mv k out && ok=1 || ok=0
 # match against expected output
-test $ok = 1 && { compare out exp || fail=1; }
+test $ok = 1 && { compare exp out || fail=1; }
 
 Exit $fail

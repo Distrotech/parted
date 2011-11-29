@@ -30,11 +30,11 @@ dd if=/dev/zero of=$dev bs=${ss}c count=$N 2> /dev/null || fail=1
 
 # label the test disk as a sun disk
 parted -s $dev mklabel sun > out 2>&1 || fail=1
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 # create a single partition
 parted -s $dev unit s mkpart ext2 0s 127s > out 2>&1 || fail=1
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 # print the partition data in machine readable format
 parted -m -s $dev unit s p > out 2>&1 || fail=1
@@ -42,11 +42,11 @@ sed "s,^.*/$dev:,---:," out > k && mv k out
 
 # check for expected values for the partition
 printf "$exp:::;\n" > exp || fail=1
-compare out exp || fail=1
+compare exp out || fail=1
 
 # set the raid flag
 parted -s $dev set 1 raid >out 2>&1 || fail=1
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 # print the partition data in machine readable format again
 parted -m -s $dev unit s p > out 2>&1 || fail=1
@@ -54,6 +54,6 @@ sed "s,^.*/$dev:,---:," out > k && mv k out || fail=1
 
 # check for expected values (including raid flag) for the partition
 printf "$exp:::raid;\n" > exp || fail=1
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

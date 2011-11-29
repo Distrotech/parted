@@ -33,7 +33,7 @@ dd if=/dev/zero of=$dev bs=${ss}c count=$N 2> /dev/null || fail=1
 # label the test disk
 parted -s $dev mklabel msdos > out 2>&1 || fail=1
 # expect no output
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 # Test the output of print free with no partitions.
 cat <<EOF > exp || fail=1
@@ -49,7 +49,7 @@ parted -m -s $dev unit s print free > out 2>&1 || fail=1
 
 # check for expected output
 sed "2s/^[^:]*:/path:/" < out > k; mv k out
-compare out exp || fail=1
+compare exp out || fail=1
 
 # Test the output of print free with one partition.
 cat <<EOF > exp || fail=1
@@ -67,6 +67,6 @@ parted -m -s $dev unit s print free > out 2>&1 || fail=1
 
 # check for expected output
 sed "2s/^[^:]*:/path:/" < out > k; mv k out
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

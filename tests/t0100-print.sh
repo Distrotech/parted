@@ -53,6 +53,6 @@ parted -s $dev unit s print >out 2>&1 || fail=1
 mv out o2 && sed "s,^Disk .*/$dev:,Disk .../$dev:," o2 > out || fail=1
 
 # check for expected output
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

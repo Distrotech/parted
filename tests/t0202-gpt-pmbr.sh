@@ -26,7 +26,7 @@ dd if=/dev/null of=$dev bs=1 seek=1M || framework_failure
 # create a GPT partition table
 parted -s $dev mklabel gpt > out 2>&1 || fail=1
 # expect no output
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 # Fill the first $bootcode_size bytes with 0's.
 # This affects only the protective MBR, so doesn't affect validity of gpt table.
@@ -38,7 +38,7 @@ parted -s $dev p || fail=1
 # create a GPT partition table on top of the existing one.
 parted -s $dev mklabel gpt > out 2>&1 || fail=1
 # expect no output
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 # Extract the first $bootcode_size Bytes after GPT creation
 dd if=$dev of=after bs=1c count=$bootcode_size > /dev/null 2>&1 || fail=1
