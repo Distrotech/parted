@@ -4,7 +4,8 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** New Features
 
-  Add resizepart command to resize a partition
+  Add resizepart command to resize a partition.  This works even on
+  mounted partitions.
 
   Add support for EAV DASD partitions, which are ECKD's with more than
   65520 cylinders.
