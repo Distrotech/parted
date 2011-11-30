@@ -224,14 +224,17 @@ _partition_warn_busy (PedPartition* part)
 
         if (ped_partition_is_busy (part)) {
                 path = ped_partition_get_path (part);
-                ped_exception_throw (
-                        PED_EXCEPTION_ERROR,
-                        PED_EXCEPTION_CANCEL,
-                        _("Partition %s is being used. You must unmount it "
-                          "before you modify it with Parted."),
-                        path);
+                if (ped_exception_throw (
+                            PED_EXCEPTION_WARNING,
+                            PED_EXCEPTION_YES_NO,
+                            _("Partition %s is being used. Are you sure you " \
+                              "want to continue?"),
+                            path) != PED_EXCEPTION_YES)
+                {
+                        free (path);
+                        return 0;
+                }
                 free (path);
-                return 0;
         }
         return 1;
 }

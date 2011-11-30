@@ -73,8 +73,7 @@ compare exp out || fail=1
 # make sure partition busy check works ( mklabel checks whole disk )
 parted -s "$dev" rm 1 > out 2>&1; test $? = 1 || fail=1
 # create expected output file
-echo "Error: Partition $dev is being used. You must unmount it before you modify \
-it with Parted." > exp
+echo "Warning: Partition ${dev} is being used. Are you sure you want to continue?" > exp
 compare exp out || fail=1
 
 umount "$mount_point"

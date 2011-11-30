@@ -29,7 +29,7 @@ scsi_debug_setup_ dev_size_mb=80 > dev-name ||
 dev=$(cat dev-name)
 
 cat <<EOF > exp-error || framework_failure
-Error: Partition ${dev}2 is being used. You must unmount it before you modify it with Parted.
+Warning: Partition ${dev}2 is being used. Are you sure you want to continue?
 EOF
 
 parted -s "$dev" mklabel msdos > out 2>&1 || fail=1

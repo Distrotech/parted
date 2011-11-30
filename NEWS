@@ -134,6 +134,9 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  When attempting to manipulate a mounted partition, parted now issues
+  a warning that you can choose to ignore, instead of an error.
+
   When creating a loop label, it automatically comes with a partition
   using the whole disk.
 

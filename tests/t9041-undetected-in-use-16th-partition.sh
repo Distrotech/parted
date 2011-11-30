@@ -87,8 +87,8 @@ for part_dev in $partitions; do
   # Removal of mounted partition must fail.
   parted -s $scsi_dev rm $n > out 2>&1 && fail=1
 
-  echo "Error: Partition $part_dev is being used." \
-	  'You must unmount it before you modify it with Parted.' \
+  echo "Warning: Partition $part_dev is being used." \
+          'Are you sure you want to continue?' \
     > exp-error || framework_failure_
 
   # expect error
