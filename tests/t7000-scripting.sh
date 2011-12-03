@@ -52,7 +52,7 @@ for mkpart in mkpart; do
 
   # Compare the real error and the expected one
   normalize_part_diag_ out || fail=1
-  compare out err.expected || fail=1
+  compare err.expected out || fail=1
 
   # Test mkpart interactive mode.
   # Create the test file

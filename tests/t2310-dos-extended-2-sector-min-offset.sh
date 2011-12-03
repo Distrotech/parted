@@ -52,7 +52,7 @@ compare /dev/null out || fail=1
 # Provoke a failure by trying to create a partition that starts just
 # one sector after the start of the extended partition.
 parted --align=min -s $scsi_dev mkpart logical 65s 128s > err 2>&1 && fail=1
-compare err err.exp || fail=1
+compare err.exp err || fail=1
 
 # The above failed, but created the partition nonetheless.  Remove it.
 parted -s $scsi_dev rm 5 || fail=1
