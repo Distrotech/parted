@@ -127,8 +127,8 @@ ped_timer_new_nested (PedTimer* parent, float nest_frac)
 	if (!parent)
 		return NULL;
 
-	PED_ASSERT (nest_frac >= 0.0);
-	PED_ASSERT (nest_frac <= 1.0);
+	PED_ASSERT (nest_frac >= 0.0f);
+	PED_ASSERT (nest_frac <= 1.0f);
 
 	context = (NestedContext*) ped_malloc (sizeof (NestedContext));
 	if (!context)

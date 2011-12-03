@@ -204,7 +204,7 @@ _timer_handler (PedTimer* timer, void* context)
                 if (timer->state_name)
                         printf ("%s... ", timer->state_name);
                 printf (_("%0.f%%\t(time left %.2d:%.2d)"),
-                        100.0 * timer->frac,
+                        (double) (100.0f * timer->frac),
                         (int) (tcontext->predicted_time_left / 60),
                         (int) (tcontext->predicted_time_left % 60));
 
