@@ -43,7 +43,7 @@
 
 #define MIN(a,b)	( (a<b)?  a : b )
 
-int
+static int _GL_ATTRIBUTE_PURE
 wchar_strlen (const wchar_t* str)
 {
 #ifdef ENABLE_NLS
@@ -53,7 +53,7 @@ wchar_strlen (const wchar_t* str)
 #endif
 }
 
-wchar_t*
+static wchar_t * _GL_ATTRIBUTE_PURE
 wchar_strchr (const wchar_t* str, char ch)
 {
 #ifdef ENABLE_NLS

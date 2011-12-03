@@ -406,7 +406,7 @@ _rawpart_is_driver (const MacRawPartition* raw_part)
 	return 1;
 }
 
-static int
+static int _GL_ATTRIBUTE_PURE
 _rawpart_has_driver (const MacRawPartition* raw_part, MacDiskData* mac_disk_data)
 {
 	MacDeviceDriver *driverlist;
@@ -1014,7 +1014,7 @@ _generate_empty_part (PedDisk* disk, int num, MacRawPartition* part_map)
 }
 
 /* returns the first empty entry in the partition map */
-static int
+static int _GL_ATTRIBUTE_PURE
 _get_first_empty_part_entry (PedDisk* disk, MacRawPartition* part_map)
 {
 	MacDiskData*	mac_disk_data = disk->disk_specific;
@@ -1292,7 +1292,7 @@ mac_partition_set_flag (PedPartition* part, PedPartitionFlag flag, int state)
 	}
 }
 
-static int
+static int _GL_ATTRIBUTE_PURE
 mac_partition_get_flag (const PedPartition* part, PedPartitionFlag flag)
 {
 	MacPartitionData*	mac_data;
@@ -1369,7 +1369,7 @@ mac_partition_set_name (PedPartition* part, const char* name)
 		mac_data->volume_name [i] = 0;
 }
 
-static const char*
+static const char* _GL_ATTRIBUTE_PURE
 mac_partition_get_name (const PedPartition* part)
 {
 	MacPartitionData*	mac_data;

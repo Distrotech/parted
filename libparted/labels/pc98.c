@@ -193,7 +193,7 @@ pc98_free (PedDisk* disk)
 	_ped_disk_free (disk);
 }
 
-static PedSector
+static PedSector _GL_ATTRIBUTE_PURE
 chs_to_sector (const PedDevice* dev, int c, int h, int s)
 {
 	PED_ASSERT (dev != NULL);
@@ -217,7 +217,7 @@ sector_to_chs (const PedDevice* dev, PedSector sector, int* c, int* h, int* s)
 	*s = (sector) % cyl_size % dev->hw_geom.sectors;
 }
 
-static PedSector
+static PedSector _GL_ATTRIBUTE_PURE
 legacy_start (const PedDisk* disk, const PC98RawPartition* raw_part)
 {
 	PED_ASSERT (disk != NULL);
@@ -227,7 +227,7 @@ legacy_start (const PedDisk* disk, const PC98RawPartition* raw_part)
 			      raw_part->head, raw_part->sector);
 }
 
-static PedSector
+static PedSector _GL_ATTRIBUTE_PURE
 legacy_end (const PedDisk* disk, const PC98RawPartition* raw_part)
 {
 	PED_ASSERT (disk != NULL);
@@ -590,7 +590,7 @@ pc98_partition_set_flag (PedPartition* part, PedPartitionFlag flag, int state)
 	}
 }
 
-static int
+static int _GL_ATTRIBUTE_PURE
 pc98_partition_get_flag (const PedPartition* part, PedPartitionFlag flag)
 {
 	PC98PartitionData*	pc98_data;
@@ -641,7 +641,7 @@ pc98_partition_set_name (PedPartition* part, const char* name)
 		pc98_data->name [i] = 0;
 }
 
-static const char*
+static const char* _GL_ATTRIBUTE_PURE
 pc98_partition_get_name (const PedPartition* part)
 {
 	PC98PartitionData*	pc98_data;

@@ -286,7 +286,7 @@ error:
 
 /* Given a partition table type NAME, e.g., "gpt", return its PedDiskType
    handle.  If no known type has a name matching NAME, return NULL.  */
-static PedDiskType const *
+static PedDiskType const * _GL_ATTRIBUTE_PURE
 find_disk_type (char const *name)
 {
   PedDiskType const *t;
@@ -1554,7 +1554,7 @@ ped_disk_next_partition (const PedDisk* disk, const PedPartition* part)
 /** @} */
 
 #ifdef DEBUG
-static int
+static int _GL_ATTRIBUTE_PURE
 _disk_check_sanity (PedDisk* disk)
 {
 	PedPartition*	walk;
@@ -1807,7 +1807,7 @@ _partition_get_overlap_constraint (PedPartition* part, PedGeometry* geom)
  * Note: overlap with an extended partition is also allowed, provided that
  * \p geom lies completely inside the extended partition.
  */
-static int
+static int _GL_ATTRIBUTE_PURE
 _disk_check_part_overlaps (PedDisk* disk, PedPartition* part)
 {
 	PedPartition*	walk;

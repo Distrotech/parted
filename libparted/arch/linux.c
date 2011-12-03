@@ -2040,7 +2040,7 @@ _compare_digit_state (char ch, int need_digit)
  * Motivation: accept devices looking like /dev/rd/c0d0, but
  * not looking like /dev/hda1 and /dev/rd/c0d0p1
  */
-static int
+static int _GL_ATTRIBUTE_PURE
 _match_rd_device (const char* name)
 {
         const char* pos;
@@ -2115,7 +2115,7 @@ struct _entry {
 	size_t len;
 };
 
-static int
+static int _GL_ATTRIBUTE_PURE
 _skip_entry (const char *name)
 {
 	struct _entry *i;
@@ -2314,7 +2314,7 @@ _partition_is_mounted (const PedPartition *part)
 	return !!status;
 }
 
-static int
+static int _GL_ATTRIBUTE_PURE
 _has_partitions (const PedDisk* disk)
 {
         PED_ASSERT(disk != NULL);

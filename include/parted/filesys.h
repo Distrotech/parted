@@ -86,10 +86,12 @@ extern void ped_file_system_alias_unregister (PedFileSystemType* type,
 
 extern PedFileSystemType* ped_file_system_type_get (const char* name);
 extern PedFileSystemType*
-ped_file_system_type_get_next (const PedFileSystemType* fs_type);
+ped_file_system_type_get_next (const PedFileSystemType* fs_type)
+  _GL_ATTRIBUTE_PURE;
 
 extern PedFileSystemAlias*
-ped_file_system_alias_get_next (const PedFileSystemAlias* fs_alias);
+ped_file_system_alias_get_next (const PedFileSystemAlias* fs_alias)
+  _GL_ATTRIBUTE_PURE;
 
 extern PedFileSystemType* ped_file_system_probe (PedGeometry* geom);
 extern PedGeometry* ped_file_system_probe_specific (

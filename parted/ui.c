@@ -592,7 +592,7 @@ _readline (const char* prompt, const StrList* possibilities)
         return line;
 }
 
-static PedExceptionOption
+static PedExceptionOption _GL_ATTRIBUTE_PURE
 option_get_next (PedExceptionOption options, PedExceptionOption current)
 {
         PedExceptionOption    i;
@@ -704,7 +704,7 @@ command_line_get_word_count ()
         return str_list_length (command_line);
 }
 
-static int
+static int _GL_ATTRIBUTE_PURE
 _str_is_spaces (const char* str)
 {
         while (isspace (*str))

@@ -55,12 +55,13 @@ extern int ped_geometry_set (PedGeometry* geom, PedSector start,
 extern int ped_geometry_set_start (PedGeometry* geom, PedSector start);
 extern int ped_geometry_set_end (PedGeometry* geom, PedSector end);
 extern int ped_geometry_test_overlap (const PedGeometry* a,
-	       			      const PedGeometry* b);
+				      const PedGeometry* b) _GL_ATTRIBUTE_PURE;
 extern int ped_geometry_test_inside (const PedGeometry* a,
-				     const PedGeometry* b);
-extern int ped_geometry_test_equal (const PedGeometry* a, const PedGeometry* b);
+				     const PedGeometry* b) _GL_ATTRIBUTE_PURE;
+extern int ped_geometry_test_equal (const PedGeometry* a, const PedGeometry* b)
+  _GL_ATTRIBUTE_PURE;
 extern int ped_geometry_test_sector_inside (const PedGeometry* geom,
-	       				    PedSector sect);
+					    PedSector sect) _GL_ATTRIBUTE_PURE;
 
 extern int ped_geometry_read (const PedGeometry* geom, void* buffer,
 			      PedSector offset, PedSector count);
@@ -78,7 +79,7 @@ extern int ped_geometry_sync_fast (PedGeometry* geom);
 /* returns -1 if "sector" is not within dest's space. */
 extern PedSector ped_geometry_map (const PedGeometry* dst,
 				   const PedGeometry* src,
-				   PedSector sector);
+				   PedSector sector) _GL_ATTRIBUTE_PURE;
 
 #endif /* PED_GEOM_H_INCLUDED */
 

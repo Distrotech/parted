@@ -83,11 +83,14 @@ typedef PedExceptionOption (PedExceptionHandler) (PedException* ex);
 
 extern int ped_exception;	/* set to true if there's an exception */
 
-extern char* ped_exception_get_type_string (PedExceptionType ex_type);
-extern char* ped_exception_get_option_string (PedExceptionOption ex_opt);
+extern char* ped_exception_get_type_string (PedExceptionType ex_type)
+     _GL_ATTRIBUTE_CONST;
+extern char* ped_exception_get_option_string (PedExceptionOption ex_opt)
+     _GL_ATTRIBUTE_PURE;
 
 extern void ped_exception_set_handler (PedExceptionHandler* handler);
-extern PedExceptionHandler *ped_exception_get_handler(void);
+extern PedExceptionHandler *ped_exception_get_handler(void)
+     _GL_ATTRIBUTE_PURE;
 
 extern PedExceptionOption ped_exception_default_handler (PedException* ex);
 

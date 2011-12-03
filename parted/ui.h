@@ -43,7 +43,7 @@ extern void command_line_push_word (const char* word);
 extern char* command_line_pop_word ();
 extern char* command_line_peek_word ();
 extern void command_line_flush ();
-extern int command_line_get_word_count ();
+extern int command_line_get_word_count () _GL_ATTRIBUTE_PURE;
 extern void command_line_prompt_words (const char* prompt, const char* def,
 				       const StrList* possibilities,
 				       int multi_word);

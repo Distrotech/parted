@@ -18,7 +18,7 @@ PedDisk* _create_disk_label (PedDevice* dev, PedDiskType* type);
  *
  * label: disk label name
  */
-int _implemented_disk_label (const char* label);
+int _implemented_disk_label (const char* label) _GL_ATTRIBUTE_PURE;
 
 /* Test specific exception handler
  *

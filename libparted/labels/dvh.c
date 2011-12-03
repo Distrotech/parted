@@ -156,7 +156,7 @@ dvh_free (PedDisk* disk)
 }
 
 /* two's complement 32-bit checksum */
-static uint32_t
+static uint32_t _GL_ATTRIBUTE_PURE
 _checksum (const uint32_t* base, size_t size)
 {
 	uint32_t	sum = 0;
@@ -656,7 +656,7 @@ dvh_partition_set_flag (PedPartition* part, PedPartitionFlag flag, int state)
 	return 1;
 }
 
-static int
+static int _GL_ATTRIBUTE_PURE
 dvh_partition_get_flag (const PedPartition* part, PedPartitionFlag flag)
 {
 	DVHDiskData* dvh_disk_data = part->disk->disk_specific;

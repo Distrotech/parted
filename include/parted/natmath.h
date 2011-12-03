@@ -58,10 +58,14 @@ struct _PedAlignment {
 	PedSector	grain_size;
 };
 
-extern PedSector ped_round_up_to (PedSector sector, PedSector grain_size);
-extern PedSector ped_round_down_to (PedSector sector, PedSector grain_size);
-extern PedSector ped_round_to_nearest (PedSector sector, PedSector grain_size);
-extern PedSector ped_greatest_common_divisor (PedSector a, PedSector b);
+extern PedSector ped_round_up_to (PedSector sector, PedSector grain_size)
+  _GL_ATTRIBUTE_CONST;
+extern PedSector ped_round_down_to (PedSector sector, PedSector grain_size)
+  _GL_ATTRIBUTE_CONST;
+extern PedSector ped_round_to_nearest (PedSector sector, PedSector grain_size)
+  _GL_ATTRIBUTE_CONST;
+extern PedSector ped_greatest_common_divisor (PedSector a, PedSector b)
+  _GL_ATTRIBUTE_PURE;
 
 extern int ped_alignment_init (PedAlignment* align, PedSector offset,
 			       PedSector grain_size);
@@ -73,17 +77,17 @@ extern PedAlignment* ped_alignment_intersect (const PedAlignment* a,
 
 extern PedSector
 ped_alignment_align_up (const PedAlignment* align, const PedGeometry* geom,
-			PedSector sector);
+			PedSector sector) _GL_ATTRIBUTE_PURE;
 extern PedSector
 ped_alignment_align_down (const PedAlignment* align, const PedGeometry* geom,
-			  PedSector sector);
+			  PedSector sector) _GL_ATTRIBUTE_PURE;
 extern PedSector
 ped_alignment_align_nearest (const PedAlignment* align, const PedGeometry* geom,
-			     PedSector sector);
+			     PedSector sector) _GL_ATTRIBUTE_PURE;
 
 extern int
 ped_alignment_is_aligned (const PedAlignment* align, const PedGeometry* geom,
-			  PedSector sector);
+			  PedSector sector) _GL_ATTRIBUTE_PURE;
 
 extern const PedAlignment* ped_alignment_any;
 extern const PedAlignment* ped_alignment_none;

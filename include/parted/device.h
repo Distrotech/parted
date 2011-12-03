@@ -1,6 +1,6 @@
 /*
     libparted - a library for manipulating disk partitions
-    Copyright (C) 1998 - 2001, 2005, 2007-2008 Free Software Foundation, Inc.
+    Copyright (C) 1998-2001, 2005, 2007-2008, 2011 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -127,7 +127,7 @@ extern void ped_device_probe_all ();
 extern void ped_device_free_all ();
 
 extern PedDevice* ped_device_get (const char* name);
-extern PedDevice* ped_device_get_next (const PedDevice* dev);
+extern PedDevice* ped_device_get_next (const PedDevice* dev) _GL_ATTRIBUTE_PURE;
 extern int ped_device_is_busy (PedDevice* dev);
 extern int ped_device_open (PedDevice* dev);
 extern int ped_device_close (PedDevice* dev);

@@ -60,6 +60,6 @@ extern int str_list_match_any (const StrList* list, const char* str);
 extern int str_list_match_node (const StrList* list, const char* str);
 extern StrList* str_list_match (const StrList* list, const char* str);
 
-extern int str_list_length (const StrList* list);
+extern int str_list_length (const StrList* list) _GL_ATTRIBUTE_PURE;
 
 #endif /* STRLIST_H_INCLUDED */

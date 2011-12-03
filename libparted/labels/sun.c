@@ -650,7 +650,7 @@ sun_partition_set_flag (PedPartition* part, PedPartitionFlag flag, int state)
 }
 
 
-static int
+static int _GL_ATTRIBUTE_PURE
 sun_partition_get_flag (const PedPartition* part, PedPartitionFlag flag)
 {
 	SunPartitionData*       sun_data;

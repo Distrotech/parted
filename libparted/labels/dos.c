@@ -403,7 +403,7 @@ chs_get_sector (const RawCHS* chs)
 	return (chs->sector & 0x3f) - 1;
 }
 
-static PedSector
+static PedSector _GL_ATTRIBUTE_PURE
 chs_to_sector (const PedDevice* dev, const PedCHSGeometry *bios_geom,
 	       const RawCHS* chs)
 {
@@ -452,7 +452,7 @@ sector_to_chs (const PedDevice* dev, const PedCHSGeometry* bios_geom,
 	chs->sector = real_s + 1 + (real_c >> 8 << 6);
 }
 
-static PedSector
+static PedSector _GL_ATTRIBUTE_PURE
 legacy_start (const PedDisk* disk, const PedCHSGeometry* bios_geom,
 	      const DosRawPartition* raw_part)
 {
@@ -462,7 +462,7 @@ legacy_start (const PedDisk* disk, const PedCHSGeometry* bios_geom,
 	return chs_to_sector (disk->dev, bios_geom, &raw_part->chs_start);
 }
 
-static PedSector
+static PedSector _GL_ATTRIBUTE_PURE
 legacy_end (const PedDisk* disk, const PedCHSGeometry* bios_geom,
 	    const DosRawPartition* raw_part)
 {
@@ -472,7 +472,7 @@ legacy_end (const PedDisk* disk, const PedCHSGeometry* bios_geom,
 	return chs_to_sector (disk->dev, bios_geom, &raw_part->chs_end);
 }
 
-static PedSector
+static PedSector _GL_ATTRIBUTE_PURE
 linear_start (const PedDisk* disk, const DosRawPartition* raw_part,
 	      PedSector offset)
 {
@@ -482,7 +482,7 @@ linear_start (const PedDisk* disk, const DosRawPartition* raw_part,
 	return offset + PED_LE32_TO_CPU (raw_part->start);
 }
 
-static PedSector
+static PedSector _GL_ATTRIBUTE_PURE
 linear_end (const PedDisk* disk, const DosRawPartition* raw_part,
 	    PedSector offset)
 {
@@ -494,7 +494,7 @@ linear_end (const PedDisk* disk, const DosRawPartition* raw_part,
 }
 
 #ifndef DISCOVER_ONLY
-static int
+static int _GL_ATTRIBUTE_PURE
 partition_check_bios_geometry (PedPartition* part, PedCHSGeometry* bios_geom)
 {
 	PedSector		leg_start, leg_end;
@@ -520,7 +520,7 @@ partition_check_bios_geometry (PedPartition* part, PedCHSGeometry* bios_geom)
 	return 1;
 }
 
-static int
+static int _GL_ATTRIBUTE_PURE
 disk_check_bios_geometry (const PedDisk* disk, PedCHSGeometry* bios_geom)
 {
 	PedPartition* part = NULL;
@@ -835,7 +835,7 @@ disk_probe_bios_geometry (const PedDisk* disk, PedCHSGeometry* bios_geom)
 }
 #endif /* !DISCOVER_ONLY */
 
-static int
+static int _GL_ATTRIBUTE_PURE
 raw_part_is_extended (const DosRawPartition* raw_part)
 {
 	PED_ASSERT (raw_part != NULL);
@@ -853,7 +853,7 @@ raw_part_is_extended (const DosRawPartition* raw_part)
 	return 0;
 }
 
-static int
+static int _GL_ATTRIBUTE_PURE
 raw_part_is_hidden (const DosRawPartition* raw_part)
 {
 	PED_ASSERT (raw_part != NULL);
@@ -875,7 +875,7 @@ raw_part_is_hidden (const DosRawPartition* raw_part)
 	return 0;
 }
 
-static int
+static int _GL_ATTRIBUTE_PURE
 raw_part_is_lba (const DosRawPartition* raw_part)
 {
 	PED_ASSERT (raw_part != NULL);
@@ -1560,7 +1560,7 @@ msdos_partition_set_flag (PedPartition* part,
 	}
 }
 
-static int
+static int _GL_ATTRIBUTE_PURE
 msdos_partition_get_flag (const PedPartition* part, PedPartitionFlag flag)
 {
 	DosPartitionData*	dos_data;
@@ -2401,7 +2401,7 @@ next_primary (const PedDisk* disk)
 	return 0;
 }
 
-static int
+static int _GL_ATTRIBUTE_PURE
 next_logical (const PedDisk* disk)
 {
 	int	i;

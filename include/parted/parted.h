@@ -37,7 +37,7 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 
-extern const char* ped_get_version ();
+extern const char* ped_get_version () _GL_ATTRIBUTE_CONST;
 
 extern void* ped_malloc (size_t size);
 extern void* ped_calloc (size_t size);

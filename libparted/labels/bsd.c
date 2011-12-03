@@ -494,7 +494,7 @@ bsd_partition_set_flag (PedPartition* part, PedPartitionFlag flag, int state)
 	return 0;
 }
 
-static int
+static int _GL_ATTRIBUTE_PURE
 bsd_partition_get_flag (const PedPartition* part, PedPartitionFlag flag)
 {
 	BSDPartitionData*		bsd_data;

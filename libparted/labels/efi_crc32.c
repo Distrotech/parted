@@ -108,7 +108,7 @@ static const uint32_t crc32_tab[] = {
 
 /* Return a 32-bit CRC of the contents of the buffer. */
 
-uint32_t
+uint32_t _GL_ATTRIBUTE_PURE
 __efi_crc32(const void *buf, unsigned long len, uint32_t seed)
 {
   unsigned long i;

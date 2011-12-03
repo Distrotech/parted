@@ -85,7 +85,7 @@ ped_constraint_solve_nearest (
 
 extern int
 ped_constraint_is_solution (const PedConstraint* constraint,
-			    const PedGeometry* geom);
+			    const PedGeometry* geom) _GL_ATTRIBUTE_PURE;
 
 extern PedConstraint*
 ped_constraint_any (const PedDevice* dev);

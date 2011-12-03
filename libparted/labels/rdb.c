@@ -113,7 +113,7 @@ _amiga_free_ids (struct AmigaIds *ids) {
 		free (current);
 	}
 }
-static int
+static int _GL_ATTRIBUTE_PURE
 _amiga_id_in_list (uint32_t id, struct AmigaIds *ids) {
 	struct AmigaIds *current;
 
@@ -608,14 +608,14 @@ _amiga_find_free_blocks(const PedDisk *disk, uint32_t *table,
 	}
 	return 1;
 }
-static uint32_t
+static uint32_t _GL_ATTRIBUTE_PURE
 _amiga_next_free_block(uint32_t *table, uint32_t start, uint32_t type) {
 	int i;
 
 	for (i = start; table[i] != type && table[i] != IDNAME_FREE; i++);
 	return i;
 }
-static PedPartition *
+static PedPartition * _GL_ATTRIBUTE_PURE
 _amiga_next_real_partition(const PedDisk *disk, PedPartition *part) {
 	PedPartition *next;
 
@@ -945,7 +945,7 @@ amiga_partition_set_flag (PedPartition* part, PedPartitionFlag flag, int state)
 	}
 }
 
-static int
+static int _GL_ATTRIBUTE_PURE
 amiga_partition_get_flag (const PedPartition* part, PedPartitionFlag flag)
 {
 	struct PartitionBlock *partition;

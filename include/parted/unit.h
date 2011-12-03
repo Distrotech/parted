@@ -65,8 +65,9 @@ typedef enum {
 #define PED_UNIT_LAST PED_UNIT_TEBIBYTE
 
 extern long long ped_unit_get_size (const PedDevice* dev, PedUnit unit);
-extern const char* ped_unit_get_name (PedUnit unit);
-extern PedUnit ped_unit_get_by_name (const char* unit_name);
+extern const char *ped_unit_get_name (PedUnit unit)
+  _GL_ATTRIBUTE_PURE _GL_ATTRIBUTE_CONST;
+extern PedUnit ped_unit_get_by_name (const char* unit_name) _GL_ATTRIBUTE_PURE;
 
 extern void ped_unit_set_default (PedUnit unit);
 extern PedUnit ped_unit_get_default ();

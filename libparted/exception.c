@@ -52,6 +52,7 @@
 
 #include <parted/parted.h>
 #include <parted/debug.h>
+#include <parted/exception.h>
 
 #define N_(String) String
 #if ENABLE_NLS
@@ -103,7 +104,7 @@ ped_exception_get_type_string (PedExceptionType ex_type)
 
 /* FIXME: move this out to the prospective math.c */
 /* FIXME: this can probably be done more efficiently */
-static int
+static int _GL_ATTRIBUTE_PURE
 ped_log2 (int n)
 {
 	int x;

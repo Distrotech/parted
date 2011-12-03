@@ -52,6 +52,7 @@
 #include <config.h>
 #include <parted/parted.h>
 #include <parted/debug.h>
+#include <parted/unit.h>
 
 #include <ctype.h>
 #include <stdio.h>
@@ -101,7 +102,7 @@ ped_unit_set_default (PedUnit unit)
 /**
  * \brief Get the current default unit.
  */
-PedUnit
+PedUnit _GL_ATTRIBUTE_PURE
 ped_unit_get_default ()
 {
 	return default_unit;
@@ -334,7 +335,7 @@ strip_string (char* str)
 
 /* Find non-number suffix.  Eg: find_suffix("32Mb") returns a pointer to
  * "Mb". */
-static char*
+static char* _GL_ATTRIBUTE_PURE
 find_suffix (const char* str)
 {
 	while (str[0] != 0 && (isdigit (str[0]) || strchr(",.-", str[0])))
@@ -353,7 +354,7 @@ remove_punct (char* str)
 	}
 }
 
-static int
+static int _GL_ATTRIBUTE_PURE
 is_chs (const char* str)
 {
 	int punct_count = 0;
