@@ -77,7 +77,7 @@ extern int command_line_get_align_type (const char *prompt,
 extern int command_line_is_integer ();
 extern int command_line_is_sector ();
 
-extern void help_msg ();
+extern void help_msg () __attribute__((__noreturn__));
 
 extern void print_using_dev (PedDevice* dev);
 
