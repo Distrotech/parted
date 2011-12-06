@@ -118,6 +118,8 @@ command_get_names (Command** list)
 void
 command_print_summary (Command* cmd)
 {
+        if (cmd->summary == NULL)
+                return;
         fputs ("  ", stdout);
 	str_list_print_wrap (cmd->summary, screen_width(), 2, 8, stdout);
 	putchar ('\n');
