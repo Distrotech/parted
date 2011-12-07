@@ -2241,7 +2241,6 @@ _device_get_part_path (PedDevice *dev, int num)
                 char const *p = (dev->type == PED_DEVICE_DAC960
                                  || dev->type == PED_DEVICE_CPQARRAY
                                  || dev->type == PED_DEVICE_ATARAID
-                                 || dev->type == PED_DEVICE_DM
                                  || isdigit (dev->path[path_len - 1])
                                  ? "p" : "");
                 result = zasprintf ("%s%s%d", dev->path, p, num);
@@ -2793,7 +2792,10 @@ _dm_add_partition (PedDisk* disk, PedPartition* part)
 
         dev_name = dm_task_get_name (task);
 
-        if ( ! (vol_name = zasprintf ("%sp%d", dev_name, part->num)))
+        if (isdigit (dev_name[strlen (dev_name) - 1])) {
+                if ( ! (vol_name = zasprintf ("%sp%d", dev_name, part->num)))
+                        goto err;
+        } else if ( ! (vol_name = zasprintf ("%s%d", dev_name, part->num)))
                 goto err;
 
         /* Caution: dm_task_destroy frees dev_name.  */
