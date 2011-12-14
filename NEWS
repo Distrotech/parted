@@ -49,6 +49,15 @@ GNU parted NEWS                                    -*- outline -*-
   subtracts one sector from the specified value. With this change, it is now
   possible to create partitions like 1MiB-2MiB, 2MiB-3MiB and so on.
 
+  Device-mapper devices ( LVM, dmraid ) no longer insert a 'p' between the
+  base device name and the partition number unless the last character of
+  the base device name is a digit.  This brings parted into compliance with
+  the partition naming of kpartx and "linux since the dawn of time", but
+  differs from the way that dmraid 1.0.0-rc16-3 operates.  A patch to
+  correct dmraid has been submitted to ataraid-list@redhat.com.  Without
+  this patch, parted and dmraid will both create duplicate partition devices
+  named /dev/mapper/foo1 and /dev/mapper/foop1.
+
 ** Build-related
 
   "make dist" no longer builds .tar.gz files.
