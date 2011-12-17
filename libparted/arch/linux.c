@@ -2450,38 +2450,6 @@ _sysfs_int_entry_from_dev(PedDevice const* dev, const char *entry, int *val)
         return ok;
 }
 
-/* Return the maximum number of partitions that the loopback device can hold.
-   First, check the loop-module-exported max_part parameter (since linux-3.0).
-   If that is not available, fall back to checking ext_range, which seems to
-   have (for some reason) different semantics compared to other devices;
-   specifically, ext_range <= 1 means that the loopback device does
-   not support partitions.  */
-static unsigned int
-_loop_get_partition_range(PedDevice const* dev)
-{
-        int         max_part;
-        bool        ok = false;
-
-        /* max_part module param is exported since kernel 3.0 */
-        FILE *fp = fopen("/sys/module/loop/parameters/max_part", "r");
-        if (fp) {
-                ok = fscanf(fp, "%d", &max_part) == 1;
-                fclose(fp);
-        }
-
-        if (ok)
-                return max_part > 0 ? max_part : 0;
-
-        /*
-         * max_part is not exported - check ext_range;
-         * device supports partitions if ext_range > 1
-         */
-        int range;
-        ok = _sysfs_int_entry_from_dev(dev, "range", &range);
-
-        return ok && range > 1 ? range : 0;
-}
-
 /*
  * The number of partitions that a device can have depends on the kernel.
  * If we don't find this value in /sys/block/DEV/ext_range, we will use our own
@@ -2490,14 +2458,13 @@ _loop_get_partition_range(PedDevice const* dev)
 static unsigned int
 _device_get_partition_range(PedDevice const* dev)
 {
-        /* loop handling is special */
-        if (dev->type == PED_DEVICE_LOOP)
-                return _loop_get_partition_range(dev);
-
         int range;
         bool ok = _sysfs_int_entry_from_dev(dev, "ext_range", &range);
 
-        return ok && range > 0 ? range : MAX_NUM_PARTS;
+        if (!ok)
+                return MAX_NUM_PARTS;
+        /* both 0 and 1 mean no partitions */
+        return range > 1 ? range : 0;
 }
 
 /*
