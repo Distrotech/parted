@@ -2314,18 +2314,6 @@ _partition_is_mounted (const PedPartition *part)
 	return !!status;
 }
 
-static int _GL_ATTRIBUTE_PURE
-_has_partitions (const PedDisk* disk)
-{
-        PED_ASSERT(disk != NULL);
-
-        /* Some devices can't be partitioned. */
-        if (!strcmp (disk->type->name, "loop"))
-                return 0;
-
-        return 1;
-}
-
 static int
 linux_partition_is_busy (const PedPartition* part)
 {
@@ -2367,9 +2355,6 @@ _blkpg_add_partition (PedDisk* disk, const PedPartition *part)
 
         PED_ASSERT(disk != NULL);
         PED_ASSERT(disk->dev->sector_size % PED_SECTOR_SIZE_DEFAULT == 0);
-
-        if (!_has_partitions (disk))
-                return 0;
 
         if (ped_disk_type_check_feature (disk->type,
                                          PED_DISK_TYPE_PARTITION_NAME))
@@ -2418,9 +2403,6 @@ static int
 _blkpg_remove_partition (PedDisk* disk, int n)
 {
         struct blkpg_partition  linux_part;
-
-        if (!_has_partitions (disk))
-                return 0;
 
         memset (&linux_part, 0, sizeof (linux_part));
         linux_part.pno = n;
@@ -2743,9 +2725,6 @@ _dm_add_partition (PedDisk* disk, PedPartition* part)
         char*           params = NULL;
         LinuxSpecific*  arch_specific = LINUX_SPECIFIC (disk->dev);
 
-        if (!_has_partitions(disk))
-                return 0;
-
         /* Get map name from devicemapper */
         struct dm_task *task = dm_task_create (DM_DEVICE_INFO);
         if (!task)
@@ -2846,9 +2825,6 @@ _have_blkpg ()
 static int
 linux_disk_commit (PedDisk* disk)
 {
-        if (!_has_partitions (disk))
-                return 1;
-
 #ifdef ENABLE_DEVICE_MAPPER
         if (disk->dev->type == PED_DEVICE_DM)
                 return _dm_reread_part_table (disk);
