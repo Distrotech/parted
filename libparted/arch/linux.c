@@ -2410,6 +2410,24 @@ _blkpg_remove_partition (PedDisk* disk, int n)
                                     BLKPG_DEL_PARTITION);
 }
 
+#ifdef BLKPG_GET_PARTITION
+static int
+_blkpg_get_partition (PedPartition *part, long long *start, long long *length)
+{
+        struct blkpg_partition  linux_part;
+
+        memset (&linux_part, 0, sizeof (linux_part));
+        linux_part.pno = part->num;
+        if (_blkpg_part_command (part->disk->dev, &linux_part,
+                                 BLKPG_GET_PARTITION)) {
+                *start = linux_part.start;
+                *length = linux_part.length;
+                return 1;
+        } else
+                return 0;
+}
+#endif
+
 /* Read the integer from /sys/block/DEV_BASE/ENTRY and set *VAL
    to that value, where DEV_BASE is the last component of DEV->path.
    Upon success, return true.  Otherwise, return false. */
@@ -2431,6 +2449,101 @@ _sysfs_int_entry_from_dev(PedDevice const* dev, const char *entry, int *val)
 
         return ok;
 }
+
+/* Read the unsigned long long from /sys/block/DEV_BASE/PART_BASE/ENTRY
+   and set *VAL to that value, where DEV_BASE is the last component of path to
+   block device corresponding to PART and PART_BASE is the sysfs name of PART.
+   Upon success, return true. Otherwise, return false. */
+static bool
+_sysfs_ull_entry_from_part(PedPartition const* part, const char *entry,
+			   unsigned long long *val)
+{
+        char path[128];
+        char *part_name = linux_partition_get_path(part);
+        if (!part_name)
+                return false;
+
+        int r = snprintf(path, sizeof(path), "/sys/block/%s/%s/%s",
+                last_component(part->disk->dev->path),
+                last_component(part_name), entry);
+        free(part_name);
+        if (r < 0 || r >= sizeof(path))
+                return false;
+
+        FILE *fp = fopen(path, "r");
+        if (!fp)
+                return false;
+
+        bool ok = fscanf(fp, "%llu", val) == 1;
+        fclose(fp);
+
+        return ok;
+}
+
+
+/* Get the starting sector and length of a partition PART within a block device
+   Use blkpg if available, then check sysfs and then use HDIO_GETGEO and
+   BLKGETSIZE64 ioctls as fallback.  Upon success, return true.  Otherwise,
+   return false. */
+static bool
+_kernel_get_partition_start_and_length(PedPartition const *part,
+				       unsigned long long *start,
+                                      unsigned long long *length)
+{
+        int fd = -1;
+        int ok;
+        PED_ASSERT(part);
+        PED_ASSERT(start);
+        PED_ASSERT(length);
+
+#ifdef BLKPG_GET_PARTITION
+        ok = _blkpg_get_partition (part, start, length);
+        if (ok) {
+                *length = (*length * 512) / part->disk->dev->sector_size;
+                *start = (*start * 512) / part->disk->dev->sector_size;
+                return ok;
+        }
+#endif
+        char *dev_name = linux_partition_get_path (part);
+        if (!dev_name)
+                return false;
+
+        ok = _sysfs_ull_entry_from_part (part, "start", start);
+        if (!ok) {
+                struct hd_geometry geom;
+                int dev_fd = open (dev_name, O_RDONLY);
+                if (dev_fd != -1 && ioctl (dev_fd, HDIO_GETGEO, &geom)) {
+                        *start = geom.start;
+                        ok = true;
+                } else {
+                        if (dev_fd != -1)
+                                close(dev_fd);
+                        free (dev_name);
+                        return false;
+                }
+        }
+        *start = (*start * 512) / part->disk->dev->sector_size;
+        ok = _sysfs_ull_entry_from_part (part, "size", length);
+        if (!ok) {
+                if (fd == -1)
+                        fd = open (dev_name, O_RDONLY);
+                if (fd != -1 && ioctl (fd, BLKGETSIZE64, length))
+                        ok = true;
+        } else *length *= 512;
+        *length /= part->disk->dev->sector_size;
+        if (fd != -1)
+                close (fd);
+
+        if (!ok)
+                ped_exception_throw (
+                        PED_EXCEPTION_BUG,
+                        PED_EXCEPTION_CANCEL,
+                        _("Unable to determine the size and length of %s."),
+                        dev_name);
+        free (dev_name);
+        return ok;
+}
+
 
 /*
  * The number of partitions that a device can have depends on the kernel.
@@ -2516,33 +2629,16 @@ _disk_sync_part_table (PedDisk* disk)
         }
 
         for (i = 1; i <= lpn; i++) {
-                const PedPartition *part = ped_disk_get_partition (disk, i);
+                PedPartition *part = ped_disk_get_partition (disk, i);
                 if (part) {
                         if (!ok[i - 1] && errnums[i - 1] == EBUSY) {
-                                struct hd_geometry geom;
-                                unsigned long long length = 0;
+                                unsigned long long length;
+                                unsigned long long start;
                                 /* get start and length of existing partition */
-                                char *dev_name = _device_get_part_path (disk->dev, i);
-                                if (!dev_name)
+                                if (!_kernel_get_partition_start_and_length(part,
+                                                                &start, &length))
                                         goto cleanup;
-                                int fd = open (dev_name, O_RDONLY);
-                                if (fd == -1
-				    || ioctl (fd, HDIO_GETGEO, &geom)
-				    || ioctl (fd, BLKGETSIZE64, &length)) {
-                                        ped_exception_throw (
-                                                             PED_EXCEPTION_BUG,
-                                                             PED_EXCEPTION_CANCEL,
-			    _("Unable to determine the size and length of %s."),
-                                                             dev_name);
-                                        if (fd != -1)
-                                                close (fd);
-                                        free (dev_name);
-                                        goto cleanup;
-                                }
-                                free (dev_name);
-                                length /= disk->dev->sector_size;
-                                close (fd);
-                                if (geom.start == part->geom.start
+                                if (start == part->geom.start
 				    && length == part->geom.length)
                                         ok[i - 1] = 1;
                                 /* If the new partition is unchanged and the
