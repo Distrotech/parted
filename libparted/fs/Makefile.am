@@ -3,9 +3,11 @@
 #
 # This file may be modified and/or distributed without restriction.
 
+AUTOMAKE_OPTIONS = subdir-objects
+
 partedincludedir = -I$(top_builddir)/include -I$(top_srcdir)/include
 
-AM_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
+AM_CFLAGS = $(WARN_CFLAGS)
 
 noinst_LTLIBRARIES    =	libfs.la
 

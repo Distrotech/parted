@@ -37,6 +37,86 @@
 #  define _(String) (String)
 #endif /* ENABLE_NLS */
 
+#define STREQ(a, b) (strcmp (a, b) == 0)
+
+typedef PedFileSystem * (*open_fn_t) (PedGeometry *);
+extern PedFileSystem *hfsplus_open (PedGeometry *);
+extern PedFileSystem *hfs_open (PedGeometry *);
+extern PedFileSystem *fat_open (PedGeometry *);
+
+typedef int (*close_fn_t) (PedFileSystem *);
+extern int hfsplus_close (PedFileSystem *);
+extern int hfs_close (PedFileSystem *);
+extern int fat_close (PedFileSystem *);
+
+typedef int (*resize_fn_t) (PedFileSystem *fs, PedGeometry *geom,
+			    PedTimer *timer);
+extern int hfsplus_resize (PedFileSystem *fs, PedGeometry *geom,
+			   PedTimer *timer);
+extern int hfs_resize (PedFileSystem *fs, PedGeometry *geom,
+		       PedTimer *timer);
+extern int fat_resize (PedFileSystem *fs, PedGeometry *geom,
+		       PedTimer *timer);
+
+typedef PedConstraint * (*resize_constraint_fn_t) (PedFileSystem const *fs);
+extern PedConstraint *hfsplus_get_resize_constraint (PedFileSystem const *fs);
+extern PedConstraint *hfs_get_resize_constraint (PedFileSystem const *fs);
+extern PedConstraint *fat_get_resize_constraint (PedFileSystem const *fs);
+
+static bool
+is_hfs_plus (char const *fs_type_name)
+{
+  return STREQ (fs_type_name, "hfsx") || STREQ (fs_type_name, "hfs+");
+}
+
+static open_fn_t
+open_fn (char const *fs_type_name)
+{
+  if (is_hfs_plus (fs_type_name))
+    return hfsplus_open;
+  if (STREQ (fs_type_name, "hfs"))
+    return hfs_open;
+  if (strncmp (fs_type_name, "fat", 3) == 0)
+    return fat_open;
+  return NULL;
+}
+
+static close_fn_t
+close_fn (char const *fs_type_name)
+{
+  if (is_hfs_plus (fs_type_name))
+    return hfsplus_close;
+  if (STREQ (fs_type_name, "hfs"))
+    return hfs_close;
+  if (strncmp (fs_type_name, "fat", 3) == 0)
+    return fat_close;
+  return NULL;
+}
+
+static resize_fn_t
+resize_fn (char const *fs_type_name)
+{
+  if (is_hfs_plus (fs_type_name))
+    return hfsplus_resize;
+  if (STREQ (fs_type_name, "hfs"))
+    return hfs_resize;
+  if (strncmp (fs_type_name, "fat", 3) == 0)
+    return fat_resize;
+  return NULL;
+}
+
+static resize_constraint_fn_t
+resize_constraint_fn (char const *fs_type_name)
+{
+  if (is_hfs_plus (fs_type_name))
+    return hfsplus_get_resize_constraint;
+  if (STREQ (fs_type_name, "hfs"))
+    return hfs_get_resize_constraint;
+  if (strncmp (fs_type_name, "fat", 3) == 0)
+    return fat_get_resize_constraint;
+  return NULL;
+}
+
 /**
  * This function opens the file system stored on \p geom, if it
  * can find one.
@@ -55,9 +135,6 @@
 PedFileSystem *
 ped_file_system_open (PedGeometry* geom)
 {
-       PedFileSystem*          fs;
-       PedGeometry*            probed_geom;
-
        PED_ASSERT (geom != NULL);
 
        if (!ped_device_open (geom->dev))
@@ -70,7 +147,15 @@ ped_file_system_open (PedGeometry* geom)
                goto error_close_dev;
        }
 
-       probed_geom = ped_file_system_probe_specific (type, geom);
+       open_fn_t open_f = open_fn (type->name);
+       if (open_f == NULL) {
+	   ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
+				_("resizing %s file systems is not supported"),
+				type->name);
+	   goto error_close_dev;
+       }
+
+       PedGeometry *probed_geom = ped_file_system_probe_specific (type, geom);
        if (!probed_geom)
                goto error_close_dev;
        if (!ped_geometry_test_inside (geom, probed_geom)) {
@@ -82,19 +167,11 @@ ped_file_system_open (PedGeometry* geom)
                        goto error_destroy_probed_geom;
        }
 
-       if (!type->ops->open) {
-               ped_exception_throw (PED_EXCEPTION_NO_FEATURE,
-                                    PED_EXCEPTION_CANCEL,
-                                    _("Support for opening %s file systems "
-                                      "is not implemented yet."),
-                                    type->name);
-               goto error_destroy_probed_geom;
-       }
-
-       fs = type->ops->open (probed_geom);
+       PedFileSystem *fs = (*open_f) (probed_geom);
        if (!fs)
                goto error_destroy_probed_geom;
        ped_geometry_destroy (probed_geom);
+       fs->type = type;
        return fs;
 
 error_destroy_probed_geom:
@@ -113,11 +190,10 @@ error:
 int
 ped_file_system_close (PedFileSystem* fs)
 {
-       PedDevice*      dev = fs->geom->dev;
-
        PED_ASSERT (fs != NULL);
+       PedDevice *dev = fs->geom->dev;
 
-       if (!fs->type->ops->close (fs))
+       if (!(close_fn (fs->type->name) (fs)))
                goto error_close_dev;
        ped_device_close (dev);
        return 1;
@@ -125,6 +201,77 @@ ped_file_system_close (PedFileSystem* fs)
 error_close_dev:
        ped_device_close (dev);
        return 0;
+}
+
+/**
+ * This function erases all file system signatures that indicate that a
+ * file system occupies a given region described by \p geom.
+ * After this operation ped_file_system_probe() won't detect any file system.
+ *
+ * \note ped_file_system_create() calls this before creating a new file system.
+ *
+ * \return \c 1 on success, \c 0 on failure
+ */
+static int
+ped_file_system_clobber (PedGeometry* geom)
+{
+	PedFileSystemType*	fs_type = NULL;
+
+	PED_ASSERT (geom != NULL);
+
+	if (!ped_device_open (geom->dev))
+		goto error;
+
+	ped_exception_fetch_all ();
+	while ((fs_type = ped_file_system_type_get_next (fs_type))) {
+		PedGeometry*	probed;
+
+		if (!fs_type->ops->clobber)
+			continue;
+
+		probed = ped_file_system_probe_specific (fs_type, geom);
+		if (!probed) {
+			ped_exception_catch ();
+			continue;
+		}
+		ped_geometry_destroy (probed);
+
+		if (fs_type->ops->clobber && !fs_type->ops->clobber (geom)) {
+			ped_exception_leave_all ();
+			goto error_close_dev;
+		}
+	}
+	ped_device_close (geom->dev);
+	ped_exception_leave_all ();
+	return 1;
+
+error_close_dev:
+	ped_device_close (geom->dev);
+error:
+	return 0;
+}
+
+/* This function erases all signatures that indicate the presence of
+ * a file system in a particular region, without erasing any data
+ * contained inside the "exclude" region.
+ */
+static int
+ped_file_system_clobber_exclude (PedGeometry* geom,
+				 const PedGeometry* exclude)
+{
+	PedGeometry*    clobber_geom;
+	int             status;
+
+	if (ped_geometry_test_sector_inside (exclude, geom->start))
+		return 1;
+
+	clobber_geom = ped_geometry_duplicate (geom);
+	if (ped_geometry_test_overlap (clobber_geom, exclude))
+		ped_geometry_set_end (clobber_geom, exclude->start - 1);
+
+	status = ped_file_system_clobber (clobber_geom);
+	ped_geometry_destroy (clobber_geom);
+	return status;
 }
 
 /**
@@ -140,25 +287,47 @@ error_close_dev:
  * \return \c 0 on failure
  */
 int
-ped_file_system_resize (PedFileSystem* fs, PedGeometry* geom, PedTimer* timer)
+ped_file_system_resize (PedFileSystem *fs, PedGeometry *geom, PedTimer *timer)
 {
        PED_ASSERT (fs != NULL);
        PED_ASSERT (geom != NULL);
 
-       if (!fs->type->ops->resize) {
-               ped_exception_throw (PED_EXCEPTION_NO_FEATURE,
-                                    PED_EXCEPTION_CANCEL,
-                                    _("Support for resizing %s file systems "
-                                      "is not implemented yet."),
-                                    fs->type->name);
-               return 0;
+       resize_fn_t resize_f = resize_fn (fs->type->name);
+       if (resize_f == NULL) {
+	   ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
+				_("resizing %s file systems is not supported"),
+				fs->type->name);
+	   return 0;
        }
-       if (!fs->checked && fs->type->ops->check) {
-               if (!ped_file_system_check (fs, timer))
-                       return 0;
-       }
+
        if (!ped_file_system_clobber_exclude (geom, fs->geom))
                return 0;
 
-       return fs->type->ops->resize (fs, geom, timer);
+       return resize_f (fs, geom, timer);
+}
+
+/**
+ * Return a constraint that represents all of the possible ways the
+ * file system \p fs can be resized with ped_file_system_resize().
+ * This takes into account the amount of used space on
+ * the filesystem \p fs and the capabilities of the resize algorithm.
+ * Hints:
+ * -# if constraint->start_align->grain_size == 0, or
+ *    constraint->start_geom->length == 1, then the start cannot be moved
+ * -# constraint->min_size is the minimum size you can resize the partition
+ *    to.  You might want to tell the user this ;-).
+ *
+ * \return a PedConstraint on success, \c NULL on failure
+ */
+PedConstraint *
+ped_file_system_get_resize_constraint (const PedFileSystem *fs)
+{
+	PED_ASSERT (fs != NULL);
+
+	resize_constraint_fn_t resize_constraint_f =
+	  resize_constraint_fn (fs->type->name);
+	if (resize_constraint_f == NULL)
+	  return NULL;
+
+	return resize_constraint_f (fs);
 }

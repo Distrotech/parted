@@ -79,7 +79,7 @@ hfs_clobber (PedGeometry* geom)
 		(!!ped_geometry_sync  (geom));
 }
 
-static PedFileSystem*
+PedFileSystem *
 hfs_open (PedGeometry* geom)
 {
 	uint8_t			buf[PED_SECTOR_SIZE_DEFAULT];
@@ -149,7 +149,7 @@ ho_fs:	free(fs);
 ho:	return NULL;
 }
 
-static int
+int
 hfs_close (PedFileSystem *fs)
 {
 	HfsPrivateFSData* priv_data = (HfsPrivateFSData*) fs->type_specific;
@@ -166,7 +166,7 @@ hfs_close (PedFileSystem *fs)
 	return 1;
 }
 
-static PedConstraint*
+PedConstraint *
 hfs_get_resize_constraint (const PedFileSystem *fs)
 {
 	PedDevice*	dev = fs->geom->dev;
@@ -190,7 +190,7 @@ hfs_get_resize_constraint (const PedFileSystem *fs)
 				   fs->geom->length);
 }
 
-static int
+int
 hfs_resize (PedFileSystem* fs, PedGeometry* geom, PedTimer* timer)
 {
 	uint8_t			buf[PED_SECTOR_SIZE_DEFAULT];
@@ -375,7 +375,7 @@ hfsplus_clobber (PedGeometry* geom)
 	return ( hfs_clobber (geom) && i );
 }
 
-static int
+int
 hfsplus_close (PedFileSystem *fs)
 {
 	HfsPPrivateFSData* 	priv_data = (HfsPPrivateFSData*)
@@ -399,7 +399,7 @@ hfsplus_close (PedFileSystem *fs)
 	return 1;
 }
 
-static PedFileSystem*
+PedFileSystem*
 hfsplus_open (PedGeometry* geom)
 {
 	uint8_t			buf[PED_SECTOR_SIZE_DEFAULT];
@@ -569,7 +569,7 @@ hpo_fs: free(fs);
 hpo:	return NULL;
 }
 
-static PedConstraint*
+PedConstraint *
 hfsplus_get_resize_constraint (const PedFileSystem *fs)
 {
 	PedDevice*	dev = fs->geom->dev;
@@ -906,7 +906,7 @@ bb_not_found:
 	return 0;
 }
 
-static int
+int
 hfsplus_resize (PedFileSystem* fs, PedGeometry* geom, PedTimer* timer)
 {
 	HfsPPrivateFSData* 	priv_data;
