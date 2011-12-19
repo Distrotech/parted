@@ -98,6 +98,12 @@ extern PedGeometry* ped_file_system_probe_specific (
 			const PedFileSystemType* fs_type,
 			PedGeometry* geom);
 
+PedFileSystem *ped_file_system_open (PedGeometry *geom);
+int ped_file_system_close (PedFileSystem *fs);
+int ped_file_system_resize (PedFileSystem *fs, PedGeometry *geom,
+			    PedTimer *timer);
+PedConstraint *ped_file_system_get_resize_constraint (const PedFileSystem *fs);
+
 #endif /* PED_FILESYS_H_INCLUDED */
 
 /** @} */

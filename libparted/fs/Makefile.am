@@ -4,7 +4,10 @@
 # This file may be modified and/or distributed without restriction.
 
 partedincludedir = -I$(top_builddir)/include -I$(top_srcdir)/include
-noinst_LTLIBRARIES =	libfs.la
+
+AM_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
+
+noinst_LTLIBRARIES    =	libfs.la
 
 libfs_la_LIBADD   = $(UUID_LIBS)		\
 		    $(INTLLIBS)			\
@@ -47,5 +50,54 @@ libfs_la_SOURCES =		\
   xfs/xfs_types.h
 
 EXTRA_DIST = hfs/DOC hfs/HISTORY
+
+lib_LTLIBRARIES = libparted-fs-resize.la
+
+EXTRA_DIST =			\
+  r/hfs/DOC			\
+  r/hfs/HISTORY			\
+  r/hfs/TODO
+
+libparted_fs_resize_la_SOURCES = \
+  r/filesys.c			\
+  r/fat/bootsector.c		\
+  r/fat/bootsector.h		\
+  r/fat/calc.c			\
+  r/fat/calc.h			\
+  r/fat/clstdup.c		\
+  r/fat/clstdup.h		\
+  r/fat/context.c		\
+  r/fat/context.h		\
+  r/fat/count.c			\
+  r/fat/count.h			\
+  r/fat/fat.c			\
+  r/fat/fat.h			\
+  r/fat/fatio.c			\
+  r/fat/fatio.h			\
+  r/fat/resize.c		\
+  r/fat/table.c			\
+  r/fat/table.h			\
+  r/fat/traverse.c		\
+  r/fat/traverse.h		\
+  r/hfs/advfs.c			\
+  r/hfs/advfs.h			\
+  r/hfs/advfs_plus.c		\
+  r/hfs/advfs_plus.h		\
+  r/hfs/cache.c			\
+  r/hfs/cache.h			\
+  r/hfs/file.c			\
+  r/hfs/file.h			\
+  r/hfs/file_plus.c		\
+  r/hfs/file_plus.h		\
+  r/hfs/hfs.c			\
+  r/hfs/hfs.h			\
+  r/hfs/journal.c		\
+  r/hfs/journal.h		\
+  r/hfs/probe.c			\
+  r/hfs/probe.h			\
+  r/hfs/reloc.c			\
+  r/hfs/reloc.h			\
+  r/hfs/reloc_plus.c		\
+  r/hfs/reloc_plus.h
 
 INCLUDES = $(partedincludedir) $(INTLINCS)
