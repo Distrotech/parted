@@ -176,28 +176,13 @@ fat_boot_sector_analyse (FatBootSector* bs, PedFileSystem* fs)
 
 		switch (ped_exception_throw (
 			PED_EXCEPTION_ERROR,
-			PED_EXCEPTION_FIX + PED_EXCEPTION_IGNORE
-			+ PED_EXCEPTION_CANCEL,
+			PED_EXCEPTION_IGNORE_CANCEL,
 			_("The file system's CHS geometry is (%d, %d, %d), "
 			  "which is invalid.  The partition table's CHS "
-			  "geometry is (%d, %d, %d).  If you select Ignore, "
-			  "the file system's CHS geometry will be left "
-			  "unchanged.  If you select Fix, the file system's "
-			  "CHS geometry will be set to match the partition "
-			  "table's CHS geometry."),
+			  "geometry is (%d, %d, %d)."),
 			 cyl_count, fs_info->heads, fs_info->sectors_per_track,
 			 bios_geom->cylinders, bios_geom->heads,
 			 bios_geom->sectors)) {
-
-		case PED_EXCEPTION_FIX:
-			fs_info->sectors_per_track = bios_geom->sectors;
-			fs_info->heads = bios_geom->heads;
-			bs->secs_track
-				= PED_CPU_TO_LE16 (fs_info->sectors_per_track);
-			bs->heads = PED_CPU_TO_LE16 (fs_info->heads);
-			if (!fat_boot_sector_write (bs, fs))
-				return 0;
-			break;
 
 		case PED_EXCEPTION_CANCEL:
 			return 0;
@@ -304,112 +289,6 @@ fat_boot_sector_analyse (FatBootSector* bs, PedFileSystem* fs)
 }
 
 #ifndef DISCOVER_ONLY
-int
-fat_boot_sector_set_boot_code (FatBootSector* bs)
-{
-	PED_ASSERT (bs != NULL);
-
-	memset (bs, 0, 512);
-	memcpy (bs->boot_jump, FAT_BOOT_JUMP, 3);
-	memcpy (bs->u.fat32.boot_code, FAT_BOOT_CODE, FAT_BOOT_CODE_LENGTH);
-	return 1;
-}
-
-int
-fat_boot_sector_generate (FatBootSector* bs, const PedFileSystem* fs)
-{
-	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
-
-	PED_ASSERT (bs != NULL);
-
-	memcpy (bs->system_id, "MSWIN4.1", 8);
-	bs->sector_size = PED_CPU_TO_LE16 (fs_info->logical_sector_size * 512);
-	bs->cluster_size = fs_info->cluster_sectors
-				/ fs_info->logical_sector_size;
-	bs->reserved = PED_CPU_TO_LE16 (fs_info->fat_offset
-					/ fs_info->logical_sector_size);
-	bs->fats = fs_info->fat_table_count;
-
-	bs->dir_entries = (fs_info->fat_type == FAT_TYPE_FAT16)
-			  ? PED_CPU_TO_LE16 (fs_info->root_dir_entry_count)
-			  : 0;
-
-	if (fs_info->sector_count / fs_info->logical_sector_size > 0xffff
-		|| fs_info->fat_type == FAT_TYPE_FAT32) {
-		bs->sectors = 0;
-		bs->sector_count = PED_CPU_TO_LE32 (fs_info->sector_count
-						/ fs_info->logical_sector_size);
-	} else {
-		bs->sectors = PED_CPU_TO_LE16 (fs_info->sector_count
-					       / fs_info->logical_sector_size);
-		bs->sector_count = 0;
-	}
-
-	bs->media = 0xf8;
-
-	bs->secs_track = PED_CPU_TO_LE16 (fs_info->sectors_per_track);
-	bs->heads = PED_CPU_TO_LE16 (fs_info->heads);
-	bs->hidden = PED_CPU_TO_LE32 (fs->geom->start);
-
-	if (fs_info->fat_type == FAT_TYPE_FAT32) {
-		bs->fat_length = 0;
-		bs->u.fat32.fat_length = PED_CPU_TO_LE32 (fs_info->fat_sectors
-						/ fs_info->logical_sector_size);
-		bs->u.fat32.flags = 0;	/* FIXME: what the hell are these? */
-		bs->u.fat32.version = 0;  /* must be 0, for Win98 bootstrap */
-		bs->u.fat32.root_dir_cluster
-			= PED_CPU_TO_LE32 (fs_info->root_cluster);
-		bs->u.fat32.info_sector
-			= PED_CPU_TO_LE16 (fs_info->info_sector_offset
-					   / fs_info->logical_sector_size);
-		bs->u.fat32.backup_sector
-			= PED_CPU_TO_LE16 (fs_info->boot_sector_backup_offset
-					   / fs_info->logical_sector_size);
-
-		bs->u.fat32.drive_num = 0x80;	/* _ALWAYS_ 0x80.  silly DOS */
-
-		memset (bs->u.fat32.empty_1, 0, 12);
-
-		bs->u.fat32.ext_signature = 0x29;
-		bs->u.fat32.serial_number
-			= PED_CPU_TO_LE32 (fs_info->serial_number);
-		memcpy (bs->u.fat32.volume_name, "NO NAME    ", 11);
-		memcpy (bs->u.fat32.fat_name, "FAT32   ", 8);
-	} else {
-		bs->fat_length
-			= PED_CPU_TO_LE16 (fs_info->fat_sectors
-					   / fs_info->logical_sector_size);
-
-		bs->u.fat16.drive_num = 0x80;	/* _ALWAYS_ 0x80.  silly DOS */
-
-		bs->u.fat16.ext_signature = 0x29;
-		bs->u.fat16.serial_number
-			= PED_CPU_TO_LE32 (fs_info->serial_number);
-		memcpy (bs->u.fat16.volume_name, "NO NAME    ", 11);
-		memcpy (bs->u.fat16.fat_name, "FAT16   ", 8);
-	}
-
-	bs->boot_sign = PED_CPU_TO_LE16 (0xaa55);
-
-	return 1;
-}
-
-int
-fat_boot_sector_write (const FatBootSector* bs, PedFileSystem* fs)
-{
-	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
-
-	PED_ASSERT (bs != NULL);
-
-	if (!ped_geometry_write (fs->geom, bs, 0, 1))
-		return 0;
-	if (fs_info->fat_type == FAT_TYPE_FAT32) {
-		if (!ped_geometry_write (fs->geom, bs,
-					 fs_info->boot_sector_backup_offset, 1))
-			return 0;
-	}
-	return ped_geometry_sync (fs->geom);
-}
 
 int
 fat_info_sector_read (FatInfoSector* is, const PedFileSystem* fs)
@@ -433,17 +312,5 @@ fat_info_sector_read (FatInfoSector* is, const PedFileSystem* fs)
 		if (status == PED_EXCEPTION_CANCEL) return 0;
 	}
 	return 1;
-}
-
-int
-fat_info_sector_write (const FatInfoSector* is, PedFileSystem *fs)
-{
-	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
-
-	PED_ASSERT (is != NULL);
-
-	if (!ped_geometry_write (fs->geom, is, fs_info->info_sector_offset, 1))
-		return 0;
-	return ped_geometry_sync (fs->geom);
 }
 #endif /* !DISCOVER_ONLY */

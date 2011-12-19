@@ -156,10 +156,7 @@ extern void fat_print (const PedFileSystem* fs);
 extern PedFileSystem* fat_alloc (const PedGeometry* geom);
 extern void fat_free (PedFileSystem* fs);
 extern int fat_alloc_buffers (PedFileSystem* fs);
-extern void fat_free_buffers (PedFileSystem* fs);
 
 extern int fat_resize (PedFileSystem* fs, PedGeometry* geom, PedTimer* timer);
-
-extern int fat_set_frag_sectors (PedFileSystem* fs, PedSector frag_sectors);
 
 #endif /* FAT_H_INCLUDED */

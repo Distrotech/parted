@@ -120,11 +120,7 @@ int fat_boot_sector_read (FatBootSector* bs, const PedGeometry* geom);
 FatType fat_boot_sector_probe_type (const FatBootSector* bs,
 				    const PedGeometry* geom);
 int fat_boot_sector_analyse (FatBootSector* bs, PedFileSystem* fs);
-int fat_boot_sector_set_boot_code (FatBootSector* bs);
-int fat_boot_sector_generate (FatBootSector* bs, const PedFileSystem* fs);
-int fat_boot_sector_write (const FatBootSector* bs, PedFileSystem* fs);
 
 int fat_info_sector_read (FatInfoSector* is, const PedFileSystem* fs);
-int fat_info_sector_write (const FatInfoSector* is, PedFileSystem* fs);
 
 #endif /* PED_FAT_BOOTSECTOR_H */
