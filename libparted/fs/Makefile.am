@@ -102,4 +102,7 @@ libparted_fs_resize_la_SOURCES = \
   r/hfs/reloc_plus.c		\
   r/hfs/reloc_plus.h
 
-INCLUDES = $(partedincludedir) $(INTLINCS)
+INCLUDES = \
+  -I$(top_srcdir)/libparted/labels	\
+  $(partedincludedir)			\
+  $(INTLINCS)

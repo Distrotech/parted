@@ -29,6 +29,7 @@
 
 #include <parted/parted.h>
 #include <parted/debug.h>
+#include "pt-tools.h"
 
 #if ENABLE_NLS
 #  include <libintl.h>
@@ -38,6 +39,10 @@
 #endif /* ENABLE_NLS */
 
 #define STREQ(a, b) (strcmp (a, b) == 0)
+
+#ifndef MIN
+# define MIN(a,b) (((a) < (b)) ? (a) : (b))
+#endif
 
 typedef PedFileSystem * (*open_fn_t) (PedGeometry *);
 extern PedFileSystem *hfsplus_open (PedGeometry *);
@@ -215,40 +220,22 @@ error_close_dev:
 static int
 ped_file_system_clobber (PedGeometry* geom)
 {
-	PedFileSystemType*	fs_type = NULL;
+  PED_ASSERT (geom != NULL);
 
-	PED_ASSERT (geom != NULL);
+  if (!ped_device_open (geom->dev))
+    return 0;
 
-	if (!ped_device_open (geom->dev))
-		goto error;
+  /* Clear the first three and the last two sectors, albeit fewer
+     when GEOM is too small.  */
+  PedSector len = MIN (geom->length, geom->dev->length);
 
-	ped_exception_fetch_all ();
-	while ((fs_type = ped_file_system_type_get_next (fs_type))) {
-		PedGeometry*	probed;
+  int ok = (len <= 5
+	    ? ptt_geom_clear_sectors (geom, 0, len)
+	    : (ptt_geom_clear_sectors (geom, 0, 3)
+	       && ptt_geom_clear_sectors (geom, geom->dev->length - 2, 2)));
 
-		if (!fs_type->ops->clobber)
-			continue;
-
-		probed = ped_file_system_probe_specific (fs_type, geom);
-		if (!probed) {
-			ped_exception_catch ();
-			continue;
-		}
-		ped_geometry_destroy (probed);
-
-		if (fs_type->ops->clobber && !fs_type->ops->clobber (geom)) {
-			ped_exception_leave_all ();
-			goto error_close_dev;
-		}
-	}
-	ped_device_close (geom->dev);
-	ped_exception_leave_all ();
-	return 1;
-
-error_close_dev:
-	ped_device_close (geom->dev);
-error:
-	return 0;
+  ped_device_close (geom->dev);
+  return !!ok;
 }
 
 /* This function erases all signatures that indicate the presence of
