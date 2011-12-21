@@ -103,6 +103,14 @@ ptt_clear_sectors (PedDevice *dev, PedSector start, PedSector n)
           ? 1 : ped_device_write (dev, zero, start + n_z_sectors * i, rem));
 }
 
+/* Zero N sectors of GEOM->dev, starting with GEOM->start + START.
+   Return nonzero to indicate success, zero otherwise.  */
+int
+ptt_geom_clear_sectors (PedGeometry *geom, PedSector start, PedSector n)
+{
+  return ptt_clear_sectors (geom->dev, geom->start + start, n);
+}
+
 #include "pt-limit.c"
 
 /* Throw an exception and return 0 if PART's starting sector number or
