@@ -728,19 +728,18 @@ _parse_header (PedDisk *disk, const GuidPartitionTableHeader_t *gpt,
     GPT_DEFAULT_PARTITION_ENTRY_ARRAY_SIZE / disk->dev->sector_size;
 
   if (last_usable_if_grown > last_usable_min_default)
-    {
-      last_usable_if_grown = last_usable_min_default;
-    }
+    last_usable_if_grown = last_usable_min_default;
 
-  PED_ASSERT (last_usable > first_usable);
-  PED_ASSERT (last_usable <= disk->dev->length);
+  if (last_usable <= first_usable
+      || disk->dev->length < last_usable)
+    return 0;
 
-  PED_ASSERT (last_usable_if_grown > first_usable);
-  PED_ASSERT (last_usable_if_grown <= disk->dev->length);
+  if (last_usable_if_grown <= first_usable
+      || disk->dev->length < last_usable_if_grown)
+    return 0;
 
   if (!asked_already && last_usable < last_usable_if_grown)
     {
-
       PedExceptionOption q;
 
       q = ped_exception_throw
