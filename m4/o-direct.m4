@@ -3,7 +3,7 @@
 # The problem is that on systems supporting O_DIRECT, open with O_DIRECT
 # fails for some file system types (e.g., tmpfs on linux-2.6.21).
 
-# Copyright (C) 2007-2011 Free Software Foundation, Inc.
+# Copyright (C) 2007-2012 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
