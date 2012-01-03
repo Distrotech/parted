@@ -6,6 +6,7 @@ scsi_debug_lock_dir_="$abs_srcdir/scsi_debug.lock"
 
 require_scsi_debug_module_()
 {
+  require_udevadm_settle_
   # check for scsi_debug module
   modprobe -n scsi_debug ||
     skip_ "you lack the scsi_debug kernel module"
@@ -24,11 +25,15 @@ scsi_debug_cleanup_()
     # We have to insist.  Otherwise, a single rmmod usually fails to remove it,
     # due either to "Resource temporarily unavailable" or to
     # "Module scsi_debug is in use".
-    for i in 1 2 3; do
+    i=0
+    udevadm settle
+    while [ $i -lt 10 ] ; do
       rmmod scsi_debug \
 	&& { test "$VERBOSE" = yes && warn_ $ME_ rmmod scsi_debug...; break; }
       sleep .2 || sleep 1
+      i=$((i + 1))
     done
+    udevadm settle
   fi
   rm -fr $scsi_debug_lock_dir_
 }
