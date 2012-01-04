@@ -31,6 +31,8 @@ cleanup_fn_()
 f1=$(pwd)/1; d1=$(loop_setup_ "$f1") \
   || skip_ "is this partition mounted with 'nodev'?"
 
+require_partitionable_loop_device_ $d1
+
 # Expect this to succeed.
 parted -s $d1 mklabel msdos > err 2>&1 || fail=1
 compare /dev/null err || fail=1     # expect no output

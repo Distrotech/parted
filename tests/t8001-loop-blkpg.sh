@@ -41,6 +41,8 @@ dd if=/dev/zero of=backing_file bs=1M count=4 >/dev/null 2>&1 || fail=1
 loopdev=`losetup -f --show backing_file`
 test -z "$loopdev" && fail=1
 
+require_partitionable_loop_device_ $loopdev
+
 # Expect this to succeed
 parted -s "$loopdev" mklabel msdos > err 2>&1 || fail=1
 compare /dev/null err || fail=1     # expect no output
