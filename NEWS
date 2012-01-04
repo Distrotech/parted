@@ -44,6 +44,10 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  Floppy drives are no longer scanned on linux: they cannot be partitioned
+  anyhow, and some users have a misconfigured BIOS that claims to have a
+  floppy when they don't, and scanning gets hung up.
+
   parted: mkpart command has changed semantics with regard to specifying end
   of the partition. If the end is specified using MiB, GiB, etc. unit, parted
   subtracts one sector from the specified value. With this change, it is now

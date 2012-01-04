@@ -2125,6 +2125,7 @@ _skip_entry (const char *name)
 		{ "dm-",	sizeof ("dm-") - 1	},
 		{ "loop",	sizeof ("loop") - 1	},
 		{ "ram",	sizeof ("ram") - 1	},
+		{ "fd",		sizeof ("fd") - 1	},
 		{ 0, 0 },
 	};
 
