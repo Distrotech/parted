@@ -2410,24 +2410,6 @@ _blkpg_remove_partition (PedDisk* disk, int n)
                                     BLKPG_DEL_PARTITION);
 }
 
-#ifdef BLKPG_GET_PARTITION
-static int
-_blkpg_get_partition (PedPartition *part, long long *start, long long *length)
-{
-        struct blkpg_partition  linux_part;
-
-        memset (&linux_part, 0, sizeof (linux_part));
-        linux_part.pno = part->num;
-        if (_blkpg_part_command (part->disk->dev, &linux_part,
-                                 BLKPG_GET_PARTITION)) {
-                *start = linux_part.start;
-                *length = linux_part.length;
-                return 1;
-        } else
-                return 0;
-}
-#endif
-
 /* Read the integer from /sys/block/DEV_BASE/ENTRY and set *VAL
    to that value, where DEV_BASE is the last component of DEV->path.
    Upon success, return true.  Otherwise, return false. */
@@ -2456,7 +2438,7 @@ _sysfs_int_entry_from_dev(PedDevice const* dev, const char *entry, int *val)
    Upon success, return true. Otherwise, return false. */
 static bool
 _sysfs_ull_entry_from_part(PedPartition const* part, const char *entry,
-			   unsigned long long *val)
+                           unsigned long long *val)
 {
         char path[128];
         char *part_name = linux_partition_get_path(part);
@@ -2487,28 +2469,18 @@ _sysfs_ull_entry_from_part(PedPartition const* part, const char *entry,
    return false. */
 static bool
 _kernel_get_partition_start_and_length(PedPartition const *part,
-				       unsigned long long *start,
-                                      unsigned long long *length)
+                                       unsigned long long *start,
+                                       unsigned long long *length)
 {
-        int fd = -1;
-        int ok;
         PED_ASSERT(part);
         PED_ASSERT(start);
         PED_ASSERT(length);
 
-#ifdef BLKPG_GET_PARTITION
-        ok = _blkpg_get_partition (part, start, length);
-        if (ok) {
-                *length = (*length * 512) / part->disk->dev->sector_size;
-                *start = (*start * 512) / part->disk->dev->sector_size;
-                return ok;
-        }
-#endif
         char *dev_name = linux_partition_get_path (part);
         if (!dev_name)
                 return false;
 
-        ok = _sysfs_ull_entry_from_part (part, "start", start);
+        int ok = _sysfs_ull_entry_from_part (part, "start", start);
         if (!ok) {
                 struct hd_geometry geom;
                 int dev_fd = open (dev_name, O_RDONLY);
@@ -2524,12 +2496,16 @@ _kernel_get_partition_start_and_length(PedPartition const *part,
         }
         *start = (*start * 512) / part->disk->dev->sector_size;
         ok = _sysfs_ull_entry_from_part (part, "size", length);
+
+        int fd;
         if (!ok) {
-                if (fd == -1)
-                        fd = open (dev_name, O_RDONLY);
+                fd = open (dev_name, O_RDONLY);
                 if (fd != -1 && ioctl (fd, BLKGETSIZE64, length))
                         ok = true;
-        } else *length *= 512;
+        } else {
+                fd = -1;
+                *length *= 512;
+        }
         *length /= part->disk->dev->sector_size;
         if (fd != -1)
                 close (fd);
@@ -2538,7 +2514,7 @@ _kernel_get_partition_start_and_length(PedPartition const *part,
                 ped_exception_throw (
                         PED_EXCEPTION_BUG,
                         PED_EXCEPTION_CANCEL,
-                        _("Unable to determine the size and length of %s."),
+                        _("Unable to determine the start and length of %s."),
                         dev_name);
         free (dev_name);
         return ok;
