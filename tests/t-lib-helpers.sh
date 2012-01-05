@@ -388,7 +388,7 @@ wait_for_dev_to_disappear_()
   while :; do
     ls "$file" > /dev/null 2>&1 || return 0
     sleep .1 2>/dev/null || { sleep 1; incr=10; }
-    i=$(expr $i + $incr); test $i -ge $($n_sec \* 10) && break
+    i=$(expr $i + $incr); test $i -ge $(expr $n_sec \* 10) && break
   done
   return 1
 }
