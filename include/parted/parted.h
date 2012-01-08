@@ -25,6 +25,12 @@
 extern "C" {
 #endif
 
+#if __GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1)
+# define __attribute(arg) __attribute__ (arg)
+#else
+# define __attribute(arg)
+#endif
+
 #include <parted/constraint.h>
 #include <parted/device.h>
 #include <parted/disk.h>
@@ -37,7 +43,10 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 
-extern const char* ped_get_version () _GL_ATTRIBUTE_CONST;
+extern const char *ped_get_version ()
+#if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95)
+  __attribute ((__const__));
+#endif
 
 extern void* ped_malloc (size_t size);
 extern void* ped_calloc (size_t size);
