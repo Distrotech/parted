@@ -7,3 +7,5 @@ pt_BR/parted.8
 pt_BR/partprobe.8
 stamp-vti
 version.texi
+/fdl.texi
+/gendocs_template

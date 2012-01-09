@@ -972,6 +972,9 @@ software
 * GNU Free Documentation License::  License for copying this manual
 @end menu
 
+@node GNU Free Documentation License
+@appendixsec GNU Free Documentation License
+@cindex FDL, GNU Free Documentation License
 @include fdl.texi
 
 @node History

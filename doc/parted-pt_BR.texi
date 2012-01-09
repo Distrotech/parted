@@ -2790,6 +2790,9 @@ por outros usuários no futuro...
 * GNU Free Documentation License::  Licença para copiar esse manual
 @end menu
 
+@node GNU Free Documentation License
+@appendixsec GNU Free Documentation License
+@cindex FDL, GNU Free Documentation License
 @include fdl.texi
 
 @c FDL: FDL 4.I suggests a HISTORY section be included in
