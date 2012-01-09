@@ -30,13 +30,13 @@ MAINTAINERCLEANFILES = parted.spec
 
 .PHONY: root-check
 root-check:
-	sudo $(MAKE) check
+	sudo sh -c '$(MAKE) check; t=$$?; chown -R $(USER) .; exit $$t'
 
 # Not everyone who runs "make distcheck" will want to or even
 # be able to run the root tests.  If you want to skip them,
 # run make like this: "make distcheck root-check="
-root-check ?= root-check
-distcheck-hook: $(root-check)
+root_check ?= root-check
+distcheck-hook: $(root_check)
 	$(MAKE) my-distcheck
 
 ### ABI Checking scripts ###
