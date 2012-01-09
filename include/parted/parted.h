@@ -43,10 +43,7 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 
-extern const char *ped_get_version ()
-#if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95)
-  __attribute ((__const__));
-#endif
+extern const char *ped_get_version () _GL_ATTRIBUTE_CONST;
 
 extern void* ped_malloc (size_t size);
 extern void* ped_calloc (size_t size);
