@@ -4,7 +4,7 @@
     original version by Matt Domsch <Matt_Domsch@dell.com>
     Disclaimed into the Public Domain
 
-    Portions Copyright (C) 2001-2003, 2005-2011 Free Software Foundation, Inc.
+    Portions Copyright (C) 2001-2003, 2005-2012 Free Software Foundation, Inc.
 
     EFI GUID Partition Table handling
     Per Intel EFI Specification v1.02
@@ -668,10 +668,6 @@ _header_is_valid (PedDisk const *disk, GuidPartitionTableHeader_t *gpt,
 
   PedSector first_usable = PED_LE64_TO_CPU (gpt->FirstUsableLBA);
   if (first_usable < 3)
-    return 0;
-
-  PedSector last_usable = PED_LE64_TO_CPU (gpt->LastUsableLBA);
-  if (disk->dev->length < last_usable)
     return 0;
 
   origcrc = gpt->HeaderCRC32;

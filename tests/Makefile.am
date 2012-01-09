@@ -15,6 +15,7 @@ TESTS = \
   t0201-gpt.sh \
   t0202-gpt-pmbr.sh \
   t0203-gpt-tiny-device-abort.sh \
+  t0203-gpt-shortened-device-primary-valid.sh \
   t0205-gpt-list-clobbers-pmbr.sh \
   t0206-gpt-print-with-corrupt-primary-clobbers-pmbr.sh \
   t0207-IEC-binary-notation.sh \
