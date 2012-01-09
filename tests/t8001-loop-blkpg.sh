@@ -23,7 +23,8 @@ require_udevadm_settle_
 
 cleanup_fn_()
 {
-  test -n "$loopdev" && losetup -d "$loopdev"
+  test -n "$loopdev" \
+    && { udevadm settle --timeout=3; losetup -d "$loopdev"; }
 }
 
 # If the loop module is loaded, unload it first
@@ -38,7 +39,7 @@ modprobe loop max_part=7 || fail=1
 dd if=/dev/zero of=backing_file bs=1M count=4 >/dev/null 2>&1 || fail=1
 
 # Set up loop device on top of backing file
-loopdev=`losetup -f --show backing_file`
+loopdev=$(losetup -f --show backing_file)
 test -z "$loopdev" && fail=1
 
 require_partitionable_loop_device_ $loopdev
@@ -53,7 +54,7 @@ compare /dev/null err || fail=1     # expect no output
 udevadm settle --timeout=5 || fail=1
 
 # Verify that the partition appeared in /proc/partitions
-entry=`basename "$loopdev"p1`
+entry=$(basename "$loopdev"p1)
 grep "$entry" /proc/partitions || { cat /proc/partitions; fail=1; }
 
 # Remove the partition
