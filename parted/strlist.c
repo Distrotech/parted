@@ -63,7 +63,7 @@ wchar_strchr (const wchar_t* str, char ch)
 #endif
 }
 
-int
+static int _GL_ATTRIBUTE_PURE
 wchar_strcasecmp (const wchar_t* a, const wchar_t* b)
 {
 #ifdef ENABLE_NLS
@@ -73,7 +73,7 @@ wchar_strcasecmp (const wchar_t* a, const wchar_t* b)
 #endif
 }
 
-int
+static int _GL_ATTRIBUTE_PURE
 wchar_strncasecmp (const wchar_t* a, const wchar_t* b, size_t n)
 {
 #ifdef ENABLE_NLS
@@ -83,7 +83,7 @@ wchar_strncasecmp (const wchar_t* a, const wchar_t* b, size_t n)
 #endif
 }
 
-wchar_t*
+static wchar_t * _GL_ATTRIBUTE_PURE
 wchar_strdup (const wchar_t* str)
 {
 #ifdef ENABLE_NLS
