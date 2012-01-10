@@ -10,7 +10,7 @@ AC_INIT([GNU parted], m4_esyscmd([build-aux/git-version-gen .version]),
 # When the most recent signed tag is v1.8.8.1,
 # the above might set e.g., PACKAGE_VERSION='1.8.8.1.1-0bfc'
 
-AC_CONFIG_SRCDIR([include/parted/parted.h.in])
+AC_CONFIG_SRCDIR([include/parted/parted.in.h])
 
 AC_CONFIG_HEADERS([lib/config.h:lib/config.h.in])
 AC_CONFIG_AUX_DIR([build-aux])
