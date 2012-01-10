@@ -3,9 +3,6 @@
 #
 # This file may be modified and/or distributed without restriction.
 
-SUBDIRS       = amiga ext2 ufs fat ntfs hfs linux_swap xfs jfs reiserfs \
-		nilfs2 # bfs
-
 partedincludedir      =	-I$(top_srcdir)/include
 noinst_LTLIBRARIES    =	libfs.la
 libfs_la_LDFLAGS  = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
@@ -13,22 +10,45 @@ libfs_la_LDFLAGS  = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
 
 libfs_la_LIBADD   = $(UUID_LIBS)		\
 		    $(INTLLIBS)			\
-		    $(OS_LIBS)			\
-		    $(REISER_LIBS)		\
-		    amiga/libamigafs.la		\
-		    ext2/libext2.la		\
-		    ufs/libufs.la		\
-		    fat/libfat.la		\
-		    ntfs/libntfs.la		\
-		    hfs/libhfs.la		\
-		    linux_swap/liblinuxswap.la	\
-		    xfs/libxfs.la		\
-		    jfs/libjfs.la		\
-		    reiserfs/libreiserfs.la	\
-		    nilfs2/libnilfs2.la
-#		    bfs/libbfs.la
+		    $(OS_LIBS)
 
-libfs_la_SOURCES   =
+libfs_la_SOURCES =		\
+  amiga/affs.c			\
+  amiga/affs.h			\
+  amiga/amiga.c			\
+  amiga/amiga.h			\
+  amiga/apfs.c			\
+  amiga/apfs.h			\
+  amiga/asfs.c			\
+  amiga/asfs.h			\
+  amiga/a-interface.c		\
+  ext2/ext2.h			\
+  ext2/ext2_fs.h		\
+  ext2/interface.c		\
+  fat/bootsector.c		\
+  fat/bootsector.h		\
+  fat/count.h			\
+  fat/fat.c			\
+  fat/fat.h			\
+  hfs/hfs.c			\
+  hfs/hfs.h			\
+  hfs/probe.c			\
+  hfs/probe.h			\
+  jfs/jfs.c			\
+  jfs/jfs_superblock.h		\
+  jfs/jfs_types.h		\
+  linux_swap/linux_swap.c	\
+  nilfs2/nilfs2.c		\
+  ntfs/ntfs.c			\
+  reiserfs/reiserfs.c		\
+  reiserfs/reiserfs.h		\
+  ufs/ufs.c			\
+  xfs/platform_defs.h		\
+  xfs/xfs.c			\
+  xfs/xfs_sb.h			\
+  xfs/xfs_types.h
+
+EXTRA_DIST = hfs/DOC hfs/HISTORY
 
 INCLUDES = $(partedincludedir) $(INTLINCS)
 
