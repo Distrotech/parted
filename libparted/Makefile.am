@@ -18,8 +18,9 @@ AM_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
 SUBDIRS       = labels fs . $(SUBDIRS_CHECK)
 
 
-partedincludedir      = -I$(top_srcdir)/lib -I$(top_srcdir)/include
-lib_LTLIBRARIES	      =	libparted.la
+partedincludedir = \
+  -I$(top_srcdir)/lib -I$(top_builddir)/include -I$(top_srcdir)/include
+lib_LTLIBRARIES	= libparted.la
 
 # Set the shared library version, per Libtool's guidelines.
 # For details, see the "Updating library version information" section of

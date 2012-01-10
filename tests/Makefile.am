@@ -74,6 +74,7 @@ LDADD = \
   $(top_builddir)/libparted/libparted.la
 AM_CPPFLAGS = \
   -I$(top_srcdir)/lib \
+  -I$(top_builddir)/include \
   -I$(top_srcdir)/include
 AM_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
 

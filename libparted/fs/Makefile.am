@@ -3,7 +3,7 @@
 #
 # This file may be modified and/or distributed without restriction.
 
-partedincludedir      =	-I$(top_srcdir)/include
+partedincludedir = -I$(top_builddir)/include -I$(top_srcdir)/include
 noinst_LTLIBRARIES    =	libfs.la
 libfs_la_LDFLAGS  = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
 			-release $(LT_RELEASE)

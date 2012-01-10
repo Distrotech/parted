@@ -12,7 +12,8 @@ endif
 AM_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
 
 partedincludedir = \
-  -I$(top_srcdir)/lib -I$(top_srcdir)/include -I$(top_srcdir)/libparted
+  -I$(top_srcdir)/lib -I$(top_builddir)/include -I$(top_srcdir)/include \
+  -I$(top_srcdir)/libparted
 noinst_LTLIBRARIES    =	liblabels.la
 
 liblabels_la_SOURCES = \
