@@ -23,8 +23,6 @@ disk_SOURCES  = common.h common.c disk.c
 zerolen_SOURCES = common.h common.c zerolen.c
 symlink_SOURCES = common.h common.c symlink.c
 
-MAINTAINERCLEANFILES = Makefile.in
-
 # Arrange to symlink to tests/init.sh.
 CLEANFILES = init.sh
 .PHONY: prereq

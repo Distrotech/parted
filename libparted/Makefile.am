@@ -66,5 +66,3 @@ libparted_la_LIBADD =	\
 EXTRA_DIST	      = mbr.s
 
 INCLUDES = $(partedincludedir) $(INTLINCS)
-
-MAINTAINERCLEANFILES = Makefile.in

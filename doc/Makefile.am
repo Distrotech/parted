@@ -15,7 +15,3 @@ updatepo:
 	list='$(SUBDIRS)'; for dir in $$list; do \
 		$(MAKE) -C "$$dir" updatepo; \
 	done
-
-MAINTAINERCLEANFILES = Makefile.in \
-                       mdate-sh    \
-                       texinfo.tex

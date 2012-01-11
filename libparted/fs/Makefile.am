@@ -51,5 +51,3 @@ libfs_la_SOURCES =		\
 EXTRA_DIST = hfs/DOC hfs/HISTORY
 
 INCLUDES = $(partedincludedir) $(INTLINCS)
-
-MAINTAINERCLEANFILES = Makefile.in
