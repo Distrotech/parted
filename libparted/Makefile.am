@@ -9,9 +9,6 @@ SUBDIRS_CHECK += tests
 endif
 
 ARCH_SOURCE = arch/$(OS).c
-if BUILD_LINUX
-ARCH_SOURCE += arch/$(OS).h
-endif
 
 AM_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
 
