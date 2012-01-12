@@ -4,6 +4,14 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug Fixes
 
+  libparted: handle logical partitions starting immediately after
+  the EBR.  Creating a logical partition one sector after the EBR
+  used to cause parted to complain that it could not inform the
+  kernel of the changes, but after a reboot, everything was fine.
+  Parted will now correctly inform the kernel of the changes, but
+  only set the length of the extended partition to 1 sector instead
+  of two, which would cause it to overlap the logical partition.
+
   parted: fix EOF and ctrl-c handling.  parted used to refuse to exit
   in response to ctrl-c and would get stuck in an infinite loop
   prompting for more input when it reached EOF on stdin.

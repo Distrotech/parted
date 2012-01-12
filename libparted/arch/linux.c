@@ -2473,8 +2473,21 @@ _blkpg_add_partition (PedDisk* disk, const PedPartition *part)
         memset (&linux_part, 0, sizeof (linux_part));
         linux_part.start = part->geom.start * disk->dev->sector_size;
         /* see fs/partitions/msdos.c:msdos_partition(): "leave room for LILO" */
-        if (part->type & PED_PARTITION_EXTENDED)
-                linux_part.length = part->geom.length == 1 ? 512 : 1024;
+        if (part->type & PED_PARTITION_EXTENDED) {
+                linux_part.length = 1;
+                if (disk->dev->sector_size == 512) {
+                        if (linux_part.length == 1)
+                                linux_part.length = 2;
+                        PedPartition *walk;
+                        /* if the second sector is claimed by a logical partition,
+                           then there's just no room for lilo, so don't try to use it */
+                        for (walk = part->part_list; walk; walk = walk->next) {
+                                if (walk->geom.start == part->geom.start+1)
+                                        linux_part.length = 1;
+                        }
+                }
+                linux_part.length *= disk->dev->sector_size;
+        }
         else
                 linux_part.length = part->geom.length * disk->dev->sector_size;
         linux_part.pno = part->num;

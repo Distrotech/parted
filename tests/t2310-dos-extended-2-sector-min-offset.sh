@@ -1,8 +1,6 @@
 #!/bin/sh
-# Ensure that parted leaves at least 2 sectors between the beginning
+# Ensure that parted allows a single sector between the beginning
 # of an extended partition and the first logical partition.
-# Before parted-2.3, it could be made to leave just one, and that
-# would cause trouble with the Linux kernel.
 
 # Copyright (C) 2010-2013 Free Software Foundation, Inc.
 
@@ -35,7 +33,7 @@ cat <<EOF > exp || framework_failure
 BYT;
 $scsi_dev:2048s:scsi:512:512:msdos:Linux scsi_debug:;
 1:64s:128s:65s:::lba;
-5:66s:128s:63s:::;
+5:65s:128s:64s:::;
 EOF
 
 cat <<EOF > err.exp || framework_failure
@@ -48,15 +46,9 @@ parted --align=min -s $scsi_dev mkpart extended 64s 128s> out 2>&1 || fail=1
 parted -m -s $scsi_dev u s print
 compare /dev/null out || fail=1
 
-# Provoke a failure by trying to create a partition that starts just
+# Trying to create a partition that starts just
 # one sector after the start of the extended partition.
-parted --align=min -s $scsi_dev mkpart logical 65s 128s > err 2>&1 && fail=1
-compare err.exp err || fail=1
-
-# The above failed, but created the partition nonetheless.  Remove it.
-parted -s $scsi_dev rm 5 || fail=1
-
-parted --align=min -s $scsi_dev mkpart logical 66s 128s > out 2>&1 || fail=1
+parted --align=min -s $scsi_dev mkpart logical 65s 128s > out 2>&1 || fail=1
 compare /dev/null out || fail=1
 
 parted -m -s $scsi_dev u s print > out 2>&1
