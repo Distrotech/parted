@@ -51,15 +51,21 @@ libfs_la_SOURCES =		\
   xfs/xfs_sb.h			\
   xfs/xfs_types.h
 
-EXTRA_DIST = hfs/DOC hfs/HISTORY
-
 lib_LTLIBRARIES = libparted-fs-resize.la
 
 EXTRA_DIST =			\
-  r/hfs/DOC			\
-  r/hfs/HISTORY			\
-  r/hfs/TODO
+  hfs/DOC			\
+  hfs/HISTORY			\
+  hfs/TODO
 
+# Set the shared library version, per Libtool's guidelines.
+# For details, see the "Updating library version information" section of
+# "info libtool".
+CURRENT = 0
+REVISION = 0
+AGE = 0
+
+libparted_fs_resize_la_LDFLAGS  = -version-info $(CURRENT):$(REVISION):$(AGE)
 libparted_fs_resize_la_SOURCES = \
   r/filesys.c			\
   r/fat/bootsector.c		\
