@@ -65,7 +65,12 @@ CURRENT = 0
 REVISION = 0
 AGE = 0
 
-libparted_fs_resize_la_LDFLAGS  = -version-info $(CURRENT):$(REVISION):$(AGE)
+libparted_fs_resize_la_LDFLAGS =		\
+  -Wl,--version-script=fsresize.sym		\
+  -version-info $(CURRENT):$(REVISION):$(AGE)
+EXTRA_DIST += fsresize.sym
+libparted_fs_resize_la_DEPENDENCIES = fsresize.sym
+
 libparted_fs_resize_la_SOURCES = \
   r/filesys.c			\
   r/fat/bootsector.c		\
