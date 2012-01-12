@@ -47,10 +47,11 @@ libparted_la_SOURCES  = debug.c			\
 			$(ARCH_SOURCE)
 
 
-EXTRA_libparted_la_SOURCES    = arch/linux.c	\
-				arch/linux.h	\
-				arch/gnu.c	\
-				arch/beos.c
+EXTRA_DIST = \
+  arch/linux.c	\
+  arch/linux.h	\
+  arch/gnu.c	\
+  arch/beos.c
 
 libparted_la_LIBADD =	\
   fs/libfs.la		\
@@ -63,6 +64,6 @@ libparted_la_LIBADD =	\
   $(LIB_BLKID)		\
   $(INTLLIBS)
 
-EXTRA_DIST	      = mbr.s
+EXTRA_DIST += mbr.s
 
 INCLUDES = $(partedincludedir) $(INTLINCS)
