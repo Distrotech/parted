@@ -40,6 +40,7 @@ TESTS = \
   t2310-dos-extended-2-sector-min-offset.sh \
   t2400-dos-hfs-partition-type.sh \
   t2500-probe-corrupt-hfs.sh \
+  t3000-resize-fs.sh \
   t3200-type-change.sh \
   t3300-palo-prep.sh \
   t3310-flags.sh \
@@ -73,7 +74,11 @@ EXTRA_DIST = \
   $(TESTS) lvm-utils.sh t-local.sh t-lvm.sh \
   init.cfg init.sh t-lib-helpers.sh gpt-header-munge
 
-check_PROGRAMS = print-align print-max dup-clobber duplicate
+check_PROGRAMS = print-align print-max dup-clobber duplicate fs-resize
+fs_resize_LDADD = \
+  $(top_builddir)/libparted/fs/libparted-fs-resize.la \
+  $(top_builddir)/libparted/libparted.la
+
 LDADD = \
   $(top_builddir)/libparted/libparted.la
 AM_CPPFLAGS = \
