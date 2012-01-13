@@ -7,6 +7,10 @@ GNU parted NEWS                                    -*- outline -*-
   parted has improved support for partitionable loopback devices
 
 ** Bug fixes
+  The msdos partition table claimed a maximum partition count of 16
+  but would allow you to go beyond that.  This resulted in the kernel
+  not being informed of those partitions.  Corrected to enforce the
+  limit.
 
   parted now exits nonzero for certain failures already diagnosed as "Error".
   For example, before this change, parted would exit successfully in spite

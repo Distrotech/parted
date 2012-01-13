@@ -2398,17 +2398,22 @@ next_primary (const PedDisk* disk)
 		if (!ped_disk_get_partition (disk, i))
 			return i;
 	}
-	return 0;
+	return -1;
 }
 
 static int _GL_ATTRIBUTE_PURE
 next_logical (const PedDisk* disk)
 {
 	int	i;
-	for (i=5; 1; i++) {
+	for (i=5; i<=MAX_TOTAL_PART; i++) {
 		if (!ped_disk_get_partition (disk, i))
 			return i;
 	}
+	ped_exception_throw (
+		PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
+		_("cannot create any more partitions"),
+		disk->dev->path);
+	return -1;
 }
 
 static int
@@ -2427,7 +2432,8 @@ msdos_partition_enumerate (PedPartition* part)
 		part->num = next_logical (part->disk);
 	else
 		part->num = next_primary (part->disk);
-
+	if (part->num == -1)
+		return 0;
 	return 1;
 }
 

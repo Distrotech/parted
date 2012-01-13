@@ -63,6 +63,7 @@ TESTS = \
   t9030-align-check.sh \
   t9040-many-partitions.sh \
   t9041-undetected-in-use-16th-partition.sh \
+  t9042-dos-partition-limit.sh \
   t9050-partition-table-types.sh
 
 EXTRA_DIST = \
