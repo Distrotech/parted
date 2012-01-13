@@ -103,7 +103,7 @@ static const char MBR_BOOT_CODE[] = {
  * (i.e. 1022 is sometimes used to indicate "use LBA").
  */
 #define MAX_CHS_CYLINDER	1021
-#define MAX_TOTAL_PART		16
+#define MAX_TOTAL_PART		64
 
 typedef struct _DosRawPartition		DosRawPartition;
 typedef struct _DosRawTable		DosRawTable;

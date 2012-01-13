@@ -26,7 +26,7 @@ grep '^#define USE_BLKID 1' "$CONFIG_HEADER" > /dev/null ||
 
 ss=$sector_size_
 partition_sectors=256  # sectors per partition
-n_partitions=13        # how many partitions to create
+n_partitions=61        # how many partitions to create
 start=2048             # start sector for the first partition
 
 n_sectors=$(($start + n_partitions * partition_sectors))
@@ -41,11 +41,11 @@ scsi_dev=$(cat dev-name)
 n=$((n_MiB * sectors_per_MiB))
 printf '%s\n' "BYT;" \
     "$scsi_dev:${n}s:scsi:$ss:$ss:msdos:Linux scsi_debug;" \
-    "1:$((start-2))s:$((start-2+4098-1))s:4098s:::lba;" \
+    "1:$((start-2))s:$((n-1))s:$((n-start+2))s:::lba;" \
   > exp || fail=1
 
 parted -s $scsi_dev mklabel msdos || fail=1
-parted -s -a min $scsi_dev mkpart extended 2046s 100% || fail=1
+parted -s -a min $scsi_dev mkpart extended $((start-2))s 100% || fail=1
 
 i=1
 while :; do
