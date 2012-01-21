@@ -1193,12 +1193,10 @@ static int
 gpt_write (const PedDisk *disk)
 {
   GPTDiskData *gpt_disk_data;
-  GuidPartitionEntry_t *ptes;
   uint32_t ptes_crc;
   uint8_t *pth_raw;
   GuidPartitionTableHeader_t *gpt;
   PedPartition *part;
-  int ptes_size;
 
   PED_ASSERT (disk != NULL);
   PED_ASSERT (disk->dev != NULL);
@@ -1206,11 +1204,12 @@ gpt_write (const PedDisk *disk)
 
   gpt_disk_data = disk->disk_specific;
 
-  ptes_size = sizeof (GuidPartitionEntry_t) * gpt_disk_data->entry_count;
-  ptes = (GuidPartitionEntry_t *) ped_malloc (ptes_size);
+  size_t ptes_bytes = (gpt_disk_data->entry_count
+			* sizeof (GuidPartitionEntry_t));
+  GuidPartitionEntry_t *ptes = malloc (ptes_bytes);
   if (!ptes)
     goto error;
-  memset (ptes, 0, ptes_size);
+  memset (ptes, 0, ptes_bytes);
   for (part = ped_disk_next_partition (disk, NULL); part;
        part = ped_disk_next_partition (disk, part))
     {
@@ -1219,7 +1218,7 @@ gpt_write (const PedDisk *disk)
       _partition_generate_part_entry (part, &ptes[part->num - 1]);
     }
 
-  ptes_crc = efi_crc32 (ptes, ptes_size);
+  ptes_crc = efi_crc32 (ptes, ptes_bytes);
 
   /* Write protective MBR */
   if (!_write_pmbr (disk->dev))
@@ -1238,7 +1237,7 @@ gpt_write (const PedDisk *disk)
   if (!write_ok)
     goto error_free_ptes;
   if (!ped_device_write (disk->dev, ptes, 2,
-                         ptes_size / disk->dev->sector_size))
+                         ptes_bytes / disk->dev->sector_size))
     goto error_free_ptes;
 
   /* Write Alternate PTH & PTEs */
@@ -1255,8 +1254,8 @@ gpt_write (const PedDisk *disk)
     goto error_free_ptes;
   if (!ped_device_write (disk->dev, ptes,
                          disk->dev->length - 1 -
-                         ptes_size / disk->dev->sector_size,
-                         ptes_size / disk->dev->sector_size))
+                         ptes_bytes / disk->dev->sector_size,
+                         ptes_bytes / disk->dev->sector_size))
     goto error_free_ptes;
 
   free (ptes);
