@@ -9,6 +9,7 @@ GNU parted NEWS                                    -*- outline -*-
   parted has improved support for partitionable loopback devices
 
 ** Bug fixes
+
   The msdos partition table claimed a maximum partition count of 16
   but would allow you to go beyond that.  This resulted in the kernel
   not being informed of those partitions.  Corrected to enforce the
@@ -18,6 +19,13 @@ GNU parted NEWS                                    -*- outline -*-
   For example, before this change, parted would exit successfully in spite
   of "Error: ...unrecognised disk label" and "Error:... both GPT primary
   and backup partition tables are corrupted".
+
+  libparted: given a GPT table with a partition table array of length, say 9,
+  (usually, there are at least 128 entries) and when run in interactive mode
+  with the backup header not at the end of the device where it belongs, parted
+  would offer to fix it by moving the backup header to the end.  If you
+  accepted, parted could corrupt both headers, truncating their on-disk
+  PTE arrays.  Now, parted handles this case.
 
   libparted: gpt_disk_duplicate now copies the flags over to the new
   disk object. Previously the flags would be undefined.
