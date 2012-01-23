@@ -1171,7 +1171,6 @@ do_print (PedDevice** dev)
                     //PED_ASSERT (row.cols == caption.cols)
                     table_add_row_from_strlist (table, row);
                     str_list_destroy (row);
-                    free (tmp);
                     free (start);
                     free (end);
                     free (size);

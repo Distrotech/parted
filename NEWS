@@ -10,6 +10,9 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  libparted: avoid an invalid free when creating many partitions in
+  a GPT partition table.  [bug introduced in parted-1.9.0]
+
   The msdos partition table claimed a maximum partition count of 16
   but would allow you to go beyond that.  This resulted in the kernel
   not being informed of those partitions.  Corrected to enforce the
