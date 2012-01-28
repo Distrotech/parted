@@ -900,6 +900,43 @@ partition_print (PedPartition* part)
         return 1;
 }
 
+static char*
+disk_print_flags (PedDisk const *disk)
+{
+        PedDiskFlag     flag;
+        int             first_flag;
+        const char*     name;
+        char*           res = ped_malloc(1);
+        void*           _res = res;
+
+        *res = '\0';
+        if (!disk)
+            return res;
+
+        first_flag = 1;
+        for (flag = ped_disk_flag_next (0); flag;
+             flag = ped_disk_flag_next (flag)) {
+                if (ped_disk_get_flag (disk, flag)) {
+                        if (first_flag)
+                                first_flag = 0;
+                        else {
+                                _res = res;
+                                ped_realloc (&_res, strlen (res) + 1 + 2);
+                                res = _res;
+                                strncat (res, ", ", 2);
+                        }
+
+                        name = _(ped_disk_flag_get_name (flag));
+                        _res = res;
+                        ped_realloc (&_res, strlen (res) + 1 + strlen (name));
+                        res = _res;
+                        strcat(res, name);
+                }
+        }
+
+        return res;
+}
+
 static void
 _print_disk_geometry (const PedDevice *dev)
 {
@@ -937,6 +974,7 @@ _print_disk_info (const PedDevice *dev, const PedDisk *disk)
                                        default_unit == PED_UNIT_CYLINDER));
 
         const char* pt_name = disk ? disk->type->name : "unknown";
+        char *disk_flags = disk_print_flags (disk);
 
         if (opt_machine_mode) {
             switch (default_unit) {
@@ -948,10 +986,10 @@ _print_disk_info (const PedDevice *dev, const PedDisk *disk)
                                         break;
 
             }
-            printf ("%s:%s:%s:%lld:%lld:%s:%s;\n",
+            printf ("%s:%s:%s:%lld:%lld:%s:%s:%s;\n",
                     dev->path, end, transport[dev->type],
                     dev->sector_size, dev->phys_sector_size,
-                    pt_name, dev->model);
+                    pt_name, dev->model, disk_flags);
         } else {
             printf (_("Model: %s (%s)\n"),
                     dev->model, transport[dev->type]);
@@ -969,7 +1007,9 @@ _print_disk_info (const PedDevice *dev, const PedDisk *disk)
 
         if (!opt_machine_mode) {
             printf (_("Partition Table: %s\n"), pt_name);
+            printf (_("Disk Flags: %s\n"), disk_flags);
         }
+        free (disk_flags);
 }
 
 static int
