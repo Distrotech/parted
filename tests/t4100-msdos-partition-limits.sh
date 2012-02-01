@@ -116,9 +116,10 @@ do_mkpart_start_and_len $(echo 2^32-1|bc) 1000 || fail=1
 
 cat > exp <<EOF
 Model:  (file)
-Disk: 4294970342s
+Disk $dev: 4294970342s
 Sector size (logical/physical): ${ss}B/${ss}B
 Partition Table: $table_type
+Disk Flags:
 
 Number  Start        End          Size   Type     File system  Flags
  1      4294967295s  4294968294s  1000s  primary
@@ -127,7 +128,8 @@ EOF
 
 # print the result
 parted -s $dev unit s p > out 2>&1 || fail=1
-sed "s/Disk .*:/Disk:/;s/ *$//" out > k && mv k out  || fail=1
+sed "s/^Disk .*\($dev: [0-9][0-9]*s\)$/Disk \1/;s/ *$//" out > k \
+    && mv k out || fail=1
 compare exp out || fail=1
 
 # a partition start sector number of 2^32 must fail

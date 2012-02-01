@@ -28,6 +28,7 @@ Model:  (file)
 Disk .../$dev: 8s
 Sector size (logical/physical): ${ss}B/${ss}B
 Partition Table: unknown
+Disk Flags:
 EOF
 } > exp || framework_failure
 
@@ -38,6 +39,7 @@ dd if=/dev/zero of=$dev bs=$(expr 8 '*' $ss) count=1 >/dev/null 2>&1 || fail=1
 parted -s $dev unit s print >out 2>&1 && fail=1
 
 # prepare actual and expected output
+sed 's/ $//' out > k && mv k out || fail=1 # Remove trailing blank.
 mv out o2 && sed "s,^Disk .*/$dev:,Disk .../$dev:,; \
                   s,^Error: .*/$dev:,Error: .../$dev:," o2 > out || fail=1
 

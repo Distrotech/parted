@@ -44,7 +44,7 @@ parted -m -s $dev unit s print > t 2>&1 || fail=1
 sed "s,.*/$dev:,$dev:," t > out || fail=1
 
 # check for expected output
-printf "BYT;\n$dev:${N}s:file:$ss:$ss:gpt:;\n" > exp || fail=1
+printf "BYT;\n$dev:${N}s:file:$ss:$ss:gpt::;\n" > exp || fail=1
 compare exp out || fail=1
 
 # add a partition
@@ -66,10 +66,10 @@ gen_exp()
 {
   cat <<EOF
 BYT;
-$dev:${N}s:file:$ss:$ss:gpt:;
+$dev:${N}s:file:$ss:$ss:gpt::;
 1:${start_sector}s:${end_sector}s:${part_sectors}s::name1:;
 BYT;
-$dev:${N}s:file:$ss:$ss:gpt:;
+$dev:${N}s:file:$ss:$ss:gpt::;
 1:${start_sector}s:${end_sector}s:${part_sectors}s::name1:bios_grub;
 EOF
 }

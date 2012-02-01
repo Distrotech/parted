@@ -34,7 +34,7 @@ parted -m -s $dev unit s print > t 2>&1 || fail=1
 sed "s,.*/$dev:,$dev:," t > out || fail=1
 
 # check for expected output
-printf "BYT;\n$dev:${n_sectors}s:file:$sector_size_:$sector_size_:gpt:;\n" \
+printf "BYT;\n$dev:${n_sectors}s:file:$sector_size_:$sector_size_:gpt::;\n" \
   > exp || fail=1
 compare exp out || fail=1
 
@@ -90,7 +90,7 @@ parted -m -s $dev u s print > out 2>&1 || fail=1
 
 # check for expected output
 printf "BYT;\nfile\n1:2048s:4095s:2048s::foo:;\n" > exp || fail=1
-sed "s/.*gpt:;/file/" out > k && mv k out || fail=1
+sed "s/.*gpt::;/file/" out > k && mv k out || fail=1
 compare exp out || fail=1
 
 Exit $fail

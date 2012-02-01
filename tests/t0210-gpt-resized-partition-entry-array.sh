@@ -35,7 +35,7 @@ gpt-header-munge --sector-size=$ss --n=9 $dev || fail=1
 
 parted -m -s $dev u s p > out 2>&1 || fail=1
 sed 's/.*:gpt:/:gpt:/' out > k && mv k out
-printf 'BYT;\n:gpt:;\n' > exp || fail=1
+printf 'BYT;\n:gpt::;\n' > exp || fail=1
 compare exp out || fail=1
 
 Exit $fail

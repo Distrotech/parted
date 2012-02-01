@@ -72,14 +72,15 @@ for type in linear ; do
   compare /dev/null out || fail=1
 
   parted -s "$dev" print > out 2>&1 || fail=1
-  sed 's/^Disk .*: /Disk DEV: /' out > k; mv k out
+  sed 's/ $//' out > k && mv k out || fail=1 # Remove trailing blank.
 
   # Create expected output file.
   cat <<EOF >> exp || fail=1
 Model: Linux device-mapper ($type) (dm)
-Disk DEV: 524kB
+Disk $dev: 524kB
 Sector size (logical/physical): 512B/512B
 Partition Table: msdos
+Disk Flags:
 
 Number  Start  End  Size  Type  File system  Flags
 

@@ -33,7 +33,7 @@ p5=${scsi_dev}5
 
 cat <<EOF > exp || framework_failure
 BYT;
-$scsi_dev:2048s:scsi:512:512:msdos:Linux scsi_debug;
+$scsi_dev:2048s:scsi:512:512:msdos:Linux scsi_debug:;
 1:64s:128s:65s:::lba;
 5:66s:128s:63s:::;
 EOF

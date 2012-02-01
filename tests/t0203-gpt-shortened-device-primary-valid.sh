@@ -41,7 +41,7 @@ Error: end of file while reading $dev
 Error: The backup GPT table is corrupt, but the primary appears OK, so that will be used.
 EOF
 
-echo "$dev:98s:file:$ss:$ss:gpt:;" > out.exp || fail=1
+echo "$dev:98s:file:$ss:$ss:gpt::;" > out.exp || fail=1
 
 compare err.exp err || fail=1
 compare out.exp out || fail=1

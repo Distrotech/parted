@@ -33,7 +33,7 @@ dvhtool -d $dev --unix-to-vh d data || fail=1
 
 # Here's sample output from the parted...print command below:
 # BYT;
-# /dev/sdd:128880s:scsi:512:512:dvh: Flash Disk;
+# /dev/sdd:128880s:scsi:512:512:dvh: Flash Disk:;
 # 9:0s:4095s:4096s:::;
 # 17:4s:11s:8s::data:;
 

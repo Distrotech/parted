@@ -52,7 +52,7 @@ parted -s $dev mklabel gpt > out 2>&1 || fail=1
 # expect no output
 compare /dev/null out || fail=1
 
-printf "BYT;\n$dev:${n_sectors}s:file:$ss:$ss:gpt:;\n" > exp
+printf "BYT;\n$dev:${n_sectors}s:file:$ss:$ss:gpt::;\n" > exp
 i=1
 for type in $fs_types; do
   end=$(expr $start + $part_size - 1)

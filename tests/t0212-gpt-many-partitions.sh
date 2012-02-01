@@ -40,7 +40,7 @@ parted -m -a min -s $dev mklabel gpt $cmd u s p > out 2>&1 || fail=1
 
 nl='
 '
-exp=$(printf '%s\n' 'BYT;' "...:${ns}s:file:$ss:$ss:gpt:;")"$nl"
+exp=$(printf '%s\n' 'BYT;' "...:${ns}s:file:$ss:$ss:gpt::;")"$nl"
 
 i=1
 while :; do

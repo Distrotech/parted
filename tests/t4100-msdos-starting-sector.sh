@@ -38,7 +38,7 @@ compare /dev/null out || fail=1
 # Test the output of print free with no partitions.
 cat <<EOF > exp || fail=1
 BYT;
-path:${N}s:file:$ss:$ss:msdos:;
+path:${N}s:file:$ss:$ss:msdos::;
 1:32s:4095s:4064s:free;
 EOF
 
@@ -54,7 +54,7 @@ compare exp out || fail=1
 # Test the output of print free with one partition.
 cat <<EOF > exp || fail=1
 BYT;
-path:${N}s:file:$ss:$ss:msdos:;
+path:${N}s:file:$ss:$ss:msdos::;
 1:32s:2047s:2016s:free;
 1:2048s:4095s:2048s:::;
 EOF

@@ -59,7 +59,7 @@ parted ---pretend-input-tty $dev u s p < in || fail=1
 
 printf '%s\n' \
     'BYT;' \
-    "...:${ns2}s:file:$ss:$ss:gpt:;" \
+    "...:${ns2}s:file:$ss:$ss:gpt::;" \
     '1:34s:34s:1s::p1:;' \
     '2:35s:35s:1s::p2:;' \
     '3:36s:36s:1s::p3:;' \

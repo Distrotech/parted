@@ -40,7 +40,7 @@ scsi_dev=$(cat dev-name)
 
 n=$((n_MiB * sectors_per_MiB))
 printf '%s\n' "BYT;" \
-    "$scsi_dev:${n}s:scsi:$ss:$ss:msdos:Linux scsi_debug;" \
+    "$scsi_dev:${n}s:scsi:$ss:$ss:msdos:Linux scsi_debug:;" \
     "1:$((start-2))s:$((n-1))s:$((n-start+2))s:::lba;" \
   > exp || fail=1
 
