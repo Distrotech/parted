@@ -836,7 +836,8 @@ ped_disk_flag_get_name(PedDiskFlag flag)
         switch (flag) {
         case PED_DISK_CYLINDER_ALIGNMENT:
                 return N_("cylinder_alignment");
-
+        case PED_DISK_GPT_PMBR_BOOT:
+                return N_("pmbr_boot");
         default:
                 ped_exception_throw (
                         PED_EXCEPTION_BUG,

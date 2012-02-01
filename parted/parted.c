@@ -1560,6 +1560,43 @@ error:
 }
 
 static int
+do_disk_set (PedDevice** dev)
+{
+    PedDisk*    disk;
+    PedDiskFlag flag;
+    int         state;
+
+    disk = ped_disk_new (*dev);
+    if (!disk)
+        goto error;
+
+    if (!command_line_get_disk_flag (_("Flag to Invert?"), disk, &flag))
+        goto error_destroy_disk;
+    state = (ped_disk_get_flag (disk, flag) == 0 ? 1 : 0);
+
+    if (!is_toggle_mode) {
+        if (!command_line_get_state (_("New state?"), &state))
+            goto error_destroy_disk;
+    }
+
+    if (!ped_disk_set_flag (disk, flag, state))
+        goto error_destroy_disk;
+    if (!ped_disk_commit (disk))
+        goto error_destroy_disk;
+    ped_disk_destroy (disk);
+
+    if ((*dev)->type != PED_DEVICE_FILE)
+        disk_is_modified = 1;
+
+    return 1;
+
+error_destroy_disk:
+    ped_disk_destroy (disk);
+error:
+    return 0;
+}
+
+static int
 do_set (PedDevice** dev)
 {
         PedDisk*                disk;
@@ -1597,6 +1634,18 @@ error_destroy_disk:
         ped_disk_destroy (disk);
 error:
         return 0;
+}
+
+static int
+do_disk_toggle (PedDevice **dev)
+{
+    int result;
+
+    is_toggle_mode = 1;
+    result = do_disk_set (dev);
+    is_toggle_mode = 0;
+
+    return result;
 }
 
 static int
@@ -1834,6 +1883,23 @@ command_register (commands, command_create (
 _("select DEVICE                            choose the device to edit"),
 NULL),
         str_list_create (_(device_msg), NULL), 1));
+
+command_register (commands, command_create (
+        str_list_create_unique ("disk_set", _("disk_set"), NULL),
+        do_disk_set,
+        str_list_create (
+_("disk_set FLAG STATE                      change the FLAG on selected device"),
+NULL),
+        str_list_create (flag_msg, _(state_msg), NULL), 1));
+
+command_register (commands, command_create (
+        str_list_create_unique ("disk_toggle", _("disk_toggle"), NULL),
+        do_disk_toggle,
+        str_list_create (
+_("disk_toggle [FLAG]                       toggle the state of FLAG on "
+"selected device"),
+NULL),
+        str_list_create (flag_msg, NULL), 1));
 
 command_register (commands, command_create (
 		str_list_create_unique ("set", _("set"), NULL),

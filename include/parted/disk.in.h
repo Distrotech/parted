@@ -36,9 +36,11 @@ enum _PedDiskFlag {
            This flag is available for msdos and sun disklabels (for sun labels
            it only controls the aligning of the end of the partition) */
         PED_DISK_CYLINDER_ALIGNMENT=1,
+        /* This flag controls whether the boot flag of a GPT PMBR is set */
+        PED_DISK_GPT_PMBR_BOOT=2,
 };
 #define PED_DISK_FIRST_FLAG             PED_DISK_CYLINDER_ALIGNMENT
-#define PED_DISK_LAST_FLAG              PED_DISK_CYLINDER_ALIGNMENT
+#define PED_DISK_LAST_FLAG              PED_DISK_GPT_PMBR_BOOT
 
 /**
  * Partition types

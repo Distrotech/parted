@@ -63,6 +63,9 @@ extern int command_line_get_fs_type (const char* prompt,
 				     const PedFileSystemType*(* value));
 extern int command_line_get_disk_type (const char* prompt,
 				       const PedDiskType*(* value));
+extern int command_line_get_disk_flag (const char* prompt,
+				       const PedDisk* disk,
+				       PedDiskFlag* flag);
 extern int command_line_get_part_flag (const char* prompt,
 				       const PedPartition* part,
 				       PedPartitionFlag* flag);

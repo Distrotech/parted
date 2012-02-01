@@ -1116,6 +1116,35 @@ command_line_get_disk_type (const char* prompt, const PedDiskType*(* value))
 }
 
 int
+command_line_get_disk_flag (const char* prompt, const PedDisk* disk,
+                            PedDiskFlag* flag)
+{
+        StrList*            opts = NULL;
+        PedPartitionFlag    walk = 0;
+        char*               flag_name;
+
+        while ( (walk = ped_disk_flag_next (walk)) ) {
+                if (ped_disk_is_flag_available (disk, walk)) {
+                        const char*        walk_name;
+
+                        walk_name = ped_disk_flag_get_name (walk);
+                        opts = str_list_append (opts, walk_name);
+                        opts = str_list_append_unique (opts, _(walk_name));
+                }
+        }
+
+        flag_name = command_line_get_word (prompt, NULL, opts, 1);
+        str_list_destroy (opts);
+
+        if (flag_name) {
+                *flag = ped_disk_flag_get_by_name (flag_name);
+                free (flag_name);
+                return 1;
+        } else
+                return 0;
+}
+
+int
 command_line_get_part_flag (const char* prompt, const PedPartition* part,
                             PedPartitionFlag* flag)
 {

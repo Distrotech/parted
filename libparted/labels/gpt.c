@@ -264,6 +264,7 @@ struct __attribute__ ((packed)) _GPTDiskData
   PedGeometry data_area;
   int entry_count;
   efi_guid_t uuid;
+  int pmbr_boot;
 };
 
 /* uses libparted's disk_specific field in PedPartition, to store our info */
@@ -535,6 +536,7 @@ gpt_alloc (const PedDevice *dev)
   gpt_disk_data->entry_count = GPT_DEFAULT_PARTITION_ENTRIES;
   uuid_generate ((unsigned char *) &gpt_disk_data->uuid);
   swap_uuid_and_efi_guid ((unsigned char *) (&gpt_disk_data->uuid));
+  gpt_disk_data->pmbr_boot = 0;
   return disk;
 
 error_free_disk:
@@ -842,6 +844,15 @@ gpt_read_headers (PedDisk const *disk,
   *primary_gpt = NULL;
   *backup_gpt = NULL;
   PedDevice const *dev = disk->dev;
+  GPTDiskData *gpt_disk_data = disk->disk_specific;
+  LegacyMBR_t *mbr;
+
+  if (!ptt_read_sector (dev, 0, (void *)&mbr))
+    return 1;
+
+  if (mbr->PartitionRecord[0].BootIndicator == 0x80)
+    gpt_disk_data->pmbr_boot = 1;
+  free (mbr);
 
   void *s1;
   if (!ptt_read_sector (dev, 1, &s1))
@@ -1079,7 +1090,7 @@ error:
 #ifndef DISCOVER_ONLY
 /* Write the protective MBR (to keep DOS happy) */
 static int
-_write_pmbr (PedDevice *dev)
+_write_pmbr (PedDevice *dev, bool pmbr_boot)
 {
   /* The UEFI spec is not clear about what to do with the following
      elements of the Protective MBR (pmbr): BootCode (0-440B),
@@ -1104,6 +1115,8 @@ _write_pmbr (PedDevice *dev)
     pmbr->PartitionRecord[0].SizeInLBA = PED_CPU_TO_LE32 (0xFFFFFFFF);
   else
     pmbr->PartitionRecord[0].SizeInLBA = PED_CPU_TO_LE32 (dev->length - 1UL);
+  if (pmbr_boot)
+    pmbr->PartitionRecord[0].BootIndicator = 0x80;
 
   int write_ok = ped_device_write (dev, pmbr, GPT_PMBR_LBA,
                                    GPT_PMBR_SECTORS);
@@ -1221,7 +1234,7 @@ gpt_write (const PedDisk *disk)
   ptes_crc = efi_crc32 (ptes, ptes_bytes);
 
   /* Write protective MBR */
-  if (!_write_pmbr (disk->dev))
+  if (!_write_pmbr (disk->dev, gpt_disk_data->pmbr_boot))
     goto error_free_ptes;
 
   /* Write PTH and PTEs */
@@ -1506,6 +1519,46 @@ gpt_partition_enumerate (PedPartition *part)
   PED_ASSERT (0);
 
   return 0;			/* used if debug is disabled */
+}
+
+static int
+gpt_disk_set_flag (PedDisk *disk, PedDiskFlag flag, int state)
+{
+  GPTDiskData *gpt_disk_data = disk->disk_specific;
+  switch (flag)
+    {
+    case PED_DISK_GPT_PMBR_BOOT:
+      gpt_disk_data->pmbr_boot = state;
+      return 1;
+    default:
+      return 0;
+    }
+}
+
+static int
+gpt_disk_is_flag_available(const PedDisk *disk, PedDiskFlag flag)
+{
+  switch (flag)
+    {
+    case PED_DISK_GPT_PMBR_BOOT:
+      return 1;
+    default:
+      return 0;
+    }
+}
+
+static int
+gpt_disk_get_flag (const PedDisk *disk, PedDiskFlag flag)
+{
+  GPTDiskData *gpt_disk_data = disk->disk_specific;
+  switch (flag)
+    {
+    case PED_DISK_GPT_PMBR_BOOT:
+      return gpt_disk_data->pmbr_boot;
+      break;
+    default:
+      return 0;
+    }
 }
 
 static int
@@ -1796,6 +1849,9 @@ static PedDiskOps gpt_disk_ops =
 
   partition_set_name:		gpt_partition_set_name,
   partition_get_name:		gpt_partition_get_name,
+  disk_set_flag:		gpt_disk_set_flag,
+  disk_get_flag:		gpt_disk_get_flag,
+  disk_is_flag_available:	gpt_disk_is_flag_available,
 
   PT_op_function_initializers (gpt)
 };
