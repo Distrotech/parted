@@ -79,6 +79,23 @@ GNU parted NEWS                                    -*- outline -*-
   this patch, parted and dmraid will both create duplicate partition devices
   named /dev/mapper/foo1 and /dev/mapper/foop1.
 
+  Add the ability to set the boot flag on the GPT PMBR. This is needed
+  for some BIOS systems that refuse to boot from GPT unless this is set.
+  disk_set and disk_toggle commands can be used to set the pmbr_boot
+  flag on the disk.
+
+  The flag is also displayed in a new line, 'Disk Flags:' like this:
+
+    Model:  (file)
+    Disk /home/bcl/disk.img: 4295MB
+    Sector size (logical/physical): 512B/512B
+    Partition Table: gpt
+    Disk Flags: pmbr_boot
+
+  Using -m the flags are added after the model name field:
+
+    /root/disk.img:4295MB:file:512:512:gpt::pmbr_boot;
+
 ** Build-related
 
   "make dist" no longer builds .tar.gz files.

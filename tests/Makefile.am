@@ -20,6 +20,7 @@ TESTS = \
   t0206-gpt-print-with-corrupt-primary-clobbers-pmbr.sh \
   t0207-IEC-binary-notation.sh \
   t0208-mkpart-end-in-IEC.sh \
+  t0209-gpt-pmbr_boot.sh \
   t0210-gpt-resized-partition-entry-array.sh \
   t0211-gpt-rewrite-header.sh \
   t0212-gpt-many-partitions.sh \
