@@ -415,6 +415,7 @@ GNU Parted provides the following commands:
 
 @menu
 * align-check::
+* disk_set::
 * help::
 * mklabel::
 * mkpart::
@@ -456,6 +457,36 @@ Example:
 1 aligned
 @end example
 
+@end deffn
+
+@node disk_set
+@subsection disk_set
+@cindex disk_set, command description
+@cindex command description, disk_set
+
+@deffn Command disk_set @var{flag} @var{state}
+
+Changes a flag on the disk.  A flag can be either ``on'' or ``off''.
+Some or all of these flags will be available, depending on what disk
+label you are using:
+
+@table @samp
+
+@item pmbr_boot
+(GPT) - this flag enables the boot flag on the GPT's protective MBR
+partition.
+
+@end table
+
+The disk's flags are displayed by the print command on the "Disk Flags:"
+line.  They are also output as the last field of the disk information
+in machine mode.
+
+@example
+(parted) @kbd{disk_set pmbr_boot on}
+@end example
+
+Set the PMBR's boot flag.
 @end deffn
 
 @node help
