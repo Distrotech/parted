@@ -860,38 +860,30 @@ error:
 }
 
 static char*
-partition_print_flags (PedPartition* part)
+partition_print_flags (PedPartition const *part)
 {
-        PedPartitionFlag        flag;
-        int                     first_flag;
-        const char*             name;
-        char*                   res = ped_malloc(1);
-        void*                   _res = res;
+  char *res = xstrdup ("");
+  if (!part)
+    return res;
 
-        *res = '\0';
-
-        first_flag = 1;
-        for (flag = ped_partition_flag_next (0); flag;
-             flag = ped_partition_flag_next (flag)) {
-                if (ped_partition_get_flag (part, flag)) {
-                        if (first_flag)
-                                first_flag = 0;
-                        else {
-                                _res = res;
-                                ped_realloc (&_res, strlen (res) + 1 + 2);
-                                res = _res;
-                                strncat (res, ", ", 2);
-                        }
-
-                        name = _(ped_partition_flag_get_name (flag));
-                        _res = res;
-                        ped_realloc (&_res, strlen (res) + 1 + strlen (name));
-                        res = _res;
-                        strcat(res, name);
-                }
+  PedPartitionFlag flag;
+  size_t res_buf_len = 1;
+  char const *sep = "";
+  for (flag = ped_partition_flag_next (0); flag;
+       flag = ped_partition_flag_next (flag))
+    {
+      if (ped_partition_get_flag (part, flag))
+        {
+          const char *name = _(ped_partition_flag_get_name (flag));
+          size_t new_len = res_buf_len + strlen (sep) + strlen (name);
+          res = xrealloc (res, new_len);
+          stpcpy (stpcpy (res + res_buf_len - 1, sep), name);
+          res_buf_len = new_len;
+          sep = ", ";
         }
+    }
 
-        return res;
+  return res;
 }
 
 static int
@@ -903,38 +895,28 @@ partition_print (PedPartition* part)
 static char*
 disk_print_flags (PedDisk const *disk)
 {
-        PedDiskFlag     flag;
-        int             first_flag;
-        const char*     name;
-        char*           res = ped_malloc(1);
-        void*           _res = res;
+  char *res = xstrdup ("");
+  if (!disk)
+    return res;
 
-        *res = '\0';
-        if (!disk)
-            return res;
-
-        first_flag = 1;
-        for (flag = ped_disk_flag_next (0); flag;
-             flag = ped_disk_flag_next (flag)) {
-                if (ped_disk_get_flag (disk, flag)) {
-                        if (first_flag)
-                                first_flag = 0;
-                        else {
-                                _res = res;
-                                ped_realloc (&_res, strlen (res) + 1 + 2);
-                                res = _res;
-                                strncat (res, ", ", 2);
-                        }
-
-                        name = _(ped_disk_flag_get_name (flag));
-                        _res = res;
-                        ped_realloc (&_res, strlen (res) + 1 + strlen (name));
-                        res = _res;
-                        strcat(res, name);
-                }
+  PedDiskFlag flag;
+  size_t res_buf_len = 1;
+  char const *sep = "";
+  for (flag = ped_disk_flag_next (0); flag;
+       flag = ped_disk_flag_next (flag))
+    {
+      if (ped_disk_get_flag (disk, flag))
+        {
+          const char *name = _(ped_disk_flag_get_name (flag));
+          size_t new_len = res_buf_len + strlen (sep) + strlen (name);
+          res = xrealloc (res, new_len);
+          stpcpy (stpcpy (res + res_buf_len - 1, sep), name);
+          res_buf_len = new_len;
+          sep = ", ";
         }
+    }
 
-        return res;
+  return res;
 }
 
 static void
