@@ -234,21 +234,6 @@ ped_malloc (size_t size)
 	return mem;
 }
 
-int
-ped_realloc (void** old, size_t size)
-{
-	void*		mem;
-
-	mem = (void*) realloc (*old, size);
-	if (!mem) {
-		ped_exception_throw (PED_EXCEPTION_FATAL, PED_EXCEPTION_CANCEL,
-				     _("Out of memory."));
-		return 0;
-	}
-	*old = mem;
-	return 1;
-}
-
 
 void* ped_calloc (size_t size)
 {

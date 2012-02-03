@@ -47,7 +47,6 @@ extern const char *ped_get_version () _GL_ATTRIBUTE_CONST;
 
 extern void* ped_malloc (size_t size);
 extern void* ped_calloc (size_t size);
-extern int ped_realloc (void** ptr, size_t size);
 extern void free (void* ptr);
 
 #ifdef __cplusplus

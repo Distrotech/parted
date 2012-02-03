@@ -381,7 +381,6 @@ FUNC:ped_partition_set_flag
 FUNC:ped_partition_set_name
 FUNC:ped_partition_set_system
 FUNC:ped_partition_type_get_name
-FUNC:ped_realloc
 FUNC:ped_register_disk_type
 FUNC:ped_round_down_to
 FUNC:ped_round_to_nearest
