@@ -8,6 +8,16 @@ GNU parted NEWS                                    -*- outline -*-
 
   parted has improved support for partitionable loopback devices
 
+  parted provides a new library, libparted-fs-resize, for resizing
+  HFS+ and FAT file systems.  This is the subset of the FS-manipulation
+  functionality removed in parted-3.0 for which we have found no free
+  alternative.  That library provides only these entry points:
+    ped_file_system_close
+    ped_file_system_get_resize_constraint
+    ped_file_system_open
+    ped_file_system_resize
+  so when using it you must also link with libparted.
+
 ** Bug fixes
 
   libparted: avoid an invalid free when creating many partitions in
