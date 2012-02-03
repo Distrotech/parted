@@ -26,7 +26,7 @@ dd if=/dev/null of=$dev bs=1 seek=$N || framework_failure
 # create a GPT partition table
 parted -s $dev mklabel gpt > out 2>&1 || fail=1
 # expect no output
-compare out /dev/null || fail=1
+compare /dev/null out || fail=1
 
 # Set the pmbr_boot flag on the PMBR
 parted -s $dev disk_set pmbr_boot on
