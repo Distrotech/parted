@@ -31,7 +31,7 @@ dev=loop-file
 # create a file large enough to hold a GPT partition table
 dd if=/dev/null of=$dev bs=$ss seek=$ns || framework_failure
 
-# create a GPT partition table with 9 PTEs.
+# create a GPT partition table with 9 partitions in a standard 128-entry table.
 parted -a min -s $dev mklabel gpt \
     mkpart p1 34s 34s \
     mkpart p2 35s 35s \
