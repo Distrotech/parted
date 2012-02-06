@@ -1219,10 +1219,13 @@ gpt_write (const PedDisk *disk)
 
   size_t ptes_bytes = (gpt_disk_data->entry_count
 			* sizeof (GuidPartitionEntry_t));
-  GuidPartitionEntry_t *ptes = malloc (ptes_bytes);
+  size_t ss = disk->dev->sector_size;
+  PedSector ptes_sectors = (ptes_bytes + ss - 1) / ss;
+  /* Note that we allocate a little more than ptes_bytes,
+     when that number is not a multiple of sector size.  */
+  GuidPartitionEntry_t *ptes = calloc (ptes_sectors, ss);
   if (!ptes)
     goto error;
-  memset (ptes, 0, ptes_bytes);
   for (part = ped_disk_next_partition (disk, NULL); part;
        part = ped_disk_next_partition (disk, part))
     {
@@ -1249,8 +1252,6 @@ gpt_write (const PedDisk *disk)
   free (pth_raw);
   if (!write_ok)
     goto error_free_ptes;
-  size_t ss = disk->dev->sector_size;
-  PedSector ptes_sectors = (ptes_bytes + ss - 1) / ss;
   if (!ped_device_write (disk->dev, ptes, 2, ptes_sectors))
     goto error_free_ptes;
 
