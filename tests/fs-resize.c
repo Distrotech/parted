@@ -1,9 +1,4 @@
-
 #include <config.h>
-#include <stdbool.h>
-
-#include "closeout.h"
-#include "configmake.h"
 
 #include <parted/parted.h>
 #include <parted/debug.h>
@@ -14,10 +9,14 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
-#include "xalloc.h"
 
-int main(int argc, char **argv)
+#include "progname.h"
+
+int
+main (int argc, char **argv)
 {
+	set_program_name (argv[0]);
+
 	PedSector start = 0, len = 0;
 	PedGeometry geom, new_geom;
 	PedDevice *dev;
