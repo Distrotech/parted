@@ -77,27 +77,34 @@ for fs_type in hfs+ fat32; do
   # Fedora 16's hfsplus-tools-332.14-12.fc15.x86_64.
   # You can build a working version from
   # git://cavan.codon.org.uk/hfsplus-tools.git
-  # FIXME: check the version somehow and skip if it's not known to work.
-  $fsck ${dev}1 > out || fail=1
-  cat out
-  # Oops.  Currently, fsck.hfs reports this:
-  # Executing fsck_hfs (version 540.1-Linux).
-  # ** Checking non-journaled HFS Plus Volume.
-  #    The volume name is untitled
-  # ** Checking extents overflow file.
-  # ** Checking catalog file.
-  # ** Checking multi-linked files.
-  # ** Checking catalog hierarchy.
-  # ** Checking volume bitmap.
-  #    Volume bitmap needs minor repair for orphaned blocks
-  # ** Checking volume information.
-  #    Invalid volume free block count
-  #    (It should be 67189 instead of 65197)
-  #    Volume header needs minor repair
-  # (2, 0)
-  # FIXME: This means the HFS resizing code is wrong.
 
-  # FIXME: parse "out" for FS size and verify that it's the new, smaller size
+  # Skip the fsck.hfs test unless it understands the -v option.
+  skip=0
+  case $fs_type in
+    hfs*) $fsck -v || { warn_ skipping $fsck test; skip=1; } ;; esac
+
+  if test $skip = 0; then
+    $fsck ${dev}1 > out || fail=1
+    cat out
+    # Oops.  Currently, fsck.hfs reports this:
+    # Executing fsck_hfs (version 540.1-Linux).
+    # ** Checking non-journaled HFS Plus Volume.
+    #    The volume name is untitled
+    # ** Checking extents overflow file.
+    # ** Checking catalog file.
+    # ** Checking multi-linked files.
+    # ** Checking catalog hierarchy.
+    # ** Checking volume bitmap.
+    #    Volume bitmap needs minor repair for orphaned blocks
+    # ** Checking volume information.
+    #    Invalid volume free block count
+    #    (It should be 67189 instead of 65197)
+    #    Volume header needs minor repair
+    # (2, 0)
+    # FIXME: This means the HFS resizing code is wrong.
+
+    # FIXME: parse "out" for FS size and verify that it's the new, smaller size
+  fi
 
   # Remove the partition explicitly, so that mklabel doesn't evoke a warning.
   parted -s $dev rm 1 || fail=1
