@@ -65,11 +65,12 @@ CURRENT = 0
 REVISION = 0
 AGE = 0
 
+sym_file = $(srcdir)/fsresize.sym
 libparted_fs_resize_la_LDFLAGS =		\
-  -Wl,--version-script=fsresize.sym		\
+  -Wl,--version-script=$(sym_file)		\
   -version-info $(CURRENT):$(REVISION):$(AGE)
 EXTRA_DIST += fsresize.sym
-libparted_fs_resize_la_DEPENDENCIES = fsresize.sym
+libparted_fs_resize_la_DEPENDENCIES = $(sym_file)
 
 libparted_fs_resize_la_SOURCES = \
   r/filesys.c			\
