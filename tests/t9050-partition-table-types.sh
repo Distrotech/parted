@@ -41,7 +41,7 @@ dd if=/dev/null of=f bs=1 seek=30M || framework_failure_
 for i in $types; do
   for j in $types; do
     echo $i:$j
-    case $i in mkswap) mkswap f >/dev/null 2>&1 || fail=1;;
+    case $i in mkswap) mkswap f || fail=1;;
       *) parted -s f mklabel $i || fail=1;; esac
     case $j in mkswap) continue;; esac
     parted -s f mklabel $j || fail=1
