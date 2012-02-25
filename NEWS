@@ -4,7 +4,9 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** New features
 
-  Increased limit for msdos partitions from 16 to 64
+  parted now supports up to 64 msdos partitions (was 16).  The partition
+  table format imposes no limit (it's simply a linked list), so we may
+  raise it further, if needed.
 
   parted has improved support for partitionable loopback devices
 
@@ -75,10 +77,11 @@ GNU parted NEWS                                    -*- outline -*-
   anyhow, and some users have a misconfigured BIOS that claims to have a
   floppy when they don't, and scanning gets hung up.
 
-  parted: mkpart command has changed semantics with regard to specifying end
-  of the partition. If the end is specified using MiB, GiB, etc. unit, parted
-  subtracts one sector from the specified value. With this change, it is now
-  possible to create partitions like 1MiB-2MiB, 2MiB-3MiB and so on.
+  parted: the mkpart command has changed semantics with regard to specifying
+  the end of the partition.  If the end is specified using units of MiB, GiB,
+  etc., parted subtracts one sector from the specified value.  With this
+  change, it is now possible to create partitions like 1MiB-2MiB, 2MiB-3MiB
+  and so on.
 
   Device-mapper devices ( LVM, dmraid ) no longer insert a 'p' between the
   base device name and the partition number unless the last character of
