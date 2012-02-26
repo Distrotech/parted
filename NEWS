@@ -71,6 +71,9 @@ GNU parted NEWS                                    -*- outline -*-
   of partitions the device can hold.  With this change, parted now correctly
   informs kernel about new partitions on partitionable MD RAID devices.
 
+  libparted: creating a new partition table on a device with an existing
+  mac partition table could result in a failed assertion.
+
 ** Changes in behavior
 
   Floppy drives are no longer scanned on linux: they cannot be partitioned

@@ -704,8 +704,7 @@ _disk_analyse_ghost_size (PedDisk* disk)
 		if (_rawpart_check_signature (buf)
 		    && !_rawpart_is_void (buf)) {
 			mac_disk_data->ghost_size = i;
-			PED_ASSERT (i <= disk->dev->sector_size / 512);
-			found = 1;
+			found = (i <= disk->dev->sector_size / 512);
 			break;
 		}
 	}
