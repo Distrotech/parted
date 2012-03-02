@@ -22,7 +22,7 @@ lib_LTLIBRARIES	= libparted.la
 # Set the shared library version, per Libtool's guidelines.
 # For details, see the "Updating library version information" section of
 # "info libtool".
-CURRENT = 1
+CURRENT = 2
 REVISION = 0
 AGE = 0
 
