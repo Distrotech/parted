@@ -31,13 +31,4 @@ hfsc_can_use_geom (PedGeometry* geom);
 PedGeometry*
 hfs_and_wrapper_probe (PedGeometry* geom);
 
-PedGeometry*
-hfsplus_probe (PedGeometry* geom);
-
-PedGeometry*
-hfs_probe (PedGeometry* geom);
-
-PedGeometry*
-hfsx_probe (PedGeometry* geom);
-
 #endif /* _PROBE_H */

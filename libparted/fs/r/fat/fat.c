@@ -108,64 +108,6 @@ fat_set_frag_sectors (PedFileSystem* fs, PedSector frag_sectors)
 	return 1;
 }
 
-PedGeometry*
-fat_probe (PedGeometry* geom, FatType* fat_type)
-{
-	PedFileSystem*		fs;
-	FatSpecific*		fs_info;
-	PedGeometry*		result;
-
-	fs = fat_alloc (geom);
-	if (!fs)
-		goto error;
-	fs_info = (FatSpecific*) fs->type_specific;
-
-	if (!fat_boot_sector_read (&fs_info->boot_sector, geom))
-		goto error_free_fs;
-	if (!fat_boot_sector_analyse (&fs_info->boot_sector, fs))
-		goto error_free_fs;
-
-	*fat_type = fs_info->fat_type;
-	result = ped_geometry_new (geom->dev, geom->start,
-				   fs_info->sector_count);
-
-	fat_free (fs);
-	return result;
-
-error_free_fs:
-	fat_free (fs);
-error:
-	return NULL;
-}
-
-PedGeometry*
-fat_probe_fat16 (PedGeometry* geom)
-{
-	FatType		fat_type;
-	PedGeometry*	probed_geom = fat_probe (geom, &fat_type);
-
-	if (probed_geom) {
-		if (fat_type == FAT_TYPE_FAT16)
-			return probed_geom;
-		ped_geometry_destroy (probed_geom);
-	}
-	return NULL;
-}
-
-PedGeometry*
-fat_probe_fat32 (PedGeometry* geom)
-{
-	FatType		fat_type;
-	PedGeometry*	probed_geom = fat_probe (geom, &fat_type);
-
-	if (probed_geom) {
-		if (fat_type == FAT_TYPE_FAT32)
-			return probed_geom;
-		ped_geometry_destroy (probed_geom);
-	}
-	return NULL;
-}
-
 #ifndef DISCOVER_ONLY
 int
 fat_clobber (PedGeometry* geom)
