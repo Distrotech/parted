@@ -17,13 +17,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../parted
-
-PARTED_SECTOR_SIZE=4096
-export PARTED_SECTOR_SIZE
+ss=$sector_size_
 
 dev=loop-file
 # create a backing file large enough for a GPT partition table
-dd if=/dev/null of=$dev seek=4001 2> /dev/null || framework_failure
+dd if=/dev/null of=$dev bs=$ss seek=80 2> /dev/null || framework_failure
 
 # create a GPT partition table
 parted -s $dev mklabel gpt > out 2>&1 || fail=1
