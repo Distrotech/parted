@@ -1785,12 +1785,12 @@ gpt_get_max_supported_partition_count (const PedDisk *disk, int *max_n)
 
   if (!_header_is_valid (disk, pth, 1))
     {
-      pth->FirstUsableLBA = 34;
+      pth->FirstUsableLBA = PED_CPU_TO_LE64 (34);
       pth->SizeOfPartitionEntry
         = PED_CPU_TO_LE32 (sizeof (GuidPartitionEntry_t));
     }
 
-  *max_n = (disk->dev->sector_size * (pth->FirstUsableLBA - 2)
+  *max_n = (disk->dev->sector_size * (PED_LE64_TO_CPU (pth->FirstUsableLBA) - 2)
             / PED_LE32_TO_CPU (pth->SizeOfPartitionEntry));
   pth_free (pth);
   return true;
