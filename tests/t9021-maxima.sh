@@ -23,6 +23,27 @@ dev=dev-file
 PATH="..:$PATH"
 export PATH
 
+max_n_partitions()
+{
+  case $1 in
+
+    # Technically, msdos partition tables have no limit on the maximum number
+    # of partitions, but we pretend it is 64 due to implementation details.
+    msdos) m=64;;
+
+    gpt) m=128;;
+    dvh) m=16;;
+    sun) m=8;;
+    mac) m=65536;;
+    bsd) m=8;;
+    amiga) m=128;;
+    loop) m=1;;
+    pc98) case $ss in 512) m=16;; *) m=64;; esac;;
+    *) warn_ invalid partition table type: $1 1>&2; exit 1;;
+  esac
+  echo $m
+}
+
 # FIXME: add aix when/if it's supported again
 for t in msdos gpt dvh sun mac bsd amiga loop pc98; do
     echo $t
@@ -40,8 +61,11 @@ for t in msdos gpt dvh sun mac bsd amiga loop pc98; do
     esac
 
     print-max $dev > out 2>&1 || fail=1
+    m=$(max_n_partitions $t) || fail=1
     printf '%s\n' "max len: $max_len" \
-	"max start sector: $max_start" > exp || fail=1
+	"max start sector: $max_start" \
+	"max number of partitions: $m" \
+      > exp || fail=1
     compare exp out || fail=1
 done
 

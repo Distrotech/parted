@@ -69,3 +69,5 @@ exclude_file_name_regexp--sc_prohibit_always-defined_macros = \
 
 exclude_file_name_regexp--sc_prohibit_path_max_allocation = \
   ^libparted/arch/beos\.c$$
+
+exclude_file_name_regexp--sc_unmarked_diagnostics = ^tests/print-max\.c$$
