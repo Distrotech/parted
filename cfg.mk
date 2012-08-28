@@ -34,6 +34,7 @@ local-checks-to-skip = \
   sc_error_message_period \
   sc_file_system \
   sc_prohibit_strcmp \
+  sc_prohibit_strncpy \
   sc_prohibit_atoi_atof \
   sc_require_test_exit_idiom \
   sc_space_tab \
