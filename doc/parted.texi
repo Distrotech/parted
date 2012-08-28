@@ -348,7 +348,7 @@ specify the location in ``G''). Use the sector unit ``s'' to specify exact
 locations.  With parted-2.4 and newer,
 IEC binary units like ``MiB'', ``GiB'', ``TiB'', etc., specify
 exact locations as well.
-See @xref{IEC binary units}.
+@xref{IEC binary units}.
 
 If you don't give a parameter to a command, Parted will prompt you for it.
 For example:
