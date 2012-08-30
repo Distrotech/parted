@@ -107,16 +107,11 @@ AM_TESTS_ENVIRONMENT =				\
   srcdir='$(srcdir)'				\
   top_srcdir='$(top_srcdir)'			\
   AWK='$(AWK)'					\
-  CC='$(CC)'					\
-  MAKE=$(MAKE)					\
   PACKAGE_BUGREPORT='$(PACKAGE_BUGREPORT)'	\
   PACKAGE_VERSION=$(PACKAGE_VERSION)		\
   CONFIG_HEADER='$(abs_top_builddir)/lib/config.h' \
   ENABLE_DEVICE_MAPPER=$(ENABLE_DEVICE_MAPPER)	\
   PARTED_TEST_NAME=`basename '$(abs_srcdir)'`,`echo $$tst|sed 's,^\./,,;s,/,-,g'`\
-  PERL='$(PERL)'				\
-  PREFERABLY_POSIX_SHELL='$(PREFERABLY_POSIX_SHELL)' \
-  REPLACE_GETCWD=$(REPLACE_GETCWD)		\
   PATH='$(abs_top_builddir)/parted$(PATH_SEPARATOR)'"$$PATH" \
   VERSION=$(VERSION)				\
   ; 9>&2
