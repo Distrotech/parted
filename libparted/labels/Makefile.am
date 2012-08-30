@@ -39,10 +39,11 @@ liblabels_la_LIBADD = $(OS_LIBS) $(INTLLIBS)
 
 AM_CPPFLAGS = $(partedincludedir) $(INTLINCS)
 
+# Included by 'pt-tools.c', so needs to be built early.
 BUILT_SOURCES = pt-limit.c
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
-liblabels_la_SOURCES += pt-limit.gperf
-EXTRA_DIST = $(BUILT_SOURCES)
+# DOn't add this to '_SOURCES', because it's not to be compiled!
+EXTRA_DIST= pt-limit.c
 
 GPERF = gperf
 GPERF_OPTIONS = \
@@ -55,3 +56,4 @@ pt-limit.c: pt-limit.gperf
 	  > $@-tmp
 	chmod a-w $@-tmp
 	mv $@-tmp $@
+EXTRA_DIST += pt-limit.gperf
