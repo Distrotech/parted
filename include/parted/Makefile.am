@@ -44,8 +44,7 @@ subst_pure_attr = \
 
 $(BUILT_SOURCES): Makefile.am
 
-SUFFIXES = .in.h .h
-.in.h.h:
+%.h: %.in.h
 	$(AM_V_GEN)rm -f $@ $@-t
 	$(AM_V_at)perl -p \
 	    -e '$(subst_const_attr);' \
