@@ -37,7 +37,7 @@ liblabels_la_SOURCES = \
 
 liblabels_la_LIBADD = $(OS_LIBS) $(INTLLIBS)
 
-INCLUDES = $(partedincludedir) $(INTLINCS)
+AM_CPPFLAGS = $(partedincludedir) $(INTLINCS)
 
 BUILT_SOURCES = pt-limit.c
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)

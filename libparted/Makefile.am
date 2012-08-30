@@ -62,4 +62,4 @@ libparted_la_LIBADD =	\
 
 EXTRA_DIST	      = mbr.s
 
-INCLUDES = $(partedincludedir) $(INTLINCS)
+AM_CPPFLAGS = $(partedincludedir) $(INTLINCS)

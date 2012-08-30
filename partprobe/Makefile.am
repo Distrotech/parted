@@ -13,4 +13,4 @@ partprobe_LDADD = \
 
 partprobe_LDFLAGS = $(PARTEDLDFLAGS)
 
-INCLUDES	= $(partedincludedir) $(INTLINCS)
+AM_CPPFLAGS = $(partedincludedir) $(INTLINCS)
