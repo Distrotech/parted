@@ -738,13 +738,16 @@ mac_read (PedDisk* disk)
 	if (!ptt_read_sector (disk->dev, 0, &buf))
 		return 0;
 
-	MacRawDisk *raw_disk = (MacRawDisk *) buf;
+	MacRawDisk *raw_disk = buf;
 
 	if (!_check_signature (raw_disk))
 		goto error;
 
+	/* Record the original sector size;  this function may change it.  */
+	PedSector ss0 = disk->dev->sector_size;
 	if (!_disk_analyse_block_size (disk, raw_disk))
 		goto error;
+
 	if (!_disk_analyse_ghost_size (disk))
 		goto error;
 	ghost_size = mac_disk_data->ghost_size;
@@ -757,6 +760,15 @@ mac_read (PedDisk* disk)
 				sizeof(mac_disk_data->driverlist));
 		mac_disk_data->driver_count = raw_disk->driver_count;
 		mac_disk_data->block_size = raw_disk->block_size;
+	}
+
+	/* If _disk_analyse_block_size has increased the sector_size,
+	   reallocate this buffer, so we can still read a sector into it.  */
+	if (ss0 < disk->dev->sector_size) {
+		free (buf);
+		buf = ped_malloc (disk->dev->sector_size);
+		if (buf == NULL)
+			goto error;
 	}
 
 	for (num=1; num==1 || num <= last_part_entry_num; num++) {

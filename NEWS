@@ -4,6 +4,13 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug Fixes
 
+  libparted: mac: a MAC partition table could have a block_size larger
+  than the one the kernel told us about.  Upon reading that partition
+  table, libparted would ask if it's ok to use the larger block size.
+  If you were to respond in the affirmative, libparted would read the
+  larger number of bytes into a buffer of the shorter length,
+  overrunning it.
+
   libparted: gpt: fix gpt_get_max_supported_partition_count to work
   also on little-endian systems.
 
