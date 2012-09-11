@@ -112,10 +112,10 @@ gettext_to_wchar (const char* str)
 
 	memset(&ps, 0, sizeof (ps));
 	status = mbsrtowcs(result, &str, count, &ps);
-	if (status == (size_t) -1)
+	if (str != NULL)
 		goto error;
 
-	result = xrealloc (result, (wcslen (result) + 1) * sizeof (wchar_t));
+	result = xrealloc (result, (status + 1) * sizeof (wchar_t));
 	return result;
 
 error:
