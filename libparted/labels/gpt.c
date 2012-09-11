@@ -653,6 +653,10 @@ _header_is_valid (PedDisk const *disk, GuidPartitionTableHeader_t *gpt,
   if (first_usable < 3)
     return 0;
 
+  PedSector last_usable = PED_LE64_TO_CPU (gpt->LastUsableLBA);
+  if (last_usable < first_usable)
+    return 0;
+
   origcrc = gpt->HeaderCRC32;
   gpt->HeaderCRC32 = 0;
   if (pth_crc32 (dev, gpt, &crc) != 0)
