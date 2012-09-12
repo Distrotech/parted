@@ -47,7 +47,7 @@ for mkpart in mkpart; do
   dd if=/dev/zero of=testfile bs=${ss}c count=$N 2> /dev/null || fail=1
 
   # Test the scripting mode of $mkpart.
-  parted -s testfile -- mklabel gpt "$mkpart" p-name ext3 1s -1s > out 2>&1
+  parted -s testfile -- mklabel gpt "$mkpart" p-name ext3 1s -34s > out 2>&1
   test $? = 1 || fail=1
 
   # Compare the real error and the expected one
@@ -60,8 +60,8 @@ for mkpart in mkpart; do
   dd if=/dev/zero of=testfile bs=${ss}c count=$N 2> /dev/null || fail=1
   # Test the interactive mode of $mkpart
   echo n | \
-    parted ---pretend-input-tty testfile \
-      "mklabel gpt '$mkpart' p-name ext3 1s -1s" > out 2>&1 && fail=1
+    parted ---pretend-input-tty -- testfile \
+      mklabel gpt $mkpart p-name ext3 1s -34s > out 2>&1 && fail=1
 
   # We have to format the output before comparing.
   # normalize the actual output
