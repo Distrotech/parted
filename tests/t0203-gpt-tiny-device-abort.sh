@@ -1,6 +1,6 @@
 #!/bin/sh
-# parted before 3.1 could abort for a pathologically small device with
-# a valid primary GPT header but no room for the backup header.
+# parted before 3.1 could abort while reading a pathologically small device
+# with a valid primary GPT header but no room for the backup header.
 
 # Copyright (C) 2009-2012 Free Software Foundation, Inc.
 
