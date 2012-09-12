@@ -504,9 +504,15 @@ gpt_alloc (const PedDevice *dev)
   data_end = dev->length - 1
     - GPT_DEFAULT_PARTITION_ENTRY_ARRAY_SIZE / dev->sector_size;
 
-  /* If the device is too small to have room for data, reject it.  */
+  /* If the device is too small to accommodate GPT headers, reject it.  */
   if (data_end < data_start)
-    goto error_free_disk;
+    {
+      ped_exception_throw (PED_EXCEPTION_ERROR,
+			   PED_EXCEPTION_OK,
+			   _("device is so small it cannot even"
+			     " accommodate GPT headers"));
+      goto error_free_disk;
+    }
 
   disk->disk_specific = gpt_disk_data = ped_malloc (sizeof (GPTDiskData));
   if (!disk->disk_specific)
