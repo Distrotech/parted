@@ -501,11 +501,11 @@ gpt_alloc (const PedDevice *dev)
     goto error;
 
   data_start = 2 + GPT_DEFAULT_PARTITION_ENTRY_ARRAY_SIZE / dev->sector_size;
-  data_end = dev->length - 2
+  data_end = dev->length - 1
     - GPT_DEFAULT_PARTITION_ENTRY_ARRAY_SIZE / dev->sector_size;
 
   /* If the device is too small to have room for data, reject it.  */
-  if (data_end <= data_start)
+  if (data_end < data_start)
     goto error_free_disk;
 
   disk->disk_specific = gpt_disk_data = ped_malloc (sizeof (GPTDiskData));
