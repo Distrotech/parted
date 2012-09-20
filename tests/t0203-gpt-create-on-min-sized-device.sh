@@ -42,6 +42,6 @@ echo Error: device is so small it cannot even accommodate GPT headers \
 # Try to create a GPT partition table in too little space.  This must fail.
 parted -s $dev mklabel gpt > out 2>&1 && fail=1
 # There must be a diagnostic.
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail
