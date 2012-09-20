@@ -30,6 +30,7 @@ TESTS = \
   t0280-gpt-corrupt.sh \
   t0300-dos-on-gpt.sh \
   t0301-overwrite-gpt-pmbr.sh \
+  t0350-mac-PT-increases-sector-size.sh \
   t0400-loop-clobber-infloop.sh \
   t0500-dup-clobber.sh \
   t0501-duplicate.sh \
