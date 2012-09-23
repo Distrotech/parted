@@ -17,6 +17,25 @@ GNU parted NEWS                                    -*- outline -*-
   libparted: treat a disk with no pMBR as an msdos-labeled disk
   even when it has valid GPT headers.
 
+** Changes in behavior
+
+  Added new Linux-specific partition GUID type code
+  (0FC63DAF-8483-4772-8E79-3D69D8477DE4) for Linux filesystem data on GPT
+  disks.  This type code is now assigned as the default partition type code
+  for new partitions holding Linux filesystems.
+
+  Added new "msftdata" flag to identify partitions holding NTFS or FAT
+  filesystems on GPT disks.  This flag corresponds to a GPT type code of
+  EBD0A0A2-B9E5-4433-87C0-68B6B72699C7 ("Microsoft Basic Data").  Since
+  Linux filesystem partitions formerly used this type code, this flag may
+  optionally be set on Linux partitions to make the partition table type
+  codes match former configurations in case the new Linux filesystem type
+  code causes problems with some utility.  Note that this flag cannot be
+  removed from NTFS or FAT partitions within parted except by setting a
+  competing flag, such as "boot" (which sets the type code used by EFI
+  System partitions) or "msftres" (which sets the "Microsoft Reserved" type
+  code).
+
 
 * Noteworthy changes in release 3.1 (2012-03-02) [stable]
 

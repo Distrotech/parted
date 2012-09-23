@@ -2433,6 +2433,8 @@ ped_partition_flag_get_name (PedPartitionFlag flag)
 		return N_("prep");
 	case PED_PARTITION_MSFT_RESERVED:
 		return N_("msftres");
+	case PED_PARTITION_MSFT_DATA:
+		return N_("msftdata");
         case PED_PARTITION_APPLE_TV_RECOVERY:
                 return N_("atvrecv");
         case PED_PARTITION_DIAG:
