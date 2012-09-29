@@ -100,7 +100,7 @@ scsi_debug_setup_()
   modprobe scsi_debug "$@" || { rm -f stamp; return 1; }
   scsi_debug_modprobe_succeeded_=1
   test "$VERBOSE" = yes \
-    && warn_ $ME_ modprobe scsi_debug succeeded
+    && echo $ME_ modprobe scsi_debug succeeded 1>&2
 
   # Wait up to 2s (via .1s increments) for the list of devices to change.
   # Sleeping for a fraction of a second requires GNU sleep, so fall

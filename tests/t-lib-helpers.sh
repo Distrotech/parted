@@ -395,6 +395,6 @@ wait_for_dev_to_disappear_()
 
 device_mapper_required_()
 {
-  . "$abs_top_srcdir/tests/lvm-utils.sh" \
-       || fail_ "device mapper setup failed"
+  . "$abs_top_srcdir/tests/t-lvm.sh"
+  lvm_init_root_dir_ || fail_ "device mapper setup failed"
 }

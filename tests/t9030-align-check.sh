@@ -49,7 +49,8 @@ while :; do
   test $i = 70 && break
 
   # Wait up to 10s for the partition file to disappear.
-  wait_for_dev_to_disappear_ $p1 10 || { fail=1; warn $p1 failed to disappear; }
+  wait_for_dev_to_disappear_ $p1 10 \
+    || { fail=1; warn_ $ME_ $p1 failed to disappear; }
 done
 
 Exit $fail

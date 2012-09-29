@@ -74,7 +74,7 @@ TESTS = \
   t9050-partition-table-types.sh
 
 EXTRA_DIST = \
-  $(TESTS) lvm-utils.sh t-local.sh t-lvm.sh \
+  $(TESTS) t-local.sh t-lvm.sh \
   init.cfg init.sh t-lib-helpers.sh gpt-header-munge
 
 check_PROGRAMS = print-align print-max dup-clobber duplicate fs-resize
