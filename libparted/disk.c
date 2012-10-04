@@ -1968,7 +1968,7 @@ _check_partition (PedDisk* disk, PedPartition* part)
 }
 
 /**
- * Adds PedPartition \p part to PedPartition \p disk.
+ * Adds PedPartition \p part to PedDisk \p disk.
  *
  * \warning The partition's geometry may be changed, subject to \p constraint.
  * You could set \p constraint to <tt>ped_constraint_exact(&part->geom)</tt>,
