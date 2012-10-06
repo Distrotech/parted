@@ -107,6 +107,7 @@ gen_start_date = 2000-01-01
 gen-ChangeLog:
 	if test -d .git; then						\
 	  $(top_srcdir)/build-aux/gitlog-to-changelog			\
+	    --amend=$(srcdir)/build-aux/git-log-fix			\
 	    --since=$(gen_start_date) > $(distdir)/cl-t;		\
 	  rm -f $(distdir)/ChangeLog;					\
 	  mv $(distdir)/cl-t $(distdir)/ChangeLog;			\

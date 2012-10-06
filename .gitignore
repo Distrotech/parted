@@ -32,7 +32,8 @@ Makefile.in
 TAGS
 aclocal.m4
 autom4te.cache
-build-aux
+/build-aux/*
+!/build-aux/git-log-fix
 config.cache
 config.h
 config.hin
