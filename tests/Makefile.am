@@ -98,7 +98,7 @@ sep = $(PATH_SEPARATOR)
 # variables that can perturb tests are unset or set to expected values.
 # The rest are envvar settings that propagate build-related Makefile
 # variables to test scripts.
-AM_TESTS_ENVIRONMENT =				\
+TESTS_ENVIRONMENT =				\
   tmp__=$$TMPDIR; test -d "$$tmp__" || tmp__=.;	\
   TMPDIR=$$tmp__; export TMPDIR;		\
   export					\
