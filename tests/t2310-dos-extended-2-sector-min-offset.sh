@@ -39,8 +39,7 @@ $scsi_dev:2048s:scsi:512:512:msdos:Linux scsi_debug:;
 EOF
 
 cat <<EOF > err.exp || framework_failure
-Error: Error informing the kernel about modifications to partition $p5 -- Device or resource busy.  This means Linux won't know about any changes you made to $p5 until you reboot -- so you shouldn't mount it or use it in any way before rebooting.
-Error: Failed to add partition 5 (Device or resource busy)
+Error: Partition(s) 5 on $scsi_dev have been written, but we have been unable to inform the kernel of the change, probably because it/they are in use.  As a result, the old partition(s) will remain in use.  You should reboot now before making further changes.
 EOF
 
 # Create a DOS label with an extended partition starting at sector 64.

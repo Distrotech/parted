@@ -2407,18 +2407,7 @@ _blkpg_add_partition (PedDisk* disk, const PedPartition *part)
 
         if (!_blkpg_part_command (disk->dev, &linux_part,
                                   BLKPG_ADD_PARTITION)) {
-                return ped_exception_throw (
-                        PED_EXCEPTION_ERROR,
-                        PED_EXCEPTION_IGNORE_CANCEL,
-                        _("Error informing the kernel about modifications to "
-                          "partition %s -- %s.  This means Linux won't know "
-                          "about any changes you made to %s until you reboot "
-                          "-- so you shouldn't mount it or use it in any way "
-                          "before rebooting."),
-                        linux_part.devname,
-                        strerror (errno),
-                        linux_part.devname)
-                                == PED_EXCEPTION_IGNORE;
+                return 0;
         }
 
         return 1;
@@ -2790,12 +2779,8 @@ _disk_sync_part_table (PedDisk* disk)
 
                         /* add the (possibly modified or new) partition */
                         if (!add_partition (disk, part)) {
-                                ped_exception_throw (
-                                        PED_EXCEPTION_ERROR,
-                                        PED_EXCEPTION_RETRY_CANCEL,
-                                        _("Failed to add partition %d (%s)"),
-                                        i, strerror (errno));
-                                goto cleanup;
+                                ok[i - 1] = 0;
+                                errnums[i - 1] = errno;
                         }
                 }
         }
