@@ -4,6 +4,9 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug Fixes
 
+  libparted: Don't fail to manipulate partitions on dmraid disks that
+  have other partitions in use.
+
   libparted: mac: a MAC partition table could have a block_size larger
   than the one the kernel told us about.  Upon reading that partition
   table, libparted would ask if it's ok to use the larger block size.
