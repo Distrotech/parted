@@ -106,12 +106,23 @@ process_dev (PedDevice* dev)
 	PedDisk*	disk;
 
 	disk_type = ped_disk_probe (dev);
-	if (!disk_type || !strcmp (disk_type->name, "loop"))
+	if (disk_type && !strcmp (disk_type->name, "loop"))
 		return 1;
+	else if (!disk_type) {
+		/* Partition table not found, so create dummy,
+		   empty one */
+		disk_type = ped_disk_type_get("msdos");
+		if (!disk_type)
+			goto error;
 
-	disk = ped_disk_new (dev);
-	if (!disk)
-		goto error;
+		disk = ped_disk_new_fresh (dev, disk_type);
+		if (!disk)
+			goto error_destroy_disk;
+	} else {
+		disk = ped_disk_new (dev);
+		if (!disk)
+			goto error;
+	}
 	if (!opt_no_inform) {
 		if (!ped_disk_commit_to_os (disk))
 			goto error_destroy_disk;

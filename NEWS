@@ -17,6 +17,9 @@ GNU parted NEWS                                    -*- outline -*-
   libparted: treat a disk with no pMBR as an msdos-labeled disk
   even when it has valid GPT headers.
 
+  partprobe now tells the kernel to forget about any partitions
+  on a device that has no recognizable partition table.
+
 ** Changes in behavior
 
   Added new Linux-specific partition GUID type code
