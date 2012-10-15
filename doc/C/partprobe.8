@@ -31,22 +31,23 @@ command.
 .\" \fI<whatever>\fP escape sequences to invode bold face and italics,
 .\" respectively.
 \fBpartprobe\fP is a program that informs the operating system kernel of
-partition table changes, by requesting that the operating system re-read
-the partition table.
+partition table changes.
 .SH OPTIONS
 This program uses short UNIX style options.
 .TP
-.B \-d
+.B -d, --dry-run
 Don't update the kernel.
 .TP
-.B \-s
+.B -s, --summary
 Show a summary of devices and their partitions.
 .TP
-.B \-h
+.B -h, --help
 Show summary of options.
 .TP
-.B \-v
+.B -v, --version
 Show version of program.
+.SH REPORTING BUGS
+Report bugs to <bug-parted@gnu.org>
 .SH SEE ALSO
 .BR parted (8).
 .SH AUTHOR
