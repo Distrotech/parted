@@ -76,6 +76,7 @@ stamp-h1
 tags
 tests/dup-clobber
 tests/duplicate
+tests/fs-resize
 tests/help-version.log
 tests/old-init.sh
 tests/print-align
