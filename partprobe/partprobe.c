@@ -57,9 +57,6 @@
 
 static struct option const long_options[] =
   {
-    /* Note: the --no-update option is deprecated, and deliberately
-     * not documented.  FIXME: remove --no-update in 2009. */
-    {"no-update", no_argument, NULL, 'd'},
     {"dry-run", no_argument, NULL, 'd'},
     {"summary", no_argument, NULL, 's'},
     {"help", no_argument, NULL, 'h'},
