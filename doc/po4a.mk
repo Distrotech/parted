@@ -41,13 +41,13 @@ install-man: install-man1 install-man5 install-man8
 
 # For each .po, try to generate the man page
 all-local:
-	for po in `ls -1 $(srcdir)/*.$(lang).po 2>/dev/null`; do \
+	$(AM_V_GEN)for po in `ls -1 $(srcdir)/*.$(lang).po 2>/dev/null`; do \
 		$(MAKE) $$(basename $${po%.$(lang).po}); \
 	done
 
 # Remove the man pages that were generated from a .po
 clean-local:
-	for po in `ls -1 $(srcdir)/*.$(lang).po 2>/dev/null`; do \
+	$(AM_V_GEN)for po in `ls -1 $(srcdir)/*.$(lang).po 2>/dev/null`; do \
 		rm -f $$(basename $${po%.$(lang).po}); \
 	done
 
@@ -55,7 +55,7 @@ clean-local:
 # Update the PO in srcdir, according to the POT in C.
 # Based on the gettext po/Makefile.in.in
 updatepo:
-	tmpdir=`pwd`; \
+	$(AM_V_GEN)tmpdir=`pwd`; \
 	cd $(srcdir); \
 	for po in *.$(lang).po; do \
 	  case "$$po" in '*'*) continue;; esac; \
@@ -83,7 +83,7 @@ dist-hook: updatepo
 
 # Build the pages
 partprobe.8:
-	for locale in pt_BR ; do \
+	$(AM_V_GEN)for locale in pt_BR ; do \
 		po4a-translate -f man -m $(srcdir)/../C/$@ -p $@.$$locale.po -l $@ $(po4a_translate_options) ; \
 		if [ -f $(srcdir)/$@.$$locale.po.addendum ]; then \
 			po4a-translate -f man -m $(srcdir)/../C/$@ -p $@.$$locale.po -l $@ -a $(srcdir)/$@.$$locale.po.addendum $(po4a_translate_options) ; \
