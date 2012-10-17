@@ -13,33 +13,14 @@
 
 export LVM_SUPPRESS_FD_WARNINGS=1
 
-unsafe_losetup_()
-{
-  f=$1
-
-  G_dev_=/dev
-
-  # Iterate through $G_dev_/loop{,/}{0,1,2,3,4,5,6,7,8,9}
-  for slash in '' /; do
-    for i in 0 1 2 3 4 5 6 7 8 9; do
-      dev=$G_dev_/loop$slash$i
-      losetup $dev 1>&2 && continue;
-      losetup "$dev" "$f" > /dev/null && { echo "$dev"; return 0; }
-      break
-    done
-  done
-
-  return 1
-}
-
 loop_setup_()
 {
   file=$1
-  dd if=/dev/zero of="$file" bs=1M count=1 seek=1000 > /dev/null 2>&1 \
+  dd if=/dev/null of="$file" bs=1M count=1 seek=1000 > /dev/null 2>&1 \
     || { warn_ "loop_setup_ failed: Unable to create tmp file $file"; return 1; }
 
   # NOTE: this requires a new enough version of losetup
-  dev=$(unsafe_losetup_ "$file") \
+  dev=$(losetup --show -f "$file") \
     || { warn_ "loop_setup_ failed: Unable to create loopback device"; return 1; }
 
   echo "$dev"

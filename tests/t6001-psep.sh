@@ -44,14 +44,10 @@ cleanup_fn_() {
 # create a file of size N bytes
 N=10M
 
-# create the test file
-f1=$(pwd)/1; dd if=/dev/null of=$f1 bs=1 seek=$N 2> /dev/null || fail=1
-f2=$(pwd)/2; dd if=/dev/null of=$f2 bs=1 seek=$N 2> /dev/null || fail=1
-
-d1=$(loop_setup_ "$f1") \
+f1=$(pwd)/1; d1=$(loop_setup_ "$f1") \
   || skip_ "is this partition mounted with 'nodev'?"
 
-d2=$(loop_setup_ "$f2") \
+f2=$(pwd)/2 ;d2=$(loop_setup_ "$f2") \
   || skip_ "is this partition mounted with 'nodev'?"
 
 dmsetup_cmd="0 `blockdev --getsz $d1` linear $d1 0"
