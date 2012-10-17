@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-02-26 06:06+0100\n"
+"POT-Creation-Date: 2012-10-17 21:43+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -93,106 +93,111 @@ msgstr ""
 msgid "This manual page documents briefly the B<partprobe> command."
 msgstr ""
 
-# type: Plain text
 #.  TeX users may be more comfortable with the \fB<whatever>\fP and
 #.  \fI<whatever>\fP escape sequences to invode bold face and italics,
 #.  respectively.
 #. type: Plain text
-#: partprobe.8:36
+#: partprobe.8:35
 msgid ""
 "B<partprobe> is a program that informs the operating system kernel of "
-"partition table changes, by requesting that the operating system re-read the "
-"partition table."
+"partition table changes."
 msgstr ""
 
 # type: SH
 #. type: SH
-#: partprobe.8:36
+#: partprobe.8:35
 #, no-wrap
 msgid "OPTIONS"
 msgstr ""
 
 # type: Plain text
 #. type: Plain text
-#: partprobe.8:38
+#: partprobe.8:37
 msgid "This program uses short UNIX style options."
 msgstr ""
 
-# type: TP
 #. type: TP
-#: partprobe.8:38
+#: partprobe.8:37
 #, no-wrap
-msgid "B<-d>"
+msgid "B<-d, --dry-run>"
 msgstr ""
 
 # type: Plain text
 #. type: Plain text
-#: partprobe.8:41
+#: partprobe.8:40
 msgid "Don't update the kernel."
 msgstr ""
 
-# type: TP
 #. type: TP
-#: partprobe.8:41
+#: partprobe.8:40
 #, no-wrap
-msgid "B<-s>"
+msgid "B<-s, --summary>"
 msgstr ""
 
 # type: Plain text
 #. type: Plain text
-#: partprobe.8:44
+#: partprobe.8:43
 msgid "Show a summary of devices and their partitions."
 msgstr ""
 
-# type: TP
 #. type: TP
-#: partprobe.8:44
+#: partprobe.8:43
 #, no-wrap
-msgid "B<-h>"
+msgid "B<-h, --help>"
 msgstr ""
 
 # type: Plain text
 #. type: Plain text
-#: partprobe.8:47
+#: partprobe.8:46
 msgid "Show summary of options."
 msgstr ""
 
-# type: TP
 #. type: TP
-#: partprobe.8:47
+#: partprobe.8:46
 #, no-wrap
-msgid "B<-v>"
+msgid "B<-v, --version>"
 msgstr ""
 
 # type: Plain text
 #. type: Plain text
-#: partprobe.8:50
+#: partprobe.8:49
 msgid "Show version of program."
+msgstr ""
+
+#. type: SH
+#: partprobe.8:49
+#, no-wrap
+msgid "REPORTING BUGS"
+msgstr ""
+
+#. type: Plain text
+#: partprobe.8:51
+msgid "Report bugs to E<lt>bug-parted@gnu.orgE<gt>"
 msgstr ""
 
 # type: SH
 #. type: SH
-#: partprobe.8:50
+#: partprobe.8:51
 #, no-wrap
 msgid "SEE ALSO"
 msgstr ""
 
 # type: Plain text
 #. type: Plain text
-#: partprobe.8:52
+#: partprobe.8:53
 msgid "B<parted>(8)."
 msgstr ""
 
 # type: SH
 #. type: SH
-#: partprobe.8:52
+#: partprobe.8:53
 #, no-wrap
 msgid "AUTHOR"
 msgstr ""
 
 # type: Plain text
 #. type: Plain text
-#: partprobe.8:54
+#: partprobe.8:55
 msgid ""
 "This manual page was written by Timshel Knoll E<lt>timshel@debian.orgE<gt>, "
 "for the Debian GNU/Linux system (but may be used by others)."
