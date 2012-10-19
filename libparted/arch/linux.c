@@ -65,6 +65,8 @@
 # define _GL_ATTRIBUTE_FORMAT(spec) /* empty */
 #endif
 
+#define STRPREFIX(a, b) (strncmp (a, b, strlen (b)) == 0)
+
 #define KERNEL_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + (c))
 
 #ifndef __NR__llseek
@@ -478,6 +480,82 @@ bad:
         return r;
 }
 
+/* Return nonzero if device-mapper device, DEVPATH, is part of a dmraid
+   array.  Use the heuristic of checking for the string "DMRAID-" at the
+   start of its UUID.  */
+static int
+_is_dmraid_device (const char *devpath)
+{
+        int rc = 0;
+
+        char const *dm_name = strrchr (devpath, '/');
+        char const *dm_basename = dm_name && *(++dm_name) ? dm_name : devpath;
+        struct dm_task *task = dm_task_create (DM_DEVICE_DEPS);
+        if (!task)
+                return 0;
+
+        dm_task_set_name (task, dm_basename);
+        if (!dm_task_run (task))
+                goto err;
+
+        const char *dmraid_uuid = dm_task_get_uuid (task);
+        if (STRPREFIX (dmraid_uuid, "DMRAID-"))
+                rc = 1;
+
+err:
+        dm_task_destroy (task);
+        return rc;
+}
+
+/* We consider a dm device that is a linear mapping with a  *
+ * single target that also is a dm device to be a partition */
+
+static int
+_dm_is_part (const char *path)
+{
+        int rc = 0;
+        struct dm_task *task = dm_task_create (DM_DEVICE_DEPS);
+        if (!task)
+                return 0;
+
+        dm_task_set_name(task, path);
+        if (!dm_task_run(task))
+                goto err;
+
+        struct dm_info *info = alloca (sizeof *info);
+        memset(info, '\0', sizeof *info);
+        dm_task_get_info (task, info);
+        if (!info->exists)
+                goto err;
+
+        struct dm_deps *deps = dm_task_get_deps (task);
+        if (!deps)
+                goto err;
+
+        if (deps->count != 1)
+                goto err;
+        if (!_is_dm_major (major (deps->device[0])))
+                goto err;
+        dm_task_destroy (task);
+        if (!(task = dm_task_create (DM_DEVICE_TABLE)))
+                return 0;
+        dm_task_set_name (task, path);
+        if (!dm_task_run (task))
+                goto err;
+
+        char *target_type = NULL;
+        char *params = NULL;
+        uint64_t start, length;
+
+        dm_get_next_target (task, NULL, &start, &length, &target_type, &params);
+        if (strcmp (target_type, "linear"))
+                goto err;
+        rc = 1;
+
+err:
+        dm_task_destroy(task);
+        return rc;
+}
 
 static int
 _probe_dm_devices ()
@@ -504,7 +582,8 @@ _probe_dm_devices ()
                if (stat (buf, &st) != 0)
                        continue;
 
-               if (_is_dm_major(major(st.st_rdev)))
+               if (_is_dm_major(major(st.st_rdev)) && _is_dmraid_device (buf)
+                   && !_dm_is_part(buf))
                        _ped_device_probe (buf);
        }
        closedir (mapper_dir);
