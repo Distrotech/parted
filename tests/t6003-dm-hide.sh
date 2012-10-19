@@ -19,7 +19,6 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../parted
 
 require_root_
-lvm_init_root_dir_
 
 test "x$ENABLE_DEVICE_MAPPER" = xyes \
   || skip_ "no device-mapper support"
@@ -32,7 +31,10 @@ d1=
 f1=
 dev=
 cleanup_fn_() {
-    dmsetup remove $linear_
+    # Insist.  Sometimes the initial removal fails (race?).
+    # When that happens, a second removal appears to be sufficient.
+    dmsetup remove $linear_ || dmsetup remove $linear_
+
     test -n "$d1" && losetup -d "$d1"
     rm -f "$f1"
 }
@@ -41,20 +43,25 @@ f1=$(pwd)/1; d1=$(loop_setup_ "$f1") \
   || fail=1
 
 # setup: create a mapping
-echo "0 2048 linear $d1 0" | dmsetup create $linear_ || fail=1
-dev="$DM_DEV_DIR/mapper/$linear_"
+echo 0 2048 linear $d1 0 | dmsetup create $linear_ || fail=1
+dev=/dev/mapper/$linear_
 
-# device should not show up
-
+# No "DMRAID-" UUID prefix, hence the device should not show up.
 parted -l >out 2>&1
-! grep $linear_ out || fail=1
+grep "^Disk $dev:" out && fail=1
 
+# Unless we perform both dmsetup-remove *and* losetup -d,
+# the following dmsetup-create would fail with EBUSY.
 dmsetup remove $linear_
-echo "0 2048 linear $d1 0" | dmsetup create $linear_ -u "DMRAID-fake" || fail=1
+losetup -d "$d1" || fail=1
+# Reopen (or get new) loop device.
+d1=$(loop_setup_ "$f1") || fail=1
 
-# device should now show up
+# This time, use a fake UUID.
+echo 0 2048 linear $d1 0 | dmsetup create $linear_ -u "DMRAID-fake-$$" || fail=1
 
+# Thus, the device should now show up.
 parted -l >out 2>&1
-grep $linear_ out || fail=1
+grep "^Disk $dev:" out || fail=1
 
 Exit $fail
