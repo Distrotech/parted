@@ -506,16 +506,16 @@ gpt_alloc (const PedDevice *dev)
     goto error;
 
   data_start = 2 + GPT_DEFAULT_PARTITION_ENTRY_ARRAY_SIZE / dev->sector_size;
-  data_end = dev->length - 1
+  data_end = dev->length - 2
     - GPT_DEFAULT_PARTITION_ENTRY_ARRAY_SIZE / dev->sector_size;
 
-  /* If the device is too small to accommodate GPT headers, reject it.  */
+  /* If the device is too small to accommodate GPT headers and one data
+     sector, reject it.  */
   if (data_end < data_start)
     {
       ped_exception_throw (PED_EXCEPTION_ERROR,
 			   PED_EXCEPTION_OK,
-			   _("device is so small it cannot even"
-			     " accommodate GPT headers"));
+			   _("device is too small for GPT"));
       goto error_free_disk;
     }
 

@@ -24,7 +24,7 @@ dev=loop-file
 ss=$sector_size_
 
 # Create the smallest file that can accommodate a GPT partition table.
-dd if=/dev/null of=$dev bs=$ss seek=67 || framework_failure
+dd if=/dev/null of=$dev bs=$ss seek=68 || framework_failure
 
 # create a GPT partition table
 parted -s $dev mklabel gpt > out 2>&1 || fail=1
@@ -34,10 +34,9 @@ compare /dev/null out || fail=1
 # Create a file that is 1 sector smaller, and require failure,
 # *with* a diagnostic.
 rm -f $dev
-dd if=/dev/null of=$dev bs=$ss seek=66 || framework_failure
+dd if=/dev/null of=$dev bs=$ss seek=67 || framework_failure
 
-echo Error: device is so small it cannot even accommodate GPT headers \
-  > exp || framework_failure
+echo Error: device is too small for GPT > exp || framework_failure
 
 # Try to create a GPT partition table in too little space.  This must fail.
 parted -s $dev mklabel gpt > out 2>&1 && fail=1
