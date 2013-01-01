@@ -269,6 +269,7 @@ struct __attribute__ ((packed)) _GPTDiskData
   int entry_count;
   efi_guid_t uuid;
   int pmbr_boot;
+  PedSector AlternateLBA;
 };
 
 /* uses libparted's disk_specific field in PedPartition, to store our info */
@@ -523,6 +524,7 @@ gpt_alloc (const PedDevice *dev)
   if (!disk->disk_specific)
     goto error_free_disk;
 
+  gpt_disk_data->AlternateLBA = dev->length - 1;
   ped_geometry_init (&gpt_disk_data->data_area, dev, data_start,
                      data_end - data_start + 1);
   gpt_disk_data->entry_count = GPT_DEFAULT_PARTITION_ENTRIES;
@@ -748,6 +750,11 @@ _parse_header (PedDisk *disk, const GuidPartitionTableHeader_t *gpt,
       if (q == PED_EXCEPTION_FIX)
         {
           last_usable = last_usable_if_grown;
+          /* clear the old backup gpt header */
+          ptt_clear_sectors (disk->dev,
+                             gpt_disk_data->AlternateLBA, 1);
+          gpt_disk_data->AlternateLBA = disk->dev->length - 1;
+          last_usable = last_usable_if_grown;
           *update_needed = 1;
         }
       else if (q != PED_EXCEPTION_UNHANDLED)
@@ -869,13 +876,13 @@ gpt_read_headers (PedDisk const *disk,
   else
     pth_free (pri);
 
-  PedSector backup_sector_num =
+  gpt_disk_data->AlternateLBA =
     (valid_primary
      ? PED_LE64_TO_CPU (pri->AlternateLBA)
      : dev->length - 1);
 
   void *s_bak;
-  if (!ptt_read_sector (dev, backup_sector_num, &s_bak))
+  if (!ptt_read_sector (dev, gpt_disk_data->AlternateLBA ,&s_bak))
     return 1;
   t = pth_new_from_raw (dev, s_bak);
   free (s_bak);
@@ -883,10 +890,10 @@ gpt_read_headers (PedDisk const *disk,
     return 1;
 
   GuidPartitionTableHeader_t *bak = t;
-  if (_header_is_valid (disk, bak, backup_sector_num))
+  if (_header_is_valid (disk, bak, gpt_disk_data->AlternateLBA))
     {
       *backup_gpt = bak;
-      *backup_sector_num_p = backup_sector_num;
+      *backup_sector_num_p = gpt_disk_data->AlternateLBA;
     }
   else
     pth_free (bak);
@@ -957,31 +964,30 @@ gpt_read (PedDisk *disk)
     {
       /* Both are valid.  */
 #ifndef DISCOVER_ONLY
-      if (PED_LE64_TO_CPU (primary_gpt->AlternateLBA) < disk->dev->length - 1)
+      PedSector gpt_disk_end = PED_LE64_TO_CPU (primary_gpt->LastUsableLBA) + 1;
+      gpt_disk_end += ((PedSector) (PED_LE32_TO_CPU (primary_gpt->NumberOfPartitionEntries)) *
+                       (PedSector) (PED_LE32_TO_CPU (primary_gpt->SizeOfPartitionEntry)) /
+                       disk->dev->sector_size);
+
+      gpt_disk_data->AlternateLBA = PED_LE64_TO_CPU (primary_gpt->AlternateLBA);
+      if (PED_LE64_TO_CPU (primary_gpt->AlternateLBA) != gpt_disk_end)
         {
-          switch (ped_exception_throw
+          if (ped_exception_throw
                   (PED_EXCEPTION_ERROR,
-                   (PED_EXCEPTION_FIX | PED_EXCEPTION_CANCEL
-                    | PED_EXCEPTION_IGNORE),
+                   (PED_EXCEPTION_FIX | PED_EXCEPTION_IGNORE),
                    _("The backup GPT table is not at the end of the disk, as it "
-                     "should be.  This might mean that another operating system "
-                     "believes the disk is smaller.  Fix, by moving the backup "
-                     "to the end (and removing the old backup)?")))
+                     "should be.  Fix, by moving the backup to the end "
+                     "(and removing the old backup)?")) == PED_EXCEPTION_FIX)
             {
-            case PED_EXCEPTION_CANCEL:
-              goto error_free_gpt;
-            case PED_EXCEPTION_FIX:
               ptt_clear_sectors (disk->dev,
                                  PED_LE64_TO_CPU (primary_gpt->AlternateLBA), 1);
+              gpt_disk_data->AlternateLBA = gpt_disk_end;
               write_back = 1;
-              break;
-            default:
-              break;
             }
         }
 #endif /* !DISCOVER_ONLY */
-      gpt = primary_gpt;
       pth_free (backup_gpt);
+      gpt = primary_gpt;
     }
   else if (!primary_gpt && !backup_gpt)
     {
@@ -1149,15 +1155,15 @@ _generate_header (const PedDisk *disk, int alternate, uint32_t ptes_crc,
 			      * sizeof (GuidPartitionEntry_t));
       PedSector ptes_sectors = (ptes_bytes + ss - 1) / ss;
 
-      gpt->MyLBA = PED_CPU_TO_LE64 (disk->dev->length - 1);
+      gpt->MyLBA = PED_CPU_TO_LE64 (gpt_disk_data->AlternateLBA);
       gpt->AlternateLBA = PED_CPU_TO_LE64 (1);
       gpt->PartitionEntryLBA
-        = PED_CPU_TO_LE64 (disk->dev->length - 1 - ptes_sectors);
+        = PED_CPU_TO_LE64 (gpt_disk_data->AlternateLBA - ptes_sectors);
     }
   else
     {
       gpt->MyLBA = PED_CPU_TO_LE64 (1);
-      gpt->AlternateLBA = PED_CPU_TO_LE64 (disk->dev->length - 1);
+      gpt->AlternateLBA = PED_CPU_TO_LE64 (gpt_disk_data->AlternateLBA);
       gpt->PartitionEntryLBA = PED_CPU_TO_LE64 (2);
     }
 
@@ -1262,12 +1268,12 @@ gpt_write (const PedDisk *disk)
   pth_free (gpt);
   if (pth_raw == NULL)
     goto error_free_ptes;
-  write_ok = ped_device_write (disk->dev, pth_raw, disk->dev->length - 1, 1);
+  write_ok = ped_device_write (disk->dev, pth_raw, gpt_disk_data->AlternateLBA, 1);
   free (pth_raw);
   if (!write_ok)
     goto error_free_ptes;
   if (!ped_device_write (disk->dev, ptes,
-                         disk->dev->length - 1 - ptes_sectors, ptes_sectors))
+                         gpt_disk_data->AlternateLBA - ptes_sectors, ptes_sectors))
     goto error_free_ptes;
 
   free (ptes);

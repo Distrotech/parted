@@ -4,6 +4,12 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug Fixes
 
+  libparted: fix gpt end of disk handling.  Previously if the backup
+  copy of the gpt was not at the end of the disk and you chose to
+  ignore this error, parted would move it to the end of the disk
+  anyhow.  It will now leave the backup in the same location if
+  you chose to ignore this error.
+
   libparted: handle logical partitions starting immediately after
   the EBR.  Creating a logical partition one sector after the EBR
   used to cause parted to complain that it could not inform the

@@ -28,6 +28,8 @@ TESTS = \
   t0220-gpt-msftres.sh \
   t0250-gpt.sh \
   t0280-gpt-corrupt.sh \
+  t0281-gpt-grow.sh \
+  t0282-gpt-move-backup.sh \
   t0300-dos-on-gpt.sh \
   t0301-overwrite-gpt-pmbr.sh \
   t0350-mac-PT-increases-sector-size.sh \
