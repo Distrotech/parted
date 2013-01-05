@@ -47,7 +47,7 @@ echo 0 2048 linear $d1 0 | dmsetup create $linear_ || fail=1
 dev=/dev/mapper/$linear_
 
 # No "DMRAID-" UUID prefix, hence the device should not show up.
-parted -l >out 2>&1
+parted -s -l >out 2>&1
 grep "^Disk $dev:" out && fail=1
 
 # Unless we perform both dmsetup-remove *and* losetup -d,
@@ -61,7 +61,7 @@ d1=$(loop_setup_ "$f1") || fail=1
 echo 0 2048 linear $d1 0 | dmsetup create $linear_ -u "DMRAID-fake-$$" || fail=1
 
 # Thus, the device should now show up.
-parted -l >out 2>&1
+parted -s -l >out 2>&1
 grep "^Disk $dev:" out || fail=1
 
 Exit $fail
