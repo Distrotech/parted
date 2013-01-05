@@ -4,6 +4,10 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug Fixes
 
+  parted: fix EOF and ctrl-c handling.  parted used to refuse to exit
+  in response to ctrl-c and would get stuck in an infinite loop
+  prompting for more input when it reached EOF on stdin.
+
   libparted: Don't fail to manipulate partitions on dmraid disks that
   have other partitions in use.
 

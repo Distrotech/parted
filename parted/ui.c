@@ -647,15 +647,7 @@ exception_handler (PedException* ex)
 
         got_ctrl_c = 0;
 
-        do {
-                opt = command_line_get_ex_opt ("", ex->options);
-        } while (opt == PED_EXCEPTION_UNHANDLED
-                 && (isatty (0) || pretend_input_tty) && !got_ctrl_c);
-
-        if (got_ctrl_c) {
-                got_ctrl_c = 0;
-                opt = PED_EXCEPTION_UNHANDLED;
-        }
+	opt = command_line_get_ex_opt ("", ex->options);
 
         return opt;
 }
@@ -900,6 +892,10 @@ command_line_get_word (const char* prompt, const char* def,
 
                 command_line_prompt_words (prompt, def, possibilities,
                                            multi_word);
+                if (got_ctrl_c) {
+                        got_ctrl_c = 0;
+                        return NULL;
+                }
         } while (command_line_get_word_count ());
 
         return NULL;
@@ -1581,7 +1577,7 @@ interactive_mode (PedDevice** dev, Command* cmd_list[])
                 Command*    cmd;
 
                 while (!command_line_get_word_count ()) {
-                        if (feof (stdin)) {
+                        if (got_ctrl_c) {
                                 putchar ('\n');
                                 return 1;
                         }
