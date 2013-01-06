@@ -2,7 +2,7 @@
 # gpt: create many partitions
 # Before parted-3.1, this would provoke an invalid free.
 
-# Copyright (C) 2012 Free Software Foundation, Inc.
+# Copyright (C) 2012-2013 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

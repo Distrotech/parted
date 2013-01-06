@@ -2,7 +2,7 @@
 # parted 3.1 and prior would exit with no diagnostic when failing
 # to create a GPT partition table on a device that was too small.
 
-# Copyright (C) 2012 Free Software Foundation, Inc.
+# Copyright (C) 2012-2013 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

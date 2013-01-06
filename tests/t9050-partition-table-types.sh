@@ -3,7 +3,7 @@
 # I.e., write a partition table of type T, and then overwrite it
 # with one of type V, for every permutation of T and V.
 
-# Copyright (C) 2011-2012 Free Software Foundation, Inc.
+# Copyright (C) 2011-2013 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
