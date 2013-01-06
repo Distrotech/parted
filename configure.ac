@@ -235,6 +235,7 @@ if test "$gl_gcc_warnings" = yes; then
   nw="$nw -Wstrict-overflow"        # expr.c, pr.c, tr.c, factor.c
   nw="$nw -Wstack-protector"        # libparted/label/gpt.c
   # ?? -Wstrict-overflow
+  nw="$nw -Wsuggest-attribute=format" # suggests to use gnu_printf for vsnprintf
 
   gl_MANYWARN_ALL_GCC([ws])
   gl_MANYWARN_COMPLEMENT([ws], [$ws], [$nw])
