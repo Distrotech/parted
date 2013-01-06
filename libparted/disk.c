@@ -36,6 +36,7 @@
 #include <parted/parted.h>
 #include <parted/debug.h>
 #include <stdbool.h>
+#include <limits.h>
 
 #include "architecture.h"
 #include "labels/pt-tools.h"
@@ -404,6 +405,7 @@ _ped_disk_alloc (const PedDevice* dev, const PedDiskType* disk_type)
 	disk->type = disk_type;
 	disk->update_mode = 1;
 	disk->part_list = NULL;
+	disk->needs_clobber = 0;
 	return disk;
 
 error:
@@ -917,6 +919,8 @@ _partition_align (PedPartition* part, const PedConstraint* constraint)
 	PED_ASSERT (disk_type->ops->partition_align != NULL);
 	PED_ASSERT (part->disk->update_mode);
 
+	if (part->disk->needs_clobber)
+		return 1; /* do not attempt to align partitions while reading them */
 	return disk_type->ops->partition_align (part, constraint);
 }
 
@@ -1771,7 +1775,7 @@ _partition_get_overlap_constraint (PedPartition* part, PedGeometry* geom)
 		walk = ext_part->part_list;
 	} else {
 		min_start = 0;
-		max_end = part->disk->dev->length - 1;
+		max_end = LLONG_MAX - 1;
 		walk = part->disk->part_list;
 	}
 
@@ -1797,48 +1801,6 @@ _partition_get_overlap_constraint (PedPartition* part, PedGeometry* geom)
 	return ped_constraint_new_from_max (&free_space);
 }
 
-/*
- * Returns \c 0 if the partition, \p part overlaps with any partitions on the
- * \p disk.  The geometry of \p part is taken to be \p geom, NOT \p part->geom
- * (the idea here is to check if \p geom is valid, before changing \p part).
- *
- * This is useful for seeing if a resized partitions new geometry is going to
- * fit, without the existing geomtry getting in the way.
- *
- * Note: overlap with an extended partition is also allowed, provided that
- * \p geom lies completely inside the extended partition.
- */
-static int _GL_ATTRIBUTE_PURE
-_disk_check_part_overlaps (PedDisk* disk, PedPartition* part)
-{
-	PedPartition*	walk;
-
-	PED_ASSERT (disk != NULL);
-	PED_ASSERT (part != NULL);
-
-	for (walk = ped_disk_next_partition (disk, NULL); walk;
-	     walk = ped_disk_next_partition (disk, walk)) {
-		if (walk->type & PED_PARTITION_FREESPACE)
-			continue;
-		if (walk == part)
-			continue;
-		if (part->type & PED_PARTITION_EXTENDED
-		    && walk->type & PED_PARTITION_LOGICAL)
-			continue;
-
-		if (ped_geometry_test_overlap (&walk->geom, &part->geom)) {
-			if (walk->type & PED_PARTITION_EXTENDED
-			    && part->type & PED_PARTITION_LOGICAL
-			    && ped_geometry_test_inside (&walk->geom,
-							 &part->geom))
-				continue;
-			return 0;
-		}
-	}
-
-	return 1;
-}
-
 static int
 _partition_check_basic_sanity (PedDisk* disk, PedPartition* part)
 {
@@ -1847,7 +1809,6 @@ _partition_check_basic_sanity (PedDisk* disk, PedPartition* part)
 	PED_ASSERT (part->disk == disk);
 
 	PED_ASSERT (part->geom.start >= 0);
-	PED_ASSERT (part->geom.end < disk->dev->length);
 	PED_ASSERT (part->geom.start <= part->geom.end);
 
 	if (!ped_disk_type_check_feature (disk->type, PED_DISK_TYPE_EXTENDED)
@@ -1934,29 +1895,30 @@ _check_partition (PedDisk* disk, PedPartition* part)
 
 	if (part->type & PED_PARTITION_LOGICAL
 	    && !ped_geometry_test_inside (&ext_part->geom, &part->geom)) {
-		ped_exception_throw (
+		if (ped_exception_throw (
 			PED_EXCEPTION_ERROR,
-			PED_EXCEPTION_CANCEL,
+			PED_EXCEPTION_IGNORE_CANCEL,
 			_("Can't have a logical partition outside of the "
 			  "extended partition on %s."),
-			disk->dev->path);
-		return 0;
-	}
-
-	if (!_disk_check_part_overlaps (disk, part)) {
-		ped_exception_throw (
-			PED_EXCEPTION_ERROR,
-			PED_EXCEPTION_CANCEL,
-			_("Can't have overlapping partitions."));
-		return 0;
+			disk->dev->path) != PED_EXCEPTION_IGNORE)
+			return 0;
 	}
 
 	if (! (part->type & PED_PARTITION_LOGICAL)
 	    && ext_part && ext_part != part
 	    && ped_geometry_test_inside (&ext_part->geom, &part->geom)) {
-		ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
+		if (ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_IGNORE_CANCEL,
 			_("Can't have a primary partition inside an extended "
-			 "partition."));
+			  "partition.")) != PED_EXCEPTION_IGNORE)
+			return 0;
+	}
+
+	if (part->geom.end >= disk->dev->length) {
+		if (ped_exception_throw (
+			PED_EXCEPTION_ERROR,
+			PED_EXCEPTION_IGNORE_CANCEL,
+			_("Can't have a partition outside the disk!"))
+		    != PED_EXCEPTION_IGNORE )
 		return 0;
 	}
 
@@ -2003,16 +1965,15 @@ ped_disk_add_partition (PedDisk* disk, PedPartition* part,
 							constraint);
 
 		if (!constraints && constraint) {
-			ped_exception_throw (
+			if (ped_exception_throw (
 				PED_EXCEPTION_ERROR,
-				PED_EXCEPTION_CANCEL,
-				_("Can't have overlapping partitions."));
+				PED_EXCEPTION_IGNORE_CANCEL,
+				_("Can't have overlapping partitions.")) != PED_EXCEPTION_IGNORE)
 			goto error;
-		}
-
+		} else constraint = constraints;
 		if (!_partition_enumerate (part))
 			goto error;
-		if (!_partition_align (part, constraints))
+		if (!_partition_align (part, constraint))
 			goto error;
 	}
         /* FIXME: when _check_partition fails, we end up leaking PART

@@ -2,6 +2,12 @@ GNU parted NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New Features
+
+  You can now choose to ignore errors about partitions that overlap,
+  or are longer than the disk.  This allows you to use parted to
+  repair the problem.
+
 ** Bug Fixes
 
   libparted: fix gpt end of disk handling.  Previously if the backup
