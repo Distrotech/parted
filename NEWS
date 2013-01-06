@@ -10,6 +10,11 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug Fixes
 
+  Fix cache coherency issue by flushing partition block devices.
+  This had been mistakenly disabled in parted 2.0, and resulted
+  in parted sometimes identifying the previous filesystem type
+  after running an mkfs to format a partition to a new type.
+
   libparted: fix gpt end of disk handling.  Previously if the backup
   copy of the gpt was not at the end of the disk and you chose to
   ignore this error, parted would move it to the end of the disk

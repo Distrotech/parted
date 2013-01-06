@@ -703,19 +703,6 @@ _get_linux_version ()
         return kver = KERNEL_VERSION (major, minor, teeny);
 }
 
-static int
-_have_kern26 ()
-{
-        static int have_kern26 = -1;
-        int kver;
-
-        if (have_kern26 != -1)
-                return have_kern26;
-
-        kver = _get_linux_version();
-        return have_kern26 = kver >= KERNEL_VERSION (2,6,0) ? 1 : 0;
-}
-
 #if USE_BLKID
 static void
 get_blkid_topology (LinuxSpecific *arch_specific)
@@ -1567,8 +1554,8 @@ linux_is_busy (PedDevice* dev)
         return 0;
 }
 
-/* we need to flush the master device, and with kernel < 2.6 all the partition
- * devices, because there is no coherency between the caches with old kernels.
+/* we need to flush the master device, and all the partition devices,
+ * because there is no coherency between the caches.
  * We should only flush unmounted partition devices, because:
  *  - there is never a need to flush them (we're not doing IO there)
  *  - flushing a device that is mounted causes unnecessary IO, and can
@@ -1585,10 +1572,6 @@ _flush_cache (PedDevice* dev)
         dev->dirty = 0;
 
         ioctl (arch_specific->fd, BLKFLSBUF);
-
-        /* With linux-2.6.0 and newer, we're done.  */
-        if (_have_kern26())
-                return;
 
         for (i = 1; i < 16; i++) {
                 char*           name;
@@ -1654,9 +1637,7 @@ retry:
                 dev->read_only = 0;
         }
 
-        /* With kernels < 2.6 flush cache for cache coherence issues */
-        if (!_have_kern26())
-                _flush_cache (dev);
+        _flush_cache (dev);
 
         return 1;
 }
