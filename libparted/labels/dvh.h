@@ -112,8 +112,8 @@ struct device_parameters {
 
 struct volume_directory {
 	char	vd_name[VDNAMESIZE];	/* name */
-	int	vd_lbn;			/* logical block number */
-	int	vd_nbytes;		/* file length in bytes */
+	unsigned int	vd_lbn;			/* logical block number */
+	unsigned int	vd_nbytes;		/* file length in bytes */
 };
 
 /*
@@ -125,9 +125,9 @@ struct volume_directory {
  * NOTE: pt_firstlbn SHOULD BE CYLINDER ALIGNED
  */
 struct partition_table {		/* one per logical partition */
-	int	pt_nblks;		/* # of logical blks in partition */
-	int	pt_firstlbn;		/* first lbn of partition */
-	int	pt_type;		/* use of partition */
+	unsigned int	pt_nblks;		/* # of logical blks in partition */
+	unsigned int	pt_firstlbn;		/* first lbn of partition */
+	int		pt_type;		/* use of partition */
 };
 
 #define	PTYPE_VOLHDR	0		/* partition is volume header */
