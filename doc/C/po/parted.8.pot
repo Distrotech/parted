@@ -1,0 +1,458 @@
+# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2013-06-18 08:26+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. type: TH
+#: parted.8:1
+#, no-wrap
+msgid "PARTED"
+msgstr ""
+
+#. type: TH
+#: parted.8:1
+#, no-wrap
+msgid "2007 March 29"
+msgstr ""
+
+#. type: TH
+#: parted.8:1
+#, no-wrap
+msgid "parted"
+msgstr ""
+
+#. type: TH
+#: parted.8:1
+#, no-wrap
+msgid "GNU Parted Manual"
+msgstr ""
+
+#. type: SH
+#: parted.8:2
+#, no-wrap
+msgid "NAME"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:4
+msgid "GNU Parted - a partition manipulation program"
+msgstr ""
+
+#. type: SH
+#: parted.8:4
+#, no-wrap
+msgid "SYNOPSIS"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:7
+msgid "B<parted> [options] [device [command [options...]...]]"
+msgstr ""
+
+#. type: SH
+#: parted.8:7
+#, no-wrap
+msgid "DESCRIPTION"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:13
+msgid ""
+"B<parted> is a program to manipulate disk partitions.  It supports multiple "
+"partition table formats, including MS-DOS and GPT.  It is useful for "
+"creating space for new operating systems, reorganising disk usage, and "
+"copying data to new hard disks."
+msgstr ""
+
+#. type: Plain text
+#: parted.8:16
+msgid ""
+"This manual page documents B<parted> briefly.  Complete documentation is "
+"distributed with the package in GNU Info format."
+msgstr ""
+
+#. type: SH
+#: parted.8:16
+#, no-wrap
+msgid "OPTIONS"
+msgstr ""
+
+#. type: TP
+#: parted.8:17
+#, no-wrap
+msgid "B<-h, --help>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:20
+msgid "displays a help message"
+msgstr ""
+
+#. type: TP
+#: parted.8:20
+#, no-wrap
+msgid "B<-l, --list>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:23
+msgid "lists partition layout on all block devices"
+msgstr ""
+
+#. type: TP
+#: parted.8:23
+#, no-wrap
+msgid "B<-m, --machine>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:26
+msgid "displays machine parseable output"
+msgstr ""
+
+#. type: TP
+#: parted.8:26
+#, no-wrap
+msgid "B<-s, --script>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:29
+msgid "never prompts for user intervention"
+msgstr ""
+
+#. type: TP
+#: parted.8:29
+#, no-wrap
+msgid "B<-v, --version>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:32
+msgid "displays the version"
+msgstr ""
+
+#. type: TP
+#: parted.8:32
+#, no-wrap
+msgid "B<-a >I<alignment-type>B<, --align >I<alignment-type>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:35
+msgid "Set alignment for newly created partitions, valid alignment types are:"
+msgstr ""
+
+#. type: IP
+#: parted.8:36
+#, no-wrap
+msgid "none"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:38
+msgid "Use the minimum alignment allowed by the disk type."
+msgstr ""
+
+#. type: IP
+#: parted.8:38
+#, no-wrap
+msgid "cylinder"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:40
+msgid "Align partitions to cylinders."
+msgstr ""
+
+#. type: IP
+#: parted.8:40
+#, no-wrap
+msgid "minimal"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:46
+msgid ""
+"Use minimum alignment as given by the disk topology information. This and "
+"the opt value will use layout information provided by the disk to align the "
+"logical partition table addresses to actual physical blocks on the disks.  "
+"The min value is the minimum alignment needed to align the partition "
+"properly to physical blocks, which avoids performance degradation."
+msgstr ""
+
+#. type: IP
+#: parted.8:46
+#, no-wrap
+msgid "optimal"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:50
+msgid ""
+"Use optimum alignment as given by the disk topology information. This aligns "
+"to a multiple of the physical block size in a way that guarantees optimal "
+"performance."
+msgstr ""
+
+#. type: SH
+#: parted.8:52
+#, no-wrap
+msgid "COMMANDS"
+msgstr ""
+
+#. type: TP
+#: parted.8:53
+#, no-wrap
+msgid "B<[device]>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:57
+msgid ""
+"The block device to be used.  When none is given, B<parted> will use the "
+"first block device it finds."
+msgstr ""
+
+#. type: TP
+#: parted.8:57
+#, no-wrap
+msgid "B<[command [options]]>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:62
+msgid ""
+"Specifies the command to be executed.  If no command is given, B<parted> "
+"will present a command prompt.  Possible commands are:"
+msgstr ""
+
+#. type: TP
+#: parted.8:63
+#, no-wrap
+msgid "B<help >I<[command]>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:66
+msgid "Print general help, or help on I<command> if specified."
+msgstr ""
+
+#. type: TP
+#: parted.8:66
+#, no-wrap
+msgid "B<align-check >I<type>B< >I<partition>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:70
+msgid ""
+"Check if I<partition> satisfies the alignment constraint of I<type>.  "
+"I<type> must be \"minimal\" or \"optimal\"."
+msgstr ""
+
+#. type: TP
+#: parted.8:70
+#, no-wrap
+msgid "B<mklabel >I<label-type>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:75
+msgid ""
+"Create a new disklabel (partition table) of I<label-type>.  I<label-type> "
+"should be one of \"aix\", \"amiga\", \"bsd\", \"dvh\", \"gpt\", \"loop\", "
+"\"mac\", \"msdos\", \"pc98\", or \"sun\"."
+msgstr ""
+
+#. type: TP
+#: parted.8:75
+#, no-wrap
+msgid "B<mkpart >I<part-type>B< >I<[fs-type]>B< >I<start>B< >I<end>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:80
+msgid ""
+"Make a I<part-type> partition for filesystem I<fs-type> (if specified), "
+"beginning at I<start> and ending at I<end> (by default in megabytes).  "
+"I<part-type> should be one of \"primary\", \"logical\", or \"extended\"."
+msgstr ""
+
+#. type: TP
+#: parted.8:80
+#, no-wrap
+msgid "B<name >I<partition>B< >I<name>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:84
+msgid ""
+"Set the name of I<partition> to I<name>. This option works only on Mac, "
+"PC98, and GPT disklabels. The name can be placed in quotes, if necessary."
+msgstr ""
+
+#. type: TP
+#: parted.8:84
+#, no-wrap
+msgid "B<print>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:87
+msgid "Display the partition table."
+msgstr ""
+
+#. type: TP
+#: parted.8:87
+#, no-wrap
+msgid "B<quit>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:90
+msgid "Exit from B<parted>."
+msgstr ""
+
+#. type: TP
+#: parted.8:90
+#, no-wrap
+msgid "B<rescue >I<start>B< >I<end>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:95
+msgid ""
+"Rescue a lost partition that was located somewhere between I<start> and "
+"I<end>.  If a partition is found, B<parted> will ask if you want to create "
+"an entry for it in the partition table."
+msgstr ""
+
+#. type: TP
+#: parted.8:95
+#, no-wrap
+msgid "B<rm >I<partition>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:98
+msgid "Delete I<partition>."
+msgstr ""
+
+#. type: TP
+#: parted.8:98
+#, no-wrap
+msgid "B<select >I<device>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:103
+msgid ""
+"Choose I<device> as the current device to edit. I<device> should usually be "
+"a Linux hard disk device, but it can be a partition, software raid device, "
+"or an LVM logical volume if necessary."
+msgstr ""
+
+#. type: TP
+#: parted.8:103
+#, no-wrap
+msgid "B<set >I<partition>B< >I<flag>B< >I<state>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:109
+msgid ""
+"Change the state of the I<flag> on I<partition> to I<state>.  Supported "
+"flags are: \"boot\", \"root\", \"swap\", \"hidden\", \"raid\", \"lvm\", "
+"\"lba\", \"legacy_boot\" and \"palo\".  I<state> should be either \"on\" or "
+"\"off\"."
+msgstr ""
+
+#. type: TP
+#: parted.8:109
+#, no-wrap
+msgid "B<unit >I<unit>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:117
+msgid ""
+"Set I<unit> as the unit to use when displaying locations and sizes, and for "
+"interpreting those given by the user when not suffixed with an explicit "
+"unit.  I<unit> can be one of \"s\" (sectors), \"B\" (bytes), \"kB\", \"MB\", "
+"\"MiB\", \"GB\", \"GiB\", \"TB\", \"TiB\", \"%\" (percentage of device "
+"size), \"cyl\" (cylinders), \"chs\" (cylinders, heads, sectors), or "
+"\"compact\" (megabytes for input, and a human-friendly form for output)."
+msgstr ""
+
+#. type: TP
+#: parted.8:117
+#, no-wrap
+msgid "B<toggle >I<partition>B< >I<flag>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:120
+msgid "Toggle the state of I<flag> on I<partition>."
+msgstr ""
+
+#. type: TP
+#: parted.8:120
+#, no-wrap
+msgid "B<version>"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:123
+msgid "Display version information and a copyright message."
+msgstr ""
+
+#. type: SH
+#: parted.8:124
+#, no-wrap
+msgid "REPORTING BUGS"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:126
+msgid "Report bugs to E<lt>bug-parted@gnu.orgE<gt>"
+msgstr ""
+
+#. type: SH
+#: parted.8:126
+#, no-wrap
+msgid "SEE ALSO"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:134
+msgid ""
+"B<fdisk>(8), B<mkfs>(8), The I<parted> program is fully documented in the "
+"B<info(1)> format I<GNU partitioning software> manual."
+msgstr ""
+
+#. type: SH
+#: parted.8:134
+#, no-wrap
+msgid "AUTHOR"
+msgstr ""
+
+#. type: Plain text
+#: parted.8:136
+msgid ""
+"This manual page was written by Timshel Knoll E<lt>timshel@debian.orgE<gt>, "
+"for the Debian GNU/Linux system (but may be used by others)."
+msgstr ""

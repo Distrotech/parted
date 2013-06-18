@@ -1,0 +1,1 @@
+/usr/src/parted/parted/gnulib/tests/test-c-strncasecmp.c

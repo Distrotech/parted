@@ -1,0 +1,1 @@
+/usr/src/parted/parted/gnulib/tests/test-mbrtowc-w32-1.sh

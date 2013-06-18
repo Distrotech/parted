@@ -1,0 +1,1593 @@
+# Kinyarwanda translations for parted package.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# Steve Murphy <murf@e-tools.com>, 2005.
+# Steve performed initial rough translation from compendium built from translations provided by the following translators:
+# Philibert Ndandali  <ndandali@yahoo.fr>, 2005.
+# Viateur MUGENZI <muvia1@yahoo.fr>, 2005.
+# Noëlla Mupole <s24211045@tuks.co.za>, 2005.
+# Carole Karema <karemacarole@hotmail.com>, 2005.
+# JEAN BAPTISTE NGENDAHAYO <ngenda_denis@yahoo.co.uk>, 2005.
+# Augustin KIBERWA  <akiberwa@yahoo.co.uk>, 2005.
+# Donatien NSENGIYUMVA <ndonatienuk@yahoo.co.uk>, 2005.
+# Antoine Bigirimana <antoine@e-tools.com>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: parted 1.6.6\n"
+"POT-Creation-Date: 2003-07-26 10:37+1000\n"
+"PO-Revision-Date: 2005-04-04 10:55-0700\n"
+"Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
+"Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: libparted/linux.c:269
+#, fuzzy, c-format
+msgid "Could not stat device %s - %s."
+msgstr "OYA APAREYE"
+
+#: libparted/linux.c:370
+#, fuzzy, c-format
+msgid "The sector size on %s is %d bytes.  Parted is known not to work properly with drives with sector sizes other than %d bytes"
+msgstr "Ingano ku ni Bayite ni OYA Kuri Akazi Na: Na: Ikindi Bayite"
+
+#: libparted/linux.c:416
+#, fuzzy, c-format
+msgid "Unable to determine the size of %s (%s)"
+msgstr "Kuri i Ingano Bya"
+
+#: libparted/linux.c:443
+#, fuzzy, c-format
+msgid "Could not read geometry of %s - %s."
+msgstr "OYA Gusoma Iyigamashusho Bya"
+
+#: libparted/linux.c:466
+#, fuzzy, c-format
+msgid "Device %s has dodgey geometry."
+msgstr "Iyigamashusho"
+
+#: libparted/linux.c:511
+#, fuzzy, c-format
+msgid "Could not get identity of device %s - %s"
+msgstr "OYA Kubona Ikiranga Bya APAREYE"
+
+#: libparted/linux.c:520
+msgid "IDE"
+msgstr ""
+
+#: libparted/linux.c:600
+#, fuzzy, c-format
+msgid "Error initialising SCSI device %s - %s"
+msgstr "APAREYE"
+
+#: libparted/linux.c:624
+msgid "SCSI"
+msgstr ""
+
+#: libparted/linux.c:679
+#, fuzzy, c-format
+msgid "The device %s is zero-length, and can't possibly store a file system or partition table.  Perhaps you selected the wrong device?"
+msgstr "APAREYE ni Zeru Uburebure Na a IDOSIYE Sisitemu Cyangwa imbonerahamwe# Byahiswemo i APAREYE"
+
+#: libparted/linux.c:725
+#, fuzzy
+msgid "Unable to determine geometry of file/device.  You should not use Parted unless you REALLY know what you're doing!"
+msgstr "Kuri Iyigamashusho Bya IDOSIYE APAREYE OYA Gukoresha"
+
+#: libparted/linux.c:801
+msgid "DAC960 RAID controller"
+msgstr ""
+
+#: libparted/linux.c:806
+msgid "Compaq Smart Array"
+msgstr ""
+
+#: libparted/linux.c:811
+msgid "ATARAID Controller"
+msgstr ""
+
+#: libparted/linux.c:816
+msgid "I2O Controller"
+msgstr ""
+
+#: libparted/linux.c:829
+#, fuzzy, c-format
+msgid "Device %s is neither a SCSI nor IDE drive."
+msgstr "ni a Porogaramu- shoboza"
+
+# filter/source\xsltdialog\xmlfilterdialogstrings.src:STR_UNKNOWN_APPLICATION.text
+#: libparted/linux.c:833
+msgid "Unknown"
+msgstr "Kitazwi"
+
+#: libparted/linux.c:840
+#, fuzzy
+msgid "ped_device_new()  Unsupported device type"
+msgstr "APAREYE Ubwoko"
+
+#: libparted/gnu.c:248 libparted/linux.c:936
+#, fuzzy, c-format
+msgid "Error opening %s: %s"
+msgstr "Hari ikibazo mu gufungura %s%S"
+
+#: libparted/gnu.c:258 libparted/linux.c:947
+#, fuzzy, c-format
+msgid "Unable to open %s read-write (%s).  %s has been opened read-only."
+msgstr "Kuri Gufungura Gusoma Kwandika Gusoma"
+
+#: libparted/gnu.c:436 libparted/gnu.c:534 libparted/gnu.c:662
+#: libparted/linux.c:1050 libparted/linux.c:1114
+#, fuzzy, c-format
+msgid "%s during read on %s"
+msgstr "%sGusoma ku"
+
+#: libparted/linux.c:1085
+#, fuzzy, c-format
+msgid "%s during seek for read on %s"
+msgstr "%skugirango Gusoma ku"
+
+#: libparted/gnu.c:571 libparted/gnu.c:616 libparted/gnu.c:693
+#: libparted/linux.c:1154 libparted/linux.c:1235 libparted/linux.c:1291
+#, fuzzy, c-format
+msgid "%s during write on %s"
+msgstr "%sKwandika ku"
+
+#: libparted/gnu.c:496 libparted/linux.c:1179
+#, fuzzy, c-format
+msgid "Can't write to %s, because it is opened read-only."
+msgstr "Kwandika Kuri ni Gusoma"
+
+#: libparted/linux.c:1201
+#, fuzzy, c-format
+msgid "%s during seek for write on %s"
+msgstr "%skugirango Kwandika ku"
+
+#: libparted/linux.c:1537
+#, fuzzy, c-format
+msgid "Error reading %s (%s) to determine if partition is mounted."
+msgstr "Kuri NIBA ni"
+
+#: libparted/linux.c:1575
+#, fuzzy
+msgid "Unable to determine if partitions are mounted via /proc/mounts or /etc/mtab.  Make sure you don't attempt to resize or modify mounted file systems.  (Even read-only mounted)"
+msgstr "Kuri NIBA Biturutse Cyangwa Kuri Ihindurangero Cyangwa Guhindura IDOSIYE Gusoma"
+
+#: libparted/linux.c:1670
+#, fuzzy, c-format
+msgid "Error informing the kernel about modifications to partition %s - %s.  This means Linux won't know about any changes you made to %s until you reboot - so you shouldn't mount it or use it in any way before rebooting."
+msgstr "i Ibyerekeye Kuri Ibyerekeye Amahinduka Kuri Cyangwa Gukoresha in Mbere"
+
+#: libparted/linux.c:1756
+#, fuzzy, c-format
+msgid "The kernel was unable to re-read the partition table on %s (%s).  This means Linux won't know anything nothing about the modifications you made until you reboot.  You should reboot your computer before doing anything with %s."
+msgstr "Kuri Gusoma i imbonerahamwe# ku Ibyerekeye i Mbere Na:"
+
+#: libparted/gnu.c:94
+#, fuzzy, c-format
+msgid "Unable to open %s."
+msgstr "Kuri Gufungura"
+
+#: libparted/gnu.c:114
+#, fuzzy
+msgid "Unable to probe store."
+msgstr "Kuri"
+
+#: libparted/gnu.c:339
+#, fuzzy
+msgid "The partition table was unable to be reread, as such, you need to reboot before mounting any modified partitions.  You also need to reinstall your boot loader before you reboot (which may require mounting modified partitions).  It is impossible do both things!  So you'll need to boot off a rescue disk, and reinstall your boot loader from the rescue disk.  Read section 4 of the Parted User documentation for more information."
+msgstr "imbonerahamwe# Kuri Nka Kuri Mbere Byahinduwe Kuri Mbere Gicurasi Byahinduwe ni Byombi Kuri Bidakora a Na Bivuye i Icyiciro 4. Bya i kugirango Birenzeho Ibisobanuro"
+
+#: libparted/gnu.c:356
+#, fuzzy, c-format
+msgid "The partition table on %s (%s).  This means the Hurd knows nothing about any modifications you made.  You should reboot your computer before doing anything with %s."
+msgstr "imbonerahamwe# ku i Ibyerekeye Mbere Na:"
+
+#: libparted/gnu.c:367 parted/parted.c:1609
+#, fuzzy
+msgid "You should reinstall your boot loader before rebooting.  Read section 4 of the Parted User documentation for more information."
+msgstr "Mbere Icyiciro 4. Bya i kugirango Birenzeho Ibisobanuro"
+
+#: libparted/gnu.c:756
+#, fuzzy, c-format
+msgid "%s trying to sync %s to disk"
+msgstr "%sKuri Kuri"
+
+#: libparted/disk.c:141
+#, fuzzy, c-format
+msgid "Unable to open %s - unrecognised disk label."
+msgstr "Kuri Gufungura Akarango"
+
+#: libparted/disk.c:355
+#, fuzzy, c-format
+msgid "This libparted doesn't have write support for %s.  Perhaps it was compiled read-only."
+msgstr "Kwandika Gushigikira kugirango Gusoma"
+
+#: libparted/disk.c:432
+#, fuzzy, c-format
+msgid "Partition %d is %.3fMb, but the file system is %.3fMb."
+msgstr "ni i IDOSIYE Sisitemu ni"
+
+#: libparted/disk.c:861
+#, fuzzy, c-format
+msgid "%s disk labels do not support extended partitions."
+msgstr "%sUturango... OYA Gushigikira Byongerewe..."
+
+#: libparted/disk.c:1322
+#, fuzzy, c-format
+msgid "%s disk labels don't support logical or extended partitions."
+msgstr "%sUturango... Gushigikira Bijyanye n'inyurabwenge Cyangwa Byongerewe..."
+
+#: libparted/disk.c:1344
+#, fuzzy, c-format
+msgid "Can't add a logical partition to %s, because there is no extended partition."
+msgstr "Kongeramo a Bijyanye n'inyurabwenge Kuri ni Oya Byongerewe..."
+
+#: libparted/disk.c:1368
+#, fuzzy, c-format
+msgid "Can't have more than one extended partition on %s"
+msgstr "Birenzeho Byongerewe... ku"
+
+#: libparted/disk.c:1378
+#, fuzzy
+msgid "Can't have logical partitions outside of the extended partition."
+msgstr "Bijyanye n'inyurabwenge Hanze Bya i Byongerewe..."
+
+#: libparted/disk.c:1401
+#, fuzzy, c-format
+msgid "Can't have a logical partition outside of the extended partition on %s."
+msgstr "a Bijyanye n'inyurabwenge Hanze Bya i Byongerewe... ku"
+
+#: libparted/disk.c:1411
+#, fuzzy
+msgid "Can't have overlapping partitions"
+msgstr "iyorosa"
+
+#: libparted/disk.c:1419
+#, fuzzy
+msgid "Can't have a primary partition inside an extended partition."
+msgstr "a Mo Imbere Byongerewe..."
+
+#: libparted/disk.c:1730
+msgid "metadata"
+msgstr ""
+
+# svx/source\dialog\labdlg.src:RID_SVXPAGE_CAPTION.LB_WINKEL.1.text
+#: libparted/disk.c:1732
+#, fuzzy
+msgid "free"
+msgstr "Kigenga"
+
+# 2175
+#: libparted/disk.c:1734 parted/ui.c:740 parted/ui.c:768
+#, fuzzy
+msgid "extended"
+msgstr "cya/ byagutse"
+
+# #-#-#-#-#  sc.pot (PACKAGE VERSION)  #-#-#-#-#
+# sc/source\ui\formdlg\dwfunctr.src:FID_FUNCTION_BOX.CB_CAT.7.text
+# #-#-#-#-#  sc.pot (PACKAGE VERSION)  #-#-#-#-#
+# sc/source\ui\formdlg\formdlgs.src:RID_SCTAB_FUNCTION.LB_CATEGORY.7.text
+#: libparted/disk.c:1736 parted/ui.c:744 parted/ui.c:772
+#, fuzzy
+msgid "logical"
+msgstr "Bijyanye n'inyurabwenge"
+
+#: libparted/disk.c:1738 parted/ui.c:736 parted/ui.c:764
+msgid "primary"
+msgstr ""
+
+#: libparted/disk.c:1749
+msgid "boot"
+msgstr ""
+
+# 5214
+#: libparted/disk.c:1751
+#, fuzzy
+msgid "root"
+msgstr "Imizi"
+
+#: libparted/disk.c:1753
+msgid "swap"
+msgstr ""
+
+# sc/source\ui\navipi\navipi.src:RID_SCDLG_NAVIGATOR.STR_HIDDEN.text
+#: libparted/disk.c:1755
+msgid "hidden"
+msgstr "gihishwe"
+
+#: libparted/disk.c:1757
+msgid "raid"
+msgstr ""
+
+#: libparted/disk.c:1759
+msgid "lvm"
+msgstr ""
+
+#: libparted/disk.c:1761
+msgid "lba"
+msgstr ""
+
+#: libparted/disk.c:1763
+#, fuzzy
+msgid "hp-service"
+msgstr "Serivisi"
+
+#: libparted/disk.c:1769
+#, fuzzy, c-format
+msgid "Unknown flag partition flag, %d."
+msgstr "Ibendera Ibendera"
+
+#: libparted/disk_bsd.c:497 libparted/disk_dos.c:1520 libparted/disk_dvh.c:798
+#: libparted/disk_gpt.c:1148 libparted/disk_loop.c:248
+#: libparted/disk_mac.c:1246 libparted/disk_pc98.c:756
+#: libparted/disk_sun.c:678
+#, fuzzy
+msgid "Unable to satisfy all constraints on the partition."
+msgstr "Kuri Byose ku i"
+
+#: libparted/disk_bsd.c:522
+#, fuzzy
+msgid "Unable to allocate a bsd disklabel slot"
+msgstr "Kuri a"
+
+#: libparted/disk_dos.c:379
+#, fuzzy, c-format
+msgid "The partition table on %s is inconsistent.  There are many reasons why this might be the case.  However, the most likely reason is that Linux detected the BIOS geometry for %s incorrectly.  GNU Parted suspects the real geometry should be %d/%d/%d (not %d/%d/%d).  You should check with your BIOS first, as this may not be correct.  You can inform Linux by adding the parameter %s=%d,%d,%d to the command line.  See the LILO or GRUB documentation for more information.  If you think Parted's suggested geometry is correct, you may select Ignore to continue (and fix Linux later).  Otherwise, select Cancel (and fix Linux and/or the BIOS now)."
+msgstr "imbonerahamwe# ku ni iyi i i ni i Iyigamashusho kugirango i Iyigamashusho OYA Kugenzura... Na: Itangira Nka iyi Gicurasi OYA ku Wongera i Kuri i Komandi: Umurongo i Cyangwa kugirango Birenzeho Ibisobanuro Iyigamashusho ni Gicurasi Guhitamo Kuri urifuzagukomeza Na Guhitamo Na Na Cyangwa i NONEAHA"
+
+#: libparted/disk_dos.c:417
+#, fuzzy, c-format
+msgid "The partition table on %s is inconsistent.  There are many reasons why this might be the case.  Often, the reason is that Linux detected the BIOS geometry incorrectly.  However, this does not appear to be the case here.  It is safe to ignore,but ignoring may cause (fixable) problems with some boot loaders, and may cause problems with FAT file systems.  Using LBA is recommended."
+msgstr "imbonerahamwe# ku ni iyi i i ni i Iyigamashusho iyi OYA Kugaragara Kuri i ni Kuri Kwirengagiza Gicurasi Na: Na Gicurasi Na: IDOSIYE ni"
+
+#: libparted/disk_dos.c:547
+#, fuzzy, c-format
+msgid "Invalid partition table on %s - wrong signature %x"
+msgstr "imbonerahamwe# ku Isinya"
+
+#: libparted/disk_dos.c:581
+#, fuzzy, c-format
+msgid "Invalid partition table - recursive partition on %s."
+msgstr "imbonerahamwe# ku"
+
+#: libparted/disk_dos.c:1501
+#, fuzzy
+msgid "Unable to align partition properly.  This probably means that another partitioning tool generated an incorrect partition table, because it didn't have the correct BIOS geometry.  It is safe to ignore,but ignoring may cause (fixable) problems with some boot loaders."
+msgstr "Kuri Gutondeka imbonerahamwe# i Iyigamashusho ni Kuri Kwirengagiza Gicurasi Na:"
+
+#: libparted/disk_dvh.c:187
+#, fuzzy, c-format
+msgid "%s has no extended partition (volume header partition).  If you ignore, then any boot volumes will be deleted."
+msgstr "%sOya Byongerewe... Igice Umutwempangano Kwirengagiza Hanyuma Cyasibwe"
+
+#: libparted/disk_dvh.c:325
+#, fuzzy
+msgid "Checksum is wrong, indicating the partition table is corrupt."
+msgstr "ni i imbonerahamwe# ni"
+
+#: libparted/disk_dvh.c:620
+#, fuzzy
+msgid "Only primary partitions can be root partitions."
+msgstr "Imizi"
+
+#: libparted/disk_dvh.c:634
+msgid "Only primary partitions can be swap partitions."
+msgstr ""
+
+#: libparted/disk_dvh.c:648
+#, fuzzy
+msgid "Only logical partitions can be a boot file."
+msgstr "Bijyanye n'inyurabwenge a IDOSIYE"
+
+#: libparted/disk_dvh.c:726
+#, fuzzy
+msgid "Only logical partitions (boot files) have a name."
+msgstr "Bijyanye n'inyurabwenge Idosiye a Izina:"
+
+#: libparted/disk_dvh.c:836
+msgid "Too many primary partitions"
+msgstr ""
+
+#: libparted/disk_gpt.c:304
+#, fuzzy, c-format
+msgid "%s contains GPT signatures, indicating that it has a GPT table.  However, it does not have a valid fake msdos partition table, as it should.  Perhaps it was corrupted - possibly by a program that doesn't understand GPT partition tables.  Or perhaps you deleted the GPT table, and are now using an msdos partition table.  Is this a GPT partition table?"
+msgstr "%sKirimo a imbonerahamwe# OYA a Byemewe imbonerahamwe# Nka ku a Porogaramu Imbonerahamwe Cyasibwe i imbonerahamwe# Na NONEAHA ikoresha imbonerahamwe# iyi a imbonerahamwe#"
+
+#: libparted/disk_gpt.c:465
+#, fuzzy, c-format
+msgid "The format of the GPT partition table is version %x, which is newer than what Parted can recognise.  Please tell us!  bug-parted@gnu.org"
+msgstr "Imiterere Bya i imbonerahamwe# ni Verisiyo ni RW org"
+
+#: libparted/disk_gpt.c:579
+#, fuzzy
+msgid "The backup GPT table is not at the end of the disk, as it should be.  This might mean that another operating system believes the disk is smaller.  Fix, by moving the backup to the end (and removing the old backup)?"
+msgstr "Inyibutsa imbonerahamwe# ni OYA ku i Impera Bya i Nka Impuzandengo- Sisitemu i ni Gitoya ku i Inyibutsa Kuri i Impera Na i ki/ bishaje Inyibutsa"
+
+#: libparted/disk_gpt.c:614
+#, fuzzy
+msgid "The primary GPT table is corrupt, but the backup appears ok, so that will be used."
+msgstr "imbonerahamwe# ni i Inyibutsa YEGO"
+
+#: libparted/disk_gpt.c:622
+#, fuzzy
+msgid "Both the primary and backup GPT tables are corrupt.  Try making a fresh table, and using Parted's rescue feature, to recover partitions."
+msgstr "i Na Inyibutsa Imbonerahamwe a imbonerahamwe# Na ikoresha Kuri"
+
+#: libparted/disk_mac.c:164
+#, fuzzy, c-format
+msgid "Invalid signature %x for Mac disk labels."
+msgstr "Isinya kugirango Uturango..."
+
+#: libparted/disk_mac.c:205
+#, fuzzy
+msgid "Partition map has no partition map entry!"
+msgstr "Oya Icyinjijwe"
+
+#: libparted/disk_mac.c:250
+#, fuzzy, c-format
+msgid "%s is too small for a Mac disk label!"
+msgstr "%sni Gitoya kugirango a Akarango"
+
+#: libparted/disk_mac.c:449
+#, fuzzy, c-format
+msgid "Partition %d has an invalid signature %x."
+msgstr "Sibyo Isinya"
+
+#: libparted/disk_mac.c:467
+#, fuzzy, c-format
+msgid "Partition %d has an invalid length of 0 bytes!"
+msgstr "Sibyo Uburebure Bya 0 Bayite"
+
+#: libparted/disk_mac.c:493
+#, fuzzy
+msgid "The data region doesn't start at the start of the partition"
+msgstr "Ibyatanzwe Gutangira ku i Gutangira Bya i"
+
+#: libparted/disk_mac.c:510
+#, fuzzy
+msgid "The boot region doesn't start at the start of the partition"
+msgstr "Gutangira ku i Gutangira Bya i"
+
+#: libparted/disk_mac.c:524
+#, fuzzy
+msgid "The partition's boot region doesn't occupy the entire partition."
+msgstr "i"
+
+#: libparted/disk_mac.c:534
+#, fuzzy
+msgid "The partition's data region doesn't occupy the entire partition."
+msgstr "Ibyatanzwe i"
+
+#: libparted/disk_mac.c:588
+#, fuzzy, c-format
+msgid "Weird block size on device descriptor: %d bytes is not divisible by 512."
+msgstr "Funga Ingano ku APAREYE Bayite ni OYA ku"
+
+#: libparted/disk_mac.c:601
+#, fuzzy, c-format
+msgid "The driver descriptor says the physical block size is %d bytes, but Linux says it is %d bytes."
+msgstr "Musomyi: i Ifatika Funga Ingano ni Bayite ni Bayite"
+
+#: libparted/disk_mac.c:649
+#, fuzzy
+msgid "No valid partition map found."
+msgstr "Byemewe Byabonetse"
+
+#: libparted/disk_mac.c:701
+#, fuzzy, c-format
+msgid "Conflicting partition map entry sizes!  Entry 1 says it's %d, but entry %d says its %d!"
+msgstr "Icyinjijwe 1. Icyinjijwe"
+
+#: libparted/disk_mac.c:728
+#, fuzzy
+msgid "Weird - 2 partitions map entries!"
+msgstr "2. Ibyinjijwe"
+
+#: libparted/disk_mac.c:1185
+#, fuzzy
+msgid "Changing the name of a root or swap partition will prevent Linux from recognising it as such."
+msgstr "i Izina: Bya a Imizi Cyangwa Bivuye Nka"
+
+#: libparted/disk_mac.c:1281
+#, fuzzy
+msgid "Can't add another partition - partition map is too small!"
+msgstr "Kongeramo ni Gitoya"
+
+#: libparted/disk_pc98.c:349
+#, fuzzy, c-format
+msgid "Invalid partition table on %s"
+msgstr "imbonerahamwe# ku"
+
+#: libparted/disk_pc98.c:401 libparted/disk_pc98.c:479
+#, fuzzy, c-format
+msgid "Partition %d isn't aligned to cylinder boundaries.  Need to add support for this."
+msgstr "si Kuri Umwiburungushure Kuri Kongeramo Gushigikira kugirango iyi"
+
+#: libparted/disk_pc98.c:788
+#, fuzzy
+msgid "Can't add another partition."
+msgstr "Kongeramo"
+
+#: libparted/disk_sun.c:140
+#, fuzzy
+msgid "Corrupted Sun disk label detected."
+msgstr "Akarango"
+
+#: libparted/disk_sun.c:250
+#, fuzzy, c-format
+msgid "The disk CHS geometry (%d,%d,%d) does not match the geometry stored on the disk label (%d,%d,%d)."
+msgstr "Iyigamashusho OYA BIHUYE i Iyigamashusho ku i Akarango"
+
+#: libparted/disk_sun.c:268
+#, fuzzy, c-format
+msgid "The disk label describes a disk bigger than %s."
+msgstr "Akarango a"
+
+#: libparted/disk_sun.c:710
+#, fuzzy
+msgid "The Whole Disk partition is the only available one left.  Generally, it is not a good idea to overwrite this partition with a real one.  Solaris may not be able to boot without it, and SILO (the sparc boot loader) appreciates it as well."
+msgstr "ni i Bihari Ibumoso: ni OYA a Kuri Guhindura iyi Na: a Gicurasi OYA Kuri Na i Nka"
+
+#: libparted/disk_sun.c:725
+#, fuzzy
+msgid "Sun disk label is full."
+msgstr "Akarango ni"
+
+#: libparted/filesys.c:300
+#, fuzzy
+msgid "Could not detect file system."
+msgstr "OYA IDOSIYE Sisitemu"
+
+#: libparted/filesys.c:311
+#, fuzzy
+msgid "The file system is bigger than it's volume!"
+msgstr "IDOSIYE Sisitemu ni Igice"
+
+#: libparted/filesys.c:319
+#, fuzzy, c-format
+msgid "Support for opening %s file systems is not implemented yet."
+msgstr "kugirango Gufungura %s%S IDOSIYE ni OYA"
+
+#: libparted/filesys.c:351
+#, fuzzy, c-format
+msgid "Support for creating %s file systems is not implemented yet."
+msgstr "kugirango IDOSIYE ni OYA"
+
+#: libparted/filesys.c:399
+#, fuzzy, c-format
+msgid "Support for checking %s file systems is not implemented yet."
+msgstr "kugirango IDOSIYE ni OYA"
+
+#: libparted/filesys.c:465
+#, fuzzy
+msgid "raw block copying"
+msgstr "Funga"
+
+#: libparted/filesys.c:476
+#, fuzzy
+msgid "growing file system"
+msgstr "IDOSIYE Sisitemu"
+
+#: libparted/filesys.c:505
+#, fuzzy
+msgid "Can't copy onto an overlapping partition."
+msgstr "Gukoporora iyorosa"
+
+#: libparted/filesys.c:527
+#, fuzzy, c-format
+msgid "Direct support for copying file systems is not yet implemented for %s.  However, support for resizing implemented.  Therefore, the file system can be copied if the new partition is at least as big as the old one.  So, either shrink the partition you are trying to copy, or copy to a bigger partition."
+msgstr "Gushigikira kugirango IDOSIYE ni OYA kugirango Gushigikira kugirango i IDOSIYE Sisitemu NIBA i Gishya ni ku Nka Nka i ki/ bishaje Kugabanuka i Kuri Gukoporora Cyangwa Gukoporora Kuri a"
+
+#: libparted/filesys.c:541
+#, fuzzy, c-format
+msgid "Support for copying %s file systems is not implemented yet."
+msgstr "kugirango IDOSIYE ni OYA"
+
+#: libparted/filesys.c:567
+#, fuzzy, c-format
+msgid "Support for resizing %s file systems is not implemented yet."
+msgstr "kugirango IDOSIYE ni OYA"
+
+#: libparted/exception.c:46
+msgid "Information"
+msgstr "Ibisobanuro"
+
+#: libparted/exception.c:47
+msgid "Warning"
+msgstr "Iburira"
+
+#: libparted/exception.c:48
+msgid "Error"
+msgstr "Ikosa"
+
+#: libparted/exception.c:49
+msgid "Fatal"
+msgstr ""
+
+#: libparted/exception.c:50
+msgid "Bug"
+msgstr ""
+
+#: libparted/exception.c:51
+msgid "No Implementation"
+msgstr ""
+
+#: libparted/exception.c:55
+msgid "Fix"
+msgstr ""
+
+#: libparted/exception.c:56
+msgid "Yes"
+msgstr "Yego"
+
+#: libparted/exception.c:57
+msgid "No"
+msgstr "Oya"
+
+#: libparted/exception.c:58
+msgid "OK"
+msgstr "OKE"
+
+#: libparted/exception.c:59
+msgid "Retry"
+msgstr "Ongera ugerageze"
+
+#: libparted/exception.c:60
+msgid "Ignore"
+msgstr "Kureka"
+
+#: libparted/exception.c:61
+msgid "Cancel"
+msgstr "Kureka"
+
+#: libparted/exception.c:89
+#, fuzzy, c-format
+msgid "A bug has been detected in GNU parted.  Please email a bug report to bug-parted@gnu.org containing the version (%s) and the following message:"
+msgstr "A in imeli a Icyegeranyo Kuri org i Verisiyo Na i Ubutumwa"
+
+#: libparted/geom.c:105
+#, fuzzy
+msgid "Can't have the end before the start!"
+msgstr "i Impera Mbere i Gutangira"
+
+#: libparted/geom.c:112
+#, fuzzy
+msgid "Can't have a partition outside the disk!"
+msgstr "a Hanze i"
+
+#: libparted/geom.c:196
+#, fuzzy, c-format
+msgid "Attempt to read sectors %ld-%ld outside of partition on %s"
+msgstr "Kuri Gusoma Hanze Bya ku"
+
+#: libparted/geom.c:231
+#, fuzzy, c-format
+msgid "Attempt to write sectors %ld-%ld outside of partition on %s"
+msgstr "Kuri Kwandika Hanze Bya ku"
+
+#: libparted/fs_linux_swap/linux_swap.c:351 libparted/geom.c:258
+#, fuzzy
+msgid "checking for bad blocks"
+msgstr "kugirango"
+
+#: libparted/libparted.c:273 libparted/libparted.c:293
+#, fuzzy
+msgid "Out of memory."
+msgstr "Ububiko bwarenzwe"
+
+#: libparted/fs_ext2/ext2.c:87 libparted/fs_ext2/ext2.c:112
+#, fuzzy
+msgid "Inconsistent group descriptors!"
+msgstr "Itsinda"
+
+#: libparted/fs_ext2/ext2.c:91 libparted/fs_ext2/ext2.c:116
+msgid "Filesystem full!"
+msgstr ""
+
+#: libparted/fs_ext2/ext2.c:696
+#, fuzzy
+msgid "This ext2 filesystem has a rather strange layout!  Parted can't resize this (yet)."
+msgstr "a Imigaragarire Ihindurangero iyi"
+
+#: libparted/fs_ext2/ext2.c:727
+#, fuzzy
+msgid "Invalid superblock.  Are you sure this is an ext2 filesystem?"
+msgstr "iyi ni"
+
+#: libparted/fs_ext2/ext2.c:741 libparted/fs_ext2/ext2_resize.c:596
+#, fuzzy
+msgid "Filesystem has errors!  You should run e2fsck."
+msgstr "Amakosa Gukoresha"
+
+#: libparted/fs_ext2/ext2.c:752
+#, fuzzy
+msgid "Filesystem was not cleanly unmounted!  You should e2fsck.  Modifying an unclean filesystem could cause severe corruption."
+msgstr "OYA"
+
+#: libparted/fs_ext2/ext2.c:772
+#, fuzzy
+msgid "Filesystem has incompatible feature enabled"
+msgstr "Bikora"
+
+#: libparted/fs_ext2/ext2.c:783
+#, fuzzy
+msgid "Error allocating buffer cache."
+msgstr "Ubwihisho"
+
+#: libparted/fs_ext2/ext2_inode_relocator.c:114
+#, fuzzy
+msgid "Found an inode with a incorrect link count.  Better go run e2fsck first."
+msgstr "Na: a Ihuza IBARA Gyayo Gukoresha Itangira"
+
+#: libparted/fs_ext2/ext2_inode_relocator.c:487
+#, fuzzy
+msgid "Not enough free inodes!"
+msgstr "Kigenga"
+
+#: libparted/fs_ext2/ext2_resize.c:224
+#, fuzzy
+msgid "Filesystem is too occupied to remove a group!"
+msgstr "ni Kuri Gukuraho... a Itsinda"
+
+#: libparted/fs_ext2/ext2_resize.c:233
+#, fuzzy
+msgid "Filesystem has too many allocated inodes to remove a group!"
+msgstr "Kuri Gukuraho... a Itsinda"
+
+#: libparted/fs_ext2/ext2_resize.c:493
+#, fuzzy
+msgid "adding groups"
+msgstr "Wongera Amatsinda"
+
+#: libparted/fs_ext2/ext2_resize.c:529
+#, fuzzy, c-format
+msgid "Your filesystem is too occupied to resize it to %i blocks. Sorry."
+msgstr "ni Kuri Ihindurangero Kuri"
+
+#: libparted/fs_ext2/ext2_resize.c:539
+#, fuzzy, c-format
+msgid "Your filesystem has too much occupied inodes to resize it to %i blocks. Sorry."
+msgstr "Kuri Ihindurangero Kuri"
+
+#: libparted/fs_ext2/ext2_resize.c:553
+msgid "shrinking"
+msgstr ""
+
+#: libparted/fs_ext2/ext2_resize.c:604
+#, fuzzy
+msgid "Filesystem was not cleanly unmounted!  You should e2fsck."
+msgstr "OYA"
+
+#: libparted/fs_ext2/ext2_resize.c:613
+#, fuzzy
+msgid "The file system has the 'dir_index' feature enabled.  Parted can only resize the file system if it disables this feature.  You can enable it later by running 'tune2fs -O dir_index DEVICE' and then 'e2fsck -fD DEVICE'."
+msgstr "IDOSIYE Sisitemu i Bikora Ihindurangero i IDOSIYE Sisitemu NIBA iyi Gushoboza ku Na Hanyuma"
+
+#: libparted/fs_ext2/ext2_block_relocator.c:155
+#, fuzzy
+msgid "Cross-linked blocks found! better go run e2fsck first!"
+msgstr "Byabonetse Gyayo Gukoresha Itangira"
+
+#: libparted/fs_ext2/ext2_block_relocator.c:489
+#, fuzzy, c-format
+msgid "Block %i has no reference?  Weird"
+msgstr "Oya Indango"
+
+#: libparted/fs_ext2/ext2_block_relocator.c:682
+#, fuzzy, c-format
+msgid "Block %i shouldn't have been marked!"
+msgstr "cy/ byagarajwe"
+
+#: libparted/fs_ext2/interface.c:188
+#, fuzzy
+msgid "The ext2 filesystem passed a basic check.  For a more comprehensive check, use the e2fsck program."
+msgstr "a BASIC Kugenzura... a Birenzeho Kugenzura... Gukoresha i Porogaramu"
+
+#: libparted/fs_ext2/interface.c:205
+#, fuzzy
+msgid "Sorry, can't move the start of ext2 partitions yet!"
+msgstr "Kwimura i Gutangira Bya"
+
+#: libparted/fs_ext2/ext2_buffer.c:82
+#, fuzzy
+msgid "Couldn't flush buffer cache!"
+msgstr "Ubwihisho"
+
+#: libparted/fs_ext2/ext2_mkfs.c:165
+#, fuzzy
+msgid "writing per-group metadata"
+msgstr "Itsinda"
+
+#: libparted/fs_ext2/ext2_mkfs.c:559
+#, fuzzy
+msgid "File system too small for ext2."
+msgstr "Idosiye Sisitemu Gitoya kugirango"
+
+#: libparted/fs_fat/calc.c:132
+#, fuzzy, c-format
+msgid "You need %dM of free space to shrink this partition to this size (you currently have only %dM free)"
+msgstr "Bya Kigenga Umwanya Kuri Kugabanuka iyi Kuri iyi Ingano Kigenga"
+
+#: libparted/fs_fat/context.c:55
+#, fuzzy, c-format
+msgid "Cluster start delta = %d, which is not a multiple of the cluster size %d."
+msgstr "Gutangira DELTA ni OYA a Igikubo Bya i Ingano"
+
+#: libparted/fs_fat/fat.c:310
+#, fuzzy, c-format
+msgid "Partition too big/small for a %s file system"
+msgstr "Gitoya kugirango a IDOSIYE Sisitemu"
+
+#: libparted/fs_fat/fat.c:476
+#, fuzzy
+msgid "The FATs don't match.  If you don't know what this means, then select cancel, run scandisk on the file system, and then come back."
+msgstr "BIHUYE iyi Hanyuma Guhitamo Kureka Gukoresha ku i IDOSIYE Sisitemu Na Hanyuma Inyuma"
+
+#: libparted/fs_fat/fat.c:516
+#, fuzzy
+msgid "There are no possible configurations for this FAT type."
+msgstr "Oya Amaboneza kugirango iyi Ubwoko"
+
+#: libparted/fs_fat/fat.c:528
+#, fuzzy, c-format
+msgid "File system doesn't have expected sizes for Windows to like it.  Cluster size is %dk (%dk expected); number of clusters is %d (%d expected); size of FATs is %d sectors (%d expected)."
+msgstr "Idosiye Sisitemu Ikitezwe: kugirango Kuri nka Ingano ni Ikitezwe: Umubare Bya ni Ikitezwe: Ingano Bya ni Ikitezwe:"
+
+#: libparted/fs_fat/fat.c:550
+#, fuzzy, c-format
+msgid "File system is reporting the free space as %d clusters, not %d clusters."
+msgstr "Idosiye Sisitemu ni i Kigenga Umwanya Nka OYA"
+
+#: libparted/fs_fat/fat.c:871
+#, fuzzy
+msgid "GNU parted was miscompiled: the FAT boot sector should be 512 bytes.  FAT support will be disabled."
+msgstr "i Bayite Gushigikira Yahagaritswe"
+
+#: libparted/fs_fat/resize.c:158
+#, fuzzy
+msgid "There's not enough room in the root directory, for all of the files.  Either cancel, or ignore to lose the files."
+msgstr "OYA in i Imizi bushyinguro kugirango Byose Bya i Idosiye Kureka Cyangwa Kwirengagiza Kuri i Idosiye"
+
+#: libparted/fs_fat/resize.c:299
+#, fuzzy
+msgid "Error writing to the root directory."
+msgstr "Kuri i Imizi bushyinguro"
+
+#: libparted/fs_fat/resize.c:484
+#, fuzzy
+msgid "If leave your file system as FAT16, then you will have no problems."
+msgstr "IDOSIYE Sisitemu Nka Hanyuma Oya"
+
+#: libparted/fs_fat/resize.c:487
+#, fuzzy
+msgid "If you convert to FAT16, and MS Windows is installed on this partition, then you must re-install the MS Windows boot loader.  If you want to do this, you should consult the Parted manual (or your distribution's manual)."
+msgstr "GUHINDURA Kuri Na ni ku iyi Hanyuma Kwinjiza porogaramu i Kuri iyi i Bikorwa Cyangwa Bikorwa"
+
+#: libparted/fs_fat/resize.c:495
+#, fuzzy
+msgid "If you leave your file system as FAT32, then you will not introduce any new problems."
+msgstr "IDOSIYE Sisitemu Nka Hanyuma OYA Gishya"
+
+#: libparted/fs_fat/resize.c:499
+#, fuzzy
+msgid "If you convert to FAT32, and MS Windows is installed on this partition, then you must re-install the MS Windows boot loader.  If you want to do this, you should consult the Parted manual (or your distribution's manual).  Also, converting to FAT32 will make the file system unreadable by MS DOS, MS Windows 95a, and MS Windows NT."
+msgstr "GUHINDURA Kuri Na ni ku iyi Hanyuma Kwinjiza porogaramu i Kuri iyi i Bikorwa Cyangwa Bikorwa Guhindura.... Kuri Ubwoko i IDOSIYE Sisitemu ku Na"
+
+# desktop/source\app\ssodlg.src:DLG_SSOLOGIN.text
+#: libparted/fs_fat/resize.c:513
+#, fuzzy, c-format
+msgid "%s  %s  %s"
+msgstr "%s%s%s"
+
+#: libparted/fs_fat/resize.c:514
+#, fuzzy
+msgid "Would you like to use FAT32?"
+msgstr "nka Kuri Gukoresha"
+
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+#: libparted/fs_fat/resize.c:541 libparted/fs_fat/resize.c:557
+#, fuzzy, c-format
+msgid "%s  %s"
+msgstr "%s%s"
+
+#: libparted/fs_fat/resize.c:542
+#, fuzzy
+msgid "The file system can only be resized to this size by converting to FAT16."
+msgstr "IDOSIYE Sisitemu Kuri iyi Ingano ku Guhindura.... Kuri"
+
+#: libparted/fs_fat/resize.c:558
+#, fuzzy
+msgid "The file system can only be resized to this size by converting to FAT32."
+msgstr "IDOSIYE Sisitemu Kuri iyi Ingano ku Guhindura.... Kuri"
+
+#: libparted/fs_fat/resize.c:571
+#, fuzzy
+msgid "GNU Parted can not resize this partition to this size.  We're working on it!"
+msgstr "OYA Ihindurangero iyi Kuri iyi Ingano ku"
+
+#: libparted/fs_fat/bootsector.c:48
+#, fuzzy
+msgid "File system has an invalid signature for a FAT file systems."
+msgstr "Idosiye Sisitemu Sibyo Isinya kugirango a IDOSIYE"
+
+#: libparted/fs_fat/bootsector.c:55
+#, fuzzy
+msgid "File system has an invalid signature for a FAT file system."
+msgstr "Idosiye Sisitemu Sibyo Isinya kugirango a IDOSIYE Sisitemu"
+
+#: libparted/fs_fat/bootsector.c:62
+#, fuzzy
+msgid "File system has an invalid sector size for a FAT file system."
+msgstr "Idosiye Sisitemu Sibyo Ingano kugirango a IDOSIYE Sisitemu"
+
+#: libparted/fs_fat/bootsector.c:69
+#, fuzzy
+msgid "File system has an invalid cluster size for a FAT file system."
+msgstr "Idosiye Sisitemu Sibyo Ingano kugirango a IDOSIYE Sisitemu"
+
+#: libparted/fs_fat/bootsector.c:76
+#, fuzzy
+msgid "File system has an invalid number of reserved sectors for a FAT filesystem."
+msgstr "Idosiye Sisitemu Sibyo Umubare Bya kugirango a"
+
+#: libparted/fs_fat/bootsector.c:83
+#, fuzzy
+msgid "File system has an invalid number of FATS."
+msgstr "Idosiye Sisitemu Sibyo Umubare Bya"
+
+#: libparted/fs_fat/bootsector.c:139
+#, fuzzy, c-format
+msgid "This file system has a logical sector size of %d.  GNU Parted is known not to work properly with sector sizes other than 512 bytes."
+msgstr "IDOSIYE Sisitemu a Bijyanye n'inyurabwenge Ingano Bya ni OYA Kuri Akazi Na: Ikindi Bayite"
+
+#: libparted/fs_fat/bootsector.c:166
+#, fuzzy
+msgid "FAT boot sector says logical sector size is 0.  This is weird. "
+msgstr "Bijyanye n'inyurabwenge Ingano ni 0 ni"
+
+#: libparted/fs_fat/bootsector.c:172
+#, fuzzy
+msgid "FAT boot sector says there are no FAT tables.  This is weird. "
+msgstr "Oya Imbonerahamwe ni"
+
+#: libparted/fs_fat/bootsector.c:178
+#, fuzzy
+msgid "FAT boot sector says clusters are 0 sectors.  This is weird. "
+msgstr "0 ni"
+
+#: libparted/fs_fat/bootsector.c:188
+#, fuzzy
+msgid "Filesystem is FAT12, which is unsupported."
+msgstr "ni ni"
+
+#: libparted/fs_fat/bootsector.c:367
+#, fuzzy, c-format
+msgid "The information sector has the wrong signature (%x).  Select cancel for now, and send in a bug report.  If you're desperate, it's probably safe to ignore."
+msgstr "Ibisobanuro i Isinya Kureka kugirango NONEAHA Na Kohereza in a Icyegeranyo Kuri Kwirengagiza"
+
+#: libparted/fs_fat/count.c:149
+#, fuzzy, c-format
+msgid "Bad directory entry for %s: first cluster is the end of file marker."
+msgstr "bushyinguro Icyinjijwe kugirango Itangira ni i Impera Bya IDOSIYE"
+
+#: libparted/fs_fat/count.c:162
+#, fuzzy, c-format
+msgid "Bad FAT: unterminated chain for %s.  You should run dosfsck or scandisk."
+msgstr "kugirango Gukoresha Cyangwa"
+
+#: libparted/fs_fat/count.c:171
+#, fuzzy, c-format
+msgid "Bad FAT: cluster %d outside filesystem in chain for %s.  You should run dosfsck or scandisk."
+msgstr "Hanze in kugirango Gukoresha Cyangwa"
+
+#: libparted/fs_fat/count.c:181
+#, fuzzy, c-format
+msgid "Bad FAT: cluster %d is cross-linked for %s.  You should run dosfsck or scandisk."
+msgstr "ni Kwambukiranya kugirango Gukoresha Cyangwa"
+
+#: libparted/fs_fat/count.c:200
+#, fuzzy, c-format
+msgid "%s is %dk, but it has %d clusters (%dk)."
+msgstr "%sni"
+
+#: libparted/fs_fat/count.c:263
+#, fuzzy, c-format
+msgid "The file %s is marked as a system file.  This means moving it could cause some programs to stop working."
+msgstr "IDOSIYE ni cy/ byagarajwe Nka a Sisitemu IDOSIYE Porogaramu Kuri Guhagarara"
+
+#: libparted/fs_fat/table.c:138
+#, fuzzy, c-format
+msgid "FAT %d media %x doesn't match the boot sector's media %x.  You should probably run scandisk."
+msgstr "Ibitangazamakuru BIHUYE i Ibitangazamakuru Gukoresha"
+
+#: libparted/fs_fat/table.c:268
+#, fuzzy, c-format
+msgid "fat_table_set: cluster %ld outside filesystem"
+msgstr "Hanze"
+
+#: libparted/fs_fat/table.c:296
+#, fuzzy, c-format
+msgid "fat_table_get: cluster %ld outside filesystem"
+msgstr "Hanze"
+
+#: libparted/fs_fat/table.c:334
+#, fuzzy
+msgid "fat_table_alloc_cluster: no free clusters"
+msgstr "Oya Kigenga"
+
+#: libparted/fs_linux_swap/linux_swap.c:234
+#, fuzzy, c-format
+msgid "Unrecognised linux swap signature '%10s'."
+msgstr "Isinya"
+
+#: libparted/fs_linux_swap/linux_swap.c:310
+#, fuzzy
+msgid "Too many bad pages."
+msgstr "Amapaji"
+
+#: parted/parted.c:69
+#, fuzzy
+msgid "displays this help message"
+msgstr "iyi Ifashayobora Ubutumwa"
+
+#: parted/parted.c:70
+#, fuzzy
+msgid "where necessary, prompts for user intervention"
+msgstr "kugirango Ukoresha:"
+
+#: parted/parted.c:71
+#, fuzzy
+msgid "never prompts for user intervention"
+msgstr "Nta narimwe kugirango Ukoresha:"
+
+#: parted/parted.c:72
+#, fuzzy
+msgid "displays the version"
+msgstr "i Verisiyo"
+
+#: parted/parted.c:79
+#, fuzzy
+msgid "MINOR is the partition number used by Linux.  On msdos disk labels, the primary partitions number from 1-4, and logical partitions are 5 onwards.\n"
+msgstr "ni i Umubare ku Uturango... i Umubare Bivuye 1. 4. Na Bijyanye n'inyurabwenge 5"
+
+#: parted/parted.c:82
+#, fuzzy
+msgid "LABEL-TYPE is one of: "
+msgstr "ni Bya"
+
+#: parted/parted.c:83
+#, fuzzy
+msgid "FLAG is one of: "
+msgstr "ni Bya"
+
+#: parted/parted.c:84
+#, fuzzy
+msgid "PART-TYPE is one of: primary, logical, extended\n"
+msgstr "ni Bya Bijyanye n'inyurabwenge"
+
+#: parted/parted.c:86
+#, fuzzy
+msgid "FS-TYPE is one of: "
+msgstr "ni Bya"
+
+#: parted/parted.c:87
+#, fuzzy
+msgid "START and END are in megabytes.  Negative values count from the end of the disk.\n"
+msgstr "Na in Uduciro IBARA Bivuye i Impera Bya i"
+
+#: parted/parted.c:89
+#, fuzzy
+msgid "STATE is one of: on, off\n"
+msgstr "ni Bya ku"
+
+#: parted/parted.c:90
+#, fuzzy
+msgid "DEVICE is usually /dev/hda or /dev/sda\n"
+msgstr "ni Cyangwa"
+
+#: parted/parted.c:91
+#, fuzzy
+msgid "NAME is any word you want\n"
+msgstr "ni ijambo"
+
+#: parted/parted.c:126
+#, fuzzy, c-format
+msgid "%0.f%%\t(time left %.2d:%.2d)"
+msgstr ""
+"%0.Project- Id- Version: basctl\n"
+"POT- Creation- Date: 2003- 12- 07 17: 13+ 02\n"
+"PO- Revision- Date: 2004- 11- 04 10: 13- 0700\n"
+"Last- Translator: Language- Team:< en@ li. org> MIME- Version: 1. 0\n"
+"Content- Type: text/ plain; charset= UTF- 8\n"
+"Content- Transfer- Encoding: 8bit\n"
+"X- Generator: KBabel 1. 0\n"
+". 2D."
+
+#: parted/parted.c:144
+#, fuzzy, c-format
+msgid "Partition %s is being used.  Modifying it while it is in use could cause severe corruption."
+msgstr "ni ni in Gukoresha"
+
+#: parted/parted.c:166
+#, fuzzy, c-format
+msgid "Partition(s) on %s are being used."
+msgstr "S ku"
+
+#. get the partition
+#: parted/parted.c:292 parted/parted.c:482 parted/parted.c:678
+#: parted/parted.c:756 parted/parted.c:1110 parted/parted.c:1185
+#: parted/parted.c:1232
+#, fuzzy
+msgid "Partition number?"
+msgstr "Umubare"
+
+#: parted/parted.c:337
+#, fuzzy
+msgid "Source device?"
+msgstr "APAREYE"
+
+#: parted/parted.c:343
+#, fuzzy
+msgid "Source partition number?"
+msgstr "Umubare"
+
+#: parted/parted.c:349
+#, fuzzy
+msgid "Can't copy extended partitions."
+msgstr "Gukoporora Byongerewe..."
+
+#: parted/parted.c:355
+#, fuzzy
+msgid "Destination partition number?"
+msgstr "Umubare"
+
+#: parted/parted.c:450
+#, fuzzy
+msgid "New disk label type?"
+msgstr "Akarango Ubwoko"
+
+# officecfg/registry\schema\org\openoffice\Office\Common.xcs:....Save.URL.FileSystem.text
+#: parted/parted.c:488
+#, fuzzy
+msgid "File system?"
+msgstr "Idosiye ya sisitemu"
+
+#: parted/parted.c:529 parted/parted.c:600
+#, fuzzy
+msgid "Partition type?"
+msgstr "Ubwoko"
+
+#: parted/parted.c:538 parted/parted.c:611
+#, fuzzy
+msgid "File system type?"
+msgstr "Idosiye Sisitemu Ubwoko"
+
+# #-#-#-#-#  sc.pot (PACKAGE VERSION)  #-#-#-#-#
+# sc/source\ui\navipi\navipi.src:RID_SCDLG_NAVIGATOR.TBX_CMD.IID_UP.text
+# #-#-#-#-#  sc.pot (PACKAGE VERSION)  #-#-#-#-#
+# sc/source\ui\src\scfuncs.src:RID_SC_FUNCTION_DESCRIPTIONS2.SC_OPCODE_PROB.6.text
+# #-#-#-#-#  sc.pot (PACKAGE VERSION)  #-#-#-#-#
+# sc/source\ui\src\scfuncs.src:RID_SC_FUNCTION_DESCRIPTIONS2.SC_OPCODE_BETA_DIST.8.text
+# #-#-#-#-#  sc.pot (PACKAGE VERSION)  #-#-#-#-#
+# sc/source\ui\src\scfuncs.src:RID_SC_FUNCTION_DESCRIPTIONS2.SC_OPCODE_BETA_INV.8.text
+#. get new target
+#: parted/parted.c:546 parted/parted.c:616 parted/parted.c:697
+#: parted/parted.c:1069 parted/parted.c:1116
+#, fuzzy
+msgid "Start?"
+msgstr "Gutangira"
+
+# officecfg/registry\schema\org\openoffice\Office\DataAccess.xcs:....FormSearchOptions.SearchPosition..end-of-field.text
+#: parted/parted.c:548 parted/parted.c:618 parted/parted.c:699
+#: parted/parted.c:1071 parted/parted.c:1119
+#, fuzzy
+msgid "End?"
+msgstr "Impera"
+
+#: parted/parted.c:560 parted/parted.c:630
+#, fuzzy, c-format
+msgid "You requested to create a partition at %.3f-%.3fMb. The closest Parted can manage is %.3f-%.3fMb."
+msgstr "Kuri Kurema a ku kuyobora ni"
+
+#: parted/parted.c:606
+#, fuzzy
+msgid "Extended partitions can't have file systems.  Did you want mkpart?"
+msgstr "IDOSIYE"
+
+#: parted/parted.c:685
+#, fuzzy
+msgid "Can't move extended partitions."
+msgstr "Kwimura Byongerewe..."
+
+#: parted/parted.c:714
+#, fuzzy
+msgid "Can't move a partition onto itself.  Try using resize, perhaps?"
+msgstr "Kwimura a ikoresha Ihindurangero"
+
+#: parted/parted.c:720
+#, fuzzy, c-format
+msgid "You requested to move the partition to %.3f-%.3fMb. The closest Parted can manage is %.3f-%.3fMb."
+msgstr "Kuri Kwimura i Kuri kuyobora ni"
+
+#: parted/parted.c:760
+#, fuzzy
+msgid "Partition name?"
+msgstr "Izina:"
+
+#: parted/parted.c:809
+#, c-format
+msgid "Minor: %d\n"
+msgstr ""
+
+# svx/source\gallery2\galtheme.src:RID_GALLERYSTR_THEME_FLAGS.text
+#: parted/parted.c:810
+#, fuzzy
+msgid "Flags: "
+msgstr "Amabendera"
+
+# officecfg/registry\schema\org\openoffice\Office\Common.xcs:....Save.URL.FileSystem.text
+#: parted/parted.c:811
+#, fuzzy, c-format
+msgid "File System: %s\n"
+msgstr "Idosiye ya sisitemu"
+
+#: parted/parted.c:812
+#, c-format
+msgid "Size:         %10.3fMb (%d%%)\n"
+msgstr ""
+
+#: parted/parted.c:818
+#, fuzzy, c-format
+msgid "Minimum size: %10.3fMb (%d%%)\n"
+msgstr "Ingano"
+
+#: parted/parted.c:822
+#, fuzzy, c-format
+msgid "Maximum size: %10.3fMb (%d%%)\n"
+msgstr "Ingano"
+
+#: parted/parted.c:864
+#, fuzzy, c-format
+msgid "Disk geometry for %s: 0.000-%.3f megabytes\n"
+msgstr "000."
+
+#: parted/parted.c:867
+#, fuzzy, c-format
+msgid "Disk label type: %s\n"
+msgstr "Akarango Ubwoko"
+
+#: parted/parted.c:874
+#, fuzzy
+msgid "Minor    Start       End     "
+msgstr "Gutangira Impera"
+
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+#: parted/parted.c:876
+#, fuzzy
+msgid "Type      "
+msgstr "Ubwoko"
+
+#: parted/parted.c:877
+msgid "Filesystem  "
+msgstr ""
+
+#: parted/parted.c:879
+#, fuzzy
+msgid "Name                  "
+msgstr "Izina"
+
+#: parted/parted.c:880
+msgid "Flags"
+msgstr "Amabendera"
+
+#: parted/parted.c:966
+#, fuzzy, c-format
+msgid "A %s %s partition was found at %.3fMb -> %.3fMb.  Do you want to add it to the partition table?"
+msgstr "A Byabonetse ku Kuri Kongeramo Kuri i imbonerahamwe#"
+
+#: parted/parted.c:1003
+#, fuzzy
+msgid "searching for file systems"
+msgstr "Ishakisha kugirango IDOSIYE"
+
+#: parted/parted.c:1134 parted/parted.c:1149
+#, fuzzy, c-format
+msgid "You requested to resize the partition to %.3f-%.3fMb. The closest Parted can manage is %.3f-%.3fMb."
+msgstr "Kuri Ihindurangero i Kuri kuyobora ni"
+
+#: parted/parted.c:1207
+#, fuzzy
+msgid "New device?"
+msgstr "APAREYE"
+
+#: parted/parted.c:1236
+#, fuzzy
+msgid "Flag to change?"
+msgstr "Kuri Guhindura>>"
+
+#: parted/parted.c:1240
+#, fuzzy
+msgid "New state?"
+msgstr "Leta"
+
+#: parted/parted.c:1329
+msgid "check"
+msgstr "genzura"
+
+#: parted/parted.c:1332
+#, fuzzy
+msgid "check MINOR                   do a simple check on the filesystem"
+msgstr "Kugenzura... a Byoroheje Kugenzura... ku i"
+
+#: parted/parted.c:1337
+msgid "cp"
+msgstr ""
+
+#: parted/parted.c:1340
+#, fuzzy
+msgid "cp [FROM-DEVICE] FROM-MINOR TO-MINOR      copy filesystem to another partition"
+msgstr "Gukoporora Kuri"
+
+#: parted/parted.c:1346
+#, fuzzy
+msgid "help"
+msgstr "Ifashayobora"
+
+#: parted/parted.c:1349
+#, fuzzy
+msgid "help [COMMAND]                prints general help, or help on COMMAND"
+msgstr "Ifashayobora Rusange Ifashayobora Cyangwa Ifashayobora ku"
+
+#: parted/parted.c:1354
+msgid "mklabel"
+msgstr ""
+
+#: parted/parted.c:1357
+#, fuzzy
+msgid "mklabel LABEL-TYPE            create a new disklabel (partition table)"
+msgstr "Kurema a Gishya imbonerahamwe#"
+
+#: parted/parted.c:1362
+msgid "mkfs"
+msgstr ""
+
+#: parted/parted.c:1365
+#, fuzzy
+msgid "mkfs MINOR FS-TYPE            make a filesystem FS-TYPE on partititon MINOR"
+msgstr "Ubwoko a ku"
+
+#: parted/parted.c:1371
+msgid "mkpart"
+msgstr ""
+
+#: parted/parted.c:1374
+#, fuzzy
+msgid "mkpart PART-TYPE [FS-TYPE] START END      make a partition"
+msgstr "Ubwoko a"
+
+#: parted/parted.c:1381
+#, fuzzy
+msgid "mkpart makes a partition without creating a new file system on the partition.  FS-TYPE may be specified to set an appropriate partition ID.\n"
+msgstr "a a Gishya IDOSIYE Sisitemu ku i Gicurasi Kuri Gushyiraho"
+
+#: parted/parted.c:1386
+msgid "mkpartfs"
+msgstr ""
+
+#: parted/parted.c:1389
+#, fuzzy
+msgid "mkpartfs PART-TYPE FS-TYPE START END      make a partition with a filesystem"
+msgstr "Ubwoko a Na: a"
+
+# sc/source\ui\src\globstr.src:RID_GLOBSTR.STR_UNDO_MOVE.text
+#: parted/parted.c:1395
+#, fuzzy
+msgid "move"
+msgstr "Kwimura"
+
+#: parted/parted.c:1398
+#, fuzzy
+msgid "move MINOR START END          move partition MINOR"
+msgstr "Kwimura Kwimura"
+
+#: parted/parted.c:1403
+msgid "name"
+msgstr "izina"
+
+#: parted/parted.c:1406
+#, fuzzy
+msgid "name MINOR NAME               name partition MINOR NAME"
+msgstr "Izina: Izina:"
+
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+#: parted/parted.c:1411
+#, fuzzy
+msgid "print"
+msgstr "Gucapa"
+
+#: parted/parted.c:1414
+#, fuzzy
+msgid "print [MINOR]                 display the partition table, or a partition"
+msgstr "Gucapa Kugaragaza i imbonerahamwe# Cyangwa a"
+
+#: parted/parted.c:1417
+#, fuzzy
+msgid ""
+"Without arguments, print displays the entire partition table.  If a\n"
+"partition number is given, then more detailed information is displayed\n"
+"about that partition.\n"
+msgstr "ingingo Gucapa i imbonerahamwe# Umubare ni Hanyuma Birenzeho Ibisobanuro ni"
+
+#: parted/parted.c:1423
+#, fuzzy
+msgid "quit"
+msgstr "Kuvamo"
+
+#: parted/parted.c:1426
+#, fuzzy
+msgid "quit                          exit program"
+msgstr "Kuvamo Gusohoka Porogaramu"
+
+#: parted/parted.c:1431
+msgid "rescue"
+msgstr ""
+
+#: parted/parted.c:1434
+#, fuzzy
+msgid "rescue START END              rescue a lost partition near START and END"
+msgstr "a Na"
+
+# starmath/source\smres.src:RID_TOOLBOXWINDOW.6.RID_SIZEXY.text
+#: parted/parted.c:1439
+#, fuzzy
+msgid "resize"
+msgstr "Kuringaniza"
+
+#: parted/parted.c:1442
+#, fuzzy
+msgid "resize MINOR START END        resize filesystem on partition MINOR"
+msgstr "Ihindurangero Ihindurangero ku"
+
+#: parted/parted.c:1447
+msgid "rm"
+msgstr ""
+
+#: parted/parted.c:1450
+#, fuzzy
+msgid "rm MINOR                      delete partition MINOR"
+msgstr "Gusiba"
+
+#: parted/parted.c:1455
+msgid "select"
+msgstr "guhitamo"
+
+#: parted/parted.c:1458
+#, fuzzy
+msgid "select DEVICE                 choose the device to edit"
+msgstr "Guhitamo Guhitamo i APAREYE Kuri Guhindura"
+
+#: parted/parted.c:1463
+#, fuzzy
+msgid "set"
+msgstr "Gushyiraho"
+
+#: parted/parted.c:1466
+#, fuzzy
+msgid "set MINOR FLAG STATE          change a flag on partition MINOR"
+msgstr "Gushyiraho Guhindura>> a Ibendera ku"
+
+#: parted/parted.c:1552
+#, fuzzy
+msgid "No device found"
+msgstr "APAREYE Byabonetse"
+
+#: parted/parted.c:1616
+#, fuzzy
+msgid "Don't forget to update /etc/fstab, if necessary.\n"
+msgstr "Kuri Kuvugurura NIBA"
+
+#: parted/ui.c:68
+#, fuzzy
+msgid ""
+"Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.\n"
+"This program is free software, covered by the GNU General Public License.\n"
+"\n"
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
+"\n"
+msgstr "C Porogaramu ni Kigenga ku i Porogaramu ni in i ATARIIGIHARWE i Bya Cyangwa A i kugirango Birenzeho Birambuye"
+
+#: parted/ui.c:77
+#, fuzzy
+msgid ""
+"Usage: parted [OPTION]... [DEVICE [COMMAND [PARAMETERS]...]...]\n"
+"Apply COMMANDs with PARAMETERS to DEVICE.  If no COMMAND(s) are given, runs in\n"
+"interactive mode.\n"
+msgstr "Na: Kuri Oya S Ubwoko"
+
+#: parted/ui.c:82
+#, fuzzy, c-format
+msgid "You found a bug in GNU Parted.  Please email a bug report to bug-parted@gnu.org containing the version (%s), and the following message:\n"
+msgstr "Byabonetse a in imeli a Icyegeranyo Kuri org i Verisiyo Na i Ubutumwa"
+
+#: parted/ui.c:611
+#, fuzzy
+msgid "Expecting a partition number."
+msgstr "a Umubare"
+
+#: parted/ui.c:618
+msgid "Partition doesn't exist."
+msgstr ""
+
+#: parted/ui.c:632
+#, fuzzy
+msgid "Expecting a file system type."
+msgstr "a IDOSIYE Sisitemu Ubwoko"
+
+#: parted/ui.c:638
+#, fuzzy, c-format
+msgid "Unknown file system type \"%s\"."
+msgstr "IDOSIYE Sisitemu Ubwoko"
+
+#: parted/ui.c:656
+#, fuzzy
+msgid "Expecting a disk label type."
+msgstr "a Akarango Ubwoko"
+
+#: parted/ui.c:749
+#, fuzzy
+msgid "Can't create any more partitions."
+msgstr "Kurema Birenzeho"
+
+#: parted/ui.c:759
+#, fuzzy
+msgid "Expecting a partition type."
+msgstr "a Ubwoko"
+
+#: parted/ui.c:863
+msgid "on"
+msgstr "kuri"
+
+# #-#-#-#-#  svx.pot (PACKAGE VERSION)  #-#-#-#-#
+# svx/source\svdraw\svdstr.src:STR_ItemValOFF.text
+# #-#-#-#-#  svx.pot (PACKAGE VERSION)  #-#-#-#-#
+# svx/source\svdraw\svdstr.src:STR_ItemValTEXTANI_NONE.text
+#: parted/ui.c:864
+msgid "off"
+msgstr "bidakora"
+
+# crashrep/source\all\crashrep.lng:%OPTIONS_BUTTON%.text
+#: parted/ui.c:952
+#, fuzzy
+msgid "OPTIONs:"
+msgstr "Amahitamo..."
+
+# sfx2/source\doc\docvor.src:DLG_ORGANIZE.BTN_EDIT.text
+#: parted/ui.c:955
+#, fuzzy
+msgid "COMMANDs:"
+msgstr "Amabwiriza"
+
+#: parted/ui.c:1011
+#, fuzzy
+msgid "  You have Windows FAT partition(s) that are not using LBA.  If your BIOS supports LBA, then you should switch to LBA by setting the LBA flag on all FAT partitions.  Otherwise, make sure the operating system and the BIOS have the same geometry before resizing any FAT partitions."
+msgstr "S OYA ikoresha Hanyuma Hindura Kuri ku Igenamiterere i Ibendera ku Byose Ubwoko i Sisitemu Na i i Iyigamashusho Mbere"
+
+#: parted/ui.c:1031
+#, fuzzy, c-format
+msgid "The operating system thinks the geometry on %s is %d/%d/%d.  Therefore, cylinder 1024 ends at %.3fM.%s"
+msgstr "Sisitemu i Iyigamashusho ku ni Umwiburungushure ku"
+
+#: parted/ui.c:1041
+#, fuzzy, c-format
+msgid "The operating system thinks the geometry on %s is %d/%d/%d.%s"
+msgstr "Sisitemu i Iyigamashusho ku ni"
+
+#: parted/ui.c:1052
+#, fuzzy, c-format
+msgid "Using %s\n"
+msgstr "ikoresha"

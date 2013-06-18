@@ -1,0 +1,1 @@
+/usr/src/parted/parted/gnulib/lib/close-stream.h

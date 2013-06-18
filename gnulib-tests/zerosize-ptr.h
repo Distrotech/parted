@@ -1,0 +1,1 @@
+/usr/src/parted/parted/gnulib/tests/zerosize-ptr.h

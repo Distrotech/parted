@@ -1,0 +1,1 @@
+/usr/src/parted/parted/gnulib/m4/msvc-inval.m4

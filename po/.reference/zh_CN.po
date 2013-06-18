@@ -1,0 +1,1385 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Wang Li <charles@linux.net.cn>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: parted 1.6.6\n"
+"POT-Creation-Date: 2003-07-26 10:37+1000\n"
+"PO-Revision-Date: 2003-08-01 11:27+0800\n"
+"Last-Translator: Wang Li <charles@linux.net.cn>\n"
+"Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=gb2312\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: libparted/linux.c:269
+#, c-format
+msgid "Could not stat device %s - %s."
+msgstr "无法对设备 %s - %s 做 stat 操作。"
+
+#: libparted/linux.c:370
+#, c-format
+msgid "The sector size on %s is %d bytes.  Parted is known not to work properly with drives with sector sizes other than %d bytes"
+msgstr "%s 上的扇区大小为 %d 字节。目前 Parted 不能在扇区大小不是 %d 字节的磁盘上正确工作。"
+
+#: libparted/linux.c:416
+#, c-format
+msgid "Unable to determine the size of %s (%s)"
+msgstr "无法确定 %s (%s) 的大小"
+
+#: libparted/linux.c:443
+#, c-format
+msgid "Could not read geometry of %s - %s."
+msgstr "无法读取 %s - %s 的几何结构。"
+
+#: libparted/linux.c:466
+#, c-format
+msgid "Device %s has dodgey geometry."
+msgstr "设备 %s 的几何结构很奇怪。"
+
+#: libparted/linux.c:511
+#, c-format
+msgid "Could not get identity of device %s - %s"
+msgstr "无法获取设备 %s - %s 的标识"
+
+#: libparted/linux.c:520
+msgid "IDE"
+msgstr "IDE"
+
+#: libparted/linux.c:600
+#, c-format
+msgid "Error initialising SCSI device %s - %s"
+msgstr "初始化 SCSI 设备 %s - %s 出错"
+
+#: libparted/linux.c:624
+msgid "SCSI"
+msgstr "SCSI"
+
+#: libparted/linux.c:679
+#, c-format
+msgid "The device %s is zero-length, and can't possibly store a file system or partition table.  Perhaps you selected the wrong device?"
+msgstr "设备 %s 的长度为零，因此无法保存文件系统或分区表。可能您选择了错误的设备？"
+
+#: libparted/linux.c:725
+msgid "Unable to determine geometry of file/device.  You should not use Parted unless you REALLY know what you're doing!"
+msgstr "无法确定文件/设备的几何结构。除非您确实知道您在做什么，否则您不该使用 Parted！"
+
+#: libparted/linux.c:801
+msgid "DAC960 RAID controller"
+msgstr "DAC960 RAID 控制器"
+
+#: libparted/linux.c:806
+msgid "Compaq Smart Array"
+msgstr "Compaq 智能阵列"
+
+#: libparted/linux.c:811
+msgid "ATARAID Controller"
+msgstr "ATARAID 控制器"
+
+#: libparted/linux.c:816
+msgid "I2O Controller"
+msgstr "I2O 控制器"
+
+#: libparted/linux.c:829
+#, c-format
+msgid "Device %s is neither a SCSI nor IDE drive."
+msgstr "设备 %s 即不是 SCSI 磁盘也不是 IDE 磁盘。"
+
+#: libparted/linux.c:833
+msgid "Unknown"
+msgstr "未知"
+
+#: libparted/linux.c:840
+msgid "ped_device_new()  Unsupported device type"
+msgstr "ped_device_new()  不支持的设备类型"
+
+#: libparted/gnu.c:248 libparted/linux.c:936
+#, c-format
+msgid "Error opening %s: %s"
+msgstr "打开 %s 出错：%s"
+
+#: libparted/gnu.c:258 libparted/linux.c:947
+#, c-format
+msgid "Unable to open %s read-write (%s).  %s has been opened read-only."
+msgstr "无法以读写方式打开 %s (%s)。%s 已按照只读方式打开。"
+
+#: libparted/gnu.c:436 libparted/gnu.c:534 libparted/gnu.c:662
+#: libparted/linux.c:1050 libparted/linux.c:1114
+#, c-format
+msgid "%s during read on %s"
+msgstr "在读取 %2$s 期间 %1$s"
+
+#: libparted/linux.c:1085
+#, c-format
+msgid "%s during seek for read on %s"
+msgstr "在为读取 %2$s 而调用 seek 时 %1$s"
+
+#: libparted/gnu.c:571 libparted/gnu.c:616 libparted/gnu.c:693
+#: libparted/linux.c:1154 libparted/linux.c:1235 libparted/linux.c:1291
+#, c-format
+msgid "%s during write on %s"
+msgstr "在写入 %2$s 时 %1$s"
+
+#: libparted/gnu.c:496 libparted/linux.c:1179
+#, c-format
+msgid "Can't write to %s, because it is opened read-only."
+msgstr "由于 %s 是以只读方式打开的，因此无法写入。"
+
+#: libparted/linux.c:1201
+#, c-format
+msgid "%s during seek for write on %s"
+msgstr "在为写入 %2$s 调用 seek 时 %1$s"
+
+#: libparted/linux.c:1537
+#, c-format
+msgid "Error reading %s (%s) to determine if partition is mounted."
+msgstr "为确定分区是否加载而读取 %s (%s) 时出错。"
+
+#: libparted/linux.c:1575
+msgid "Unable to determine if partitions are mounted via /proc/mounts or /etc/mtab.  Make sure you don't attempt to resize or modify mounted file systems.  (Even read-only mounted)"
+msgstr "无法确定分区是否是通过 /proc/mounts 或 /etc/mtab 加载的。请确认您不会试图改变文件系统的大小或者修改加载的文件系统。(即使按只读方式加载也不行)"
+
+#: libparted/linux.c:1670
+#, c-format
+msgid "Error informing the kernel about modifications to partition %s - %s.  This means Linux won't know about any changes you made to %s until you reboot - so you shouldn't mount it or use it in any way before rebooting."
+msgstr "通知内核关于分区 %s - %s 的修改时出错。这意味着 Linux 在重新启动之前无法知道您针对 %s 所作的任何修改 - 所以您也不能在重新启动之前加载或以任何方式使用它。"
+
+#: libparted/linux.c:1756
+#, c-format
+msgid "The kernel was unable to re-read the partition table on %s (%s).  This means Linux won't know anything nothing about the modifications you made until you reboot.  You should reboot your computer before doing anything with %s."
+msgstr "内核无法重新读取 %s (%s) 上的分区表。这意味这 Linux 在您重新启动之前无法知道任何修改。您应该在对 %s 做任何操作  之前重新启动您的计算机。"
+
+#: libparted/gnu.c:94
+#, c-format
+msgid "Unable to open %s."
+msgstr "无法打开 %s。"
+
+#: libparted/gnu.c:114
+msgid "Unable to probe store."
+msgstr "无法探测存储设备。"
+
+#: libparted/gnu.c:339
+msgid "The partition table was unable to be reread, as such, you need to reboot before mounting any modified partitions.  You also need to reinstall your boot loader before you reboot (which may require mounting modified partitions).  It is impossible do both things!  So you'll need to boot off a rescue disk, and reinstall your boot loader from the rescue disk.  Read section 4 of the Parted User documentation for more information."
+msgstr "无法重新读入分区表，同样，您必须在加载任何修改了的分区之前重新启动。您还需要在您重新启动之前重新安装启动管理器 (它可能需要加载修改了的分区)。同时做这两件事是不可能的！所以您就需要从急救盘启动，并从急救盘重新安装您的启动管理器。更多详情请参阅 Parted 用户文档的第四节。"
+
+#: libparted/gnu.c:356
+#, c-format
+msgid "The partition table on %s (%s).  This means the Hurd knows nothing about any modifications you made.  You should reboot your computer before doing anything with %s."
+msgstr "%s (%s) 上的分区表。这意味着 Hurd 不知道任何您所作的修改。您应该在对 %s 做任何操作之前重新启动您的计算机。"
+
+#: libparted/gnu.c:367 parted/parted.c:1609
+msgid "You should reinstall your boot loader before rebooting.  Read section 4 of the Parted User documentation for more information."
+msgstr "您应该在重新启动之前重新安装您的启动管理器。详情请阅读 Parted 用户文档的第四节。"
+
+#: libparted/gnu.c:756
+#, c-format
+msgid "%s trying to sync %s to disk"
+msgstr "%s 试图将 %s 同步到磁盘上"
+
+#: libparted/disk.c:141
+#, c-format
+msgid "Unable to open %s - unrecognised disk label."
+msgstr "无法打开 %s - 无法识别的磁盘标签。"
+
+#: libparted/disk.c:355
+#, c-format
+msgid "This libparted doesn't have write support for %s.  Perhaps it was compiled read-only."
+msgstr "这个 libparted 不支持对 %s 的写操作。可能它是按只读方式编译的。"
+
+#: libparted/disk.c:432
+#, c-format
+msgid "Partition %d is %.3fMb, but the file system is %.3fMb."
+msgstr "分区 %d 为 %.3fMb，但文件系统为 %.3fMb。"
+
+#: libparted/disk.c:861
+#, c-format
+msgid "%s disk labels do not support extended partitions."
+msgstr "%s 磁盘标签不支持扩展分区。"
+
+#: libparted/disk.c:1322
+#, c-format
+msgid "%s disk labels don't support logical or extended partitions."
+msgstr "%s 磁盘标签不支持逻辑或扩展分区。"
+
+#: libparted/disk.c:1344
+#, c-format
+msgid "Can't add a logical partition to %s, because there is no extended partition."
+msgstr "由于没有扩展分区，无法将逻辑分区添加到 %s。"
+
+#: libparted/disk.c:1368
+#, c-format
+msgid "Can't have more than one extended partition on %s"
+msgstr "%s 上不能含有多于一个扩展分区"
+
+#: libparted/disk.c:1378
+msgid "Can't have logical partitions outside of the extended partition."
+msgstr "逻辑分区不能处于扩展分区之外。"
+
+#: libparted/disk.c:1401
+#, c-format
+msgid "Can't have a logical partition outside of the extended partition on %s."
+msgstr "%s 上的逻辑分区不能处于扩展分区之外。"
+
+#: libparted/disk.c:1411
+msgid "Can't have overlapping partitions"
+msgstr "分区不能重叠"
+
+#: libparted/disk.c:1419
+msgid "Can't have a primary partition inside an extended partition."
+msgstr "扩展分区中不能含有主分区。"
+
+#: libparted/disk.c:1730
+msgid "metadata"
+msgstr "元数据"
+
+#: libparted/disk.c:1732
+msgid "free"
+msgstr "空闲空间"
+
+#: libparted/disk.c:1734 parted/ui.c:740 parted/ui.c:768
+msgid "extended"
+msgstr "扩展分区"
+
+#: libparted/disk.c:1736 parted/ui.c:744 parted/ui.c:772
+msgid "logical"
+msgstr "逻辑分区"
+
+#: libparted/disk.c:1738 parted/ui.c:736 parted/ui.c:764
+msgid "primary"
+msgstr "主分区"
+
+#: libparted/disk.c:1749
+msgid "boot"
+msgstr "启动"
+
+#: libparted/disk.c:1751
+msgid "root"
+msgstr "根"
+
+#: libparted/disk.c:1753
+msgid "swap"
+msgstr "对换分区"
+
+#: libparted/disk.c:1755
+msgid "hidden"
+msgstr "隐藏分区"
+
+#: libparted/disk.c:1757
+msgid "raid"
+msgstr "raid"
+
+#: libparted/disk.c:1759
+msgid "lvm"
+msgstr "lvm"
+
+#: libparted/disk.c:1761
+msgid "lba"
+msgstr "lba"
+
+#: libparted/disk.c:1763
+msgid "hp-service"
+msgstr ""
+
+#: libparted/disk.c:1769
+#, c-format
+msgid "Unknown flag partition flag, %d."
+msgstr ""
+
+#: libparted/disk_bsd.c:497 libparted/disk_dos.c:1520 libparted/disk_dvh.c:798
+#: libparted/disk_gpt.c:1148 libparted/disk_loop.c:248
+#: libparted/disk_mac.c:1246 libparted/disk_pc98.c:756
+#: libparted/disk_sun.c:678
+msgid "Unable to satisfy all constraints on the partition."
+msgstr "无法满足分区的所有限制。"
+
+#: libparted/disk_bsd.c:522
+msgid "Unable to allocate a bsd disklabel slot"
+msgstr "取法定位 bsd 磁盘标签槽"
+
+#: libparted/disk_dos.c:379
+#, c-format
+msgid "The partition table on %s is inconsistent.  There are many reasons why this might be the case.  However, the most likely reason is that Linux detected the BIOS geometry for %s incorrectly.  GNU Parted suspects the real geometry should be %d/%d/%d (not %d/%d/%d).  You should check with your BIOS first, as this may not be correct.  You can inform Linux by adding the parameter %s=%d,%d,%d to the command line.  See the LILO or GRUB documentation for more information.  If you think Parted's suggested geometry is correct, you may select Ignore to continue (and fix Linux later).  Otherwise, select Cancel (and fix Linux and/or the BIOS now)."
+msgstr "%s 上的分区不协调。产生这种情况的原因很多。然而，最可能的原因是 Linux 检测到的 BIOS 关于 %s 的几何结构是错误的。GNU Parted 怀疑实际的几何结构为 %d/%d/%d (而不是 %d/%d/%d)。因为 BIOS 可能不正确，您应该首先检查您的 BIOS。您可以通过在命令行中添加参数 %s=%d,%d,%d 来通知 Linux。详情请参见 LILO 或 GRUB 的文档。如果您认为 Parted 所建议的几何结构是正确的，您可以忽略并继续 (并在以后修正 Linux)。否则，选择放弃 (并马上修正 Linux 并且/或者 BIOS)。"
+
+#: libparted/disk_dos.c:417
+#, c-format
+msgid "The partition table on %s is inconsistent.  There are many reasons why this might be the case.  Often, the reason is that Linux detected the BIOS geometry incorrectly.  However, this does not appear to be the case here.  It is safe to ignore,but ignoring may cause (fixable) problems with some boot loaders, and may cause problems with FAT file systems.  Using LBA is recommended."
+msgstr "%s 上的分区表不协调。可能导致这种情况的原因有很多。通常，原因是 Linux 检测到的 BIOS 几何结构是错误的。然而，现在似乎并不是这种情况。忽略是安全的，但是忽略可能导致某些启动管理器的问题 (可修复的)，还可能导致 FAT 文件系统出现问题。建议使用 LBA。"
+
+#: libparted/disk_dos.c:547
+#, c-format
+msgid "Invalid partition table on %s - wrong signature %x"
+msgstr "%s 上的分区表无效 - 错误的签名 %x"
+
+#: libparted/disk_dos.c:581
+#, c-format
+msgid "Invalid partition table - recursive partition on %s."
+msgstr "无效的分区表 - %s 出现递归分区。"
+
+#: libparted/disk_dos.c:1501
+msgid "Unable to align partition properly.  This probably means that another partitioning tool generated an incorrect partition table, because it didn't have the correct BIOS geometry.  It is safe to ignore,but ignoring may cause (fixable) problems with some boot loaders."
+msgstr "无法正确地对齐分区。这可能意味着其它分区工具由于没有得到正确的 BIOS 几何结构而生成了错误的分区表。忽略是安全的，但忽略可能导致某些启动管理器出现可修复的问题。"
+
+#: libparted/disk_dvh.c:187
+#, c-format
+msgid "%s has no extended partition (volume header partition).  If you ignore, then any boot volumes will be deleted."
+msgstr "%s 没有扩展分区 (卷头分区)。如果您忽略，将删除所有启动卷。"
+
+#: libparted/disk_dvh.c:325
+msgid "Checksum is wrong, indicating the partition table is corrupt."
+msgstr "校验和错误，标明分区表已损坏。"
+
+#: libparted/disk_dvh.c:620
+msgid "Only primary partitions can be root partitions."
+msgstr "只有主分区可以是根分区。"
+
+#: libparted/disk_dvh.c:634
+msgid "Only primary partitions can be swap partitions."
+msgstr "只有主分区可以是对换分区。"
+
+#: libparted/disk_dvh.c:648
+msgid "Only logical partitions can be a boot file."
+msgstr "只有逻辑分区可以是启动文件。"
+
+#: libparted/disk_dvh.c:726
+msgid "Only logical partitions (boot files) have a name."
+msgstr "只有逻辑分区 (启动文件) 拥有名字。"
+
+#: libparted/disk_dvh.c:836
+msgid "Too many primary partitions"
+msgstr "过多的主分区"
+
+#: libparted/disk_gpt.c:304
+#, c-format
+msgid "%s contains GPT signatures, indicating that it has a GPT table.  However, it does not have a valid fake msdos partition table, as it should.  Perhaps it was corrupted - possibly by a program that doesn't understand GPT partition tables.  Or perhaps you deleted the GPT table, and are now using an msdos partition table.  Is this a GPT partition table?"
+msgstr "%s 含有 GPT 签名，标明它含有 GPT 表。然而，它并不像应该的那样含有有效的伪 msdos 分区表。可能它已经损坏 - 可能是不理解 GPT 分区表的程序导致的。或者您删除了 GPT 表，现在使用 msdos 分区表。这是 GPT 分区表吗？"
+
+#: libparted/disk_gpt.c:465
+#, c-format
+msgid "The format of the GPT partition table is version %x, which is newer than what Parted can recognise.  Please tell us!  bug-parted@gnu.org"
+msgstr "GPT 分区表的格式版本为 %x，它比 Parted 所能识别的版本要新。请告诉我们！bug-parted@gnu.org"
+
+#: libparted/disk_gpt.c:579
+msgid "The backup GPT table is not at the end of the disk, as it should be.  This might mean that another operating system believes the disk is smaller.  Fix, by moving the backup to the end (and removing the old backup)?"
+msgstr "备份 GPT 表不像应该的那样出现在磁盘的末尾。这可能意味这其它操作系统相信磁盘小一些。通过将备份移动到末尾 (并删除旧备份) 来修正？"
+
+#: libparted/disk_gpt.c:614
+msgid "The primary GPT table is corrupt, but the backup appears ok, so that will be used."
+msgstr "主 GPT 表损坏，但备份似乎是正确的，所以使用备份。"
+
+#: libparted/disk_gpt.c:622
+msgid "Both the primary and backup GPT tables are corrupt.  Try making a fresh table, and using Parted's rescue feature, to recover partitions."
+msgstr "主 GPT 和备份 GPT 都损坏了。试图创建新表并使用 Parted 的急救功能以修复分区表。"
+
+#: libparted/disk_mac.c:164
+#, c-format
+msgid "Invalid signature %x for Mac disk labels."
+msgstr "无效的 Mac 磁盘标签签名 %x。"
+
+#: libparted/disk_mac.c:205
+msgid "Partition map has no partition map entry!"
+msgstr "分区映射不含有分区映射条目！"
+
+#: libparted/disk_mac.c:250
+#, c-format
+msgid "%s is too small for a Mac disk label!"
+msgstr "%s 对 Mac 磁盘标签来说太小了！"
+
+#: libparted/disk_mac.c:449
+#, c-format
+msgid "Partition %d has an invalid signature %x."
+msgstr "分区 %d 含有无效的签名 %x。"
+
+#: libparted/disk_mac.c:467
+#, c-format
+msgid "Partition %d has an invalid length of 0 bytes!"
+msgstr "分区 %d 含有无效的长度 0 字节！"
+
+#: libparted/disk_mac.c:493
+msgid "The data region doesn't start at the start of the partition"
+msgstr "数据区并未从分区的起点开始"
+
+#: libparted/disk_mac.c:510
+msgid "The boot region doesn't start at the start of the partition"
+msgstr "启动区域并未从分区的起点开始"
+
+#: libparted/disk_mac.c:524
+msgid "The partition's boot region doesn't occupy the entire partition."
+msgstr "分区的启动区域并未占用整个分区。"
+
+#: libparted/disk_mac.c:534
+msgid "The partition's data region doesn't occupy the entire partition."
+msgstr "分区的数据区域并未占用整个分区。"
+
+#: libparted/disk_mac.c:588
+#, c-format
+msgid "Weird block size on device descriptor: %d bytes is not divisible by 512."
+msgstr "设备描述中出现古怪的块大小：%d 字节不能被 512 整除。"
+
+#: libparted/disk_mac.c:601
+#, c-format
+msgid "The driver descriptor says the physical block size is %d bytes, but Linux says it is %d bytes."
+msgstr "磁盘描述表明物理块大小为 %d 字节，但 Linux 认为它是 %d 字节。"
+
+#: libparted/disk_mac.c:649
+msgid "No valid partition map found."
+msgstr "找不到有效的分区映射。"
+
+#: libparted/disk_mac.c:701
+#, c-format
+msgid "Conflicting partition map entry sizes!  Entry 1 says it's %d, but entry %d says its %d!"
+msgstr "分区映射条目大小冲突！条目 1 说它是 %d，但条目 %d 说它是 %d！"
+
+#: libparted/disk_mac.c:728
+msgid "Weird - 2 partitions map entries!"
+msgstr "奇怪 - 两个分区映射条目！"
+
+#: libparted/disk_mac.c:1185
+msgid "Changing the name of a root or swap partition will prevent Linux from recognising it as such."
+msgstr "改变根分区或对换分区的名称将导致 Linux 无法识别它。"
+
+#: libparted/disk_mac.c:1281
+msgid "Can't add another partition - partition map is too small!"
+msgstr "无法添加另一个分区 - 分区映射过小！"
+
+#: libparted/disk_pc98.c:349
+#, c-format
+msgid "Invalid partition table on %s"
+msgstr "%s 的分区表无效"
+
+#: libparted/disk_pc98.c:401 libparted/disk_pc98.c:479
+#, c-format
+msgid "Partition %d isn't aligned to cylinder boundaries.  Need to add support for this."
+msgstr "分区 %d 并未对齐到柱面边界。需要添加对它的支持。"
+
+#: libparted/disk_pc98.c:788
+msgid "Can't add another partition."
+msgstr "无法添加其它分区。"
+
+#: libparted/disk_sun.c:140
+msgid "Corrupted Sun disk label detected."
+msgstr "检测到损坏了的 Sun 磁盘标签。"
+
+#: libparted/disk_sun.c:250
+#, c-format
+msgid "The disk CHS geometry (%d,%d,%d) does not match the geometry stored on the disk label (%d,%d,%d)."
+msgstr "磁盘 CHS 几何结构 (%d,%d,%d) 于保存在磁盘标签 (%d,%d,%d) 中的几何结构不匹配。"
+
+#: libparted/disk_sun.c:268
+#, c-format
+msgid "The disk label describes a disk bigger than %s."
+msgstr "磁盘标签描述的磁盘大于 %s。"
+
+#: libparted/disk_sun.c:710
+msgid "The Whole Disk partition is the only available one left.  Generally, it is not a good idea to overwrite this partition with a real one.  Solaris may not be able to boot without it, and SILO (the sparc boot loader) appreciates it as well."
+msgstr ""
+
+#: libparted/disk_sun.c:725
+msgid "Sun disk label is full."
+msgstr "Sun 磁盘标签已满。"
+
+#: libparted/filesys.c:300
+msgid "Could not detect file system."
+msgstr "无法检测文件系统。"
+
+#: libparted/filesys.c:311
+msgid "The file system is bigger than it's volume!"
+msgstr "文件系统比它的卷还大！"
+
+#: libparted/filesys.c:319
+#, c-format
+msgid "Support for opening %s file systems is not implemented yet."
+msgstr "关于打开 %s 文件系统的支持尚未实现。"
+
+#: libparted/filesys.c:351
+#, c-format
+msgid "Support for creating %s file systems is not implemented yet."
+msgstr "关于创建 %s 文件系统的支持尚未实现。"
+
+#: libparted/filesys.c:399
+#, c-format
+msgid "Support for checking %s file systems is not implemented yet."
+msgstr "关于检查 %s 文件系统的支持尚未实现。"
+
+#: libparted/filesys.c:465
+msgid "raw block copying"
+msgstr "原始块复制"
+
+#: libparted/filesys.c:476
+msgid "growing file system"
+msgstr "正在扩大文件系统"
+
+#: libparted/filesys.c:505
+msgid "Can't copy onto an overlapping partition."
+msgstr "无法复制到重叠的分区。"
+
+#: libparted/filesys.c:527
+#, c-format
+msgid "Direct support for copying file systems is not yet implemented for %s.  However, support for resizing implemented.  Therefore, the file system can be copied if the new partition is at least as big as the old one.  So, either shrink the partition you are trying to copy, or copy to a bigger partition."
+msgstr "对 %s 来说尚不支持直接的文件系统复制。但支持改变大小。因此，只要新分区比原分区大，就能够复制文件系统。所以，缩小您试图复制的分区，或复制到较大的分区。"
+
+#: libparted/filesys.c:541
+#, c-format
+msgid "Support for copying %s file systems is not implemented yet."
+msgstr "关于复制 %s 文件系统的支持尚未实现。"
+
+#: libparted/filesys.c:567
+#, c-format
+msgid "Support for resizing %s file systems is not implemented yet."
+msgstr "改变 %s 文件系统的支持尚未实现。"
+
+#: libparted/exception.c:46
+msgid "Information"
+msgstr "信息"
+
+#: libparted/exception.c:47
+msgid "Warning"
+msgstr "警告"
+
+#: libparted/exception.c:48
+msgid "Error"
+msgstr "错误"
+
+#: libparted/exception.c:49
+msgid "Fatal"
+msgstr "致命错误"
+
+#: libparted/exception.c:50
+msgid "Bug"
+msgstr "Bug"
+
+#: libparted/exception.c:51
+msgid "No Implementation"
+msgstr "未实现"
+
+#: libparted/exception.c:55
+msgid "Fix"
+msgstr "修正"
+
+#: libparted/exception.c:56
+msgid "Yes"
+msgstr "是"
+
+#: libparted/exception.c:57
+msgid "No"
+msgstr "否"
+
+#: libparted/exception.c:58
+msgid "OK"
+msgstr "确认"
+
+#: libparted/exception.c:59
+msgid "Retry"
+msgstr "重试"
+
+#: libparted/exception.c:60
+msgid "Ignore"
+msgstr "忽略"
+
+#: libparted/exception.c:61
+msgid "Cancel"
+msgstr "放弃"
+
+#: libparted/exception.c:89
+#, c-format
+msgid "A bug has been detected in GNU parted.  Please email a bug report to bug-parted@gnu.org containing the version (%s) and the following message:"
+msgstr "发现 GNU Parted 中的 bug。请将含有版本 (%s) 和以下信息的 bug 报告发送到 bug-parted@gnu.org："
+
+#: libparted/geom.c:105
+msgid "Can't have the end before the start!"
+msgstr "无法在开始之前结束！"
+
+#: libparted/geom.c:112
+msgid "Can't have a partition outside the disk!"
+msgstr "无法让分区超出磁盘！"
+
+#: libparted/geom.c:196
+#, c-format
+msgid "Attempt to read sectors %ld-%ld outside of partition on %s"
+msgstr "试图读取 %3$s 上分区之外的扇区 %1$ld-%2$ld"
+
+#: libparted/geom.c:231
+#, c-format
+msgid "Attempt to write sectors %ld-%ld outside of partition on %s"
+msgstr "试图写入 %3$s 上分区之外的扇区 %1$ld-%2$ld"
+
+#: libparted/fs_linux_swap/linux_swap.c:351 libparted/geom.c:258
+msgid "checking for bad blocks"
+msgstr "检查坏块"
+
+#: libparted/libparted.c:273 libparted/libparted.c:293
+msgid "Out of memory."
+msgstr "内存耗尽。"
+
+#: libparted/fs_ext2/ext2.c:87 libparted/fs_ext2/ext2.c:112
+msgid "Inconsistent group descriptors!"
+msgstr "不一致的组描述符！"
+
+#: libparted/fs_ext2/ext2.c:91 libparted/fs_ext2/ext2.c:116
+msgid "Filesystem full!"
+msgstr "文件系统已满！"
+
+#: libparted/fs_ext2/ext2.c:696
+msgid "This ext2 filesystem has a rather strange layout!  Parted can't resize this (yet)."
+msgstr "该 ext2 文件系统的布局相当奇怪！Parted 尚且无法改变它的大小。"
+
+#: libparted/fs_ext2/ext2.c:727
+msgid "Invalid superblock.  Are you sure this is an ext2 filesystem?"
+msgstr "无效的超块。您确认它是一个 ext2 文件系统？"
+
+#: libparted/fs_ext2/ext2.c:741 libparted/fs_ext2/ext2_resize.c:596
+msgid "Filesystem has errors!  You should run e2fsck."
+msgstr "文件系统错误！您应该运行 e2fsck。"
+
+#: libparted/fs_ext2/ext2.c:752
+msgid "Filesystem was not cleanly unmounted!  You should e2fsck.  Modifying an unclean filesystem could cause severe corruption."
+msgstr "文件系统没有被干净地卸载！您应该运行 e2fsck。修改不干净的文件系统将导致严重的损坏。"
+
+#: libparted/fs_ext2/ext2.c:772
+msgid "Filesystem has incompatible feature enabled"
+msgstr "文件系统启用了不兼容的功能"
+
+#: libparted/fs_ext2/ext2.c:783
+msgid "Error allocating buffer cache."
+msgstr "分配缓冲区 cache 错误。"
+
+#: libparted/fs_ext2/ext2_inode_relocator.c:114
+msgid "Found an inode with a incorrect link count.  Better go run e2fsck first."
+msgstr "找到带有错误连接计数的 inode。最好先运行 e2fsck。"
+
+#: libparted/fs_ext2/ext2_inode_relocator.c:487
+msgid "Not enough free inodes!"
+msgstr "没有足够的空闲 inodes！"
+
+#: libparted/fs_ext2/ext2_resize.c:224
+msgid "Filesystem is too occupied to remove a group!"
+msgstr "文件系统被过渡占用以致无法删除组！"
+
+#: libparted/fs_ext2/ext2_resize.c:233
+msgid "Filesystem has too many allocated inodes to remove a group!"
+msgstr "文件系统中已使用的 inode 过多以致无法删除组！"
+
+#: libparted/fs_ext2/ext2_resize.c:493
+msgid "adding groups"
+msgstr "添加组"
+
+#: libparted/fs_ext2/ext2_resize.c:529
+#, c-format
+msgid "Your filesystem is too occupied to resize it to %i blocks. Sorry."
+msgstr "您的文件系统被过渡占用以致无法将它的大小改变为 %i 个块。抱歉。"
+
+#: libparted/fs_ext2/ext2_resize.c:539
+#, c-format
+msgid "Your filesystem has too much occupied inodes to resize it to %i blocks. Sorry."
+msgstr "您的文件系统中已使用的 inode 过多以致无法将其大小改变为 %i 个块。抱歉。"
+
+#: libparted/fs_ext2/ext2_resize.c:553
+msgid "shrinking"
+msgstr "正在缩小"
+
+#: libparted/fs_ext2/ext2_resize.c:604
+msgid "Filesystem was not cleanly unmounted!  You should e2fsck."
+msgstr "文件系统没有干净地卸载！您应该运行 e2fsck。"
+
+#: libparted/fs_ext2/ext2_resize.c:613
+msgid "The file system has the 'dir_index' feature enabled.  Parted can only resize the file system if it disables this feature.  You can enable it later by running 'tune2fs -O dir_index DEVICE' and then 'e2fsck -fD DEVICE'."
+msgstr ""
+
+#: libparted/fs_ext2/ext2_block_relocator.c:155
+msgid "Cross-linked blocks found! better go run e2fsck first!"
+msgstr "发现交叉连接块！最好先运行 e2fsck！"
+
+#: libparted/fs_ext2/ext2_block_relocator.c:489
+#, c-format
+msgid "Block %i has no reference?  Weird"
+msgstr "块 %i 没有引用？奇怪"
+
+#: libparted/fs_ext2/ext2_block_relocator.c:682
+#, c-format
+msgid "Block %i shouldn't have been marked!"
+msgstr "块 %i 不应该已被标记！"
+
+#: libparted/fs_ext2/interface.c:188
+msgid "The ext2 filesystem passed a basic check.  For a more comprehensive check, use the e2fsck program."
+msgstr "ext2 文件系统通过基本检查。至于更负载的检查，使用 e2fsck 程序。"
+
+#: libparted/fs_ext2/interface.c:205
+msgid "Sorry, can't move the start of ext2 partitions yet!"
+msgstr "错误，尚无法移动 ext2 分区的起点！"
+
+#: libparted/fs_ext2/ext2_buffer.c:82
+msgid "Couldn't flush buffer cache!"
+msgstr "无法刷新缓冲区 cache！"
+
+#: libparted/fs_ext2/ext2_mkfs.c:165
+msgid "writing per-group metadata"
+msgstr "写入每个组都有的元数据"
+
+#: libparted/fs_ext2/ext2_mkfs.c:559
+msgid "File system too small for ext2."
+msgstr "对 ext2 来说文件系统过小。"
+
+#: libparted/fs_fat/calc.c:132
+#, c-format
+msgid "You need %dM of free space to shrink this partition to this size (you currently have only %dM free)"
+msgstr "您需要 %dM 的空闲空间来将此分区收缩到这一大小 (您目前只有 %dM 的空闲空间)"
+
+#: libparted/fs_fat/context.c:55
+#, c-format
+msgid "Cluster start delta = %d, which is not a multiple of the cluster size %d."
+msgstr "簇起始偏移 = %d，不是簇大小 %d 的整数倍。"
+
+#: libparted/fs_fat/fat.c:310
+#, c-format
+msgid "Partition too big/small for a %s file system"
+msgstr "对于 %s 文件系统来说，分区过大或过小"
+
+#: libparted/fs_fat/fat.c:476
+msgid "The FATs don't match.  If you don't know what this means, then select cancel, run scandisk on the file system, and then come back."
+msgstr "FAT 不匹配。如果你不知道它的含义，请选择放弃，并对文件系统运行 scandisk，而后在回到这里来。"
+
+#: libparted/fs_fat/fat.c:516
+msgid "There are no possible configurations for this FAT type."
+msgstr "对于此 FAT 类型没有可能的配置。"
+
+#: libparted/fs_fat/fat.c:528
+#, c-format
+msgid "File system doesn't have expected sizes for Windows to like it.  Cluster size is %dk (%dk expected); number of clusters is %d (%d expected); size of FATs is %d sectors (%d expected)."
+msgstr "文件系统的大小不是 Windows 所希望的。簇大小为 %dk (期望 %dk)；簇数量为 %d (期望 %d)；FAT 的大小为 %d 扇区 (期望 %d)。"
+
+#: libparted/fs_fat/fat.c:550
+#, c-format
+msgid "File system is reporting the free space as %d clusters, not %d clusters."
+msgstr "文件系统报告空闲空间为 %d 簇，而不是 %d 簇。"
+
+#: libparted/fs_fat/fat.c:871
+msgid "GNU parted was miscompiled: the FAT boot sector should be 512 bytes.  FAT support will be disabled."
+msgstr "GNU parted 编译错误：FAT 启动扇区应为 512 字节。FAT 支持将被关闭。"
+
+#: libparted/fs_fat/resize.c:158
+msgid "There's not enough room in the root directory, for all of the files.  Either cancel, or ignore to lose the files."
+msgstr "根目录下没有保存所有文件的足够空间。放弃或者以损失文件为代价忽略。"
+
+#: libparted/fs_fat/resize.c:299
+msgid "Error writing to the root directory."
+msgstr "写入根目录错误。"
+
+#: libparted/fs_fat/resize.c:484
+msgid "If leave your file system as FAT16, then you will have no problems."
+msgstr "如果将您的文件系统类型保持 FAT16 不变，那么你就不会有问题。"
+
+#: libparted/fs_fat/resize.c:487
+msgid "If you convert to FAT16, and MS Windows is installed on this partition, then you must re-install the MS Windows boot loader.  If you want to do this, you should consult the Parted manual (or your distribution's manual)."
+msgstr "如果您转换为 FAT16，并将 MS Windows 安装到这个分区，那么您必须重新安装 MS Windows 启动管理器。如果您打算这么做，您应该参阅 Parted 的手册 (或您的发行版的手册)。"
+
+#: libparted/fs_fat/resize.c:495
+msgid "If you leave your file system as FAT32, then you will not introduce any new problems."
+msgstr "如果您保持文件系统类型为 FAT32 不变，那么您将不会遇到任何新问题。"
+
+#: libparted/fs_fat/resize.c:499
+msgid "If you convert to FAT32, and MS Windows is installed on this partition, then you must re-install the MS Windows boot loader.  If you want to do this, you should consult the Parted manual (or your distribution's manual).  Also, converting to FAT32 will make the file system unreadable by MS DOS, MS Windows 95a, and MS Windows NT."
+msgstr "如果您转换为 FAT32，并且 MS Windows 安装在这个分区，那么您必须重新安装 MS Windows 的启动管理器。如果您打算这样作，您应该参阅 Parted 的手册 (或者您的发行版的手册)。此外，将文件系统转换为 FAT32，文件系统就不能够被 MS DOS、MS Windows 95a 和 MS Windows NT 所访问了。"
+
+#: libparted/fs_fat/resize.c:513
+#, c-format
+msgid "%s  %s  %s"
+msgstr "%s  %s  %s"
+
+#: libparted/fs_fat/resize.c:514
+msgid "Would you like to use FAT32?"
+msgstr "您是否愿意使用 FAT32？"
+
+#: libparted/fs_fat/resize.c:541 libparted/fs_fat/resize.c:557
+#, c-format
+msgid "%s  %s"
+msgstr "%s  %s"
+
+#: libparted/fs_fat/resize.c:542
+msgid "The file system can only be resized to this size by converting to FAT16."
+msgstr "文件系统的大小只能通过转换为 FAT16 改变到这一大小。"
+
+#: libparted/fs_fat/resize.c:558
+msgid "The file system can only be resized to this size by converting to FAT32."
+msgstr "文件系统的大小只能通过转换为 FAT32 改变到这一大小。"
+
+#: libparted/fs_fat/resize.c:571
+msgid "GNU Parted can not resize this partition to this size.  We're working on it!"
+msgstr "GNU Parted 无法将此分区转换到这一大小。我们正在实现它！"
+
+#: libparted/fs_fat/bootsector.c:48
+msgid "File system has an invalid signature for a FAT file systems."
+msgstr "文件系统含有无效的 FAT 文件系统签名。"
+
+#: libparted/fs_fat/bootsector.c:55
+msgid "File system has an invalid signature for a FAT file system."
+msgstr "文件系统含有无效的 FAT 文件系统签名。"
+
+#: libparted/fs_fat/bootsector.c:62
+msgid "File system has an invalid sector size for a FAT file system."
+msgstr "文件系统的扇区大小对 FAT 文件系统来说无效。"
+
+#: libparted/fs_fat/bootsector.c:69
+msgid "File system has an invalid cluster size for a FAT file system."
+msgstr "文件系统的簇大小对 FAT 文件系统来说无效。"
+
+#: libparted/fs_fat/bootsector.c:76
+msgid "File system has an invalid number of reserved sectors for a FAT filesystem."
+msgstr "文件系统的保留扇区数对 FAT 文件系统来说无效。"
+
+#: libparted/fs_fat/bootsector.c:83
+msgid "File system has an invalid number of FATS."
+msgstr "文件系统的 FATS 数量无效。"
+
+#: libparted/fs_fat/bootsector.c:139
+#, c-format
+msgid "This file system has a logical sector size of %d.  GNU Parted is known not to work properly with sector sizes other than 512 bytes."
+msgstr "此文件系统的逻辑扇区大小为 %d。GNU Parted 不能在扇区大小不是 512 字节的情况下正确工作。"
+
+#: libparted/fs_fat/bootsector.c:166
+msgid "FAT boot sector says logical sector size is 0.  This is weird. "
+msgstr "FAT 启动扇区声称逻辑扇区的大小为零。这很奇怪。"
+
+#: libparted/fs_fat/bootsector.c:172
+msgid "FAT boot sector says there are no FAT tables.  This is weird. "
+msgstr "FAT 启动扇区声称没有 FAT 表。这很奇怪。"
+
+#: libparted/fs_fat/bootsector.c:178
+msgid "FAT boot sector says clusters are 0 sectors.  This is weird. "
+msgstr "FAT 启动扇区声称卒是零扇区。这很奇怪。"
+
+#: libparted/fs_fat/bootsector.c:188
+msgid "Filesystem is FAT12, which is unsupported."
+msgstr "文件系统为 FAT12，不支持。"
+
+#: libparted/fs_fat/bootsector.c:367
+#, c-format
+msgid "The information sector has the wrong signature (%x).  Select cancel for now, and send in a bug report.  If you're desperate, it's probably safe to ignore."
+msgstr "信息扇区的签名错误 (%x)。现在选择放弃，并发送 bug 报告。如果您不顾一切，选择忽略有可能是“安全”的。"
+
+#: libparted/fs_fat/count.c:149
+#, c-format
+msgid "Bad directory entry for %s: first cluster is the end of file marker."
+msgstr "%s 的目录条目错误：第一个簇就是文件标志的结束。"
+
+#: libparted/fs_fat/count.c:162
+#, c-format
+msgid "Bad FAT: unterminated chain for %s.  You should run dosfsck or scandisk."
+msgstr "错误的 FAT：%s 的链未终止。您应该运行 dosfsck 或 scandisk。"
+
+#: libparted/fs_fat/count.c:171
+#, c-format
+msgid "Bad FAT: cluster %d outside filesystem in chain for %s.  You should run dosfsck or scandisk."
+msgstr "错误的 FAT：在%2$s 的链中，簇 %1$d 处于文件系统之外。您应该运行 dosfsck 或 scandisk。"
+
+#: libparted/fs_fat/count.c:181
+#, c-format
+msgid "Bad FAT: cluster %d is cross-linked for %s.  You should run dosfsck or scandisk."
+msgstr "错误的 FAT：簇 %d 同 %s 的链交叉了。您应该运行 dosfsck 或 scandisk。"
+
+#: libparted/fs_fat/count.c:200
+#, c-format
+msgid "%s is %dk, but it has %d clusters (%dk)."
+msgstr "%s 为 %dk，但含有 %d 个簇 (%dk)。"
+
+#: libparted/fs_fat/count.c:263
+#, c-format
+msgid "The file %s is marked as a system file.  This means moving it could cause some programs to stop working."
+msgstr "文件 %s 被标记为系统文件。这意味着移动它可能导致某些程序停止工作。"
+
+#: libparted/fs_fat/table.c:138
+#, c-format
+msgid "FAT %d media %x doesn't match the boot sector's media %x.  You should probably run scandisk."
+msgstr "FAT %d 媒体 %x 和启动扇区所在的媒体 %x 不匹配。您可能应该运行 scandisk。"
+
+#: libparted/fs_fat/table.c:268
+#, c-format
+msgid "fat_table_set: cluster %ld outside filesystem"
+msgstr "fat_table_set：簇 %ld 处于文件系统之外"
+
+#: libparted/fs_fat/table.c:296
+#, c-format
+msgid "fat_table_get: cluster %ld outside filesystem"
+msgstr "fat_table_get：簇 %ld 处于文件系统之外"
+
+#: libparted/fs_fat/table.c:334
+msgid "fat_table_alloc_cluster: no free clusters"
+msgstr "fat_table_alloc_cluster：没有空闲簇"
+
+#: libparted/fs_linux_swap/linux_swap.c:234
+#, c-format
+msgid "Unrecognised linux swap signature '%10s'."
+msgstr "无法识别的 linux 对换签名“%10s”。"
+
+#: libparted/fs_linux_swap/linux_swap.c:310
+msgid "Too many bad pages."
+msgstr "过多的坏页。"
+
+#: parted/parted.c:69
+msgid "displays this help message"
+msgstr "显示此求助信息"
+
+#: parted/parted.c:70
+msgid "where necessary, prompts for user intervention"
+msgstr "在必要时，提示用户"
+
+#: parted/parted.c:71
+msgid "never prompts for user intervention"
+msgstr "从不提示用户"
+
+#: parted/parted.c:72
+msgid "displays the version"
+msgstr "显示版本"
+
+#: parted/parted.c:79
+msgid "MINOR is the partition number used by Linux.  On msdos disk labels, the primary partitions number from 1-4, and logical partitions are 5 onwards.\n"
+msgstr "MINOR 是 Linux 使用的分区编号。在 msdos 磁盘    标签中，主分区编号为 1 - 4，逻辑分区从 5 开始。\n"
+
+#: parted/parted.c:82
+msgid "LABEL-TYPE is one of: "
+msgstr "“标签类型”是以下任意一项："
+
+#: parted/parted.c:83
+msgid "FLAG is one of: "
+msgstr "“标志”是以下任意一项："
+
+#: parted/parted.c:84
+msgid "PART-TYPE is one of: primary, logical, extended\n"
+msgstr "“分区类型”是主分区、逻辑分区、扩展分区之一\n"
+
+#: parted/parted.c:86
+msgid "FS-TYPE is one of: "
+msgstr "“文件系统类型”是以下任意一项："
+
+#: parted/parted.c:87
+msgid "START and END are in megabytes.  Negative values count from the end of the disk.\n"
+msgstr "“起始点”和“终止点”以兆为单位。负值表示从磁盘末段开始计数。\n"
+
+#: parted/parted.c:89
+msgid "STATE is one of: on, off\n"
+msgstr "状态为：开、关\n"
+
+#: parted/parted.c:90
+msgid "DEVICE is usually /dev/hda or /dev/sda\n"
+msgstr "DEVICE 通常为 /dev/hda 或 /dev/sda\n"
+
+#: parted/parted.c:91
+msgid "NAME is any word you want\n"
+msgstr "NAME 是您需要的任何单词\n"
+
+#: parted/parted.c:126
+#, c-format
+msgid "%0.f%%\t(time left %.2d:%.2d)"
+msgstr "%0.f%%\t(剩余时间 %.2d:%.2d)"
+
+#: parted/parted.c:144
+#, c-format
+msgid "Partition %s is being used.  Modifying it while it is in use could cause severe corruption."
+msgstr "正在使用分区 %s。在使用时修改他将导致严重的破坏。"
+
+#: parted/parted.c:166
+#, c-format
+msgid "Partition(s) on %s are being used."
+msgstr "正在使用 %s 上的分区。"
+
+#. get the partition
+#: parted/parted.c:292 parted/parted.c:482 parted/parted.c:678
+#: parted/parted.c:756 parted/parted.c:1110 parted/parted.c:1185
+#: parted/parted.c:1232
+msgid "Partition number?"
+msgstr "分区编号？"
+
+#: parted/parted.c:337
+msgid "Source device?"
+msgstr "源设备？"
+
+#: parted/parted.c:343
+msgid "Source partition number?"
+msgstr "源分区编号？"
+
+#: parted/parted.c:349
+msgid "Can't copy extended partitions."
+msgstr "不能只复制扩展分区。"
+
+#: parted/parted.c:355
+msgid "Destination partition number?"
+msgstr "目标分区编号？"
+
+#: parted/parted.c:450
+msgid "New disk label type?"
+msgstr "新的磁盘标签类型？"
+
+#: parted/parted.c:488
+msgid "File system?"
+msgstr "文件系统？"
+
+#: parted/parted.c:529 parted/parted.c:600
+msgid "Partition type?"
+msgstr "分区类型？"
+
+#: parted/parted.c:538 parted/parted.c:611
+msgid "File system type?"
+msgstr "文件系统类型？"
+
+#. get new target
+#: parted/parted.c:546 parted/parted.c:616 parted/parted.c:697
+#: parted/parted.c:1069 parted/parted.c:1116
+msgid "Start?"
+msgstr "起始点？"
+
+#: parted/parted.c:548 parted/parted.c:618 parted/parted.c:699
+#: parted/parted.c:1071 parted/parted.c:1119
+msgid "End?"
+msgstr "结束点？"
+
+#: parted/parted.c:560 parted/parted.c:630
+#, c-format
+msgid "You requested to create a partition at %.3f-%.3fMb. The closest Parted can manage is %.3f-%.3fMb."
+msgstr "您要求在 %.3f - %.3fMb 的位置创建分区。可管理的最相近分区为 %.3f-%.3fMb。"
+
+#: parted/parted.c:606
+msgid "Extended partitions can't have file systems.  Did you want mkpart?"
+msgstr "扩展分区不能含有文件系统。您是要用 mkpart 吧？"
+
+#: parted/parted.c:685
+msgid "Can't move extended partitions."
+msgstr "无法移动扩展分区。"
+
+#: parted/parted.c:714
+msgid "Can't move a partition onto itself.  Try using resize, perhaps?"
+msgstr "无法将分区移动到它自身。试用改变大小，可能？"
+
+#: parted/parted.c:720
+#, c-format
+msgid "You requested to move the partition to %.3f-%.3fMb. The closest Parted can manage is %.3f-%.3fMb."
+msgstr "您请求将分区移动到 %.3f - %.3fMb。可管理最贴近的分区为 %.3f - %.3fMB。"
+
+#: parted/parted.c:760
+msgid "Partition name?"
+msgstr "分区名称？"
+
+#: parted/parted.c:809
+#, c-format
+msgid "Minor: %d\n"
+msgstr "Minor：%d\n"
+
+#: parted/parted.c:810
+msgid "Flags: "
+msgstr "标志："
+
+#: parted/parted.c:811
+#, c-format
+msgid "File System: %s\n"
+msgstr "文件系统：%s\n"
+
+#: parted/parted.c:812
+#, c-format
+msgid "Size:         %10.3fMb (%d%%)\n"
+msgstr "大小：         %10.3fMb (%d%%)\n"
+
+#: parted/parted.c:818
+#, c-format
+msgid "Minimum size: %10.3fMb (%d%%)\n"
+msgstr "最小尺寸：     %10.3fMb (%d%%)\n"
+
+#: parted/parted.c:822
+#, c-format
+msgid "Maximum size: %10.3fMb (%d%%)\n"
+msgstr "最大尺寸：     %10.3fMb (%d%%)\n"
+
+#: parted/parted.c:864
+#, c-format
+msgid "Disk geometry for %s: 0.000-%.3f megabytes\n"
+msgstr "%s 的磁盘几何结构：0.000-%.3f 兆字节\n"
+
+#: parted/parted.c:867
+#, c-format
+msgid "Disk label type: %s\n"
+msgstr "磁盘标签类型：%s\n"
+
+#: parted/parted.c:874
+msgid "Minor    Start       End     "
+msgstr "Minor    起始点        终止点  "
+
+#: parted/parted.c:876
+msgid "Type      "
+msgstr "类型      "
+
+#: parted/parted.c:877
+msgid "Filesystem  "
+msgstr "文件系统    "
+
+#: parted/parted.c:879
+msgid "Name                  "
+msgstr "名称                  "
+
+#: parted/parted.c:880
+msgid "Flags"
+msgstr "标志"
+
+#: parted/parted.c:966
+#, c-format
+msgid "A %s %s partition was found at %.3fMb -> %.3fMb.  Do you want to add it to the partition table?"
+msgstr "在 %3$.3fMb -> %4$.3fMb 处找到一个 %1$s %2$s 分区。您希望将其添加到分区表中吗？"
+
+#: parted/parted.c:1003
+msgid "searching for file systems"
+msgstr "正在搜索文件系统"
+
+#: parted/parted.c:1134 parted/parted.c:1149
+#, c-format
+msgid "You requested to resize the partition to %.3f-%.3fMb. The closest Parted can manage is %.3f-%.3fMb."
+msgstr "您要求将分区改变大小并保存到 %.3f - %.3fMb。可管理最接近的分区为 %.3f - %.3fMb。"
+
+#: parted/parted.c:1207
+msgid "New device?"
+msgstr "新设备？"
+
+#: parted/parted.c:1236
+msgid "Flag to change?"
+msgstr "要修改的标志？"
+
+#: parted/parted.c:1240
+msgid "New state?"
+msgstr "新状态？"
+
+#: parted/parted.c:1329
+msgid "check"
+msgstr "检查"
+
+#: parted/parted.c:1332
+msgid "check MINOR                   do a simple check on the filesystem"
+msgstr "检查  MINOR                   对文件系统进行一个简单的检查"
+
+#: parted/parted.c:1337
+msgid "cp"
+msgstr "cp"
+
+#: parted/parted.c:1340
+msgid "cp [FROM-DEVICE] FROM-MINOR TO-MINOR      copy filesystem to another partition"
+msgstr "cp [FROM-DEVICE] FROM-MINOR TO-MINOR      将文件系统复制到另一个分区"
+
+#: parted/parted.c:1346
+msgid "help"
+msgstr "help"
+
+#: parted/parted.c:1349
+msgid "help [COMMAND]                prints general help, or help on COMMAND"
+msgstr "help [COMMAND]                打印通用求助信息，或关于 COMMAND 的信息"
+
+#: parted/parted.c:1354
+msgid "mklabel"
+msgstr "mklabel"
+
+#: parted/parted.c:1357
+msgid "mklabel LABEL-TYPE            create a new disklabel (partition table)"
+msgstr "mklabel 标签类型              创建新的磁盘标签 (分区表)"
+
+#: parted/parted.c:1362
+msgid "mkfs"
+msgstr "mkfs"
+
+#: parted/parted.c:1365
+msgid "mkfs MINOR FS-TYPE            make a filesystem FS-TYPE on partititon MINOR"
+msgstr "mkfs MINOR 文件系统类型       在 MINOR 创建类型为“文件系统类型”的文件系统"
+
+#: parted/parted.c:1371
+msgid "mkpart"
+msgstr "mkpart"
+
+#: parted/parted.c:1374
+msgid "mkpart PART-TYPE [FS-TYPE] START END      make a partition"
+msgstr "mkpart 分区类型 [文件系统类型] 起始点 终止点      创建一个分区"
+
+#: parted/parted.c:1381
+msgid "mkpart makes a partition without creating a new file system on the partition.  FS-TYPE may be specified to set an appropriate partition ID.\n"
+msgstr "mkpart 创建分区而不在分区上创建新文件系统。“文件系统类型”可以用于设置适当的分区标识。\n"
+
+#: parted/parted.c:1386
+msgid "mkpartfs"
+msgstr "mkpartfs"
+
+#: parted/parted.c:1389
+msgid "mkpartfs PART-TYPE FS-TYPE START END      make a partition with a filesystem"
+msgstr "mkpartfs 分区类型 文件系统类型 起始点 终止点  创建一个带有文件系统的分区"
+
+#: parted/parted.c:1395
+msgid "move"
+msgstr "move"
+
+#: parted/parted.c:1398
+msgid "move MINOR START END          move partition MINOR"
+msgstr "move MINOR 起始点 终止点      移动编号为 MINOR 的分区"
+
+#: parted/parted.c:1403
+msgid "name"
+msgstr "name"
+
+#: parted/parted.c:1406
+msgid "name MINOR NAME               name partition MINOR NAME"
+msgstr "name MINOR 名称               将编号为 MINOR 的分区命名为“名称”"
+
+#: parted/parted.c:1411
+msgid "print"
+msgstr "print"
+
+#: parted/parted.c:1414
+msgid "print [MINOR]                 display the partition table, or a partition"
+msgstr "print [MINOR]                 打印分区表，或者分区"
+
+#: parted/parted.c:1417
+msgid ""
+"Without arguments, print displays the entire partition table.  If a\n"
+"partition number is given, then more detailed information is displayed\n"
+"about that partition.\n"
+msgstr ""
+"不带参数，print 显示整个分区表。\n"
+"如果给出了分区表，就显示更多\n"
+"关于分区的详细信息。\n"
+
+#: parted/parted.c:1423
+msgid "quit"
+msgstr "quit"
+
+#: parted/parted.c:1426
+msgid "quit                          exit program"
+msgstr "quit                          退出程序"
+
+#: parted/parted.c:1431
+msgid "rescue"
+msgstr "rescue"
+
+#: parted/parted.c:1434
+msgid "rescue START END              rescue a lost partition near START and END"
+msgstr "rescue 起始点 终止点          挽救临近“起始点”、“终止点”的遗失的分区"
+
+#: parted/parted.c:1439
+msgid "resize"
+msgstr "resize"
+
+#: parted/parted.c:1442
+msgid "resize MINOR START END        resize filesystem on partition MINOR"
+msgstr "resize MINOR 起始点 终止点    改变位于编号为 MINOR 的分区中文件系统的大小"
+
+#: parted/parted.c:1447
+msgid "rm"
+msgstr "rm"
+
+#: parted/parted.c:1450
+msgid "rm MINOR                      delete partition MINOR"
+msgstr "rm MINOR                      删除编号为 MINOR 的分区"
+
+#: parted/parted.c:1455
+msgid "select"
+msgstr "select"
+
+#: parted/parted.c:1458
+msgid "select DEVICE                 choose the device to edit"
+msgstr "select 设备                 选择要编辑的设备"
+
+#: parted/parted.c:1463
+msgid "set"
+msgstr "set"
+
+#: parted/parted.c:1466
+msgid "set MINOR FLAG STATE          change a flag on partition MINOR"
+msgstr "set MINOR 标志 状态           改变编号为 MINOR 的分区的标志"
+
+#: parted/parted.c:1552
+msgid "No device found"
+msgstr "没有找到设备"
+
+#: parted/parted.c:1616
+msgid "Don't forget to update /etc/fstab, if necessary.\n"
+msgstr "如果必要，不要忘记更新 /etc/fstab。\n"
+
+#: parted/ui.c:68
+msgid ""
+"Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.\n"
+"This program is free software, covered by the GNU General Public License.\n"
+"\n"
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
+"\n"
+msgstr ""
+"版权所有 (C) 1998, 1999, 2000, 2001, 2002, 2003 自由软件基金会。\n"
+"本程序为自由软件，按 GNU 通用公共许可证发行。\n"
+"\n"
+"发行本程序是希望它能够有用，但没有任何担保；甚至不包括隐含的适销和适合特定用途的保证。详情请参见 GNU 通用公共许可证。\n"
+
+#: parted/ui.c:77
+msgid ""
+"Usage: parted [OPTION]... [DEVICE [COMMAND [PARAMETERS]...]...]\n"
+"Apply COMMANDs with PARAMETERS to DEVICE.  If no COMMAND(s) are given, runs in\n"
+"interactive mode.\n"
+msgstr ""
+"用法：parted [选项]... [设备 [命令 [参数]...]...]\n"
+"将带有“参数”的命令应用于“设备”。如果没有给出“命令”，则以交互模式运行。\n"
+
+#: parted/ui.c:82
+#, c-format
+msgid "You found a bug in GNU Parted.  Please email a bug report to bug-parted@gnu.org containing the version (%s), and the following message:\n"
+msgstr "您找到了 GNU Parted 的 bug。请将含有版本 (%s) 和以下信息的 bug 报告发送到 bug-parted@gnu.org：\n"
+
+#: parted/ui.c:611
+msgid "Expecting a partition number."
+msgstr "需要分区编号。"
+
+#: parted/ui.c:618
+msgid "Partition doesn't exist."
+msgstr "分区不存在。"
+
+#: parted/ui.c:632
+msgid "Expecting a file system type."
+msgstr "需要文件系统类型。"
+
+#: parted/ui.c:638
+#, c-format
+msgid "Unknown file system type \"%s\"."
+msgstr "未知的文件系统类型“%s”。"
+
+#: parted/ui.c:656
+msgid "Expecting a disk label type."
+msgstr "需要磁盘标签类型。"
+
+#: parted/ui.c:749
+msgid "Can't create any more partitions."
+msgstr "无法创建更多分区。"
+
+#: parted/ui.c:759
+msgid "Expecting a partition type."
+msgstr "需要分区类型。"
+
+#: parted/ui.c:863
+msgid "on"
+msgstr "开"
+
+#: parted/ui.c:864
+msgid "off"
+msgstr "关"
+
+#: parted/ui.c:952
+msgid "OPTIONs:"
+msgstr "选项："
+
+#: parted/ui.c:955
+msgid "COMMANDs:"
+msgstr "命令："
+
+#: parted/ui.c:1011
+msgid "  You have Windows FAT partition(s) that are not using LBA.  If your BIOS supports LBA, then you should switch to LBA by setting the LBA flag on all FAT partitions.  Otherwise, make sure the operating system and the BIOS have the same geometry before resizing any FAT partitions."
+msgstr "您使用了不使用 LBA 的 Windows FAT 分区。如果您的 BIOS 支持 LBA，那么您应该通过在所有 FAT 分区上设置 LBA 标志以切换到 LBA 模式。否则，在改变任何 FAT 分区大小的时候确认操作系统和 BIOS 使用相同的几何结构。"
+
+#: parted/ui.c:1031
+#, c-format
+msgid "The operating system thinks the geometry on %s is %d/%d/%d.  Therefore, cylinder 1024 ends at %.3fM.%s"
+msgstr "操作系统认为 %s 的几何结构为 %d/%d/%d。因此，柱面 1024 结束于 %.3fM.%s"
+
+#: parted/ui.c:1041
+#, c-format
+msgid "The operating system thinks the geometry on %s is %d/%d/%d.%s"
+msgstr "操作系统认为 %s 的几何结构 %d/%d/%d.%s"
+
+#: parted/ui.c:1052
+#, c-format
+msgid "Using %s\n"
+msgstr "使用 %s\n"
