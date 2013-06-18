@@ -1,1 +1,4 @@
-/usr/src/parted/parted/gnulib/tests/test-wcrtomb-w32-3.sh
+#!/bin/sh
+
+# Test a CP932 locale.
+./test-wcrtomb-w32${EXEEXT} Japanese_Japan 932

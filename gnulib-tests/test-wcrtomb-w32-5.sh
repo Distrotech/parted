@@ -1,1 +1,4 @@
-/usr/src/parted/parted/gnulib/tests/test-wcrtomb-w32-5.sh
+#!/bin/sh
+
+# Test a CP936 locale.
+./test-wcrtomb-w32${EXEEXT} Chinese_China 936

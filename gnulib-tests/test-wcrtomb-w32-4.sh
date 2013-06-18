@@ -1,1 +1,4 @@
-/usr/src/parted/parted/gnulib/tests/test-wcrtomb-w32-4.sh
+#!/bin/sh
+
+# Test a CP950 locale.
+./test-wcrtomb-w32${EXEEXT} Chinese_Taiwan 950

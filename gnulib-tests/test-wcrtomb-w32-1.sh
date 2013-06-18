@@ -1,1 +1,4 @@
-/usr/src/parted/parted/gnulib/tests/test-wcrtomb-w32-1.sh
+#!/bin/sh
+
+# Test a CP1252 locale.
+./test-wcrtomb-w32${EXEEXT} French_France 1252
