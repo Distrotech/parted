@@ -1,1 +1,2 @@
-/usr/src/parted/parted/gnulib/lib/close-stream.h
+#include <stdio.h>
+int close_stream (FILE *stream);
