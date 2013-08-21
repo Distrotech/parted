@@ -721,6 +721,7 @@ fdasd_check_volume (fdasd_anchor_t *anc, int fd)
 	unsigned long b = -1;
 	char str[LINE_LENGTH];
 
+	memset(v, 0, sizeof(volume_label_t));
 	vtoc_read_volume_label (fd, anc->label_pos, v);
 
 	if (strncmp(v->vollbl, vtoc_ebcdic_enc ("VOL1", str, 4), 4) == 0) {
@@ -800,6 +801,8 @@ fdasd_get_geometry (const PedDevice *dev, fdasd_anchor_t *anc, int f)
 	    dasd_info.dev_type = 13200;
 	    dasd_info.label_block = 2;
 	    dasd_info.devno = 513;
+	    dasd_info.label_block = 2;
+	    dasd_info.FBA_layout = 0;
 	} else {
 		if (ioctl(f, HDIO_GETGEO, &anc->geo) != 0)
 			fdasd_error(anc, unable_to_ioctl,
@@ -820,6 +823,8 @@ fdasd_get_geometry (const PedDevice *dev, fdasd_anchor_t *anc, int f)
 	anc->label_pos  = dasd_info.label_block * blksize;
 	anc->devno      = dasd_info.devno;
 	anc->fspace_trk = anc->geo.cylinders * anc->geo.heads - FIRST_USABLE_TRK;
+	anc->label_block = dasd_info.label_block;
+	anc->FBA_layout = dasd_info.FBA_layout;
 }
 
 /*

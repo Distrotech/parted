@@ -194,6 +194,8 @@ typedef struct fdasd_anchor {
 	volume_label_t   *vlabel;
 	config_data_t confdata[USABLE_PARTITIONS];
 	struct fdasd_hd_geometry geo;
+	unsigned int label_block;
+	unsigned int FBA_layout;
 } fdasd_anchor_t;
 
 enum offset {lower, upper};
