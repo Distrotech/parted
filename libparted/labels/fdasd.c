@@ -301,6 +301,7 @@ fdasd_initialize_anchor (fdasd_anchor_t * anc)
 	}
 	anc->hw_cylinders = 0;
 	anc->formatted_cylinders = 0;
+	anc->is_file = 0;
 }
 
 /*
@@ -890,7 +891,7 @@ fdasd_check_volume (fdasd_anchor_t *anc, int fd)
 		/* Some times LDL formatted disks does not
 		   contain any volume label */
 		return 1;
-	} else {
+	} else if (! anc->is_file) {
 	/* didn't find VOL1 volume label */
 		anc->formatted_cylinders = anc->hw_cylinders;
 		anc->fspace_trk = anc->formatted_cylinders * anc->geo.heads
@@ -974,6 +975,7 @@ fdasd_get_geometry (const PedDevice *dev, fdasd_anchor_t *anc, int f)
 	    dasd_info.FBA_layout = 0;
 	    anc->hw_cylinders = ((st.st_size / blksize) / anc->geo.sectors) /
 				anc->geo.heads;
+	    anc->is_file = 1;
 	} else {
 		if (ioctl(f, HDIO_GETGEO, &anc->geo) != 0)
 			fdasd_error(anc, unable_to_ioctl,
@@ -995,6 +997,8 @@ fdasd_get_geometry (const PedDevice *dev, fdasd_anchor_t *anc, int f)
 			anc->hw_cylinders = characteristics->long_no_cyl;
 		else
 			anc->hw_cylinders = characteristics->no_cyl;
+
+		anc->is_file = 0;
 	}
 
 	anc->dev_type   = dasd_info.dev_type;

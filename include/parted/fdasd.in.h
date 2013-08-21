@@ -261,6 +261,7 @@ typedef struct fdasd_anchor {
 	struct fdasd_hd_geometry geo;
 	unsigned int label_block;
 	unsigned int FBA_layout;
+	bool is_file;
 } fdasd_anchor_t;
 
 enum offset {lower, upper};
