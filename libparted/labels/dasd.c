@@ -631,6 +631,7 @@ dasd_write (const PedDisk* disk)
 	/* initialize the anchor */
 	fdasd_initialize_anchor(&anchor);
 	fdasd_get_geometry(disk->dev, &anchor, arch_specific->fd);
+	fdasd_check_volume(&anchor, arch_specific->fd);
 	memcpy(anchor.vlabel, &disk_specific->vlabel, sizeof(volume_label_t));
 	anchor.vlabel_changed++;
 

@@ -42,6 +42,18 @@
 
 #define VOLSER_LENGTH 6
 #define BIG_DISK_SIZE 0x10000
+#define LV_COMPAT_CYL 0xFFFE
+
+/*****************************************************************************
+ * SECTION: Definition from hdreq.h                                          *
+ *****************************************************************************/
+
+struct fdasd_hd_geometry {
+      unsigned char heads;
+      unsigned char sectors;
+      unsigned short cylinders;
+      unsigned long start;
+};
 
 
 typedef struct ttr              ttr_t;
@@ -59,6 +71,7 @@ typedef struct ds5ext           ds5ext_t;
 typedef struct format5_label    format5_label_t;
 typedef struct ds7ext           ds7ext_t;
 typedef struct format7_label    format7_label_t;
+typedef struct format9_label    format9_label_t;
 
 struct __attribute__ ((packed)) ttr {
         u_int16_t tt;
@@ -169,6 +182,10 @@ struct __attribute__ ((packed)) dev_const {
         u_int8_t  DS4DEVDB;     /* number of directory blocks per track */
 };
 
+/*
+ * format 1 and format 8 label have the same layout so we use the following
+ * structure for both.
+ */
 struct __attribute__ ((packed)) format1_label {
 	char  DS1DSNAM[44];     /* data set name                           */
 	u_int8_t  DS1FMTID;     /* format identifier                       */
@@ -229,7 +246,11 @@ struct __attribute__ ((packed)) format4_label {
 	char res2[10];          /* reserved                                */
 	u_int8_t DS4EFLVL;      /* extended free-space management level    */
 	cchhb_t DS4EFPTR;       /* pointer to extended free-space info     */
-	char res3[9];           /* reserved                                */
+	char res3;              /* reserved */
+	u_int32_t DS4DCYL;      /* number of logical cyls */
+	char res4[2];           /* reserved */
+	u_int8_t DS4DEVF2;      /* device flags */
+	char res5;              /* reserved */
 };
 
 struct __attribute__ ((packed)) ds5ext {
@@ -261,12 +282,28 @@ struct __attribute__ ((packed)) format7_label {
 	cchhb_t DS7PTRDS;       /* pointer to next FMT7 DSCB               */
 };
 
+struct __attribute__ ((packed)) format9_label {
+	u_int8_t  DS9KEYID;     /* key code for format 9 labels (0x09) */
+	u_int8_t  DS9SUBTY;     /* subtype (0x01) */
+	u_int8_t  DS9NUMF9;     /* number of F9 datasets  */
+	u_int8_t  res1[41];     /* reserved  */
+	u_int8_t  DS9FMTID;     /* format identifier  */
+	u_int8_t  res2[95];     /* reserved */
+};
+
 char *vtoc_ebcdic_enc (char const *source, char *target, int l);
 char *vtoc_ebcdic_dec (char const *source, char *target, int l);
 void vtoc_set_extent (extent_t *ext, u_int8_t typeind, u_int8_t seqno,
                       cchh_t *lower, cchh_t *upper);
-void vtoc_set_cchh (cchh_t *addr, u_int16_t cc, u_int16_t hh);
-void vtoc_set_cchhb (cchhb_t *addr, u_int16_t cc, u_int16_t hh, u_int8_t b);
+void vtoc_set_cchh (cchh_t *addr, u_int32_t cc, u_int16_t hh);
+u_int32_t vtoc_get_cyl_from_cchh(cchh_t *addr);
+u_int16_t vtoc_get_head_from_cchh(cchh_t *addr);
+void vtoc_set_cchhb (cchhb_t *addr, u_int32_t cc, u_int16_t hh, u_int8_t b);
+u_int32_t vtoc_get_cyl_from_cchhb(cchhb_t *addr);
+u_int16_t vtoc_get_head_from_cchhb(cchhb_t *addr);
+u_int64_t cchhb2blk(cchhb_t *p, struct fdasd_hd_geometry *geo);
+u_int64_t cchh2blk (cchh_t *p, struct fdasd_hd_geometry *geo);
+u_int32_t cchh2trk (cchh_t *p, struct fdasd_hd_geometry *geo);
 void vtoc_set_date (labeldate_t *d, u_int8_t year, u_int16_t day);
 
 void vtoc_volume_label_init (volume_label_t *vlabel);
@@ -295,14 +332,16 @@ void vtoc_write_label (int fd, unsigned long position,
 		       format1_label_t const *f1,
                        format4_label_t const *f4,
 		       format5_label_t const *f5,
-                       format7_label_t const *f7);
+                       format7_label_t const *f7,
+                       format9_label_t const *f9);
 
 void vtoc_init_format1_label (char *volid, unsigned int blksize,
                               extent_t *part_extent, format1_label_t *f1);
 
 void vtoc_init_format4_label (format4_label_t *f4lbl,
                               unsigned int usable_partitions,
-                              unsigned int cylinders,
+                              unsigned int compat_cylinders,
+                              unsigned int real_cylinders,
                               unsigned int tracks,
                               unsigned int blocks,
                               unsigned int blksize,
@@ -329,8 +368,16 @@ void vtoc_update_format7_label_add (format7_label_t *f7, int verbose,
 void vtoc_update_format7_label_del (format7_label_t *f7, int verbose,
                                     u_int32_t a, u_int32_t b);
 
+void vtoc_init_format8_label (char *volid, unsigned int blksize,
+                              extent_t *part_extent, format1_label_t *f1);
+
+void vtoc_update_format8_label (cchhb_t *associated_f9, format1_label_t *f8);
+
+void vtoc_init_format9_label (format9_label_t *f9);
+
 void vtoc_set_freespace(format4_label_t *f4, format5_label_t *f5,
                         format7_label_t *f7, char ch, int verbose,
-                        u_int32_t start, u_int32_t stop, int cyl, int trk);
+                        u_int32_t start, u_int32_t stop, u_int32_t cyl,
+                        u_int32_t trk);
 
 #endif /* VTOC_H */

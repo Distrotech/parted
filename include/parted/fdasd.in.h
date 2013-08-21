@@ -74,6 +74,80 @@ typedef struct dasd_information_t {
 	char configuration_data[256]; /* from read_configuration_data        */
 } dasd_information_t;
 
+struct dasd_eckd_characteristics {
+	unsigned short cu_type;
+	struct {
+		unsigned char support:2;
+		unsigned char async:1;
+		unsigned char reserved:1;
+		unsigned char cache_info:1;
+		unsigned char model:3;
+	} __attribute__ ((packed)) cu_model;
+	unsigned short dev_type;
+	unsigned char dev_model;
+	struct {
+		unsigned char mult_burst:1;
+		unsigned char RT_in_LR:1;
+		unsigned char reserved1:1;
+		unsigned char RD_IN_LR:1;
+		unsigned char reserved2:4;
+		unsigned char reserved3:8;
+		unsigned char defect_wr:1;
+		unsigned char XRC_supported:1;
+		unsigned char reserved4:1;
+		unsigned char striping:1;
+		unsigned char reserved5:4;
+		unsigned char cfw:1;
+		unsigned char reserved6:2;
+		unsigned char cache:1;
+		unsigned char dual_copy:1;
+		unsigned char dfw:1;
+		unsigned char reset_alleg:1;
+		unsigned char sense_down:1;
+	} __attribute__ ((packed)) facilities;
+	unsigned char dev_class;
+	unsigned char unit_type;
+	unsigned short no_cyl;
+	unsigned short trk_per_cyl;
+	unsigned char sec_per_trk;
+	unsigned char byte_per_track[3];
+	unsigned short home_bytes;
+	unsigned char formula;
+	union {
+		struct {
+			unsigned char f1;
+			unsigned short f2;
+			unsigned short f3;
+		} __attribute__ ((packed)) f_0x01;
+		struct {
+			unsigned char f1;
+			unsigned char f2;
+			unsigned char f3;
+			unsigned char f4;
+			unsigned char f5;
+		} __attribute__ ((packed)) f_0x02;
+	} __attribute__ ((packed)) factors;
+	unsigned short first_alt_trk;
+	unsigned short no_alt_trk;
+	unsigned short first_dia_trk;
+	unsigned short no_dia_trk;
+	unsigned short first_sup_trk;
+	unsigned short no_sup_trk;
+	unsigned char MDR_ID;
+	unsigned char OBR_ID;
+	unsigned char director;
+	unsigned char rd_trk_set;
+	unsigned short max_rec_zero;
+	unsigned char reserved1;
+	unsigned char RWANY_in_LR;
+	unsigned char factor6;
+	unsigned char factor7;
+	unsigned char factor8;
+	unsigned char reserved2[3];
+	unsigned char reserved3[6];
+	unsigned int long_no_cyl;
+} __attribute__ ((packed));
+
 /*
  * struct format_data_t
  * represents all data necessary to format a dasd
@@ -116,18 +190,6 @@ typedef struct format_data_t {
 #define BLKRRPART  _IO(0x12,95)
 /* get block device sector size */
 #define BLKSSZGET  _IO(0x12,104)
-
-/*****************************************************************************
- * SECTION: Definition from hdreq.h                                          *
- *****************************************************************************/
-
-struct fdasd_hd_geometry {
-      unsigned char heads;
-      unsigned char sectors;
-      unsigned short cylinders;
-      unsigned long start;
-};
-
 /* get device geometry */
 #define HDIO_GETGEO		0x0301
 
@@ -189,10 +251,13 @@ typedef struct fdasd_anchor {
 	format4_label_t  *f4;
 	format5_label_t  *f5;
 	format7_label_t  *f7;
+	format9_label_t  *f9; /* template for all f9 labels */
 	partition_info_t *first;
 	partition_info_t *last;
 	volume_label_t   *vlabel;
 	config_data_t confdata[USABLE_PARTITIONS];
+	u_int32_t hw_cylinders;
+	u_int32_t formatted_cylinders;
 	struct fdasd_hd_geometry geo;
 	unsigned int label_block;
 	unsigned int FBA_layout;
