@@ -288,7 +288,6 @@ void fdasd_get_geometry (const PedDevice *dev, fdasd_anchor_t *anc, int fd);
 void fdasd_check_api_version (fdasd_anchor_t *anc, int fd);
 int fdasd_check_volume (fdasd_anchor_t *anc, int fd);
 int fdasd_write_labels (fdasd_anchor_t *anc, int fd);
-int fdasd_invalid_vtoc_pointer(fdasd_anchor_t *anc);
 void fdasd_recreate_vtoc(fdasd_anchor_t *anc);
 partition_info_t * fdasd_add_partition (fdasd_anchor_t *anc,
                                         unsigned int start, unsigned int stop);
