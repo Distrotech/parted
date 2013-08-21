@@ -870,19 +870,21 @@ fdasd_check_volume (fdasd_anchor_t *anc, int fd)
 	vtoc_read_volume_label (fd, anc->label_pos, v);
 
 	if (strncmp(v->vollbl, vtoc_ebcdic_enc ("VOL1", str, 4), 4) == 0) {
-		/* found VOL1 volume label */
-		b = (cchhb2blk (&v->vtoc, &anc->geo) - 1) * anc->blksize;
+		if (anc->FBA_layout != 1 ) {
+			/* found VOL1 volume label */
+			b = (cchhb2blk (&v->vtoc, &anc->geo) - 1) * anc->blksize;
 
-		if (b > 0) {
-			int rc;
-			rc = fdasd_valid_vtoc_pointer (anc, b, fd);
+			if (b > 0) {
+				int rc;
+				rc = fdasd_valid_vtoc_pointer (anc, b, fd);
 
-			if (rc < 0)
-				return 1;
-			else
-				return 0;
-		} else {
-			fdasd_invalid_vtoc_pointer(anc);
+				if (rc < 0)
+					return 1;
+				else
+					return 0;
+			} else {
+				fdasd_invalid_vtoc_pointer(anc);
+			}
 		}
 	} else if (strncmp (v->volkey, vtoc_ebcdic_enc ("LNX1", str, 4), 4) == 0 ||
 	           strncmp (v->volkey, vtoc_ebcdic_enc ("CMS1", str, 4), 4) == 0) {
