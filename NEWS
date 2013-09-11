@@ -4,6 +4,10 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** New Features
 
+  Added new partition type flag, irst, for use with Intel Rapid Start
+  Technology. On MS-DOS disk labels it sets the type to 0x84 and on GPT
+  it sets the GUID to D3BFE2DE-3DAF-11DF-BA-40-E3A556D89593.
+
   You can now choose to ignore errors about partitions that overlap,
   or are longer than the disk.  This allows you to use parted to
   repair the problem.
