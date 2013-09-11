@@ -13,6 +13,11 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug Fixes
 
+  libparted: On multipath systems new partitions would sometimes not
+  appear, reporting 'device-mapper: create ioctl failed: Device or
+  resource busy' until the system was rebooted. Added dm_udev_wait
+  calls to synchronize parted with udev.
+
   Fix help text for disk_{set,toggle} to show *disk* flags instead
   of partition flags.
 

@@ -438,6 +438,17 @@ _is_virtblk_major (int major)
 
 #ifdef ENABLE_DEVICE_MAPPER
 static int
+_dm_task_run_wait (struct dm_task *task, uint32_t cookie)
+{
+        int rc = 0;
+
+        rc = dm_task_run (task);
+        dm_udev_wait (cookie);
+
+        return rc;
+}
+
+static int
 _is_dm_major (int major)
 {
         return _major_type_in_devices (major, "device-mapper");
@@ -1384,6 +1395,10 @@ linux_new (const char* path)
         dev->external_mode = 0;
         dev->dirty = 0;
         dev->boot_dirty = 0;
+
+#ifdef ENABLE_DEVICE_MAPPER
+        dm_udev_set_sync_support(1);
+#endif
 
         if (!_device_probe_type (dev))
                 goto error_free_arch_specific;
@@ -2631,31 +2646,29 @@ _device_get_partition_range(PedDevice const* dev)
 static int
 _dm_remove_partition(PedDisk* disk, int partno)
 {
-        int             rc;
+        int             rc = 0;
+        uint32_t        cookie = 0;
         char            *part_name = _device_get_part_path (disk->dev, partno);
 
         int fd = open (part_name, O_RDONLY | O_EXCL);
         if (fd == -1) {
                 if (errno == ENOENT)
                         errno = ENXIO; /* nothing to remove, device already doesn't exist */
-                free (part_name);
-                return 0;
+                goto err;
         }
         close (fd);
         struct dm_task *task = dm_task_create(DM_DEVICE_REMOVE);
-        if (!task) {
-                free (part_name);
-                return 0;
-        }
+        if (!task)
+                goto err;
         dm_task_set_name (task, part_name);
-        rc = dm_task_run(task);
+        if (!dm_task_set_cookie (task, &cookie, 0))
+                goto err;
+        rc = _dm_task_run_wait (task, cookie);
         dm_task_update_nodes();
         dm_task_destroy(task);
+err:
         free (part_name);
-        if (!rc)
-                return 0;
-
-        return 1;
+        return rc;
 }
 
 static bool
@@ -2699,6 +2712,7 @@ _dm_add_partition (PedDisk* disk, const PedPartition* part)
         LinuxSpecific*  arch_specific = LINUX_SPECIFIC (disk->dev);
         char *params = NULL;
         char *vol_name = NULL;
+        uint32_t cookie = 0;
 
         /* Get map name from devicemapper */
         struct dm_task *task = dm_task_create (DM_DEVICE_INFO);
@@ -2735,7 +2749,9 @@ _dm_add_partition (PedDisk* disk, const PedPartition* part)
         dm_task_set_name (task, vol_name);
         dm_task_add_target (task, 0, part->geom.length,
                 "linear", params);
-        if (dm_task_run (task)) {
+        if (!dm_task_set_cookie (task, &cookie, 0))
+                goto err;
+        if (_dm_task_run_wait (task, cookie)) {
                 dm_task_update_nodes ();
                 dm_task_destroy (task);
                 free (params);
