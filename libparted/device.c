@@ -152,8 +152,11 @@ ped_device_get (const char* path)
 	char*		normal_path = NULL;
 
 	PED_ASSERT (path != NULL);
-	/* Don't canonicalize /dev/mapper paths, see tests/symlink.c */
-	if (strncmp (path, "/dev/mapper/", 12))
+	/* Don't canonicalize /dev/mapper or /dev/md/ paths, see
+	   tests/symlink.c
+	*/
+	if (strncmp (path, "/dev/mapper/", 12) &&
+	    strncmp (path, "/dev/md/", 8))
 		normal_path = canonicalize_file_name (path);
 	if (!normal_path)
 		/* Well, maybe it is just that the file does not exist.

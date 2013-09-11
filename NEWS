@@ -13,6 +13,10 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug Fixes
 
+  libparted: /dev/md/ symlink can change after libparted dereferences it,
+  instead it should just use the symlink as given by the caller in the
+  same way we do with /dev/mapper/.
+
   libparted: On multipath systems new partitions would sometimes not
   appear, reporting 'device-mapper: create ioctl failed: Device or
   resource busy' until the system was rebooted. Added dm_udev_wait
