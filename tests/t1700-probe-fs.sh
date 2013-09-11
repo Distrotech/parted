@@ -22,7 +22,7 @@ require_512_byte_sector_size_
 dev=loop-file
 ss=$sector_size_
 
-for type in ext2 ext3 ext4 nilfs2; do
+for type in ext2 ext3 ext4 btrfs xfs nilfs2; do
 
   ( mkfs.$type -V ) >/dev/null 2>&1 \
       || { warn_ "$ME: no $type support"; continue; }
