@@ -4,6 +4,9 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** New Features
 
+  Added support for recognizing btrfs filesystem. This simply displays
+  btrfs in the 'file system' column of the parted output.
+
   Added new partition type flag, esp, to set the type to 0xEF on MS-DOS.
   Also aliased to boot on GPT to set the UEFI ESP GUID.
 

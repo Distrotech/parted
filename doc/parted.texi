@@ -575,6 +575,7 @@ partition table.
 @item NTFS
 @item reiserfs
 @item ufs
+@item btrfs
 @end itemize
 
 For example, the following creates a logical partition that will contain

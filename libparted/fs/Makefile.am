@@ -23,6 +23,7 @@ libfs_la_SOURCES =		\
   amiga/asfs.c			\
   amiga/asfs.h			\
   amiga/a-interface.c		\
+  btrfs/btrfs.c			\
   ext2/ext2.h			\
   ext2/ext2_fs.h		\
   ext2/interface.c		\
