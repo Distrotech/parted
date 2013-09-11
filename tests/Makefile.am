@@ -64,6 +64,7 @@ TESTS = \
   t6001-psep.sh \
   t6002-dm-busy.sh \
   t6003-dm-hide.sh \
+  t6004-dm-many-partitions.sh \
   t6100-mdraid-partitions.sh \
   t7000-scripting.sh \
   t8000-loop.sh \
