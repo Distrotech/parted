@@ -19,10 +19,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../parted
 
 require_root_
-lvm_init_root_dir_
-
-test "x$ENABLE_DEVICE_MAPPER" = xyes \
-  || skip_ "no device-mapper support"
+(dmsetup --help) > /dev/null 2>&1 || skip_test_ "No dmsetup installed"
 
 # Device maps names - should be random to not conflict with existing ones on
 # the system
@@ -41,25 +38,19 @@ cleanup_fn_() {
     rm -f "$f1 $f2";
 }
 
-# create a file of size N bytes
-N=10M
+loop_file_1=loop-file-1-$$
+loop_file_2=loop-file-2-$$
 
-f1=$(pwd)/1; d1=$(loop_setup_ "$f1") \
-  || skip_ "is this partition mounted with 'nodev'?"
+d1=$(loop_setup_ $loop_file_1) || framework_failure
+d1_size=$(blockdev --getsz $d1)
+d2=$(loop_setup_ $loop_file_2) || framework_failure
+d2_size=$(blockdev --getsz $d2)
 
-f2=$(pwd)/2 ;d2=$(loop_setup_ "$f2") \
-  || skip_ "is this partition mounted with 'nodev'?"
-
-dmsetup_cmd="0 `blockdev --getsz $d1` linear $d1 0"
-# setup: create a mapping
-echo "$dmsetup_cmd" | dmsetup create "$linear_" || fail=1
-dev="$DM_DEV_DIR/mapper/$linear_"
+dmsetup create $linear_ --table "0 $d1_size linear $d1 0" || framework_failure
+dev="/dev/mapper/$linear_"
 
 # Create msdos partition table
-parted -s $dev mklabel msdos > out 2>&1 || fail=1
-compare /dev/null out || fail=1
-
-parted -s $dev mkpart primary fat32 1m 5m > out 2>&1 || fail=1
+parted -s $dev mklabel msdos mkpart primary fat32 1m 5m > out 2>&1 || fail=1
 compare /dev/null out || fail=1
 
 #make sure device name is correct
@@ -67,17 +58,18 @@ test -e ${dev}p1 || fail=1
 
 #repeat on name not ending in a digit
 # setup: create a mapping
-echo "$dmsetup_cmd" | dmsetup create "$linear2_" || fail=1
-dev="$DM_DEV_DIR/mapper/$linear2_"
+dmsetup create $linear2_ --table "0 $d2_size linear $d2 0" || framework_failure
+dev="/dev/mapper/$linear2_"
 
 # Create msdos partition table
-parted -s $dev mklabel msdos > out 2>&1 || fail=1
-compare /dev/null out || fail=1
-
-parted -s $dev mkpart primary fat32 1m 5m > out 2>&1 || fail=1
+parted -s $dev mklabel msdos mkpart primary fat32 1m 5m > out 2>&1 || fail=1
 compare /dev/null out || fail=1
 
 #make sure device name is correct
 test -e ${dev}1 || fail=1
+
+if [ -n "$fail" ]; then
+    ls /dev/mapper
+fi
 
 Exit $fail
