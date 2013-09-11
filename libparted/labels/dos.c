@@ -92,6 +92,7 @@ static const char MBR_BOOT_CODE[] = {
 #define PARTITION_SUN_UFS	0xbf
 #define PARTITION_DELL_DIAG	0xde
 #define PARTITION_GPT		0xee
+#define PARTITION_ESP		0xef
 #define PARTITION_PALO		0xf0
 #define PARTITION_PREP		0x41
 #define PARTITION_LINUX_RAID	0xfd
@@ -161,6 +162,7 @@ typedef struct {
 	int		prep;
 	int		diag;
 	int		irst;
+	int		esp;
 	OrigState*	orig;			/* used for CHS stuff */
 } DosPartitionData;
 
@@ -927,6 +929,7 @@ raw_part_parse (const PedDisk* disk, const DosRawPartition* raw_part,
 	dos_data->palo = raw_part->type == PARTITION_PALO;
 	dos_data->prep = raw_part->type == PARTITION_PREP;
 	dos_data->irst = raw_part->type == PARTITION_IRST;
+	dos_data->esp = raw_part->type == PARTITION_ESP;
 	dos_data->orig = ped_malloc (sizeof (OrigState));
 	if (!dos_data->orig) {
 		ped_partition_destroy (part);
@@ -1320,6 +1323,7 @@ msdos_partition_new (const PedDisk* disk, PedPartitionType part_type,
 		dos_data->palo = 0;
 		dos_data->prep = 0;
 		dos_data->irst = 0;
+		dos_data->esp = 0;
 	} else {
 		part->disk_specific = NULL;
 	}
@@ -1356,6 +1360,7 @@ msdos_partition_duplicate (const PedPartition* part)
 	new_dos_data->palo = old_dos_data->palo;
 	new_dos_data->prep = old_dos_data->prep;
 	new_dos_data->irst = old_dos_data->irst;
+	new_dos_data->esp = old_dos_data->esp;
 
 	if (old_dos_data->orig) {
 		new_dos_data->orig = ped_malloc (sizeof (OrigState));
@@ -1405,6 +1410,7 @@ msdos_partition_set_system (PedPartition* part,
 		dos_data->palo = 0;
 		dos_data->prep = 0;
 		dos_data->irst = 0;
+		dos_data->esp = 0;
 		if (dos_data->lba)
 			dos_data->system = PARTITION_EXT_LBA;
 		else
@@ -1439,6 +1445,10 @@ msdos_partition_set_system (PedPartition* part,
 	}
 	if (dos_data->irst) {
 		dos_data->system = PARTITION_IRST;
+		return 1;
+	}
+	if (dos_data->esp) {
+		dos_data->system = PARTITION_ESP;
 		return 1;
 	}
 
@@ -1478,6 +1488,7 @@ clear_flags (DosPartitionData *dos_data)
   dos_data->palo = 0;
   dos_data->prep = 0;
   dos_data->irst = 0;
+  dos_data->esp = 0;
   dos_data->raid = 0;
 }
 
@@ -1562,6 +1573,12 @@ msdos_partition_set_flag (PedPartition* part,
 		dos_data->irst = state;
 		return ped_partition_set_system (part, part->fs_type);
 
+	case PED_PARTITION_ESP:
+		if (state)
+			clear_flags (dos_data);
+		dos_data->esp = state;
+		return ped_partition_set_system (part, part->fs_type);
+
 	default:
 		return 0;
 	}
@@ -1607,6 +1624,9 @@ msdos_partition_get_flag (const PedPartition* part, PedPartitionFlag flag)
 	case PED_PARTITION_IRST:
 		return dos_data->irst;
 
+	case PED_PARTITION_ESP:
+		return dos_data->esp;
+
 	default:
 		return 0;
 	}
@@ -1630,6 +1650,7 @@ msdos_partition_is_flag_available (const PedPartition* part,
 	case PED_PARTITION_PALO:
 	case PED_PARTITION_PREP:
 	case PED_PARTITION_IRST:
+	case PED_PARTITION_ESP:
 	case PED_PARTITION_DIAG:
 		return 1;
 

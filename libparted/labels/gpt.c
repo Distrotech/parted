@@ -1622,6 +1622,7 @@ gpt_partition_set_flag (PedPartition *part, PedPartitionFlag flag, int state)
 
   switch (flag)
     {
+    case PED_PARTITION_ESP:
     case PED_PARTITION_BOOT:
       gpt_part_data->boot = state;
       if (state)
@@ -1806,6 +1807,7 @@ gpt_partition_get_flag (const PedPartition *part, PedPartitionFlag flag)
       return gpt_part_data->raid;
     case PED_PARTITION_LVM:
       return gpt_part_data->lvm;
+    case PED_PARTITION_ESP:
     case PED_PARTITION_BOOT:
       return gpt_part_data->boot;
     case PED_PARTITION_BIOS_GRUB:
@@ -1856,6 +1858,7 @@ gpt_partition_is_flag_available (const PedPartition *part,
     case PED_PARTITION_LEGACY_BOOT:
     case PED_PARTITION_PREP:
     case PED_PARTITION_IRST:
+    case PED_PARTITION_ESP:
       return 1;
     case PED_PARTITION_SWAP:
     case PED_PARTITION_ROOT:

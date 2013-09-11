@@ -840,6 +840,10 @@ filesystems).
 (MS-DOS, GPT) - this flag identifies an Intel Rapid Start Technology
 partition.
 
+@item esp
+(MS-DOS, GPT) - this flag identifies a UEFI System Partition. On GPT
+it is an alias for boot.
+
 @item lba
 (MS-DOS) - this flag can be enabled to tell MS DOS, MS Windows 9x and
 MS Windows ME based operating systems to use Linear (LBA) mode.

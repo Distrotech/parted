@@ -74,10 +74,11 @@ enum _PedPartitionFlag {
         PED_PARTITION_DIAG=14,
         PED_PARTITION_LEGACY_BOOT=15,
         PED_PARTITION_MSFT_DATA=16,
-        PED_PARTITION_IRST=17
+        PED_PARTITION_IRST=17,
+        PED_PARTITION_ESP=18
 };
 #define PED_PARTITION_FIRST_FLAG        PED_PARTITION_BOOT
-#define PED_PARTITION_LAST_FLAG         PED_PARTITION_IRST
+#define PED_PARTITION_LAST_FLAG         PED_PARTITION_ESP
 
 enum _PedDiskTypeFeature {
         PED_DISK_TYPE_EXTENDED=1,       /**< supports extended partitions */

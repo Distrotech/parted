@@ -2404,6 +2404,8 @@ ped_partition_flag_get_name (PedPartitionFlag flag)
                 return N_("legacy_boot");
         case PED_PARTITION_IRST:
                 return N_("irst");
+        case PED_PARTITION_ESP:
+                return N_("esp");
 
 	default:
 		ped_exception_throw (

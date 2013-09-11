@@ -4,6 +4,9 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** New Features
 
+  Added new partition type flag, esp, to set the type to 0xEF on MS-DOS.
+  Also aliased to boot on GPT to set the UEFI ESP GUID.
+
   Added new partition type flag, irst, for use with Intel Rapid Start
   Technology. On MS-DOS disk labels it sets the type to 0x84 and on GPT
   it sets the GUID to D3BFE2DE-3DAF-11DF-BA-40-E3A556D89593.
