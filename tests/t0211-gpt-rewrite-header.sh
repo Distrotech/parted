@@ -23,6 +23,11 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../parted $srcdir
 require_perl_digest_crc_
 
+# gpt-header-munge will fail on big-endian systems
+if test $(uname -m) != x86_64; then
+  skip_ 'this test only works on little-endian systems'
+fi
+
 ss=$sector_size_
 
 ns=100         # Initial number of sectors.
