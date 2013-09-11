@@ -2710,9 +2710,12 @@ static int
 _dm_add_partition (PedDisk* disk, const PedPartition* part)
 {
         LinuxSpecific*  arch_specific = LINUX_SPECIFIC (disk->dev);
-        char *params = NULL;
-        char *vol_name = NULL;
-        uint32_t cookie = 0;
+        char*           params = NULL;
+        char*           vol_name = NULL;
+        const char*     dev_name = NULL;
+        char*           vol_uuid = NULL;
+        const char*     dev_uuid = NULL;
+        uint32_t        cookie = 0;
 
         /* Get map name from devicemapper */
         struct dm_task *task = dm_task_create (DM_DEVICE_INFO);
@@ -2726,7 +2729,7 @@ _dm_add_partition (PedDisk* disk, const PedPartition* part)
         if (!dm_task_run(task))
                 goto err;
 
-        const char *dev_name = dm_task_get_name (task);
+        dev_name = dm_task_get_name (task);
         size_t name_len = strlen (dev_name);
         vol_name = zasprintf ("%s%s%d",
                               dev_name,
@@ -2734,6 +2737,11 @@ _dm_add_partition (PedDisk* disk, const PedPartition* part)
                               part->num);
         if (vol_name == NULL)
                 goto err;
+
+        dev_uuid = dm_task_get_uuid (task);
+        if (dev_uuid && (strlen(dev_uuid) > 0)
+             && !(vol_uuid = zasprintf ("part%d-%s", part->num, dev_uuid)))
+            goto err;
 
         /* Caution: dm_task_destroy frees dev_name.  */
         dm_task_destroy (task);
@@ -2747,6 +2755,8 @@ _dm_add_partition (PedDisk* disk, const PedPartition* part)
                 goto err;
 
         dm_task_set_name (task, vol_name);
+        if (vol_uuid)
+                dm_task_set_uuid (task, vol_uuid);
         dm_task_add_target (task, 0, part->geom.length,
                 "linear", params);
         if (!dm_task_set_cookie (task, &cookie, 0))
@@ -2755,6 +2765,7 @@ _dm_add_partition (PedDisk* disk, const PedPartition* part)
                 dm_task_update_nodes ();
                 dm_task_destroy (task);
                 free (params);
+                free (vol_uuid);
                 free (vol_name);
                 return 1;
         } else {
@@ -2765,6 +2776,7 @@ err:
         if (task)
                 dm_task_destroy (task);
         free (params);
+        free (vol_uuid);
         free (vol_name);
         return 0;
 }
