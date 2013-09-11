@@ -566,6 +566,7 @@ gpt_duplicate (const PedDisk *disk)
                      old_disk_data->data_area.length);
   new_disk_data->entry_count = old_disk_data->entry_count;
   new_disk_data->uuid = old_disk_data->uuid;
+  new_disk_data->pmbr_boot = old_disk_data->pmbr_boot;
   return new_disk;
 }
 
