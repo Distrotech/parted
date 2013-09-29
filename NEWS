@@ -10,6 +10,9 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug Fixes
 
+  Avoid generating udev add/remove events for all unmodified partitions
+  when writing a new table.
+
   Fix cache coherency issue by flushing partition block devices.
   This had been mistakenly disabled in parted 2.0, and resulted
   in parted sometimes identifying the previous filesystem type

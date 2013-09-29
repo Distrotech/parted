@@ -2670,6 +2670,11 @@ _dm_get_partition_start_and_length(PedPartition const *part,
                 return 0;
         char *path = _device_get_part_path (part->disk->dev, part->num);
         PED_ASSERT(path);
+        /* libdevmapper likes to complain on stderr instead of quietly
+           returning ENOENT or ENXIO, so try to stat first */
+        struct stat st;
+        if (stat(path, &st))
+                goto err;
         dm_task_set_name(task, path);
         if (!dm_task_run(task))
                 goto err;
@@ -2806,50 +2811,55 @@ _disk_sync_part_table (PedDisk* disk)
         if (!errnums)
                 goto cleanup;
 
-        /* Attempt to remove each and every partition, retrying for
-           up to max_sleep_seconds upon any failure due to EBUSY. */
-        unsigned int sleep_microseconds = 10000;
-        unsigned int max_sleep_seconds = 1;
-        unsigned int n_sleep = (max_sleep_seconds
-                                * 1000000 / sleep_microseconds);
         int i;
-        for (i = 0; i < n_sleep; i++) {
-	    if (i)
-		usleep (sleep_microseconds);
-            bool busy = false;
-            int j;
-            for (j = 0; j < lpn; j++) {
-                if (!ok[j]) {
-                    ok[j] = remove_partition (disk, j + 1);
-                    errnums[j] = errno;
-                    if (!ok[j] && errnums[j] == EBUSY)
-                        busy = true;
-                }
-            }
-            if (!busy)
-                break;
-        }
-
+        /* remove old partitions first */
         for (i = 1; i <= lpn; i++) {
                 PedPartition *part = ped_disk_get_partition (disk, i);
                 if (part) {
-                        if (!ok[i - 1] && errnums[i - 1] == EBUSY) {
-                                unsigned long long length;
-                                unsigned long long start;
-                                /* get start and length of existing partition */
-                                if (!get_partition_start_and_length(part,
-                                                                    &start, &length))
-                                        goto cleanup;
-                                if (start == part->geom.start
-				    && length == part->geom.length)
-                                        ok[i - 1] = 1;
-                                /* If the new partition is unchanged and the
-				   existing one was not removed because it was
-				   in use, then reset the error flag and do not
-				   try to add it since it is already there.  */
+                        unsigned long long length;
+                        unsigned long long start;
+                        /* get start and length of existing partition */
+                        if (get_partition_start_and_length(part,
+                                                           &start, &length)
+                            && start == part->geom.start
+                            && length == part->geom.length)
+                        {
+                                ok[i - 1] = 1;
                                 continue;
                         }
-
+                }
+	}
+        for (i = 1; i <= lpn; i++) {
+                PedPartition *part = ped_disk_get_partition (disk, i);
+                if (part) {
+                        unsigned long long length;
+                        unsigned long long start;
+                        /* get start and length of existing partition */
+                        if (get_partition_start_and_length(part,
+                                                            &start, &length)
+                            && start == part->geom.start
+                            && length == part->geom.length) {
+                                ok[i - 1] = 1;
+                                /* partition is unchanged, so nothing to do */
+                                continue;
+                        }
+                }
+                /* Attempt to remove the partition, retrying for
+                   up to max_sleep_seconds upon any failure due to EBUSY. */
+                unsigned int sleep_microseconds = 10000;
+                unsigned int max_sleep_seconds = 1;
+                unsigned int n_sleep = (max_sleep_seconds
+                                        * 1000000 / sleep_microseconds);
+                do {
+                        ok[i - 1] = remove_partition (disk, i);
+                        errnums[i - 1] = errno;
+                        if (ok[i - 1] || errnums[i - 1] != EBUSY)
+                                break;
+                        usleep (sleep_microseconds);
+                } while (n_sleep--);
+                if (!ok[i - 1] && errnums[i - 1] == ENXIO)
+                        ok[i - 1] = 1; /* it already doesn't exist */
+                if (part && ok[i - 1]) {
                         /* add the (possibly modified or new) partition */
                         if (!add_partition (disk, part)) {
                                 ok[i - 1] = 0;
