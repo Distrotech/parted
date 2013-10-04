@@ -23,6 +23,10 @@ GNU parted NEWS                                    -*- outline -*-
   partprobe now tells the kernel to forget about any partitions
   on a device that has no recognizable partition table.
 
+  dos: the range of random MBR signature values was artificially limited
+  to 0..999999, which mistakenly included 0.  Now, we use the full 32-bit
+  range, but exclude 0.
+
 ** Changes in behavior
 
   parted -l no longer lists device-mapper devices other than

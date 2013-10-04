@@ -18,10 +18,10 @@
 
 #include <config.h>
 #include <string.h>
-#include <uuid/uuid.h>
 
 #include "fat.h"
 #include "calc.h"
+#include "../../../labels/misc.h"
 
 PedFileSystem*
 fat_alloc (const PedGeometry* geom)
@@ -202,21 +202,6 @@ fat_root_dir_clear (PedFileSystem* fs)
 				   fs_info->root_dir_sector_count);
 }
 
-/* hack: use the ext2 uuid library to generate a reasonably random (hopefully
- * with /dev/random) number.  Unfortunately, we can only use 4 bytes of it
- */
-static uint32_t
-_gen_new_serial_number (void)
-{
-	union {
-		uuid_t uuid;
-		uint32_t i;
-	} uu32;
-
-	uuid_generate (uu32.uuid);
-	return uu32.i;
-}
-
 PedFileSystem*
 fat_create (PedGeometry* geom, FatType fat_type, PedTimer* timer)
 {
@@ -316,7 +301,7 @@ fat_create (PedGeometry* geom, FatType fat_type, PedTimer* timer)
 			return 0;
 	}
 
-	fs_info->serial_number = _gen_new_serial_number ();
+	fs_info->serial_number = generate_random_uint32 ();
 
 	if (!fat_boot_sector_set_boot_code (&fs_info->boot_sector))
 		goto error_free_buffers;

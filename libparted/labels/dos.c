@@ -1236,16 +1236,6 @@ write_extended_partitions (const PedDisk* disk)
 		return write_empty_table (disk, ext_part->geom.start);
 }
 
-static inline uint32_t generate_random_id (void)
-{
-	struct timeval tv;
-	int rc;
-	rc = gettimeofday(&tv, NULL);
-	if (rc == -1)
-		return 0;
-	return (uint32_t)(tv.tv_usec & 0xFFFFFFFFUL);
-}
-
 static int
 msdos_write (const PedDisk* disk)
 {
@@ -1267,7 +1257,7 @@ msdos_write (const PedDisk* disk)
 
 	/* If there is no unique identifier, generate a random one */
 	if (!table->mbr_signature)
-		table->mbr_signature = generate_random_id();
+		table->mbr_signature = generate_random_uint32 ();
 
 	memset (table->partitions, 0, sizeof (table->partitions));
 	table->magic = PED_CPU_TO_LE16 (MSDOS_MAGIC);
