@@ -865,7 +865,7 @@ physical volume.
 by the Linux/PA-RISC boot loader, palo.
 
 @item PREP
-(MS-DOS) - this flag can be enabled so that the partition can be used
+(MS-DOS, GPT) - this flag can be enabled so that the partition can be used
 as a PReP boot partition on PowerPC PReP or IBM RS6K/CHRP hardware.
 
 @item DIAG

@@ -8,6 +8,9 @@ GNU parted NEWS                                    -*- outline -*-
   or are longer than the disk.  This allows you to use parted to
   repair the problem.
 
+  Add support for prep flag to GPT to select PowerPC Reference Platform
+  boot partition type.
+
 ** Bug Fixes
 
   Avoid generating udev add/remove events for all unmodified partitions
