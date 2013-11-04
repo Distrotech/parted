@@ -548,7 +548,7 @@ ped_unit_parse_custom (const char* str, const PedDevice* dev, PedUnit unit,
 	   do not use 4MiB as the range.  Rather, presume that they
 	   are specifying precisely the starting or ending number,
 	   and treat "4MiB" just as we would treat "4194304B".  */
-	if (is_power_of_2 (unit_size))
+	if (is_power_of_2 (unit_size) && unit != PED_UNIT_PERCENT)
 		radius = 0;
 
 	*sector = num * unit_size / dev->sector_size;
