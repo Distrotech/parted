@@ -10,7 +10,8 @@ AM_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
 
 LDADD = \
   $(top_builddir)/libparted/libparted.la \
-  $(CHECK_LIBS)
+  $(CHECK_LIBS) \
+  -lpthread
 
 AM_CPPFLAGS = \
   $(CHECK_CFLAGS) \
