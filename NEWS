@@ -12,6 +12,7 @@ GNU parted NEWS                                    -*- outline -*-
   boot partition type.
 
 ** Bug Fixes
+  Fix gpt to correctly handle non ASCII charcters in partition names
 
   If a drive was 100 times an even multiple of two, sizes specified as
   a percentage would trigger the exact placement rule and refuse to round

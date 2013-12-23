@@ -39,6 +39,8 @@
 #include <uuid/uuid.h>
 #include <stdbool.h>
 #include <errno.h>
+#include <iconv.h>
+#include <langinfo.h>
 #include "xalloc.h"
 #include "verify.h"
 
@@ -196,7 +198,7 @@ struct __attribute__ ((packed)) _GuidPartitionEntry_t
   uint64_t StartingLBA;
   uint64_t EndingLBA;
   GuidPartitionEntryAttributes_t Attributes;
-  efi_char16_t PartitionName[72 / sizeof (efi_char16_t)];
+  efi_char16_t PartitionName[36];
 };
 
 #define GPT_PMBR_LBA 0
@@ -281,7 +283,8 @@ typedef struct _GPTPartitionData
 {
   efi_guid_t type;
   efi_guid_t uuid;
-  char name[37];
+  efi_char16_t name[37];
+  char *translated_name;
   int lvm;
   int raid;
   int boot;
@@ -797,10 +800,11 @@ _parse_part_entry (PedDisk *disk, GuidPartitionEntry_t *pte)
   gpt_part_data = part->disk_specific;
   gpt_part_data->type = pte->PartitionTypeGuid;
   gpt_part_data->uuid = pte->UniquePartitionGuid;
-  for (i = 0; i < 72 / sizeof (efi_char16_t); i++)
+  for (i = 0; i < 36; i++)
     gpt_part_data->name[i] =
       (efi_char16_t) PED_LE16_TO_CPU ((uint16_t) pte->PartitionName[i]);
   gpt_part_data->name[i] = 0;
+  gpt_part_data->translated_name = 0;
 
   gpt_part_data->lvm = gpt_part_data->raid
     = gpt_part_data->boot = gpt_part_data->hp_service
@@ -1210,7 +1214,7 @@ _partition_generate_part_entry (PedPartition *part, GuidPartitionEntry_t *pte)
   if (gpt_part_data->legacy_boot)
     pte->Attributes.LegacyBIOSBootable = 1;
 
-  for (i = 0; i < 72 / sizeof (efi_char16_t); i++)
+  for (i = 0; i < 36; i++)
     pte->PartitionName[i]
       = (efi_char16_t) PED_CPU_TO_LE16 ((uint16_t) gpt_part_data->name[i]);
 }
@@ -1353,6 +1357,7 @@ gpt_partition_new (const PedDisk *disk,
   gpt_part_data->atvrecv = 0;
   gpt_part_data->legacy_boot = 0;
   gpt_part_data->prep = 0;
+  gpt_part_data->translated_name = 0;
   uuid_generate ((unsigned char *) &gpt_part_data->uuid);
   swap_uuid_and_efi_guid ((unsigned char *) (&gpt_part_data->uuid));
   memset (gpt_part_data->name, 0, sizeof gpt_part_data->name);
@@ -1386,6 +1391,9 @@ gpt_partition_duplicate (const PedPartition *part)
     goto error_free_part;
 
   *result_data = *part_data;
+  if (part_data->translated_name)
+    result_data->translated_name = xstrdup (part_data->translated_name);
+  else part_data->translated_name = 0;
   return result;
 
 error_free_part:
@@ -1400,6 +1408,8 @@ gpt_partition_destroy (PedPartition *part)
   if (part->type == 0)
     {
       PED_ASSERT (part->disk_specific != NULL);
+      GPTPartitionData *gpt_part_data = part->disk_specific;
+      free (gpt_part_data->translated_name);
       free (part->disk_specific);
     }
 
@@ -1820,15 +1830,54 @@ gpt_partition_set_name (PedPartition *part, const char *name)
 {
   GPTPartitionData *gpt_part_data = part->disk_specific;
 
-  strncpy (gpt_part_data->name, name, 36);
-  gpt_part_data->name[36] = 0;
+  free(gpt_part_data->translated_name);
+  gpt_part_data->translated_name = xstrdup(name);
+  iconv_t conv = iconv_open ("UTF-16", nl_langinfo (CODESET));
+  if (conv == (iconv_t)-1)
+    goto err;
+  char *inbuff = gpt_part_data->translated_name;
+  char *outbuff = (char *)&gpt_part_data->name;
+  size_t inbuffsize = strlen (inbuff) + 1;
+  size_t outbuffsize = 72;
+  if (iconv (conv, &inbuff, &inbuffsize, &outbuff, &outbuffsize) == -1)
+    goto err;
+  iconv_close (conv);
+  return;
+ err:
+  ped_exception_throw (PED_EXCEPTION_WARNING,
+		       PED_EXCEPTION_IGNORE,
+		       _("Can not translate partition name"));
+  iconv_close (conv);
 }
 
 static const char *
 gpt_partition_get_name (const PedPartition *part)
 {
   GPTPartitionData *gpt_part_data = part->disk_specific;
-  return gpt_part_data->name;
+  if (gpt_part_data->translated_name == NULL)
+    {
+      char buffer[200];
+      iconv_t conv = iconv_open (nl_langinfo (CODESET), "UTF-16");
+      if (conv == (iconv_t)-1)
+	goto err;
+      char *inbuff = (char *)&gpt_part_data->name;
+      char *outbuff = buffer;
+      size_t inbuffsize = 72;
+      size_t outbuffsize = sizeof(buffer);
+      if (iconv (conv, &inbuff, &inbuffsize, &outbuff, &outbuffsize) == -1)
+	goto err;
+      iconv_close (conv);
+      *outbuff = 0;
+      gpt_part_data->translated_name = xstrdup (buffer);
+      return gpt_part_data->translated_name;
+    err:
+      ped_exception_throw (PED_EXCEPTION_WARNING,
+			   PED_EXCEPTION_IGNORE,
+			   _("Can not translate partition name"));
+      iconv_close (conv);
+      return "";
+    }
+  return gpt_part_data->translated_name;
 }
 
 static int

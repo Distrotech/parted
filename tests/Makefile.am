@@ -27,6 +27,7 @@ TESTS = \
   t0212-gpt-many-partitions.sh \
   t0220-gpt-msftres.sh \
   t0250-gpt.sh \
+  t0251-gpt-unicode.sh \
   t0280-gpt-corrupt.sh \
   t0281-gpt-grow.sh \
   t0282-gpt-move-backup.sh \
