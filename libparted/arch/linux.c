@@ -289,6 +289,8 @@ struct blkdev_ioctl_param {
 
 static char* _device_get_part_path (PedDevice const *dev, int num);
 static int _partition_is_mounted_by_path (const char* path);
+static unsigned int _device_get_partition_range(PedDevice const* dev);
+
 
 static int
 _read_fd (int fd, char **buf)
@@ -1581,6 +1583,7 @@ _flush_cache (PedDevice* dev)
 {
         LinuxSpecific*  arch_specific = LINUX_SPECIFIC (dev);
         int             i;
+	int             lpn = _device_get_partition_range(dev);
 
         if (dev->read_only)
                 return;
@@ -1588,7 +1591,7 @@ _flush_cache (PedDevice* dev)
 
         ioctl (arch_specific->fd, BLKFLSBUF);
 
-        for (i = 1; i < 16; i++) {
+        for (i = 1; i < lpn; i++) {
                 char*           name;
                 int             fd;
 

@@ -23,6 +23,8 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug Fixes
 
+  Fix linux partition sync code to flush partitions > 16
+
   Do not reject a FAT boot sector as invalid because it has no
   system ID string.
 
