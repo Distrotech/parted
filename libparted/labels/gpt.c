@@ -724,7 +724,6 @@ _parse_header (PedDisk *disk, const GuidPartitionTableHeader_t *gpt,
   PedSector first_usable;
   PedSector last_usable;
   PedSector last_usable_if_grown;
-  static int asked_already;
 
 #ifndef DISCOVER_ONLY
   if (PED_LE32_TO_CPU (gpt->Revision) > GPT_HEADER_REVISION_V1_02)
@@ -761,7 +760,7 @@ _parse_header (PedDisk *disk, const GuidPartitionTableHeader_t *gpt,
       || disk->dev->length < last_usable_if_grown)
     return 0;
 
-  if (!asked_already && last_usable < last_usable_if_grown)
+  if (last_usable < last_usable_if_grown)
     {
       PedExceptionOption q;
 
@@ -782,10 +781,6 @@ _parse_header (PedDisk *disk, const GuidPartitionTableHeader_t *gpt,
                              gpt_disk_data->AlternateLBA, 1);
           gpt_disk_data->AlternateLBA = disk->dev->length - 1;
           *update_needed = 1;
-        }
-      else if (q != PED_EXCEPTION_UNHANDLED)
-        {
-          asked_already = 1;
         }
     }
 

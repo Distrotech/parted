@@ -31,9 +31,11 @@ extern const char *prog_name;
 
 extern int init_ui ();
 extern int init_readline ();
-extern int non_interactive_mode (PedDevice** dev, Command* cmd_list[],
-				 int argc, char* argv[]);
-extern int interactive_mode (PedDevice** dev, Command* cmd_list[]);
+extern int non_interactive_mode (PedDevice** dev, PedDisk **disk,
+				 Command* cmd_list[], int argc,
+				 char* argv[]);
+extern int interactive_mode (PedDevice** dev, PedDisk **disk,
+			     Command* cmd_list[]);
 extern void done_ui ();
 
 extern int screen_width ();

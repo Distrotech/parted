@@ -30,7 +30,6 @@ parted ---pretend-input-tty $dev <<EOF > out 2>&1 || fail=1
 print
 ignore
 rm
-ignore
 2
 EOF
 
@@ -59,8 +58,6 @@ Number  Start   End     Size    Type     File system  Flags
  2      5242kB  8000kB  2758kB  primary
 
 (parted) rm
-Error: Can't have overlapping partitions.
-Ignore/Cancel? ignore
 Partition number? 2
 (parted)
 EOF
@@ -73,7 +70,6 @@ parted ---pretend-input-tty $dev <<EOF > out 2>&1 || fail=1
 print
 ignore
 rm
-ignore
 1
 EOF
 
@@ -101,8 +97,6 @@ Number  Start   End     Size    Type     File system  Flags
  1      1049kB  5243kB  4194kB  primary
 
 (parted) rm
-Error: Can't have a partition outside the disk!
-Ignore/Cancel? ignore
 Partition number? 1
 (parted)
 EOF

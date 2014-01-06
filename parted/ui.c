@@ -1557,7 +1557,7 @@ print_using_dev (PedDevice* dev)
 }
 
 int
-interactive_mode (PedDevice** dev, Command* cmd_list[])
+interactive_mode (PedDevice** dev, PedDisk** disk, Command* cmd_list[])
 {
         StrList*    list;
         StrList*    command_names = command_get_names (cmd_list);
@@ -1590,7 +1590,7 @@ interactive_mode (PedDevice** dev, Command* cmd_list[])
                         cmd = command_get (commands, word);
                         free (word);
                         if (cmd) {
-                                if (!command_run (cmd, dev))
+                                if (!command_run (cmd, dev, disk))
                                         command_line_flush ();
                         } else
                                 print_commands_help ();
@@ -1602,7 +1602,7 @@ interactive_mode (PedDevice** dev, Command* cmd_list[])
 
 
 int
-non_interactive_mode (PedDevice** dev, Command* cmd_list[],
+non_interactive_mode (PedDevice** dev, PedDisk **disk, Command* cmd_list[],
                       int argc, char* argv[])
 {
         int         i;
@@ -1633,7 +1633,7 @@ non_interactive_mode (PedDevice** dev, Command* cmd_list[],
                         goto error;
                 }
 
-                if (!command_run (cmd, dev))
+                if (!command_run (cmd, dev, disk))
                         goto error;
         }
         return 1;

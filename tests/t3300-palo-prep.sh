@@ -20,9 +20,9 @@
 ss=$sector_size_
 
 cat > exp <<EOF || framework_failure
-1:2048s:4095s:2048s:::palo;
-1:2048s:4095s:2048s:::prep;
-1:2048s:4095s:2048s:::palo;
+1:2048s:4095s:2048s:ext2::lba, palo;
+1:2048s:4095s:2048s:ext2::lba, prep;
+1:2048s:4095s:2048s:ext2::lba, palo;
 EOF
 
 dev=dev-file
@@ -37,7 +37,7 @@ parted -m -s $dev mklabel msdos \
   set 1 palo on u s print \
     > out 2> err || fail=1
 
-grep -E '^1:2048s:4095s:2048s:::p...;$' out > k; mv k out
+grep -E '^1:2048s:4095s:2048s:ext2::lba, p...;$' out > k; mv k out
 
 compare exp out || fail=1
 

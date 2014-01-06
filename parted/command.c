@@ -28,7 +28,7 @@
 
 Command*
 command_create (const StrList* names,
-		int (*method) (PedDevice** dev),
+		int (*method) (PedDevice** dev, PedDisk** diskp),
 		const StrList* summary,
 		const StrList* help,
                 const int non_interactive)
@@ -134,7 +134,7 @@ command_print_help (Command* cmd)
 }
 
 int
-command_run (Command* cmd, PedDevice** dev)
+command_run (Command* cmd, PedDevice** dev, PedDisk** diskp)
 {
-	return cmd->method (dev);
+	return cmd->method (dev, diskp);
 }
