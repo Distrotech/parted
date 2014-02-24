@@ -144,6 +144,7 @@ static const char* number_msg = N_(
 
 static const char* label_type_msg_start = N_("LABEL-TYPE is one of: ");
 static const char* flag_msg_start =   N_("FLAG is one of: ");
+static const char* disk_flag_msg_start =   N_("FLAG is one of: ");
 static const char* unit_msg_start =   N_("UNIT is one of: ");
 static const char* min_or_opt_msg = N_("desired alignment: minimum or optimal");
 static const char* part_type_msg =    N_("PART-TYPE is one of: primary, logical, "
@@ -167,6 +168,7 @@ static const char* copyright_msg = N_(
 
 static char* label_type_msg;
 static char* flag_msg;
+static char* disk_flag_msg;
 static char* unit_msg;
 
 static char* mkpart_fs_type_msg;
@@ -1710,6 +1712,7 @@ _init_messages ()
         PedFileSystemAlias*     fs_alias;
         PedDiskType*            disk_type;
         PedPartitionFlag        part_flag;
+        PedDiskFlag             disk_flag;
         PedUnit                 unit;
 
 /* flags */
@@ -1727,6 +1730,22 @@ _init_messages ()
         str_list_append (list, "\n");
 
         flag_msg = str_list_convert (list);
+        str_list_destroy (list);
+/* disk flags */
+        first = 1;
+        list = str_list_create (_(disk_flag_msg_start), NULL);
+        for (disk_flag = ped_disk_flag_next (0); disk_flag;
+                        disk_flag = ped_disk_flag_next (disk_flag)) {
+                if (first)
+                        first = 0;
+                else
+                        str_list_append (list, ", ");
+                str_list_append (list,
+                                 _(ped_disk_flag_get_name (disk_flag)));
+        }
+        str_list_append (list, "\n");
+
+        disk_flag_msg = str_list_convert (list);
         str_list_destroy (list);
 
 /* units */
@@ -1912,7 +1931,7 @@ command_register (commands, command_create (
         str_list_create (
 _("disk_set FLAG STATE                      change the FLAG on selected device"),
 NULL),
-        str_list_create (flag_msg, _(state_msg), NULL), 1));
+        str_list_create (disk_flag_msg, _(state_msg), NULL), 1));
 
 command_register (commands, command_create (
         str_list_create_unique ("disk_toggle", _("disk_toggle"), NULL),
@@ -1921,7 +1940,7 @@ command_register (commands, command_create (
 _("disk_toggle [FLAG]                       toggle the state of FLAG on "
 "selected device"),
 NULL),
-        str_list_create (flag_msg, NULL), 1));
+        str_list_create (disk_flag_msg, NULL), 1));
 
 command_register (commands, command_create (
 		str_list_create_unique ("set", _("set"), NULL),

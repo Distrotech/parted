@@ -12,6 +12,10 @@ GNU parted NEWS                                    -*- outline -*-
   boot partition type.
 
 ** Bug Fixes
+
+  Fix help text for disk_{set,toggle} to show *disk* flags instead
+  of partition flags.
+
   Fix gpt to correctly handle non ASCII charcters in partition names
 
   If a drive was 100 times an even multiple of two, sizes specified as
