@@ -29,6 +29,8 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug Fixes
 
+  libparted: fix mac partition tables on > 512 byte sector sizes
+
   libparted: ped_partition_get_path() was returning "/dev/foo1" instead
   of "/dev/foo" for loop labels.
 

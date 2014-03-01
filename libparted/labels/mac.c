@@ -290,7 +290,7 @@ mac_alloc (const PedDevice* dev)
 	if (!mac_disk_data)
 		goto error_free_disk;
 	disk->disk_specific = mac_disk_data;
-	mac_disk_data->ghost_size = disk->dev->sector_size / 512;
+	mac_disk_data->ghost_size = 1;
 	mac_disk_data->active_part_entry_count = 0;
 	mac_disk_data->free_part_entry_count = 1;
 	mac_disk_data->last_part_entry_num = 1;
@@ -410,13 +410,12 @@ static int _GL_ATTRIBUTE_PURE
 _rawpart_has_driver (const MacRawPartition* raw_part, MacDiskData* mac_disk_data)
 {
 	MacDeviceDriver *driverlist;
-	uint16_t i, bsz;
+	uint16_t i;
 	uint32_t driver_bs, driver_be, part_be;
 
 	driverlist = &mac_disk_data->driverlist[0];
-	bsz = mac_disk_data->block_size / 512;
 	for (i = 0; i < mac_disk_data->driver_count; i++) {
-		driver_bs = driverlist->block * bsz;
+		driver_bs = driverlist->block;
 		driver_be = driver_bs + driverlist->size;
 		part_be = raw_part->start_block + raw_part->block_count;
 		if (driver_bs >= raw_part->start_block && driver_be <= part_be)
@@ -497,7 +496,6 @@ _rawpart_analyse (MacRawPartition* raw_part, PedDisk* disk, int num)
 	MacDiskData*		mac_disk_data;
 	PedPartition*		part;
 	MacPartitionData*	mac_part_data;
-	PedSector		block_size;
 	PedSector		start, length;
 
 	if (!_rawpart_check_signature (raw_part)) {
@@ -514,10 +512,9 @@ _rawpart_analyse (MacRawPartition* raw_part, PedDisk* disk, int num)
 	}
 
 	mac_disk_data = (MacDiskData*) disk->disk_specific;
-	block_size = disk->dev->sector_size / 512;
 
-	start = PED_BE32_TO_CPU (raw_part->start_block) * block_size;
-	length = PED_BE32_TO_CPU (raw_part->block_count) * block_size;
+	start = PED_BE32_TO_CPU (raw_part->start_block);
+	length = PED_BE32_TO_CPU (raw_part->block_count);
 	if (length == 0) {
 #ifndef DISCOVER_ONLY
 		ped_exception_throw (
@@ -560,7 +557,7 @@ _rawpart_analyse (MacRawPartition* raw_part, PedDisk* disk, int num)
 	}
 #endif /* !DISCOVER_ONLY */
 	mac_part_data->data_region_length
-		= PED_BE32_TO_CPU (raw_part->data_count) * block_size;
+		= PED_BE32_TO_CPU (raw_part->data_count);
 
 	/* boot region - we have no idea what this is for, but Mac OSX
 	 * seems to put garbage here, and doesn't pay any attention to
@@ -577,7 +574,7 @@ _rawpart_analyse (MacRawPartition* raw_part, PedDisk* disk, int num)
 	}
 #endif
 	mac_part_data->boot_region_length
-		= PED_BE32_TO_CPU (raw_part->boot_count) * block_size;
+		= PED_BE32_TO_CPU (raw_part->boot_count);
 
 #ifndef DISCOVER_ONLY
 	if (mac_part_data->has_driver) {
@@ -629,12 +626,11 @@ static int
 _rawpart_get_partmap_size (MacRawPartition* raw_part, PedDisk* disk)
 {
 	MacDiskData*	mac_disk_data = disk->disk_specific;
-	PedSector	sector_size = disk->dev->sector_size / 512;
 	PedSector	part_map_start;
 	PedSector	part_map_end;
 
 	part_map_start = mac_disk_data->ghost_size;
-	part_map_end = sector_size * PED_BE32_TO_CPU (raw_part->map_count);
+	part_map_end = PED_BE32_TO_CPU (raw_part->map_count);
 
 	return part_map_end - part_map_start + 1;
 }
@@ -881,14 +877,13 @@ static void
 _update_driver_count (MacRawPartition* part_map_entry,
 		      MacDiskData *mac_driverdata, const MacDiskData* mac_disk_data)
 {
-	uint16_t	i, count_orig, count_cur, bsz;
+	uint16_t	i, count_orig, count_cur;
 	uint32_t	driver_bs, driver_be, part_be;
 
-	bsz = mac_disk_data->block_size / 512;
 	count_cur = mac_driverdata->driver_count;
 	count_orig = mac_disk_data->driver_count;
 	for (i = 0; i < count_orig; i++) {
-		driver_bs = mac_disk_data->driverlist[i].block * bsz;
+		driver_bs = mac_disk_data->driverlist[i].block;
 		driver_be = driver_bs + mac_disk_data->driverlist[i].size;
 		part_be = part_map_entry->start_block + part_map_entry->block_count;
 		if (driver_bs >= part_map_entry->start_block
@@ -921,7 +916,6 @@ _generate_raw_part (PedDisk* disk, PedPartition* part,
 {
 	MacDiskData*		mac_disk_data;
 	MacPartitionData*	mac_part_data;
-	PedSector		block_size = disk->dev->sector_size / 512;
 
 	PED_ASSERT (part->num > 0);
 
@@ -934,10 +928,8 @@ _generate_raw_part (PedDisk* disk, PedPartition* part,
 	part_map_entry->signature = PED_CPU_TO_BE16 (MAC_PARTITION_MAGIC_2);
 	part_map_entry->map_count
 		= PED_CPU_TO_BE32 (mac_disk_data->last_part_entry_num);
-	part_map_entry->start_block
-		= PED_CPU_TO_BE32 (part->geom.start / block_size);
-	part_map_entry->block_count
-		= PED_CPU_TO_BE32 (part->geom.length / block_size);
+	part_map_entry->start_block = PED_CPU_TO_BE32 (part->geom.start);
+	part_map_entry->block_count = PED_CPU_TO_BE32 (part->geom.length);
 	strcpy (part_map_entry->name, mac_part_data->volume_name);
 	strcpy (part_map_entry->type, mac_part_data->system_name);
 
@@ -949,9 +941,9 @@ _generate_raw_part (PedDisk* disk, PedPartition* part,
 	} else
 		mac_part_data->data_region_length = part->geom.length;
 	part_map_entry->data_count = PED_CPU_TO_BE32 (
-			mac_part_data->data_region_length / block_size);
+			mac_part_data->data_region_length);
 	part_map_entry->boot_count = PED_CPU_TO_BE32 (
-			mac_part_data->boot_region_length / block_size);
+			mac_part_data->boot_region_length);
 	part_map_entry->status = PED_CPU_TO_BE32 (mac_part_data->status);
 	part_map_entry->driver_sig
 		= PED_CPU_TO_BE32 (mac_part_data->driver_sig);
@@ -979,7 +971,6 @@ _generate_raw_freespace_part (PedDisk* disk, PedGeometry* geom, int num,
 			      MacRawPartition* part_map)
 {
 	MacDiskData*		mac_disk_data = disk->disk_specific;
-	PedSector		block_size = disk->dev->sector_size / 512;
 
 	PED_ASSERT (num > 0);
 
@@ -988,10 +979,8 @@ _generate_raw_freespace_part (PedDisk* disk, PedGeometry* geom, int num,
 	part_map_entry->signature = PED_CPU_TO_BE16 (MAC_PARTITION_MAGIC_2);
 	part_map_entry->map_count
 		= PED_CPU_TO_BE32 (mac_disk_data->last_part_entry_num);
-	part_map_entry->start_block
-		= PED_CPU_TO_BE32 (geom->start / block_size);
-	part_map_entry->block_count
-		= PED_CPU_TO_BE32 (geom->length / block_size);
+	part_map_entry->start_block = PED_CPU_TO_BE32 (geom->start);
+	part_map_entry->block_count = PED_CPU_TO_BE32 (geom->length);
 	strcpy (part_map_entry->name, "Extra");
 	strcpy (part_map_entry->type, "Apple_Free");
 
@@ -1051,8 +1040,7 @@ write_block_zero (PedDisk* disk, MacDiskData* mac_driverdata)
 
 	raw_disk->signature = PED_CPU_TO_BE16 (MAC_DISK_MAGIC);
 	raw_disk->block_size = PED_CPU_TO_BE16 (dev->sector_size);
-	raw_disk->block_count
-		= PED_CPU_TO_BE32 (dev->length / (dev->sector_size / 512));
+	raw_disk->block_count = PED_CPU_TO_BE32 (dev->length);
 
 	raw_disk->driver_count = mac_driverdata->driver_count;
 	memcpy(&raw_disk->driverlist[0], &mac_driverdata->driverlist[0],
@@ -1395,9 +1383,7 @@ mac_partition_get_name (const PedPartition* part)
 static PedAlignment*
 mac_get_partition_alignment(const PedDisk *disk)
 {
-        PedSector sector_size = disk->dev->sector_size / 512;
-
-        return ped_alignment_new(0, sector_size);
+        return ped_alignment_new(0, 1);
 }
 
 static PedConstraint*
@@ -1406,13 +1392,10 @@ _primary_constraint (PedDisk* disk)
 	PedAlignment	start_align;
 	PedAlignment	end_align;
 	PedGeometry	max_geom;
-	PedSector	sector_size;
 
-	sector_size = disk->dev->sector_size / 512;
-
-	if (!ped_alignment_init (&start_align, 0, sector_size))
+	if (!ped_alignment_init (&start_align, 0, 1))
 		return NULL;
-	if (!ped_alignment_init (&end_align, -1, sector_size))
+	if (!ped_alignment_init (&end_align, -1, 1))
 		return NULL;
 	if (!ped_geometry_init (&max_geom, disk->dev, 1, disk->dev->length - 1))
 		return NULL;
@@ -1548,7 +1531,7 @@ mac_alloc_metadata (PedDisk* disk)
 	PED_ASSERT (disk->disk_specific != NULL);
 	PED_ASSERT (disk->dev != NULL);
 
-	if (!add_metadata_part (disk, 0, disk->dev->sector_size / 512 - 1))
+	if (!add_metadata_part (disk, 0, 0))
 		return 0;
 
 	/* hack: this seems to be a good place, to update the partition	map
