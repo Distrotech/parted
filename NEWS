@@ -23,6 +23,9 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug Fixes
 
+  Do not reject a FAT boot sector as invalid because it has no
+  system ID string.
+
   libparted: /dev/md/ symlink can change after libparted dereferences it,
   instead it should just use the symlink as given by the caller in the
   same way we do with /dev/mapper/.

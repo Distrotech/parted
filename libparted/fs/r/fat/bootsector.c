@@ -51,13 +51,6 @@ fat_boot_sector_read (FatBootSector* bs, const PedGeometry *geom)
 		return 0;
 	}
 
-	if (!bs->system_id[0]) {
-		ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
-			_("File system has an invalid signature for a FAT "
-			  "file system."));
-		return 0;
-	}
-
 	if (!bs->sector_size
             || PED_LE16_TO_CPU (bs->sector_size) % PED_SECTOR_SIZE_DEFAULT) {
 		ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
