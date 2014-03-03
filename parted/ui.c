@@ -1470,7 +1470,7 @@ init_readline (void)
 #ifdef HAVE_LIBREADLINE
   if (!opt_script_mode) {
     rl_initialize ();
-    rl_attempted_completion_function = (CPPFunction*) complete_function;
+    rl_attempted_completion_function = (rl_completion_func_t *) complete_function;
     readline_state.in_readline = 0;
   }
 #endif
