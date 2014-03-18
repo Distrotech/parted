@@ -62,7 +62,6 @@ static PedFileSystemType btrfs_type = {
         next:   NULL,
         ops:    &btrfs_ops,
         name:   "btrfs",
-        block_sizes: ((int[2]){512, 0})
 };
 
 void

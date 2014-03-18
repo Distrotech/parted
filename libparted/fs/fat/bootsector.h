@@ -116,11 +116,10 @@ struct __attribute__ ((packed)) _FatInfoSector {
         uint16_t	signature_3;	/* should be 0xaa55 */
 };
 
-int fat_boot_sector_read (FatBootSector* bs, const PedGeometry* geom);
+int fat_boot_sector_read (FatBootSector** bs, const PedGeometry* geom);
 FatType fat_boot_sector_probe_type (const FatBootSector* bs,
 				    const PedGeometry* geom);
 int fat_boot_sector_analyse (FatBootSector* bs, PedFileSystem* fs);
 
-int fat_info_sector_read (FatInfoSector* is, const PedFileSystem* fs);
 
 #endif /* PED_FAT_BOOTSECTOR_H */

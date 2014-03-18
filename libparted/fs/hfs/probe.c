@@ -62,7 +62,6 @@ it is in fact a wrapper to an HFS+ volume */
 PedGeometry*
 hfs_and_wrapper_probe (PedGeometry* geom)
 {
-	uint8_t		buf[PED_SECTOR_SIZE_DEFAULT];
 	HfsMasterDirectoryBlock	*mdb;
 	PedGeometry*	geom_ret;
 	PedSector	search, max;
@@ -70,18 +69,22 @@ hfs_and_wrapper_probe (PedGeometry* geom)
 	PED_ASSERT (geom != NULL);
 	PED_ASSERT (hfsc_can_use_geom (geom));
 
-	mdb = (HfsMasterDirectoryBlock *) buf;
+	const int	sectors = ((3 * 512) + geom->dev->sector_size - 1) /
+				   geom->dev->sector_size;
+	char *		buf = alloca (sectors * geom->dev->sector_size);
+
+	mdb = (HfsMasterDirectoryBlock *)(buf+1024);
 
 	/* is 5 an intelligent value ? */
 	if ((geom->length < 5)
-	    || (!ped_geometry_read (geom, buf, 2, 1))
+	    || (!ped_geometry_read (geom, buf, 0, sectors))
 	    || (mdb->signature != PED_CPU_TO_BE16 (HFS_SIGNATURE)) )
 		return NULL;
 
 	search = ((PedSector) PED_BE16_TO_CPU (mdb->start_block)
 		  + ((PedSector) PED_BE16_TO_CPU (mdb->total_blocks)
-		     * (PED_BE32_TO_CPU (mdb->block_size) / PED_SECTOR_SIZE_DEFAULT )));
-	max = search + (PED_BE32_TO_CPU (mdb->block_size) / PED_SECTOR_SIZE_DEFAULT);
+		     * (PED_BE32_TO_CPU (mdb->block_size) / geom->dev->sector_size)));
+	max = search + (PED_BE32_TO_CPU (mdb->block_size) / geom->dev->sector_size);
 	if ((search < 0)
 	    || !(geom_ret = ped_geometry_new (geom->dev, geom->start, search + 2)))
 		return NULL;

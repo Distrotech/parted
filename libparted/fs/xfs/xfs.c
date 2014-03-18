@@ -33,39 +33,34 @@
 #include "xfs_types.h"
 #include "xfs_sb.h"
 
-#define XFS_BLOCK_SIZES		((int[2]){512, 0})
-
 static PedGeometry*
 xfs_probe (PedGeometry* geom)
 {
 	PedSector	block_size;
 	PedSector	block_count;
-	union {
-		struct xfs_sb	sb;
-		char		bytes [512];
-	} buf;
+	struct xfs_sb	*sb = (struct xfs_sb *)alloca (geom->dev->sector_size);
 
 	if (geom->length < XFS_SB_DADDR + 1)
 		return NULL;
-	if (!ped_geometry_read (geom, &buf, XFS_SB_DADDR, 1))
+	if (!ped_geometry_read (geom, sb, XFS_SB_DADDR, 1))
 		return NULL;
 
-	if (PED_LE32_TO_CPU (buf.sb.sb_magicnum) == XFS_SB_MAGIC) {
-		block_size = PED_LE32_TO_CPU (buf.sb.sb_blocksize) / 512;
-		block_count = PED_LE64_TO_CPU (buf.sb.sb_dblocks);
+	if (PED_LE32_TO_CPU (sb->sb_magicnum) == XFS_SB_MAGIC) {
+		block_size = PED_LE32_TO_CPU (sb->sb_blocksize) / geom->dev->sector_size;
+		block_count = PED_LE64_TO_CPU (sb->sb_dblocks);
 
 		return ped_geometry_new (geom->dev, geom->start,
 					 block_size * block_count);
 	}
 
-	if (PED_BE32_TO_CPU (buf.sb.sb_magicnum) == XFS_SB_MAGIC) {
-		block_size = PED_BE32_TO_CPU (buf.sb.sb_blocksize) / 512;
-		block_count = PED_BE64_TO_CPU (buf.sb.sb_dblocks);
+	if (PED_BE32_TO_CPU (sb->sb_magicnum) == XFS_SB_MAGIC) {
+		block_size = PED_BE32_TO_CPU (sb->sb_blocksize) / geom->dev->sector_size;
+		block_count = PED_BE64_TO_CPU (sb->sb_dblocks);
 
-		return ped_geometry_new (geom->dev, geom->start,
+		geom = ped_geometry_new (geom->dev, geom->start,
 					 block_size * block_count);
+		return geom;
 	}
-
 	return NULL;
 }
 
@@ -77,7 +72,6 @@ static PedFileSystemType xfs_type = {
 	next:	NULL,
 	ops:	&xfs_ops,
 	name:	"xfs",
-	block_sizes: XFS_BLOCK_SIZES
 };
 
 void

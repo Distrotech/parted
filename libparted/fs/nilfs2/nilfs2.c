@@ -103,38 +103,31 @@ is_valid_nilfs_sb(struct nilfs2_super_block *sb)
 PedGeometry*
 nilfs2_probe (PedGeometry* geom)
 {
-	void *sb_v;
-	void *sb2_v;
 	struct nilfs2_super_block *sb = NULL;
 	struct nilfs2_super_block *sb2 = NULL;
-	PedSector length = geom->length;
+	PedSector length = geom->length * (geom->dev->sector_size / 512);
 
-	/* ignore if sector size is not 512bytes for now  */
-	if (geom->dev->sector_size != PED_SECTOR_SIZE_DEFAULT)
-		return NULL;
-
-	PedSector sb2off = NILFS_SB2_OFFSET(length);
+	PedSector sb2off = NILFS_SB2_OFFSET(length) / (geom->dev->sector_size / 512);
 	if (sb2off <= 2)
 		return NULL;
+	const int sectors = (4096 + geom->dev->sector_size - 1) /
+			     geom->dev->sector_size;
+	char *buf = alloca (sectors * geom->dev->sector_size);
+	void *buff2 = alloca (geom->dev->sector_size);
 
-	if (ped_geometry_read_alloc(geom, &sb_v, 2, 1))
-		sb = sb_v;
-
-	if (ped_geometry_read_alloc(geom, &sb2_v, sb2off, 1))
-		sb2 = sb2_v;
+	if (ped_geometry_read(geom, buf, 0, sectors))
+		sb = (struct nilfs2_super_block *)(buf+1024);
+	if (ped_geometry_read(geom, buff2, sb2off, 1))
+		sb2 = buff2;
 
 	if ((!sb || !is_valid_nilfs_sb(sb)) &&
-	    (!sb2 || !is_valid_nilfs_sb(sb2)) ) {
-		free(sb);
-		free(sb2);
+	    (!sb2 || !is_valid_nilfs_sb(sb2)) )
 		return NULL;
-	}
 
 	/* reserve 4k bytes for secondary superblock */
-	length = sb2off + 8;
+	length = sb2off + ((4096 + geom->dev->sector_size - 1) /
+			   geom->dev->sector_size);
 
-	free(sb);
-	free(sb2);
 	return ped_geometry_new(geom->dev, geom->start, length);
 }
 
@@ -142,13 +135,10 @@ static PedFileSystemOps nilfs2_ops = {
 	probe:			nilfs2_probe,
 };
 
-#define NILFS2_BLOCK_SIZES ((int[5]){1024, 2048, 4096, 8192, 0})
-
 static PedFileSystemType nilfs2_type = {
 	next:   NULL,
 	ops:    &nilfs2_ops,
 	name:   "nilfs2",
-	block_sizes: NILFS2_BLOCK_SIZES
 };
 
 void

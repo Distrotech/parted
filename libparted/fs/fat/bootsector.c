@@ -36,13 +36,14 @@
  * fat_boot_sector_probe_type() to work (or possibly crash on a divide-by-zero)
  */
 int
-fat_boot_sector_read (FatBootSector* bs, const PedGeometry *geom)
+fat_boot_sector_read (FatBootSector** bsp, const PedGeometry *geom)
 {
-	PED_ASSERT (bs != NULL);
+	PED_ASSERT (bsp != NULL);
 	PED_ASSERT (geom != NULL);
 
-	if (!ped_geometry_read (geom, bs, 0, 1))
+	if (!ped_geometry_read_alloc (geom, (void **)bsp, 0, 1))
 		return 0;
+	FatBootSector *bs = *bsp;
 
 	if (PED_LE16_TO_CPU (bs->boot_sign) != 0xAA55) {
 		ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
@@ -142,18 +143,6 @@ fat_boot_sector_analyse (FatBootSector* bs, PedFileSystem* fs)
 
 	PED_ASSERT (bs != NULL);
 
-	if (PED_LE16_TO_CPU (bs->sector_size) != 512) {
-		if (ped_exception_throw (
-			PED_EXCEPTION_BUG,
-			PED_EXCEPTION_IGNORE_CANCEL,
-			_("This file system has a logical sector size of %d.  "
-			"GNU Parted is known not to work properly with sector "
-			"sizes other than 512 bytes."),
-			(int) PED_LE16_TO_CPU (bs->sector_size))
-				!= PED_EXCEPTION_IGNORE)
-			return 0;
-	}
-
 	fs_info->logical_sector_size = PED_LE16_TO_CPU (bs->sector_size) / 512;
 
 	fs_info->sectors_per_track = PED_LE16_TO_CPU (bs->secs_track);
@@ -252,10 +241,10 @@ fat_boot_sector_analyse (FatBootSector* bs, PedFileSystem* fs)
 		fs_info->serial_number
 			= PED_LE32_TO_CPU (bs->u.fat32.serial_number);
 		fs_info->info_sector_offset
-		    = PED_LE16_TO_CPU (fs_info->boot_sector.u.fat32.info_sector)
+		    = PED_LE16_TO_CPU (fs_info->boot_sector->u.fat32.info_sector)
 			  * fs_info->logical_sector_size;
 		fs_info->boot_sector_backup_offset
-		  = PED_LE16_TO_CPU (fs_info->boot_sector.u.fat32.backup_sector)
+		  = PED_LE16_TO_CPU (fs_info->boot_sector->u.fat32.backup_sector)
 			  * fs_info->logical_sector_size;
 		fs_info->root_cluster
 			= PED_LE32_TO_CPU (bs->u.fat32.root_dir_cluster);
@@ -280,30 +269,3 @@ fat_boot_sector_analyse (FatBootSector* bs, PedFileSystem* fs)
 		= fs_info->cluster_size / sizeof (FatDirEntry);
 	return 1;
 }
-
-#ifndef DISCOVER_ONLY
-
-int
-fat_info_sector_read (FatInfoSector* is, const PedFileSystem* fs)
-{
-	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
-	int		status;
-
-	PED_ASSERT (is != NULL);
-
-	if (!ped_geometry_read (fs->geom, is, fs_info->info_sector_offset, 1))
-		return 0;
-
-	if (PED_LE32_TO_CPU (is->signature_2) != FAT32_INFO_MAGIC2) {
-		status = ped_exception_throw (PED_EXCEPTION_WARNING,
-				PED_EXCEPTION_IGNORE_CANCEL,
-				_("The information sector has the wrong "
-				"signature (%x).  Select cancel for now, "
-				"and send in a bug report.  If you're "
-				"desperate, it's probably safe to ignore."),
-				PED_LE32_TO_CPU (is->signature_2));
-		if (status == PED_EXCEPTION_CANCEL) return 0;
-	}
-	return 1;
-}
-#endif /* !DISCOVER_ONLY */

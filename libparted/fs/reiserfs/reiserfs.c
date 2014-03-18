@@ -46,8 +46,6 @@
 
 #include "reiserfs.h"
 
-#define REISERFS_BLOCK_SIZES       ((int[2]){512, 0})
-
 static PedSector reiserfs_super_offset[] = { 128, 16, -1 };
 static PedFileSystemType* reiserfs_type;
 
@@ -57,29 +55,29 @@ static PedFileSystemType* reiserfs_type;
 static PedGeometry *reiserfs_probe(PedGeometry *geom)
 {
 	int i;
-	reiserfs_super_block_t sb;
 
 	PED_ASSERT(geom != NULL);
+	reiserfs_super_block_t *sb =
+		(reiserfs_super_block_t *)alloca (geom->dev->sector_size);
 
 	for (i = 0; reiserfs_super_offset[i] != -1; i++) {
 		if (reiserfs_super_offset[i] >= geom->length)
 			continue;
-		if (!ped_geometry_read (geom, &sb, reiserfs_super_offset[i], 1))
+		if (!ped_geometry_read (geom, sb, reiserfs_super_offset[i], 1))
 			continue;
 
-		if (strncmp(REISERFS_SIGNATURE, sb.s_magic,
+		if (strncmp(REISERFS_SIGNATURE, sb->s_magic,
 		            strlen(REISERFS_SIGNATURE)) == 0
-		    || strncmp(REISER2FS_SIGNATURE, sb.s_magic,
+		    || strncmp(REISER2FS_SIGNATURE, sb->s_magic,
 			       strlen(REISER2FS_SIGNATURE)) == 0
-		    || strncmp(REISER3FS_SIGNATURE, sb.s_magic,
+		    || strncmp(REISER3FS_SIGNATURE, sb->s_magic,
 			       strlen(REISER3FS_SIGNATURE)) == 0) {
 			PedSector block_size;
 			PedSector block_count;
 
-			block_size = PED_LE16_TO_CPU(sb.s_blocksize)
-					/ PED_SECTOR_SIZE_DEFAULT;
-			block_count = PED_LE32_TO_CPU(sb.s_block_count);
-
+			block_size = PED_LE16_TO_CPU(sb->s_blocksize)
+					/ geom->dev->sector_size;
+			block_count = PED_LE32_TO_CPU(sb->s_block_count);
 			return ped_geometry_new(geom->dev, geom->start,
 						block_size * block_count);
 		}
@@ -87,8 +85,6 @@ static PedGeometry *reiserfs_probe(PedGeometry *geom)
 	return NULL;
 }
 
-
-#define REISER_BLOCK_SIZES ((int[]){512, 1024, 2048, 4096, 8192, 0})
 
 static PedFileSystemOps reiserfs_simple_ops = {
 	probe:		reiserfs_probe,
@@ -98,7 +94,6 @@ static PedFileSystemType reiserfs_simple_type = {
 	next:	        NULL,
 	ops:	        &reiserfs_simple_ops,
 	name:	        "reiserfs",
-        block_sizes:    REISER_BLOCK_SIZES
 };
 
 void ped_file_system_reiserfs_init()

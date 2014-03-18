@@ -33,10 +33,12 @@ struct ext2_dev_handle* ext2_make_dev_handle_from_parted_geometry(PedGeometry* g
 static PedGeometry*
 _ext2_generic_probe (PedGeometry* geom, int expect_ext_ver)
 {
-	void *sb_v;
-	if (!ped_geometry_read_alloc(geom, &sb_v, 2, 2))
+	const int sectors = (4096 + geom->dev->sector_size - 1) /
+			     geom->dev->sector_size;
+	char *sb_v = alloca (sectors * geom->dev->sector_size);
+	if (!ped_geometry_read(geom, sb_v, 0, sectors))
 		return NULL;
-	struct ext2_super_block *sb = sb_v;
+	struct ext2_super_block *sb = (struct ext2_super_block *)(sb_v + 1024);
 
 	if (EXT2_SUPER_MAGIC(*sb) == EXT2_SUPER_MAGIC_CONST) {
 		PedSector block_size = 1 << (EXT2_SUPER_LOG_BLOCK_SIZE(*sb) + 1);
@@ -66,8 +68,6 @@ _ext2_generic_probe (PedGeometry* geom, int expect_ext_ver)
 			if (is_ext4)
 				is_ext3 = 0;
 		}
-		free (sb);
-
 		if (expect_ext_ver == 2 && (is_ext3 || is_ext4))
 			return NULL;
 		if (expect_ext_ver == 3 && !is_ext3)
@@ -94,9 +94,6 @@ _ext2_generic_probe (PedGeometry* geom, int expect_ext_ver)
 						 block_count * block_size);
 		}
 	}
-        else {
-		free (sb);
-        }
 
 	return NULL;
 }
@@ -131,27 +128,22 @@ static PedFileSystemOps _ext4_ops = {
 	probe:		_ext4_probe,
 };
 
-#define EXT23_BLOCK_SIZES ((int[6]){512, 1024, 2048, 4096, 8192, 0})
-
 static PedFileSystemType _ext2_type = {
        next:		 NULL,
        ops:		 &_ext2_ops,
        name:		 "ext2",
-       block_sizes:      EXT23_BLOCK_SIZES
 };
 
 static PedFileSystemType _ext3_type = {
        next:		 NULL,
        ops:		 &_ext3_ops,
        name:		 "ext3",
-       block_sizes:      EXT23_BLOCK_SIZES
 };
 
 static PedFileSystemType _ext4_type = {
        next:		 NULL,
        ops:		 &_ext4_ops,
        name:		 "ext4",
-       block_sizes:      EXT23_BLOCK_SIZES
 };
 
 void ped_file_system_ext2_init ()

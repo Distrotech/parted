@@ -129,7 +129,7 @@ fat_table_read (FatTable* ft, const PedFileSystem* fs, int table_num)
 				fs_info->fat_sectors))
 		return 0;
 
-        if ( *((unsigned char*) ft->table) != fs_info->boot_sector.media) {
+        if ( *((unsigned char*) ft->table) != fs_info->boot_sector->media) {
 		if (ped_exception_throw (
 			PED_EXCEPTION_ERROR,
 			PED_EXCEPTION_IGNORE_CANCEL,
@@ -137,7 +137,7 @@ fat_table_read (FatTable* ft, const PedFileSystem* fs, int table_num)
 			  "media %x.  You should probably run scandisk."),
 			(int) table_num + 1,
 			(int) *((unsigned char*) ft->table),
-			(int) fs_info->boot_sector.media)
+			(int) fs_info->boot_sector->media)
 				!= PED_EXCEPTION_IGNORE)
 			return 0;
         }

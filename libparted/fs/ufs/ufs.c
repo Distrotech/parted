@@ -34,10 +34,6 @@
 #include <unistd.h>
 #include <string.h>
 
-#define SUN_UFS_BLOCK_SIZES       ((int[2]){512, 0})
-#define HP_UFS_BLOCK_SIZES        ((int[2]){512, 0})
-
-
 /* taken from ufs_fs.h in Linux */
 #define	UFS_MAXNAMLEN 255
 #define UFS_MAXMNTLEN 512
@@ -178,24 +174,26 @@ struct ufs_super_block {
 static PedGeometry*
 ufs_probe_sun (PedGeometry* geom)
 {
-	int8_t buf[512 * 3];
+	const int	sectors = ((3 * 512) + geom->dev->sector_size - 1) /
+				   geom->dev->sector_size;
+	char *		buf = alloca (sectors * geom->dev->sector_size);
 	struct ufs_super_block *sb;
 
 	if (geom->length < 5)
 		return 0;
-	if (!ped_geometry_read (geom, buf, 16, 3))
+	if (!ped_geometry_read (geom, buf, 16 * 512 / geom->dev->sector_size, sectors))
 		return 0;
 
 	sb = (struct ufs_super_block *)buf;
 
 	if (PED_BE32_TO_CPU(sb->fs_magic) == UFS_MAGIC) {
-		PedSector block_size = PED_BE32_TO_CPU(sb->fs_bsize) / 512;
+		PedSector block_size = PED_BE32_TO_CPU(sb->fs_bsize) / geom->dev->sector_size;
 		PedSector block_count = PED_BE32_TO_CPU(sb->fs_size);
 		return ped_geometry_new (geom->dev, geom->start,
 					 block_size * block_count);
 	}
 	if (PED_LE32_TO_CPU(sb->fs_magic) == UFS_MAGIC) {
-		PedSector block_size = PED_LE32_TO_CPU(sb->fs_bsize) / 512;
+		PedSector block_size = PED_LE32_TO_CPU(sb->fs_bsize) / geom->dev->sector_size;
 		PedSector block_count = PED_LE32_TO_CPU(sb->fs_size);
 		return ped_geometry_new (geom->dev, geom->start,
 					 block_size * block_count);
@@ -206,14 +204,17 @@ ufs_probe_sun (PedGeometry* geom)
 static PedGeometry*
 ufs_probe_hp (PedGeometry* geom)
 {
-	int8_t buf[1536];
 	struct ufs_super_block *sb;
 	PedSector block_size;
 	PedSector block_count;
 
 	if (geom->length < 5)
 		return 0;
-	if (!ped_geometry_read (geom, buf, 16, 3))
+	const int	sectors = ((3 * 512) + geom->dev->sector_size - 1) /
+				   geom->dev->sector_size;
+	char *		buf = alloca (sectors * geom->dev->sector_size);
+
+	if (!ped_geometry_read (geom, buf, 16 * 512 / geom->dev->sector_size, sectors))
 		return 0;
 
 	sb = (struct ufs_super_block *)buf;
@@ -223,7 +224,7 @@ ufs_probe_hp (PedGeometry* geom)
 		case UFS_MAGIC_LFN:
 		case UFS_MAGIC_FEA:
 		case UFS_MAGIC_4GB:
-			block_size = PED_BE32_TO_CPU(sb->fs_bsize) / 512;
+			block_size = PED_BE32_TO_CPU(sb->fs_bsize) / geom->dev->sector_size;
 			block_count = PED_BE32_TO_CPU(sb->fs_size);
 			return ped_geometry_new (geom->dev, geom->start,
 						 block_size * block_count);
@@ -234,7 +235,7 @@ ufs_probe_hp (PedGeometry* geom)
 		case UFS_MAGIC_LFN:
 		case UFS_MAGIC_FEA:
 		case UFS_MAGIC_4GB:
-			block_size = PED_LE32_TO_CPU(sb->fs_bsize) / 512;
+			block_size = PED_LE32_TO_CPU(sb->fs_bsize) / geom->dev->sector_size;
 			block_count = PED_LE32_TO_CPU(sb->fs_size);
 			return ped_geometry_new (geom->dev, geom->start,
 						 block_size * block_count);
@@ -254,14 +255,12 @@ static PedFileSystemType ufs_type_sun = {
 	next:	NULL,
 	ops:	&ufs_ops_sun,
 	name:	"sun-ufs",
-	block_sizes: SUN_UFS_BLOCK_SIZES
 };
 
 static PedFileSystemType ufs_type_hp = {
 	next:   NULL,
 	ops:    &ufs_ops_hp,
 	name:   "hp-ufs",
-	block_sizes: HP_UFS_BLOCK_SIZES
 };
 
 void

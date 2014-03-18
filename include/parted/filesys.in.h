@@ -46,7 +46,6 @@ struct _PedFileSystemOps {
 struct _PedFileSystemType {
 	PedFileSystemType*	next;
 	const char* const	name;		/**< name of the file system type */
-        const int*              block_sizes;
 	PedFileSystemOps* const	ops;
 };
 

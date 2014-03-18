@@ -36,14 +36,14 @@
  * fat_boot_sector_probe_type() to work (or possibly crash on a divide-by-zero)
  */
 int
-fat_boot_sector_read (FatBootSector* bs, const PedGeometry *geom)
+fat_boot_sector_read (FatBootSector** bsp, const PedGeometry *geom)
 {
-	PED_ASSERT (bs != NULL);
+	PED_ASSERT (bsp != NULL);
 	PED_ASSERT (geom != NULL);
 
-	if (!ped_geometry_read (geom, bs, 0, 1))
+	if (!ped_geometry_read_alloc (geom, (void **)bsp, 0, 1))
 		return 0;
-
+	FatBootSector *bs = *bsp;
 	if (PED_LE16_TO_CPU (bs->boot_sign) != 0xAA55) {
 		ped_exception_throw (PED_EXCEPTION_ERROR, PED_EXCEPTION_CANCEL,
 			_("File system has an invalid signature for a FAT "
@@ -250,10 +250,10 @@ fat_boot_sector_analyse (FatBootSector* bs, PedFileSystem* fs)
 		fs_info->serial_number
 			= PED_LE32_TO_CPU (bs->u.fat32.serial_number);
 		fs_info->info_sector_offset
-		    = PED_LE16_TO_CPU (fs_info->boot_sector.u.fat32.info_sector)
+		    = PED_LE16_TO_CPU (fs_info->boot_sector->u.fat32.info_sector)
 			  * fs_info->logical_sector_size;
 		fs_info->boot_sector_backup_offset
-		  = PED_LE16_TO_CPU (fs_info->boot_sector.u.fat32.backup_sector)
+		  = PED_LE16_TO_CPU (fs_info->boot_sector->u.fat32.backup_sector)
 			  * fs_info->logical_sector_size;
 		fs_info->root_cluster
 			= PED_LE32_TO_CPU (bs->u.fat32.root_dir_cluster);
@@ -292,11 +292,13 @@ fat_boot_sector_set_boot_code (FatBootSector* bs)
 }
 
 int
-fat_boot_sector_generate (FatBootSector* bs, const PedFileSystem* fs)
+fat_boot_sector_generate (FatBootSector** bsp, const PedFileSystem* fs)
 {
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 
-	PED_ASSERT (bs != NULL);
+	PED_ASSERT (bsp != NULL);
+	*bsp = ped_malloc (fs->geom->dev->sector_size);
+	FatBootSector *bs = *bsp;
 
 	memcpy (bs->system_id, "MSWIN4.1", 8);
 	bs->sector_size = PED_CPU_TO_LE16 (fs_info->logical_sector_size * 512);
@@ -388,16 +390,16 @@ fat_boot_sector_write (const FatBootSector* bs, PedFileSystem* fs)
 }
 
 int
-fat_info_sector_read (FatInfoSector* is, const PedFileSystem* fs)
+fat_info_sector_read (FatInfoSector** isp, const PedFileSystem* fs)
 {
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 	int		status;
 
-	PED_ASSERT (is != NULL);
+	PED_ASSERT (isp != NULL);
 
-	if (!ped_geometry_read (fs->geom, is, fs_info->info_sector_offset, 1))
+	if (!ped_geometry_read_alloc (fs->geom, (void **)isp, fs_info->info_sector_offset, 1))
 		return 0;
-
+	FatInfoSector *is = *isp;
 	if (PED_LE32_TO_CPU (is->signature_2) != FAT32_INFO_MAGIC2) {
 		status = ped_exception_throw (PED_EXCEPTION_WARNING,
 				PED_EXCEPTION_IGNORE_CANCEL,
@@ -412,11 +414,13 @@ fat_info_sector_read (FatInfoSector* is, const PedFileSystem* fs)
 }
 
 int
-fat_info_sector_generate (FatInfoSector* is, const PedFileSystem* fs)
+fat_info_sector_generate (FatInfoSector** isp, const PedFileSystem* fs)
 {
 	FatSpecific*	fs_info = FAT_SPECIFIC (fs);
 
-	PED_ASSERT (is != NULL);
+	PED_ASSERT (isp != NULL);
+	*isp = ped_malloc (fs->geom->dev->sector_size);
+	FatInfoSector *is = *isp;
 
 	fat_table_count_stats (fs_info->fat);
 

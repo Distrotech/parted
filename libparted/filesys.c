@@ -198,11 +198,6 @@ ped_file_system_probe_specific (
 	PED_ASSERT (fs_type->ops->probe != NULL);
 	PED_ASSERT (geom != NULL);
 
-        /* Fail all fs-specific probe-related tests when sector size
-           is not the default.  */
-	if (geom->dev->sector_size != PED_SECTOR_SIZE_DEFAULT)
-		return 0;
-
 	if (!ped_device_open (geom->dev))
 		return 0;
 	result = fs_type->ops->probe (geom);

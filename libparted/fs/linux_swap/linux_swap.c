@@ -86,11 +86,6 @@ _generic_swap_probe (PedGeometry* geom, int kind)
 	PedGeometry*	probed_geom;
 	PedSector	length;
 
-        /* Fail the swap-file-system-recognizing test when sector size
-           is not the default.  */
-	if (geom->dev->sector_size != PED_SECTOR_SIZE_DEFAULT)
-		return NULL;
-
         switch (kind) {
         /* Check for old style swap partitions. */
                 case 0:
@@ -132,30 +127,18 @@ error:
 
 
 static int
-swap_init (PedFileSystem* fs, int fresh)
+swap_init (PedFileSystem* fs)
 {
 	SwapSpecific*	fs_info = SWAP_SPECIFIC (fs);
 
-	fs_info->page_sectors = getpagesize () / 512;
+	fs_info->page_sectors = getpagesize () / fs->geom->dev->sector_size;
 	fs_info->page_count = fs->geom->length / fs_info->page_sectors;
 	fs_info->version = 1;
 	fs_info->max_bad_pages = (getpagesize()
 					- sizeof (SwapNewHeader)) / 4;
 
-	if (fresh) {
-		uuid_t uuid_dat;
-
-		memset (fs_info->header, 0, getpagesize());
-
-		/* version is always 1 here */
-		uuid_generate (uuid_dat);
-		memcpy (fs_info->header->new.sws_uuid, uuid_dat,
-			sizeof (fs_info->header->new.sws_uuid));
-                return 1;
-        }
-	else
-                return ped_geometry_read (fs->geom, fs_info->header,
-                                          0, fs_info->page_sectors);
+	return ped_geometry_read (fs->geom, fs_info->header,
+				  0, fs_info->page_sectors);
 }
 
 
@@ -174,7 +157,7 @@ swap_alloc (PedGeometry* geom)
 		goto error_free_fs;
 
 	fs_info = SWAP_SPECIFIC (fs);
-	fs_info->header = ped_malloc (getpagesize());
+	fs_info->header = ped_malloc (PED_MAX(getpagesize(), geom->dev->sector_size));
 	if (!fs_info->header)
 		goto error_free_type_specific;
 
@@ -225,7 +208,7 @@ _swap_v0_open (PedGeometry* geom)
 	fs = swap_alloc (geom);
 	if (!fs)
 		goto error;
-	swap_init (fs, 0);
+	swap_init (fs);
 
 	fs_info = SWAP_SPECIFIC (fs);
 	if (!ped_geometry_read (fs->geom, fs_info->header, 0,
@@ -267,12 +250,7 @@ _swap_v1_open (PedGeometry* geom)
 	fs = swap_alloc (geom);
 	if (!fs)
 		goto error;
-/* 	swap_init (fs, 0); */
-
-/* 	fs_info = SWAP_SPECIFIC (fs); */
-/* 	if (!ped_geometry_read (fs->geom, fs_info->header, 0, */
-/* 				fs_info->page_sectors)) */
-        if (!swap_init(fs, 0))
+        if (!swap_init(fs))
 		goto error_free_fs;
 
         fs_info = SWAP_SPECIFIC (fs);
@@ -311,7 +289,7 @@ _swap_swsusp_open (PedGeometry* geom)
 	if (!fs)
 		goto error;
         fs->type = &_swap_swsusp_type;
-	swap_init (fs, 0);
+	swap_init (fs);
 
 	fs_info = SWAP_SPECIFIC (fs);
 	if (!ped_geometry_read (fs->geom, fs_info->header, 0,
@@ -378,21 +356,18 @@ static PedFileSystemType _swap_v0_type = {
 	next:	NULL,
 	ops:	&_swap_v0_ops,
 	name:	"linux-swap(v0)",
-	block_sizes: LINUXSWAP_BLOCK_SIZES
 };
 
 static PedFileSystemType _swap_v1_type = {
 	next:	NULL,
 	ops:	&_swap_v1_ops,
 	name:	"linux-swap(v1)",
-	block_sizes: LINUXSWAP_BLOCK_SIZES
 };
 
 static PedFileSystemType _swap_swsusp_type = {
         next:   NULL,
 	ops:    &_swap_swsusp_ops,
 	name:   "swsusp",
-        block_sizes: LINUXSWAP_BLOCK_SIZES
 };
 
 void

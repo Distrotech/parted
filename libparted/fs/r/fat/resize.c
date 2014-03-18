@@ -857,10 +857,10 @@ fat_resize (PedFileSystem* fs, PedGeometry* geom, PedTimer* timer)
 
 	_copy_hidden_sectors (ctx);
 	fat_boot_sector_generate (&new_fs_info->boot_sector, new_fs);
-	fat_boot_sector_write (&new_fs_info->boot_sector, new_fs);
+	fat_boot_sector_write (new_fs_info->boot_sector, new_fs);
 	if (new_fs_info->fat_type == FAT_TYPE_FAT32) {
 		fat_info_sector_generate (&new_fs_info->info_sector, new_fs);
-		fat_info_sector_write (&new_fs_info->info_sector, new_fs);
+		fat_info_sector_write (new_fs_info->info_sector, new_fs);
 	}
 
 	if (!resize_context_assimilate (ctx))
