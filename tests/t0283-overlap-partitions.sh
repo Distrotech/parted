@@ -74,7 +74,8 @@ mv out o2 && sed -e "s,/.*/$dev,DEVICE,;s,   *,,g;s, $,," \
                       -e "s,^.*/lt-parted: ,parted: ," -e "s/^GNU Parted .*$/GNU Parted VERSION/" o2 > out
 
 # check for expected output
-cat <<EOF > exp || fail=1
+emit_superuser_warning > exp || fail=1
+cat <<EOF >> exp || fail=1
 GNU Parted VERSION
 Using DEVICE
 Welcome to GNU Parted! Type 'help' to view a list of commands.
@@ -116,7 +117,8 @@ mv out o2 && sed -e "s,/.*/$dev,DEVICE,;s,   *,,g;s, $,," \
                       -e "s,^.*/lt-parted: ,parted: ," -e "s/^GNU Parted .*$/GNU Parted VERSION/" o2 > out
 
 # check for expected output
-cat <<EOF > exp || fail=1
+emit_superuser_warning > exp || fail=1
+cat <<EOF >> exp || fail=1
 GNU Parted VERSION
 Using DEVICE
 Welcome to GNU Parted! Type 'help' to view a list of commands.

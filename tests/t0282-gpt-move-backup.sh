@@ -75,7 +75,8 @@ mv out o2 && sed -e "s,/.*/$dev,DEVICE,;s,   *,,g;s, $,," \
                       -e "s,^.*/lt-parted: ,parted: ," o2 > out
 
 # check for expected diagnostic
-cat <<EOF > exp || fail=1
+emit_superuser_warning > exp || fail=1
+cat <<EOF >> exp || fail=1
 Error: The backup GPT table is not at the end of the disk, as it should be.  Fix, by moving the backup to the end (and removing the old backup)?
 Fix/Ignore? f
 Model:  (file)

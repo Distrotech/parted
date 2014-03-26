@@ -75,7 +75,8 @@ mv out o2 && sed -e "s,/.*/$dev,DEVICE,;s,   *,,g;s, $,," \
                       -e "s,^.*/lt-parted: ,parted: ," o2 > out
 
 # check for expected diagnostic
-cat <<EOF > exp || fail=1
+emit_superuser_warning > exp || fail=1
+cat <<EOF >> exp || fail=1
 Warning: Not all of the space available to DEVICE appears to be used, you can fix the GPT to use all of the space (an extra 500 blocks) or continue with the current setting?
 Fix/Ignore? f
 Model:  (file)
