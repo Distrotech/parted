@@ -699,7 +699,7 @@ dasd_partition_new (const PedDisk* disk, PedPartitionType part_type,
 	if (!part)
 		goto error;
 
-	part->disk_specific = ped_malloc (sizeof (DasdPartitionData));
+	part->disk_specific = ped_calloc (sizeof (DasdPartitionData));
 	return part;
 
 error:
