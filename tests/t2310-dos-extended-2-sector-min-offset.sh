@@ -23,7 +23,8 @@ require_root_
 require_scsi_debug_module_
 
 # create memory-backed device
-scsi_debug_setup_ dev_size_mb=1 > dev-name ||
+ss=$sector_size_
+scsi_debug_setup_ sector_size=$ss dev_size_mb=1 > dev-name ||
   skip_ 'failed to create scsi_debug device'
 scsi_dev=$(cat dev-name)
 p1=${scsi_dev}1
@@ -31,13 +32,9 @@ p5=${scsi_dev}5
 
 cat <<EOF > exp || framework_failure
 BYT;
-$scsi_dev:2048s:scsi:512:512:msdos:Linux scsi_debug:;
+$scsi_dev:$((2048*512/$ss))s:scsi:$ss:$ss:msdos:Linux scsi_debug:;
 1:64s:128s:65s:::lba;
 5:65s:128s:64s:::;
-EOF
-
-cat <<EOF > err.exp || framework_failure
-Error: Partition(s) 5 on $scsi_dev have been written, but we have been unable to inform the kernel of the change, probably because it/they are in use.  As a result, the old partition(s) will remain in use.  You should reboot now before making further changes.
 EOF
 
 # Create a DOS label with an extended partition starting at sector 64.
