@@ -751,17 +751,7 @@ _parse_header (PedDisk *disk, const GuidPartitionTableHeader_t *gpt,
      space or continue with the current usable area.  Only ask once per
      parted invocation. */
 
-  last_usable_if_grown
-    = (disk->dev->length - 2 -
-       ((PedSector) (PED_LE32_TO_CPU (gpt->NumberOfPartitionEntries)) *
-        (PedSector) (PED_LE32_TO_CPU (gpt->SizeOfPartitionEntry)) /
-        disk->dev->sector_size));
-
-  last_usable_min_default = disk->dev->length - 2 -
-    GPT_DEFAULT_PARTITION_ENTRY_ARRAY_SIZE / disk->dev->sector_size;
-
-  if (last_usable_if_grown > last_usable_min_default)
-    last_usable_if_grown = last_usable_min_default;
+  last_usable_if_grown = disk->dev->length - 2 - _ptes_sectors(disk, gpt);
 
   if (last_usable <= first_usable
       || disk->dev->length < last_usable)
@@ -791,7 +781,6 @@ _parse_header (PedDisk *disk, const GuidPartitionTableHeader_t *gpt,
           ptt_clear_sectors (disk->dev,
                              gpt_disk_data->AlternateLBA, 1);
           gpt_disk_data->AlternateLBA = disk->dev->length - 1;
-          last_usable = last_usable_if_grown;
           *update_needed = 1;
         }
       else if (q != PED_EXCEPTION_UNHANDLED)
