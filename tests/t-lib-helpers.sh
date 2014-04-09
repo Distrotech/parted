@@ -398,3 +398,15 @@ device_mapper_required_()
   . "$abs_top_srcdir/tests/t-lvm.sh"
   lvm_init_root_dir_ || fail_ "device mapper setup failed"
 }
+
+# Require a 64bit system
+require_64bit_()
+{
+  case $(uname -m) in
+      x86_64|ppc64)
+          return 0;;
+      *)
+          skip_ "This test requires a 64 bit system"
+          ;;
+  esac
+}

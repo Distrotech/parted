@@ -19,10 +19,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../parted $srcdir
 require_perl_digest_crc_
 
-# gpt-header-munge will fail on big-endian systems
-if test $(uname -m) != x86_64; then
-  skip_ 'this test only works on little-endian systems'
-fi
+# gpt-header-munge won't work on 32bit systems
+require_64bit_
 
 ss=$sector_size_
 

@@ -107,7 +107,7 @@ sub check_GPT_header ($$$)
     }
 
   # Save a copy of the CRC, then zero that field, bytes 16..19:
-  my $orig_crc = unpack ('L', substr ($buf, 16, 4));
+  my $orig_crc = unpack ('L<', substr ($buf, 16, 4));
   substr ($buf, 16, 4) = "\0" x 4;
 
   # Compute CRC32 of header: it'd better match.
@@ -133,7 +133,7 @@ sub set_CRCs ($$$$)
 
   # Compute CRC of primary partition array and put it in substr ($pri, 88, 4)
   my $pa_crc = partition_array_crc $pri_or_backup, $n_pe, $in;
-  substr ($$buf, 88, 4) = pack ('L', $pa_crc);
+  substr ($$buf, 88, 4) = pack ('L<', $pa_crc);
 
   # In the backup header, we must also set the 8-byte "Partition entries
   # starting LBA number" field to reflect our new value of $n_pe.
@@ -151,7 +151,7 @@ sub set_CRCs ($$$$)
   # slot into which we'll store the result.
   substr ($$buf, 16, 4) = "\0" x 4;
   my $crc = crc32($$buf);
-  substr ($$buf, 16, 4) = pack ('L', $crc);
+  substr ($$buf, 16, 4) = pack ('L<', $crc);
 }
 
 sub usage ($)
