@@ -21,17 +21,19 @@ require_512_byte_sector_size_
 
 dev=loop-file
 ss=$sector_size_
+n_sectors=$((257*1024))
 
 for type in ext2 ext3 ext4 btrfs xfs nilfs2; do
 
   ( mkfs.$type -V ) >/dev/null 2>&1 \
       || { warn_ "$ME: no $type support"; continue; }
 
-  case $type in ext*) n_sectors=8000 force=-F;;
-      *) n_sectors=$((257*1024)) force=;; esac
+  case $type in ext*) force=-F;;
+      xfs) force=-f;;
+      *) force=;; esac
 
   # create an $type file system
-  dd if=/dev/zero of=$dev bs=$ss count=$n_sectors >/dev/null || fail=1
+  dd if=/dev/null of=$dev bs=$ss count=$n_sectors >/dev/null || fail=1
   mkfs.$type $force $dev || { warn_ $ME: mkfs.$type failed; fail=1; continue; }
 
   # probe the $type file system
@@ -43,7 +45,7 @@ done
 # Some features should indicate ext4 by themselves.
 for feature in uninit_bg flex_bg; do
   # create an ext3 file system
-  dd if=/dev/zero of=$dev bs=1024 count=4096 >/dev/null || fail=1
+  dd if=/dev/null of=$dev bs=1024 count=4096 >/dev/null || fail=1
   mkfs.ext3 -F $dev >/dev/null || skip_ "mkfs.ext3 failed"
 
   # set the feature
