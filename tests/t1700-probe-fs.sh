@@ -33,7 +33,7 @@ for type in ext2 ext3 ext4 btrfs xfs nilfs2; do
       *) force=;; esac
 
   # create an $type file system
-  dd if=/dev/null of=$dev bs=$ss count=$n_sectors >/dev/null || fail=1
+  dd if=/dev/null of=$dev bs=$ss seek=$n_sectors >/dev/null || fail=1
   mkfs.$type $force $dev || { warn_ $ME: mkfs.$type failed; fail=1; continue; }
 
   # probe the $type file system
@@ -45,7 +45,7 @@ done
 # Some features should indicate ext4 by themselves.
 for feature in uninit_bg flex_bg; do
   # create an ext3 file system
-  dd if=/dev/null of=$dev bs=1024 count=4096 >/dev/null || fail=1
+  dd if=/dev/null of=$dev bs=1024 seek=4096 >/dev/null || fail=1
   mkfs.ext3 -F $dev >/dev/null || skip_ "mkfs.ext3 failed"
 
   # set the feature
