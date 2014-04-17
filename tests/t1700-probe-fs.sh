@@ -23,14 +23,21 @@ dev=loop-file
 ss=$sector_size_
 n_sectors=$((257*1024))
 
-for type in ext2 ext3 ext4 btrfs xfs nilfs2; do
+for type in ext2 ext3 ext4 btrfs xfs nilfs2 ntfs vfat hfsplus; do
 
-  ( mkfs.$type -V ) >/dev/null 2>&1 \
+  ( mkfs.$type 2>&1 | grep -i '^usage' ) > /dev/null \
       || { warn_ "$ME: no $type support"; continue; }
 
-  case $type in ext*) force=-F;;
+  fsname=$type
+  force=
+  case $type in
+      ext*) force=-F;;
       xfs) force=-f;;
-      *) force=;; esac
+      nilfs2) force=-f;;
+      ntfs) force=-F;;
+      vfat) fsname=fat16;;
+      hfsplus) fsname=hfs+;;
+  esac
 
   # create an $type file system
   dd if=/dev/null of=$dev bs=$ss seek=$n_sectors >/dev/null || fail=1
@@ -38,9 +45,8 @@ for type in ext2 ext3 ext4 btrfs xfs nilfs2; do
 
   # probe the $type file system
   parted -m -s $dev u s print >out 2>&1 || fail=1
-  grep '^1:.*:'$type'::;$' out || { cat out; fail=1; }
+  grep '^1:.*:'$fsname'::;$' out || { cat out; fail=1; }
   rm $dev
-
 done
 
 # Some features should indicate ext4 by themselves.
@@ -55,6 +61,7 @@ for feature in uninit_bg flex_bg; do
   # probe the file system, which should now be ext4
   parted -m -s $dev u s print >out 2>&1 || fail=1
   grep '^1:.*:ext4::;$' out || fail=1
+  rm $dev
 done
 
 Exit $fail
