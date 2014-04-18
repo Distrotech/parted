@@ -667,10 +667,12 @@ create_resize_context (PedFileSystem* fs, const PedGeometry* new_geom)
 		goto error_free_new_fs;
 
 /* preserve boot code, etc. */
-	memcpy (&new_fs_info->boot_sector, &fs_info->boot_sector,
-		sizeof (FatBootSector));
-	memcpy (&new_fs_info->info_sector, &fs_info->info_sector,
-		sizeof (FatInfoSector));
+	new_fs_info->boot_sector = ped_malloc (new_geom->dev->sector_size);
+	new_fs_info->info_sector = ped_malloc (new_geom->dev->sector_size);
+	memcpy (new_fs_info->boot_sector, fs_info->boot_sector,
+		new_geom->dev->sector_size);
+	memcpy (new_fs_info->info_sector, fs_info->info_sector,
+		new_geom->dev->sector_size);
 
 	new_fs_info->logical_sector_size = fs_info->logical_sector_size;
 	new_fs_info->sector_count = new_geom->length;

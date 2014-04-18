@@ -35,7 +35,9 @@ fat_alloc (const PedGeometry* geom)
 	fs->type_specific = (FatSpecific*) ped_malloc (sizeof (FatSpecific));
 	if (!fs->type_specific)
 		goto error_free_fs;
-
+	FatSpecific* fs_info = (FatSpecific*) fs->type_specific;
+	fs_info->boot_sector = NULL;
+	fs_info->info_sector = NULL;
 	fs->geom = ped_geometry_duplicate (geom);
 	if (!fs->geom)
 		goto error_free_type_specific;
@@ -86,6 +88,8 @@ fat_free_buffers (PedFileSystem* fs)
 void
 fat_free (PedFileSystem* fs)
 {
+	FatSpecific* fs_info = (FatSpecific*) fs->type_specific;
+	free (fs_info->boot_sector);
 	ped_geometry_destroy (fs->geom);
 	free (fs->type_specific);
 	free (fs);
