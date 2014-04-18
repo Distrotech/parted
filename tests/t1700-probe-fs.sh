@@ -39,6 +39,7 @@ for type in ext2 ext3 ext4 btrfs xfs nilfs2; do
   # probe the $type file system
   parted -m -s $dev u s print >out 2>&1 || fail=1
   grep '^1:.*:'$type'::;$' out || { cat out; fail=1; }
+  rm $dev
 
 done
 
