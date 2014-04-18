@@ -723,7 +723,7 @@ _parse_header (PedDisk *disk, const GuidPartitionTableHeader_t *gpt,
   GPTDiskData *gpt_disk_data = disk->disk_specific;
   PedSector first_usable;
   PedSector last_usable;
-  PedSector last_usable_if_grown, last_usable_min_default;
+  PedSector last_usable_if_grown;
   static int asked_already;
 
 #ifndef DISCOVER_ONLY
