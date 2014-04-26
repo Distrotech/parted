@@ -29,6 +29,9 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug Fixes
 
+  libparted: fat and ntfs boot sectors were misdetected as dos
+  partition tables instead of being treated as a loop label.
+
   libparted: previously if you chose to ignore the warning about
   the gpt thinking the disk was smaller than it appears to be on
   on disk, subsequent warnings on other disks would be suppressed.

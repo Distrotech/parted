@@ -32,7 +32,7 @@
 
 #define NTFS_SIGNATURE	"NTFS"
 
-static PedGeometry*
+PedGeometry*
 ntfs_probe (PedGeometry* geom)
 {
 	char	*buf = alloca (geom->dev->sector_size);
