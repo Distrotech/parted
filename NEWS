@@ -29,6 +29,9 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug Fixes
 
+  libparted: ped_partition_get_path() was returning "/dev/foo1" instead
+  of "/dev/foo" for loop labels.
+
   partprobe: when called on a disk that has become a loop label,
   remove any partitions left over from a previous label.
 

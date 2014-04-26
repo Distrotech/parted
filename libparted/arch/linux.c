@@ -48,6 +48,7 @@
 #include "../architecture.h"
 #include "dirname.h"
 #include "xstrtol.h"
+#include "xalloc.h"
 
 #if ENABLE_NLS
 #  include <libintl.h>
@@ -2356,6 +2357,9 @@ _device_get_part_path (PedDevice const *dev, int num)
 static char*
 linux_partition_get_path (const PedPartition* part)
 {
+        /* loop label means use the whole disk */
+        if (strcmp (part->disk->type->name, "loop") == 0)
+                return xstrdup (part->disk->dev->path);
         return _device_get_part_path (part->disk->dev, part->num);
 }
 
@@ -2424,6 +2428,8 @@ linux_partition_is_busy (const PedPartition* part)
 
         PED_ASSERT (part != NULL);
 
+        if (strcmp (part->disk->type->name, "loop") == 0)
+                return linux_is_busy (part->disk->dev);
         if (_partition_is_mounted (part))
                 return 1;
         if (part->type == PED_PARTITION_EXTENDED) {
@@ -2546,7 +2552,7 @@ _sysfs_ull_entry_from_part(PedPartition const* part, const char *entry,
                            unsigned long long *val)
 {
         char path[128];
-        char *part_name = linux_partition_get_path(part);
+        char *part_name = _device_get_part_path (part->disk->dev, part->num);
         if (!part_name)
                 return false;
 
@@ -2581,7 +2587,7 @@ _kernel_get_partition_start_and_length(PedPartition const *part,
         PED_ASSERT(start);
         PED_ASSERT(length);
 
-        char *dev_name = linux_partition_get_path (part);
+        char *dev_name = _device_get_part_path (part->disk->dev, part->num);
         if (!dev_name)
                 return false;
 
