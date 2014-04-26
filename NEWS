@@ -29,6 +29,9 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug Fixes
 
+  partprobe: when called on a disk that has become a loop label,
+  remove any partitions left over from a previous label.
+
   libparted: The loop label represents an unpartitioned disk, but creates
   a dummy partition to represent the whole disk.  This dummy partition
   was actually being loaded into the kernel.  Don't do that.

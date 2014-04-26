@@ -106,9 +106,7 @@ process_dev (PedDevice* dev)
 	PedDisk*	disk;
 
 	disk_type = ped_disk_probe (dev);
-	if (disk_type && !strcmp (disk_type->name, "loop"))
-		return 1;
-	else if (!disk_type) {
+	if (!disk_type) {
 		/* Partition table not found, so create dummy,
 		   empty one */
 		disk_type = ped_disk_type_get("msdos");
