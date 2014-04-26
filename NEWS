@@ -29,6 +29,9 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug Fixes
 
+  libparted: fix loop labels to not vanish if you don't create
+  a filesystem, and to not return an error syncing when you do.
+
   libparted: remove all old partitions, even if new label does not allow
   as many.
 
@@ -115,6 +118,9 @@ GNU parted NEWS                                    -*- outline -*-
   range, but exclude 0.
 
 ** Changes in behavior
+
+  When creating a loop label, it automatically comes with a partition
+  using the whole disk.
 
   parted -l no longer lists device-mapper devices other than
   dmraid whole disks.
