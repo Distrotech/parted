@@ -2855,23 +2855,8 @@ _disk_sync_part_table (PedDisk* disk)
                             && start == part->geom.start
                             && length == part->geom.length)
                         {
-                                ok[i - 1] = 1;
-                                continue;
-                        }
-                }
-	}
-        for (i = 1; i <= lpn; i++) {
-                PedPartition *part = ped_disk_get_partition (disk, i);
-                if (part) {
-                        unsigned long long length;
-                        unsigned long long start;
-                        /* get start and length of existing partition */
-                        if (get_partition_start_and_length(part,
-                                                            &start, &length)
-                            && start == part->geom.start
-                            && length == part->geom.length) {
-                                ok[i - 1] = 1;
                                 /* partition is unchanged, so nothing to do */
+                                ok[i - 1] = 1;
                                 continue;
                         }
                 }
@@ -2890,12 +2875,26 @@ _disk_sync_part_table (PedDisk* disk)
                 } while (n_sleep--);
                 if (!ok[i - 1] && errnums[i - 1] == ENXIO)
                         ok[i - 1] = 1; /* it already doesn't exist */
-                if (part && ok[i - 1]) {
-                        /* add the (possibly modified or new) partition */
-                        if (!add_partition (disk, part)) {
-                                ok[i - 1] = 0;
-                                errnums[i - 1] = errno;
-                        }
+	}
+        for (i = 1; i <= lpn; i++) {
+                PedPartition *part = ped_disk_get_partition (disk, i);
+                if (!part)
+                        continue;
+                unsigned long long length;
+                unsigned long long start;
+                /* get start and length of existing partition */
+                if (get_partition_start_and_length(part,
+                                                   &start, &length)
+                    && start == part->geom.start
+                    && length == part->geom.length) {
+                        ok[i - 1] = 1;
+                        /* partition is unchanged, so nothing to do */
+                        continue;
+                }
+                /* add the (possibly modified or new) partition */
+                if (!add_partition (disk, part)) {
+                        ok[i - 1] = 0;
+                        errnums[i - 1] = errno;
                 }
         }
 
