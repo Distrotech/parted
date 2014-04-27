@@ -29,6 +29,10 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug Fixes
 
+  libparted: The loop label represents an unpartitioned disk, but creates
+  a dummy partition to represent the whole disk.  This dummy partition
+  was actually being loaded into the kernel.  Don't do that.
+
   libparted: fix loop labels to not vanish if you don't create
   a filesystem, and to not return an error syncing when you do.
 

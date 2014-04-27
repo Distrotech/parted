@@ -2883,6 +2883,9 @@ _disk_sync_part_table (PedDisk* disk)
                 lpn = PED_MIN(lpn, part_range);
         else
                 lpn = part_range;
+        /* don't actually add partitions for loop */
+        if (strcmp (disk->type->name, "loop") == 0)
+                lpn = 0;
         for (i = 1; i <= lpn; i++) {
                 PedPartition *part = ped_disk_get_partition (disk, i);
                 if (!part)
