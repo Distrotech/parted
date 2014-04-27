@@ -29,6 +29,9 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug Fixes
 
+  libparted: remove all old partitions, even if new label does not allow
+  as many.
+
   libparted: fat and ntfs boot sectors were misdetected as dos
   partition tables instead of being treated as a loop label.
 

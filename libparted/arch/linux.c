@@ -2823,9 +2823,10 @@ _disk_sync_part_table (PedDisk* disk)
                 get_partition_start_and_length = _kernel_get_partition_start_and_length;
         }
 
-        /* lpn = largest partition number. */
+        /* lpn = largest partition number.
+         * for remove pass, use greater of device or label limit */
         if (ped_disk_get_max_supported_partition_count(disk, &lpn))
-                lpn = PED_MIN(lpn, part_range);
+                lpn = PED_MAX(lpn, part_range);
         else
                 lpn = part_range;
 
@@ -2876,6 +2877,12 @@ _disk_sync_part_table (PedDisk* disk)
                 if (!ok[i - 1] && errnums[i - 1] == ENXIO)
                         ok[i - 1] = 1; /* it already doesn't exist */
 	}
+        /* lpn = largest partition number.
+         * for add pass, use lesser of device or label limit */
+        if (ped_disk_get_max_supported_partition_count(disk, &lpn))
+                lpn = PED_MIN(lpn, part_range);
+        else
+                lpn = part_range;
         for (i = 1; i <= lpn; i++) {
                 PedPartition *part = ped_disk_get_partition (disk, i);
                 if (!part)
