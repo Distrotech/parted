@@ -4,6 +4,12 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** New Features
 
+  Add support for EAV DASD partitions, which are ECKD's with more than
+  65520 cylinders.
+
+  Add support for implicit FBA DASD partitions with a single immutable
+  partition.
+
   Added support for recognizing btrfs filesystem. This simply displays
   btrfs in the 'file system' column of the parted output.
 
