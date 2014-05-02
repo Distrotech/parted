@@ -40,6 +40,7 @@ TESTS = \
   t0501-duplicate.sh \
   t1100-busy-label.sh \
   t1101-busy-partition.sh \
+  t1102-loop-label.sh \
   t1104-remove-and-add-partition.sh \
   t1700-probe-fs.sh \
   t2200-dos-label-recog.sh \
