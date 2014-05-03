@@ -170,7 +170,8 @@ loop_write (const PedDisk* disk)
 	/* if there is already a filesystem on the disk, we don't need to write the signature */
 	if (part && part->fs_type)
 		return 1;
-	memset (buf, 0, buflen);
+	if (!ped_device_read (disk->dev, buf, 0, 1))
+		return 0;
 	strcpy (buf, LOOP_SIGNATURE);
 
         return ped_device_write (disk->dev, buf, 0, 1);
