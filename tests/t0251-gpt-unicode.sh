@@ -31,7 +31,7 @@ parted -s $dev mklabel gpt mkpart primary ext2 1MiB 2MiB name 1 $part_name > emp
 compare /dev/null empty || fail=1
 
 # check for expected output
-dd if=$dev bs=1 skip=$(($sector_size_+$sector_size_+58)) count=10 2>/dev/null | od -An -tx1 > out || fail=1
+dd if=$dev bs=1 skip=$(($sector_size_+$sector_size_+56)) count=10 2>/dev/null | od -An -tx1 > out || fail=1
 echo ' 66 00 6f 00 6f 00 24 1d 00 00' >> exp
 compare exp out || fail=1
 

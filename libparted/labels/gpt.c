@@ -819,8 +819,7 @@ _parse_part_entry (PedDisk *disk, GuidPartitionEntry_t *pte)
   gpt_part_data->type = pte->PartitionTypeGuid;
   gpt_part_data->uuid = pte->UniquePartitionGuid;
   for (i = 0; i < 36; i++)
-    gpt_part_data->name[i] =
-      (efi_char16_t) PED_LE16_TO_CPU ((uint16_t) pte->PartitionName[i]);
+    gpt_part_data->name[i] = (efi_char16_t) pte->PartitionName[i];
   gpt_part_data->name[i] = 0;
   gpt_part_data->translated_name = 0;
 
@@ -1237,8 +1236,7 @@ _partition_generate_part_entry (PedPartition *part, GuidPartitionEntry_t *pte)
     pte->Attributes.LegacyBIOSBootable = 1;
 
   for (i = 0; i < 36; i++)
-    pte->PartitionName[i]
-      = (efi_char16_t) PED_CPU_TO_LE16 ((uint16_t) gpt_part_data->name[i]);
+    pte->PartitionName[i] = gpt_part_data->name[i];
 }
 
 static int
@@ -1889,7 +1887,7 @@ gpt_partition_set_name (PedPartition *part, const char *name)
 
   free(gpt_part_data->translated_name);
   gpt_part_data->translated_name = xstrdup(name);
-  iconv_t conv = iconv_open ("UTF-16", nl_langinfo (CODESET));
+  iconv_t conv = iconv_open ("UCS-2LE", nl_langinfo (CODESET));
   if (conv == (iconv_t)-1)
     goto err;
   char *inbuff = gpt_part_data->translated_name;
@@ -1902,8 +1900,8 @@ gpt_partition_set_name (PedPartition *part, const char *name)
   return;
  err:
   ped_exception_throw (PED_EXCEPTION_WARNING,
-		       PED_EXCEPTION_IGNORE,
-		       _("Can not translate partition name"));
+                       PED_EXCEPTION_IGNORE,
+                       _("Can not translate partition name"));
   iconv_close (conv);
 }
 
@@ -1914,23 +1912,23 @@ gpt_partition_get_name (const PedPartition *part)
   if (gpt_part_data->translated_name == NULL)
     {
       char buffer[200];
-      iconv_t conv = iconv_open (nl_langinfo (CODESET), "UTF-16");
+      iconv_t conv = iconv_open (nl_langinfo (CODESET), "UCS-2LE");
       if (conv == (iconv_t)-1)
-	goto err;
+        goto err;
       char *inbuff = (char *)&gpt_part_data->name;
       char *outbuff = buffer;
       size_t inbuffsize = 72;
       size_t outbuffsize = sizeof(buffer);
       if (iconv (conv, &inbuff, &inbuffsize, &outbuff, &outbuffsize) == -1)
-	goto err;
+        goto err;
       iconv_close (conv);
       *outbuff = 0;
       gpt_part_data->translated_name = xstrdup (buffer);
       return gpt_part_data->translated_name;
     err:
       ped_exception_throw (PED_EXCEPTION_WARNING,
-			   PED_EXCEPTION_IGNORE,
-			   _("Can not translate partition name"));
+                           PED_EXCEPTION_IGNORE,
+                           _("Can not translate partition name"));
       iconv_close (conv);
       return "";
     }
