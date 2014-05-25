@@ -423,6 +423,7 @@ GNU Parted provides the following commands:
 * print::
 * quit::
 * rescue::
+* resizepart::
 * rm::
 * select::
 * set::
@@ -742,6 +743,21 @@ Minor    Start       End     Type      Filesystem  Flags
 
 It's back!  :)
 
+@end deffn
+
+@node resizepart
+@subsection resizepart
+@cindex resizepart, command description
+@cindex command description, resizepart
+
+@deffn Command resizepart @var{number} @var{end}
+
+Moves the @var{end} position of partition @var{number}.  Note that this
+does not modify any filesystem present in the partition.  If you wish to
+do this, you will need to use external tools, such as @command{resize2fs}.
+
+When growing a partition you will want to grow the filesystem afterwards,
+but when shrinking, you need to shrink the filesystem before the partition.
 @end deffn
 
 @node rm

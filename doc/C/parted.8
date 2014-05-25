@@ -93,6 +93,10 @@ Rescue a lost partition that was located somewhere between \fIstart\fP and
 \fIend\fP.  If a partition is found, \fBparted\fP will ask if you want to
 create an entry for it in the partition table.
 .TP
+.B resizepart \fIpartition\fP \fIend\fP
+Change the \fIend\fP position of \fIpartition\fP.  Note that this does not
+modify any filesystem present in the partition.
+.TP
 .B rm \fIpartition\fP
 Delete \fIpartition\fP.
 .TP
