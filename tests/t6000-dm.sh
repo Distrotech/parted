@@ -47,6 +47,12 @@ f1=$(pwd)/1; d1=$(loop_setup_ "$f1") \
 f2=$(pwd)/2 && d2=$(loop_setup_ "$f2") || fail=1
 f3=$(pwd)/3 && d3=$(loop_setup_ "$f3") || fail=1
 
+# In the output of parted's print -s command,
+# replace (possibly varying) $dev name with '...'.
+sanitize() {
+  sed 's,^Disk .*: \([0-9][0-9]*\),Disk ...: \1,;s/ *$//' "$@"
+}
+
 # This loop used to include "multipath", but lvm2 changed
 # in such a way that that no longer works with loop devices.
 # FIXME: use two scsi_debug devices instead.
@@ -72,12 +78,12 @@ for type in linear ; do
   compare /dev/null out || fail=1
 
   parted -s "$dev" print > out 2>&1 || fail=1
-  sed 's/ $//' out > k && mv k out || fail=1 # Remove trailing blank.
+  sanitize out > k && mv k out || fail=1
 
   # Create expected output file.
   cat <<EOF >> exp || fail=1
 Model: Linux device-mapper ($type) (dm)
-Disk $dev: 524kB
+Disk ...: 524kB
 Sector size (logical/physical): 512B/512B
 Partition Table: msdos
 Disk Flags:
