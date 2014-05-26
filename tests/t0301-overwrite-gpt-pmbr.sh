@@ -2,7 +2,7 @@
 # Test creating a msdos partition over a GPT partition with
 # fdisk which doesn't remove the GPT partitions, only the PMBR
 
-# Copyright (C) 2009-2013 Free Software Foundation, Inc.
+# Copyright (C) 2009-2014 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

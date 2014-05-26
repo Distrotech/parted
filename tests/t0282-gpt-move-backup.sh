@@ -2,7 +2,7 @@
 # put backup copy gpt in the wrong place, ensure that
 # parted offers to fix
 
-# Copyright (C) 2009-2012 Free Software Foundation, Inc.
+# Copyright (C) 2009-2012, 2014 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

@@ -2,7 +2,7 @@
 # device-mapper: create many partitions
 # This would not create partitions > 16 when using device-mapper
 
-# Copyright (C) 2012 Free Software Foundation, Inc.
+# Copyright (C) 2012, 2014 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

@@ -2,7 +2,7 @@
 # ensure that parted can alter a partition on a dmraid disk
 # while another one is mounted
 
-# Copyright (C) 2008-2013 Free Software Foundation, Inc.
+# Copyright (C) 2008-2014 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

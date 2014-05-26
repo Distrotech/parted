@@ -1,7 +1,7 @@
 #!/bin/sh
 # Confirm that a value between 0 and 1 throws an error
 
-# Copyright (C) 2011-2013 Free Software Foundation, Inc.
+# Copyright (C) 2011-2014 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
