@@ -1896,7 +1896,7 @@ gpt_partition_set_name (PedPartition *part, const char *name)
  err:
   ped_exception_throw (PED_EXCEPTION_WARNING,
                        PED_EXCEPTION_IGNORE,
-                       _("Can not translate partition name"));
+                       _("failed to translate partition name"));
   iconv_close (conv);
 }
 
@@ -1923,7 +1923,7 @@ gpt_partition_get_name (const PedPartition *part)
     err:
       ped_exception_throw (PED_EXCEPTION_WARNING,
                            PED_EXCEPTION_IGNORE,
-                           _("Can not translate partition name"));
+                           _("failed to translate partition name"));
       iconv_close (conv);
       return "";
     }

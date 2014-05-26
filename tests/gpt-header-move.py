@@ -37,4 +37,3 @@ file.seek(512*(altlba-32))
 file.write(backup)
 file.write(gptheader)
 file.write("\0" * (512 * 33))
-

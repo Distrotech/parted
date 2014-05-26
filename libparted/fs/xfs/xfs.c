@@ -38,7 +38,7 @@ xfs_probe (PedGeometry* geom)
 {
 	PedSector	block_size;
 	PedSector	block_count;
-	struct xfs_sb	*sb = (struct xfs_sb *)alloca (geom->dev->sector_size);
+	struct xfs_sb	*sb = alloca (geom->dev->sector_size);
 
 	if (geom->length < XFS_SB_DADDR + 1)
 		return NULL;

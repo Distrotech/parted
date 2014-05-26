@@ -57,8 +57,7 @@ static PedGeometry *reiserfs_probe(PedGeometry *geom)
 	int i;
 
 	PED_ASSERT(geom != NULL);
-	reiserfs_super_block_t *sb =
-		(reiserfs_super_block_t *)alloca (geom->dev->sector_size);
+	reiserfs_super_block_t *sb = alloca (geom->dev->sector_size);
 
 	for (i = 0; reiserfs_super_offset[i] != -1; i++) {
 		if (reiserfs_super_offset[i] >= geom->length)

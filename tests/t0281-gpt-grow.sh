@@ -95,6 +95,6 @@ compare exp out || fail=1
 
 parted -s $dev print > err 2>&1 || fail=1
 grep Warning: err > k ; mv k err
-compare err /dev/null || fail=1
+compare /dev/null err || fail=1
 
 Exit $fail

@@ -37,7 +37,7 @@
 static PedGeometry*
 jfs_probe (PedGeometry* geom)
 {
-	struct superblock *sb = (struct superblock *)alloca (geom->dev->sector_size);
+	struct superblock *sb = alloca (geom->dev->sector_size);
 
 	if (geom->length * geom->dev->sector_size < JFS_SUPER_OFFSET)
 		return NULL;

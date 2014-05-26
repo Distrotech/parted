@@ -34,13 +34,13 @@ Model: Linux scsi_debug (scsi)
 Disk DEVICE: 94.4MB
 Sector size (logical/physical): ${ss}B/${ss}B
 Partition Table: loop
-Disk Flags: 
+Disk Flags:
 
 Number  Start  End     Size    File system  Flags
  1      0.00B  94.4MB  94.4MB  ext2
 
 EOF
-mv out o2 && sed -e "s,$dev,DEVICE,;" o2 > out
+mv out o2 && sed -e "s,$dev,DEVICE,;s/  *$//" o2 > out
 
 compare exp out || fail=1
 parted -s $dev rm 1 || fail=1
