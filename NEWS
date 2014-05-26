@@ -52,7 +52,7 @@ GNU parted NEWS                                    -*- outline -*-
 
   libparted: previously if you chose to ignore the warning about
   the gpt thinking the disk was smaller than it appears to be on
-  on disk, subsequent warnings on other disks would be suppressed.
+  disk, subsequent warnings on other disks would be suppressed.
   Now parted will warn once per disk.
 
   Fix filesystem detection on non 512 byte sector sizes
