@@ -40,7 +40,7 @@ for type in ext2 ext3 ext4 btrfs xfs nilfs2 ntfs vfat hfsplus; do
   esac
 
   # create an $type file system
-  if [ "$type" == "xfs" ]; then
+  if [ "$type" = "xfs" ]; then
       # Work around a problem with s390
       mkfs.xfs -ssize=$ss -dfile,name=$dev,size=${n_sectors}s || fail=1
   else
