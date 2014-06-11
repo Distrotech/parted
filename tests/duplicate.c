@@ -50,7 +50,7 @@ main (int argc, char **argv)
   const PedGeometry *geometry = ped_geometry_new (dev, 34, 1024);
   assert (geometry);
   PedPartition *part = ped_partition_new (disk, part_type, fs_type,
-					  geometry->start, geometry->end);
+                                          geometry->start, geometry->end);
   assert (part);
   PedConstraint *constraint = ped_constraint_exact (geometry);
   assert (constraint);
@@ -64,6 +64,22 @@ main (int argc, char **argv)
   assert (ped_partition_set_system (part, fs_type));
   if (ped_partition_is_flag_available (part, PED_PARTITION_LBA))
     ped_partition_set_flag (part, PED_PARTITION_LBA, 1);
+
+  /* Add a 2nd partition with a name (when supported) */
+  geometry = ped_geometry_new (dev, 1500, 500);
+  assert (geometry);
+  part = ped_partition_new (disk, part_type, fs_type,
+                            geometry->start, geometry->end);
+  assert (part);
+  constraint = ped_constraint_exact (geometry);
+  assert (constraint);
+  assert (ped_disk_add_partition (disk, part, constraint));
+  ped_constraint_destroy (constraint);
+  assert (ped_partition_set_system (part, fs_type));
+  if (ped_partition_is_flag_available (part, PED_PARTITION_LBA))
+    ped_partition_set_flag (part, PED_PARTITION_LBA, 1);
+  if (ped_disk_type_check_feature (part->disk->type, PED_DISK_TYPE_PARTITION_NAME))
+    ped_partition_set_name(part, "foobarbaz");
 
   assert (ped_disk_commit(disk));
 
@@ -114,14 +130,23 @@ main (int argc, char **argv)
 
     /* Check the flags */
     for (PedPartitionFlag flag = PED_PARTITION_FIRST_FLAG;
-	 flag <= PED_PARTITION_LAST_FLAG; flag++) {
+        flag <= PED_PARTITION_LAST_FLAG; flag++)
+    {
       if (!ped_partition_is_flag_available(disk_part, flag))
         continue;
       fprintf (stderr, "Checking partition flag %d\n", flag);
       fprintf (stderr, "%d ? %d\n", ped_partition_get_flag (disk_part, flag),
-	       ped_partition_get_flag (copy_part, flag));
+               ped_partition_get_flag (copy_part, flag));
       assert (ped_partition_get_flag (disk_part, flag)
-	      == ped_partition_get_flag (copy_part, flag));
+              == ped_partition_get_flag (copy_part, flag));
+    }
+
+    /* Check the name, if supported */
+    if (ped_disk_type_check_feature (part->disk->type, PED_DISK_TYPE_PARTITION_NAME))
+    {
+      const char *disk_name = ped_partition_get_name(disk_part);
+      const char *copy_name = ped_partition_get_name(copy_part);
+      assert (strcmp (disk_name, copy_name) == 0);
     }
   }
 
