@@ -1407,9 +1407,11 @@ gpt_partition_duplicate (const PedPartition *part)
     goto error_free_part;
 
   *result_data = *part_data;
-  if (part_data->translated_name)
+  if (part_data->translated_name) {
     result_data->translated_name = xstrdup (part_data->translated_name);
-  else part_data->translated_name = 0;
+  } else {
+    result_data->translated_name = 0;
+  }
   return result;
 
 error_free_part:
