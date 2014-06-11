@@ -17,13 +17,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../parted
+. "${srcdir=.}/init.sh"; path_prepend_ ../parted $srcdir
 require_512_byte_sector_size_
 dev=loop-file
 
 truncate -s 10m $dev || framework_failure
 parted -s $dev mklabel msdos || framework_failure
-python ../msdos-overlap.py $dev || framework_failure
+msdos-overlap $dev || framework_failure
 
 # print the empty table
 parted ---pretend-input-tty $dev <<EOF > out 2>&1 || fail=1

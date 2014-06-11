@@ -85,7 +85,8 @@ TESTS = \
 
 EXTRA_DIST = \
   $(TESTS) t-local.sh t-lvm.sh \
-  init.cfg init.sh t-lib-helpers.sh gpt-header-munge
+  init.cfg init.sh t-lib-helpers.sh gpt-header-munge \
+  gpt-header-move msdos-overlap
 
 check_PROGRAMS = print-align print-max dup-clobber duplicate fs-resize
 fs_resize_LDADD = \

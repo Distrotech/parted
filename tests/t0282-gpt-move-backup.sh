@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../parted
+. "${srcdir=.}/init.sh"; path_prepend_ ../parted $srcdir
 require_512_byte_sector_size_
 dev=loop-file
 
@@ -40,7 +40,7 @@ printf "BYT;\n$dev:${n_sectors}s:file:$sector_size_:$sector_size_:gpt::;\n" \
 compare exp out || fail=1
 
 # move the backup
-python ../gpt-header-move.py $dev || fail=1
+gpt-header-move $dev || fail=1
 
 # printing must warn, but not fix in script mode
 parted -s $dev print > out 2>&1 || fail=1

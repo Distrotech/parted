@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 # open img file, subtract 33 from altlba address, and move the last 33 sectors
 # back by 33 sectors
 
