@@ -36,7 +36,7 @@ scsi_debug_setup_ physblk_exp=3 lowest_aligned=7 num_parts=4 > dev-name ||
 scsi_dev=$(cat dev-name)
 
 # print alignment info
-"$abs_srcdir/print-align" $scsi_dev > out 2>&1 || fail=1
+../print-align $scsi_dev > out 2>&1 || fail=1
 
 compare exp out || fail=1
 
