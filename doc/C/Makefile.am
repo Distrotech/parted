@@ -13,6 +13,7 @@ updatepo:
 	test -w . || exit 0; \
 	for name in $(dist_man8_MANS); do \
 		echo $$name; \
+		test -f po/$$name.pot || touch po/$$name.pot; \
 		cp po/$$name.pot po/$$name.new.pot; \
 		po4a-updatepo -f man -m $$name -p po/$$name.new.pot; \
 		diff -I '^\"POT-Creation-Date: ' po/$$name.pot po/$$name.new.pot 2>&1 > /dev/null; \
