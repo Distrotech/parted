@@ -22,7 +22,7 @@ dev=loop-file
 # create zeroed device
 truncate -s 10m $dev || fail=1
 
-export LC_ALL=en_US.UTF-8
+export LC_ALL=C.UTF-8
 # create gpt label with named partition
 part_name=$(printf 'foo\341\264\244')
 parted -s $dev mklabel gpt mkpart primary ext2 1MiB 2MiB name 1 $part_name > empty 2>&1 || fail=1
