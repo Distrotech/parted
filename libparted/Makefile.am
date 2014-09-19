@@ -58,6 +58,7 @@ libparted_la_LIBADD =	\
   $(DM_LIBS)		\
   $(SELINUX_LIBS)	\
   $(LIB_BLKID)		\
+  $(UUID_LIBS)		\
   $(INTLLIBS)
 
 EXTRA_DIST	      = mbr.s
