@@ -20,7 +20,13 @@ require_acl_()
 require_hfs_()
 {
   mkfs.hfs 2>&1 | grep '^usage:' \
-    || skip_ "This test requires HFS support."
+    || skip_ "mkfs.hfs: command not found"
+}
+
+require_fat_()
+{
+  mkfs.vfat 2>&1 | grep '^Usage:' \
+    || skip_ "mkfs.vfat: command not found"
 }
 
 # Skip this test if we're not in SELinux "enforcing" mode.

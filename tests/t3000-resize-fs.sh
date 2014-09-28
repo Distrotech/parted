@@ -18,7 +18,7 @@
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../parted .
 require_hfs_
-
+require_fat_
 require_root_
 require_scsi_debug_module_
 require_512_byte_sector_size_
@@ -31,7 +31,7 @@ default_end=546147s
 
 # create memory-backed device
 scsi_debug_setup_ dev_size_mb=550 > dev-name ||
-  skip_test_ 'failed to create scsi_debug device'
+  skip_ 'failed to create scsi_debug device'
 dev=$(cat dev-name)
 
 fail=0
@@ -47,6 +47,7 @@ device_sectors_required=$(echo $default_end | sed 's/s$//')
 test $device_sectors_required -le $dev_n_sectors || fail=1
 
 for fs_type in hfs+ fat32 fat16; do
+  echo "fs_type=$fs_type"
 
   # create an empty $fs_type partition, cylinder aligned, size > 256 MB
   parted -a min -s $dev mkpart p1 $start $default_end > out 2>&1 || fail=1
