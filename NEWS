@@ -2,6 +2,10 @@ GNU parted NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug Fixes
+
+  libparted-fs-resize: Prevent crash resizing FAT16 file systems.
+
 
 * Noteworthy changes in release 3.2 (2014-07-28) [stable]
 
