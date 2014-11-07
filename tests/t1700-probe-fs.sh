@@ -21,7 +21,7 @@ require_512_byte_sector_size_
 
 dev=loop-file
 ss=$sector_size_
-n_sectors=$((257*1024))
+n_sectors=$((512*1024))
 
 for type in ext2 ext3 ext4 btrfs xfs nilfs2 ntfs vfat hfsplus; do
 
