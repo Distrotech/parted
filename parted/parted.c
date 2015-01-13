@@ -1684,7 +1684,7 @@ do_disk_set (PedDevice** dev, PedDisk** diskp)
 
     if (!*diskp)
             *diskp = ped_disk_new (*dev);
-    if (!diskp)
+    if (!*diskp)
         goto error;
 
     if (!command_line_get_disk_flag (_("Flag to Invert?"), *diskp, &flag))

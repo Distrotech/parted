@@ -4,6 +4,8 @@ GNU parted NEWS                                    -*- outline -*-
 
 ** Bug Fixes
 
+  Don't crash in the disk_set command when a disk label is not found
+
   libparted-fs-resize: Prevent crash resizing FAT16 file systems.
 
 
