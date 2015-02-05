@@ -69,6 +69,7 @@ TESTS = \
   t6003-dm-hide.sh \
   t6004-dm-many-partitions.sh \
   t6005-dm-uuid.sh \
+  t6006-dm-512b-sectors.sh \
   t6100-mdraid-partitions.sh \
   t7000-scripting.sh \
   t8000-loop.sh \
