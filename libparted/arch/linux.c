@@ -2763,6 +2763,12 @@ _dm_get_partition_start_and_length(PedPartition const *part,
         if (sscanf (params, "%d:%d %Ld", &major, &minor, start) != 3)
                 goto err;
         rc = 1;
+
+        /* device-mapper uses 512b units, make sure we return length and start in terms of the device's
+         * sector size.
+         */
+        *start /= (part->disk->dev->sector_size / PED_SECTOR_SIZE_DEFAULT);
+        *length /= (part->disk->dev->sector_size / PED_SECTOR_SIZE_DEFAULT);
 err:
         free (path);
         dm_task_destroy(task);
@@ -2810,8 +2816,10 @@ _dm_add_partition (PedDisk* disk, const PedPartition* part)
         /* Caution: dm_task_destroy frees dev_name.  */
         dm_task_destroy (task);
         task = NULL;
+        /* device-mapper uses 512b units, not the device's sector size */
         if ( ! (params = zasprintf ("%d:%d %lld", arch_specific->major,
-                                    arch_specific->minor, part->geom.start)))
+                                    arch_specific->minor,
+                                    part->geom.start * (disk->dev->sector_size / PED_SECTOR_SIZE_DEFAULT))))
                 goto err;
 
         task = dm_task_create (DM_DEVICE_CREATE);
@@ -2821,7 +2829,8 @@ _dm_add_partition (PedDisk* disk, const PedPartition* part)
         dm_task_set_name (task, vol_name);
         if (vol_uuid)
                 dm_task_set_uuid (task, vol_uuid);
-        dm_task_add_target (task, 0, part->geom.length,
+        /* device-mapper uses 512b units, not the device's sector size */
+        dm_task_add_target (task, 0, part->geom.length * (disk->dev->sector_size / PED_SECTOR_SIZE_DEFAULT),
                 "linear", params);
         if (!dm_task_set_cookie (task, &cookie, 0))
                 goto err;
@@ -2878,8 +2887,11 @@ _dm_resize_partition (PedDisk* disk, const PedPartition* part)
         /* Caution: dm_task_destroy frees dev_name.  */
         dm_task_destroy (task);
         task = NULL;
+
+        /* device-mapper uses 512b units, not the device's sector size */
         if ( ! (params = zasprintf ("%d:%d %lld", arch_specific->major,
-                                    arch_specific->minor, part->geom.start)))
+                                    arch_specific->minor,
+                                    part->geom.start * (disk->dev->sector_size / PED_SECTOR_SIZE_DEFAULT))))
                 goto err;
 
         task = dm_task_create (DM_DEVICE_RELOAD);
@@ -2887,7 +2899,8 @@ _dm_resize_partition (PedDisk* disk, const PedPartition* part)
                 goto err;
 
         dm_task_set_name (task, vol_name);
-        dm_task_add_target (task, 0, part->geom.length,
+        /* device-mapper uses 512b units, not the device's sector size */
+        dm_task_add_target (task, 0, part->geom.length * (disk->dev->sector_size / PED_SECTOR_SIZE_DEFAULT),
                 "linear", params);
         if (!dm_task_set_cookie (task, &cookie, 0))
                 goto err;
