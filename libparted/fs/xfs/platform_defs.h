@@ -38,6 +38,7 @@
 #include <stdarg.h>
 #include <assert.h>
 #include <endian.h>
+#include <fcntl.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
