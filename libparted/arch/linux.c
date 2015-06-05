@@ -2557,7 +2557,10 @@ static int _blkpg_resize_partition (PedDisk* disk, const PedPartition *part)
                                 if (walk->geom.start == part->geom.start+1)
                                         linux_part.length = 1;
                         }
-                } else linux_part.length = 1;
+                } else {
+                        linux_part.length = 1;
+                }
+                linux_part.length *= disk->dev->sector_size;
         }
         else
                 linux_part.length = part->geom.length * disk->dev->sector_size;
