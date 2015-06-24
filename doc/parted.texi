@@ -594,7 +594,7 @@ Cheap flash drives will be with us for a long time to
 come, and, for them, 1MiB alignment is not enough.
 Use at least 4MiB-aligned partitions.
 For details, see Arnd Bergman's article,
-@uref{http://http://lwn.net/Articles/428584/} and its many comments.}.
+@uref{http://lwn.net/Articles/428584/} and its many comments.}.
 This command creates a tiny place-holder partition at the beginning, and
 then uses all remaining space to create the partition you'll actually use:
 
