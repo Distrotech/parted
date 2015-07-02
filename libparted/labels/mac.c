@@ -930,8 +930,8 @@ _generate_raw_part (PedDisk* disk, PedPartition* part,
 		= PED_CPU_TO_BE32 (mac_disk_data->last_part_entry_num);
 	part_map_entry->start_block = PED_CPU_TO_BE32 (part->geom.start);
 	part_map_entry->block_count = PED_CPU_TO_BE32 (part->geom.length);
-	strcpy (part_map_entry->name, mac_part_data->volume_name);
-	strcpy (part_map_entry->type, mac_part_data->system_name);
+	strncpy (part_map_entry->name, mac_part_data->volume_name, 32);
+	strncpy (part_map_entry->type, mac_part_data->system_name, 32);
 
 	if (mac_part_data->is_driver) {
 		mac_part_data->boot_region_length = part->geom.length;
