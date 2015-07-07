@@ -478,12 +478,7 @@ Nearly every significant change must be accompanied by a test suite
 addition that exercises it.  If you fix a bug, add at least one test that
 fails without the patch, but that succeeds once your patch is applied.
 If you add a feature, add tests to exercise as much of the new code
-as possible. Note to run tests/new-test in isolation you can do:
-
-  (cd tests && make check TESTS=new-test VERBOSE=yes)
-
-There are many tests in the tests/ directories.  Use one of the
-init.sh-using scripts as a template.
+as possible.
 
 If writing tests is not your thing, don't worry too much about it,
 but do provide scenarios, input/output pairs, or whatever, along with
@@ -491,6 +486,34 @@ examples of running the tool to demonstrate the new or changed feature,
 and someone else will massage that into a test (writing portable tests
 can be a challenge).
 
+Executing the tests
+===================
+
+All test cases can be executed by running the command:
+
+    make check
+
+To run individual tests in isolation you can do:
+
+    cd tests/
+    make check TESTS=new-test VERBOSE=yes
+
+Writing new tests
+=================
+
+parted's test suite consists of shell scripts and C programs exercising
+specific parted functionality. There are also a few helper scripts written
+in Python and Perl.
+
+To write a new test use one of the init.sh-using scripts as a template and
+update the Makefile.am file. Shell test scripts are listed in the TESTS
+variable and the C programs in the check_PROGRAMS variable. The EXTRA_DIST
+variable lists the remaining helper scripts.
+
+libparted's tests are under the libparted/tests/ directory. They are written
+in C using the check test framework <http://check.sourceforge.net/> and
+executed from shell scripts. Don't forget to add new tests in Makefile.am.
+See the TESTS, check_PROGRAMS and xxxx_SOURCES variables.
 
 Copyright assignment
 ====================
