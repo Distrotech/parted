@@ -829,8 +829,11 @@ command_line_prompt_words (const char* prompt, const char* def,
         }
 
         if (opt_script_mode) {
-                if (_def)
+                if (_def) {
                         command_line_push_line (_def, 0);
+                        if (_def_needs_free)
+                                free (_def);
+                }
                 return;
         }
 
@@ -938,6 +941,7 @@ command_line_get_sector (const char* prompt, PedDevice* dev, PedSector* value,
                 if (range) {
                         *range = ped_geometry_new (dev, *value, 1);
                         free (def_str);
+                        free (input);
                         return *range != NULL;
                 }
 
