@@ -305,7 +305,7 @@ fat_create (PedGeometry* geom, FatType fat_type, PedTimer* timer)
 		memset (fs_info->buffer, 0, fs_info->cluster_size);
 		if (!fat_write_cluster (fs, fs_info->buffer,
 					fs_info->root_cluster))
-			return 0;
+			goto error_free_buffers;
 	}
 
 	fs_info->serial_number = generate_random_uint32 ();

@@ -2665,6 +2665,7 @@ _kernel_get_partition_start_and_length(PedPartition const *part,
                 int dev_fd = open (dev_name, O_RDONLY);
                 if (dev_fd != -1 && ioctl (dev_fd, HDIO_GETGEO, &geom)) {
                         *start = geom.start;
+                        close (dev_fd);
                         ok = true;
                 } else {
                         if (dev_fd != -1)
