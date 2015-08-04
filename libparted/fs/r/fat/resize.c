@@ -177,10 +177,13 @@ fat_convert_directory (FatOpContext* ctx, FatTraverseInfo* old_trav,
 				&& old_dir_entry->name [0] != '.') {
 			sub_old_dir_trav
 			    = fat_traverse_directory (old_trav, old_dir_entry);
+			if (!sub_old_dir_trav) return 0;
 			sub_new_dir_trav
 			    = fat_traverse_directory (new_trav, new_dir_entry);
-			if (!sub_old_dir_trav || !sub_new_dir_trav)
+			if (!sub_new_dir_trav) {
+				fat_traverse_complete (sub_old_dir_trav);
 				return 0;
+			}
 
 			if (!fat_convert_directory (ctx, sub_old_dir_trav,
 						    sub_new_dir_trav))
@@ -315,17 +318,21 @@ fat_construct_converted_tree (FatOpContext* ctx)
 	if (new_fs_info->fat_type == FAT_TYPE_FAT32) {
 		new_trav_info = fat_traverse_begin (ctx->new_fs,
 					    new_fs_info->root_cluster, "\\");
+		if (!new_trav_info) return 0;
 		old_trav_info = fat_traverse_begin (ctx->old_fs, FAT_ROOT,
 						    "\\");
 	} else {
 		fat_clear_root_dir (ctx->new_fs);
 		new_trav_info = fat_traverse_begin (ctx->new_fs, FAT_ROOT,
 						    "\\");
+		if (!new_trav_info) return 0;
 		old_trav_info = fat_traverse_begin (ctx->old_fs,
 					    old_fs_info->root_cluster, "\\");
 	}
-	if (!new_trav_info || !old_trav_info)
+	if (!old_trav_info) {
+		fat_traverse_complete (new_trav_info);
 		return 0;
+	}
 	if (!fat_convert_directory (ctx, old_trav_info, new_trav_info))
 		return 0;
 	return 1;
