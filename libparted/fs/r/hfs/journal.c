@@ -257,7 +257,7 @@ hfsj_replay_journal(PedFileSystem* fs)
 			PED_EXCEPTION_NO_FEATURE,
 			PED_EXCEPTION_CANCEL,
 			_("Journal stored outside of the volume are "
-			  "not supported.  Try to desactivate the "
+			  "not supported.  Try to deactivate the "
 			  "journal and run Parted again."));
 		return 0;
 	}
