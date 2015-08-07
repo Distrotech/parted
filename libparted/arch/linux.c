@@ -2235,9 +2235,9 @@ _probe_sys_block ()
 
 		strcpy (dev_name, "/dev/");
 		strcat (dev_name, dirent->d_name);
-		/* in /sys/block, '/'s are replaced with '!' or '.' */
+		/* in /sys/block, '/'s are replaced with '!' */
 		for (ptr = dev_name; *ptr != '\0'; ptr++) {
-			if (*ptr == '!' || *ptr == '.')
+			if (*ptr == '!')
 				*ptr = '/';
 		}
 		_ped_device_probe (dev_name);
