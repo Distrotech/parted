@@ -49,10 +49,8 @@ parted -m -a min -s /dev/mapper/$dm_name mklabel gpt $cmd > /dev/null 2>&1 || fa
 
 # Make sure all the partitions appeared under /dev/mapper/
 for ((i=1; i<=$n_partitions; i+=1)); do
-    if [ ! -e "/dev/mapper/${dm_name}p$i" ]; then
-        fail=1
-        break
-    fi
+    wait_for_dev_to_appear_ "/dev/mapper/${dm_name}p$i" || { fail=1; break; }
+
     # remove the partitions as we go, otherwise cleanup won't work.
     dmsetup remove /dev/mapper/${dm_name}p$i
 done

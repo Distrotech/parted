@@ -27,22 +27,16 @@ dev=$(cat dev-name)
 
 parted -s "$dev" mklabel msdos mkpart primary fat32 1 40 > out 2>&1 || fail=1
 compare /dev/null out || fail=1
-mkfs.vfat ${dev}1 || skip_ "mkfs.vfat failed"
+wait_for_dev_to_appear_ ${dev}1 || fail=1
+mkfs.vfat ${dev}1 || fail=1
 
 mount_point="`pwd`/mnt"
 
 # Be sure to unmount upon interrupt, failure, etc.
 cleanup_fn_() { umount "${dev}1" > /dev/null 2>&1; }
 
-# There's a race condition here: on udev-based systems, the partition#1
-# device, ${dev}1 (i.e., /dev/sdd1) is not created immediately, and
-# without some delay, this mount command would fail.  Using a flash card
-# as $dev, the loop below typically iterates 7-20 times.
-
 # create mount point dir. and mount the just-created partition on it
 mkdir $mount_point || fail=1
-i=0; while :; do test -e "${dev}1" && break; test $i = 90 && break;
-  i=$(expr $i + 1); done;
 mount "${dev}1" $mount_point || fail=1
 
 # now that a partition is mounted, mklabel attempt must fail

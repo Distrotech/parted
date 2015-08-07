@@ -44,15 +44,9 @@ mv out o2 && sed -e "s,$dev,DEVICE,;s/  *$//" o2 > out
 
 compare exp out || fail=1
 parted -s $dev rm 1 || fail=1
-if [ -e ${dev}1 ]; then
-    echo "Partition should not exist on loop device"
-    fail=1
-fi
+wait_for_dev_to_disappear_ ${dev}1 2 || fail=1
 partprobe $dev || fail=1
-if [ -e ${dev}1 ]; then
-    echo "Partition should not exist on loop device"
-    fail=1
-fi
+wait_for_dev_to_disappear_ ${dev}1 2 || fail=1
 
 mount_point="`pwd`/mnt"
 
@@ -80,24 +74,15 @@ umount "$mount_point"
 
 # make sure partprobe cleans up stale partition devices
 parted -s $dev mklabel msdos mkpart primary ext2 0% 100% || fail=1
-if [ ! -e ${dev}1 ]; then
-    echo "Partition doesn't exist on loop device"
-    fail=1
-fi
+wait_for_dev_to_appear_ ${dev}1 || fail=1
 
 mke2fs -F $dev
 partprobe $dev || fail=1
-if [ -e ${dev}1 ]; then
-    echo "Partition should not exist on loop device"
-    fail=1
-fi
+wait_for_dev_to_disappear_ ${dev}1 2 || fail=1
 
 # make sure new loop label removes old partitions > 1
 parted -s $dev mklabel msdos mkpart primary ext2 0% 50% mkpart primary ext2 50% 100% || fail=1
 parted -s $dev mklabel loop || fail=1
-if [ -e ${dev}2 ]; then
-    echo "Partition 2 not removed"
-    fail=1
-fi
+wait_for_dev_to_disappear_ ${dev}2 2 || fail=1
 
 Exit $fail

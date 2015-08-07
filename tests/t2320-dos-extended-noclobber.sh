@@ -32,6 +32,7 @@ scsi_dev=$(cat dev-name)
 parted -s $scsi_dev mklabel msdos || fail=1
 parted -s $scsi_dev mkpart extended 1 5 > out 2>&1 || fail=1
 parted -s $scsi_dev mkpart primary 5 10 > out 2>&1 || fail=1
+wait_for_dev_to_appear_ ${scsi_dev}1 || fail=1
 
 # Make sure the size of the extended partition is correct.
 # 2 sectors for 512b and 1 sector for larger. /sys/.../size is in

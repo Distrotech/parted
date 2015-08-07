@@ -72,7 +72,7 @@ wait_for_dev_to_appear_ ${scsi_dev}16 || fail_ ${scsi_dev}16 did not appear
 
 partitions="${scsi_dev}14 ${scsi_dev}15 ${scsi_dev}16"
 for i in $partitions; do
-  mkfs.ext3 $i || skip_ mkfs.ext3 $i failed
+  mkfs.ext3 $i || fail=1
 done
 
 # be sure to unmount upon interrupt, failure, etc.

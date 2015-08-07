@@ -54,13 +54,14 @@ parted -s $md_dev mklabel gpt \
 compare /dev/null out || fail=1
 
 # Verify that kernel has been informed about the second device.
-grep "${md_name}p2" /proc/partitions || { fail=1; cat /proc/partitions; }
+wait_for_dev_to_appear_ ${md_dev}p2 || { fail=1; cat /proc/partitions; }
 
 # Remove partitions from the raid device.
 parted -s $md_dev rm 2 rm 1 > out 2>&1 || fail=1
 compare /dev/null out || fail=1
 
 # Verify that kernel has been informed about those removals.
-grep "${md_name}p[12]" /proc/partitions && { fail=1; cat /proc/partitions; }
+wait_for_dev_to_disappear_ ${md_dev}p1 2 || { fail=1; cat /proc/partitions; }
+wait_for_dev_to_disappear_ ${md_dev}p2 2 || { fail=1; cat /proc/partitions; }
 
 Exit $fail

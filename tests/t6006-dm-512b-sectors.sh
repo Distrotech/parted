@@ -60,6 +60,7 @@ dev="/dev/mapper/$linear_"
 # Create msdos partition table with a partition from 1MiB to 100MiB
 parted -s $dev mklabel msdos mkpart primary ext2 1MiB 101MiB > out 2>&1 || fail=1
 compare /dev/null out || fail=1
+wait_for_dev_to_appear_ ${dev}1 || fail=1
 
 # The size of the partition should be 100MiB, or 204800 512b sectors
 p1_size=$(blockdev --getsz ${dev}1) || framework_failure
