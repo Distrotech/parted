@@ -785,9 +785,13 @@ _device_set_sector_size (PedDevice* dev)
 #endif
 
 #if defined __s390__ || defined __s390x__
+        /* The real_sector_size is currently needed for DASD layouts,
+         * so we set it unconditionally. In the long run it should
+         * be considered to use the dev->phys_sector_size in label/dasd.c.
+         */
+        arch_specific->real_sector_size = dev->sector_size;
         /* Return PED_SECTOR_SIZE_DEFAULT for DASDs. */
         if (dev->type == PED_DEVICE_DASD) {
-                arch_specific->real_sector_size = dev->sector_size;
                 dev->sector_size = PED_SECTOR_SIZE_DEFAULT;
         }
 #endif
@@ -3167,18 +3171,71 @@ linux_disk_commit (PedDisk* disk)
 {
         if (disk->dev->type != PED_DEVICE_FILE) {
 
-		/* We now require BLKPG support.  If this assertion fails,
-		   please write to the mailing list describing your system.
-		   Assuming it's never triggered, ...
-		   FIXME: remove this assertion in 2012.  */
-		assert (_have_blkpg ());
+                /* We now require BLKPG support.  If this assertion fails,
+                   please write to the mailing list describing your system.
+                   Assuming it's never triggered, ...
+                   FIXME: remove this assertion in 2012.  */
+                assert (_have_blkpg ());
 
-		if (!_disk_sync_part_table (disk))
-			return 0;
+                if (!_disk_sync_part_table (disk))
+                        return 0;
         }
 
         return 1;
 }
+
+#if defined __s390__ || defined __s390x__
+/**
+ * Check whether this device could be a DASD
+ *
+ * The device probing yields PED_DEVICE_DASD for native DASD transport
+ * If the block device uses a different transport (e.g. virtio)
+ * a simplified heuristic (assuming a model 3390 with 4K sectors)
+ * is applied (only) on s390x systems for this check.
+ *
+ * \return 1 if the geometry indicates this could be a DASD
+ *         and 0 otherwise
+ */
+static int
+_ped_device_like_dasd(const PedDevice *dev)
+{
+        return (dev->type == PED_DEVICE_DASD)
+          || (dev->hw_geom.heads == 15
+              && dev->hw_geom.sectors == 12
+              && (dev->hw_geom.cylinders
+                  * dev->hw_geom.heads
+                  * dev->hw_geom.sectors
+                  * dev->phys_sector_size
+                  == dev->length * dev->sector_size));
+}
+
+
+
+static PedAlignment*
+s390_get_minimum_alignment(const PedDevice *dev)
+{
+#if USE_BLKID
+        return linux_get_minimum_alignment(dev);
+#else
+        return ped_alignment_new(0,
+                                 dev->phys_sector_size
+                                 / dev->sector_size);
+#endif
+}
+
+static PedAlignment*
+s390_get_optimum_alignment(const PedDevice *dev)
+{
+        /* DASD needs to use minimum alignment */
+        if (_ped_device_like_dasd(dev))
+                return s390_get_minimum_alignment(dev);
+#if USE_BLKID
+        return linux_get_optimum_alignment(dev);
+#else
+        return NULL;
+#endif
+}
+#endif
 
 #if USE_BLKID
 static PedAlignment*
@@ -3220,15 +3277,10 @@ linux_get_optimum_alignment(const PedDevice *dev)
 		&& PED_DEFAULT_ALIGNMENT % optimal_io == 0)
 	    || (!optimal_io && minimum_io
 		&& PED_DEFAULT_ALIGNMENT % minimum_io == 0)
-           ) {
-            /* DASD needs to use minimum alignment */
-            if (dev->type == PED_DEVICE_DASD)
-                return linux_get_minimum_alignment(dev);
-
+           )
             return ped_alignment_new(
                     blkid_topology_get_alignment_offset(tp) / dev->sector_size,
                     PED_DEFAULT_ALIGNMENT / dev->sector_size);
-        }
 
         /* If optimal_io_size is 0 and we don't meet the other criteria
            for using the device.c default, return the minimum alignment. */
@@ -3255,7 +3307,10 @@ static PedDeviceArchOps linux_dev_ops = {
         sync:           linux_sync,
         sync_fast:      linux_sync_fast,
         probe_all:      linux_probe_all,
-#if USE_BLKID
+#if defined __s390__ || defined __s390x__
+        get_minimum_alignment:	s390_get_minimum_alignment,
+        get_optimum_alignment:	s390_get_optimum_alignment,
+#elif USE_BLKID
         get_minimum_alignment:	linux_get_minimum_alignment,
         get_optimum_alignment:	linux_get_optimum_alignment,
 #endif

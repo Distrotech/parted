@@ -550,16 +550,10 @@ ped_device_get_optimum_alignment(const PedDevice *dev)
         /* If the arch specific code could not give as an alignment
            return a default value based on the type of device. */
         if (align == NULL) {
-                switch (dev->type) {
-                case PED_DEVICE_DASD:
-                        align = ped_device_get_minimum_alignment(dev);
-                        break;
-                default:
-                        /* Align to a grain of 1MiB (like vista / win7) */
-                        align = ped_alignment_new(0,
-                                                  (PED_DEFAULT_ALIGNMENT
-						   / dev->sector_size));
-                }
+                /* Align to a grain of 1MiB (like vista / win7) */
+                align = ped_alignment_new(0,
+                                          (PED_DEFAULT_ALIGNMENT
+                                           / dev->sector_size));
         }
 
         return align;

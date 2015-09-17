@@ -214,19 +214,13 @@ dasd_probe (const PedDevice *dev)
 
 	PED_ASSERT(dev != NULL);
 
-	if (!(dev->type == PED_DEVICE_DASD
-              || dev->type == PED_DEVICE_VIODASD
-              || dev->type == PED_DEVICE_FILE))
-		return 0;
-
 	arch_specific = LINUX_SPECIFIC(dev);
 
 	/* add partition test here */
 	fdasd_initialize_anchor(&anchor);
 
-	fdasd_get_geometry(dev, &anchor, arch_specific->fd);
-
-	fdasd_check_api_version(&anchor, arch_specific->fd);
+	if (fdasd_get_geometry(dev, &anchor, arch_specific->fd) == 0)
+                goto error_cleanup;
 
 	/* Labels are required on CDL formatted DASDs. */
 	if (fdasd_check_volume(&anchor, arch_specific->fd) &&
@@ -276,7 +270,9 @@ dasd_read (PedDisk* disk)
 
 	fdasd_initialize_anchor(&anchor);
 
-	fdasd_get_geometry(disk->dev, &anchor, arch_specific->fd);
+	if (fdasd_get_geometry(disk->dev, &anchor, arch_specific->fd) == 0)
+                goto error_close_dev;
+
 	disk_specific->label_block = anchor.label_block;
 
 	if ((anchor.geo.cylinders * anchor.geo.heads) > BIG_DISK_SIZE)
@@ -630,7 +626,9 @@ dasd_write (const PedDisk* disk)
 
 	/* initialize the anchor */
 	fdasd_initialize_anchor(&anchor);
-	fdasd_get_geometry(disk->dev, &anchor, arch_specific->fd);
+	if (fdasd_get_geometry(disk->dev, &anchor, arch_specific->fd) == 0)
+                goto error;
+
 	fdasd_check_volume(&anchor, arch_specific->fd);
 	memcpy(anchor.vlabel, &disk_specific->vlabel, sizeof(volume_label_t));
 	anchor.vlabel_changed++;
