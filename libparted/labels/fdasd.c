@@ -210,27 +210,7 @@ fdasd_initialize_anchor (fdasd_anchor_t * anc)
 	partition_info_t *p = NULL;
 	partition_info_t *q = NULL;
 
-	anc->devno             = 0;
-	anc->dev_type          = 0;
-	anc->used_partitions   = 0;
-
-	anc->silent            = 0;
-	anc->verbose           = 0;
-	anc->big_disk          = 0;
-	anc->volid_specified   = 0;
-	anc->config_specified  = 0;
-	anc->auto_partition    = 0;
-	anc->devname_specified = 0;
-	anc->print_table       = 0;
-
-	anc->option_reuse      = 0;
-	anc->option_recreate   = 0;
-
-	anc->vlabel_changed    = 0;
-	anc->vtoc_changed      = 0;
-	anc->blksize           = 0;
-	anc->fspace_trk        = 0;
-	anc->label_pos         = 0;
+	bzero(anc, sizeof(fdasd_anchor_t));
 
 	for (i=0; i<USABLE_PARTITIONS; i++)
 		setpos(anc, i, -1);
@@ -272,24 +252,18 @@ fdasd_initialize_anchor (fdasd_anchor_t * anc)
 		if (p == NULL)
 			fdasd_error(anc, malloc_failed,
 				    _("No room for partition info."));
-		p->used       = 0x00;
-		p->len_trk    = 0;
-		p->start_trk  = 0;
-		p->fspace_trk = 0;
-		p->type       = 0;
+		bzero(p, sizeof(partition_info_t));
 
 		/* add p to double pointered list */
 		if (i == 1) {
-	        anc->first = p;
-			p->prev = NULL;
+		        anc->first = p;
 		} else if (i == USABLE_PARTITIONS) {
-	        anc->last = p;
-	        p->next = NULL;
+		        anc->last = p;
 			p->prev = q;
 			q->next = p;
 		} else {
-	        p->prev = q;
-	        q->next = p;
+	                p->prev = q;
+	                q->next = p;
 		}
 
 		p->f1 = malloc(sizeof(format1_label_t));
@@ -947,15 +921,77 @@ fdasd_check_api_version (fdasd_anchor_t *anc, int f)
 }
 
 /*
+ * The following two functions match those in the DASD ECKD device driver.
+ * They are used to compute how many records of a given size can be stored
+ * in one track.
+ */
+static unsigned int ceil_quot(unsigned int d1, unsigned int d2)
+{
+	return (d1 + (d2 - 1)) / d2;
+}
+
+/* kl: key length, dl: data length */
+static unsigned int recs_per_track(unsigned short dev_type, unsigned int kl,
+				   unsigned int dl)
+{
+	unsigned int dn, kn;
+
+	switch (dev_type) {
+	case DASD_3380_TYPE:
+		if (kl)
+			return 1499 / (15 + 7 + ceil_quot(kl + 12, 32) +
+				       ceil_quot(dl + 12, 32));
+		else
+			return 1499 / (15 + ceil_quot(dl + 12, 32));
+	case DASD_3390_TYPE:
+		dn = ceil_quot(dl + 6, 232) + 1;
+		if (kl) {
+			kn = ceil_quot(kl + 6, 232) + 1;
+			return 1729 / (10 + 9 + ceil_quot(kl + 6 * kn, 34) +
+				       9 + ceil_quot(dl + 6 * dn, 34));
+		} else
+			return 1729 / (10 + 9 + ceil_quot(dl + 6 * dn, 34));
+	case DASD_9345_TYPE:
+		dn = ceil_quot(dl + 6, 232) + 1;
+		if (kl) {
+			kn = ceil_quot(kl + 6, 232) + 1;
+			return 1420 / (18 + 7 + ceil_quot(kl + 6 * kn, 34) +
+				       ceil_quot(dl + 6 * dn, 34));
+		} else
+			return 1420 / (18 + 7 + ceil_quot(dl + 6 * dn, 34));
+	}
+	return 0;
+}
+
+/*
+ * Verify that number of tracks (heads) per cylinder and number of
+ * sectors per track match the expected values for a given device type
+ * and block size.
+ * Returns 1 for a valid match and 0 otherwise.
+ */
+static int fdasd_verify_geometry(unsigned short dev_type, int blksize,
+				 struct fdasd_hd_geometry *geometry)
+{
+	unsigned int expected_sectors;
+	if (geometry->heads != 15)
+		return 0;
+	expected_sectors = recs_per_track(dev_type, 0, blksize);
+	if (geometry->sectors == expected_sectors)
+		return 1;
+	return 0;
+}
+
+/*
  * reads dasd geometry data
  */
-void
+int
 fdasd_get_geometry (const PedDevice *dev, fdasd_anchor_t *anc, int f)
 {
 	PDEBUG
 	int blksize = 0;
 	dasd_information_t dasd_info;
 	struct dasd_eckd_characteristics *characteristics;
+	unsigned long long size_in_bytes;
 
 	/* We can't get geometry from a regular file,
 	   so simulate something usable, for the sake of testing.  */
@@ -979,6 +1015,12 @@ fdasd_get_geometry (const PedDevice *dev, fdasd_anchor_t *anc, int f)
 				anc->geo.heads;
 	    anc->is_file = 1;
 	} else {
+	        if (ioctl(f, BLKGETSIZE64, &size_in_bytes) != 0) {
+		        fdasd_error(anc, unable_to_ioctl,
+				    _("Could not retrieve disk size."));
+			goto error;
+		}
+
 		if (ioctl(f, HDIO_GETGEO, &anc->geo) != 0)
 			fdasd_error(anc, unable_to_ioctl,
 			    _("Could not retrieve disk geometry information."));
@@ -988,27 +1030,51 @@ fdasd_get_geometry (const PedDevice *dev, fdasd_anchor_t *anc, int f)
 			    _("Could not retrieve blocksize information."));
 
 		/* get disk type */
-		if (ioctl(f, BIODASDINFO, &dasd_info) != 0)
-			fdasd_error(anc, unable_to_ioctl,
-				    _("Could not retrieve disk information."));
-
-		characteristics = (struct dasd_eckd_characteristics *)
-					&dasd_info.characteristics;
-		if (characteristics->no_cyl == LV_COMPAT_CYL &&
-		    characteristics->long_no_cyl)
-			anc->hw_cylinders = characteristics->long_no_cyl;
-		else
-			anc->hw_cylinders = characteristics->no_cyl;
+		if (ioctl(f, BIODASDINFO, &dasd_info) != 0) {
+		        /* verify that the geometry matches a 3390 DASD */
+		        if (!fdasd_verify_geometry(DASD_3390_TYPE, blksize,
+						   &anc->geo)) {
+			        fdasd_error(anc, wrong_disk_type,
+					    _("Disk geometry does not match a " \
+					      "DASD device of type 3390."));
+				goto error;
+			}
+			anc->dev_type = DASD_3390_TYPE;
+			anc->hw_cylinders =
+			        size_in_bytes / (blksize * anc->geo.heads * anc->geo.sectors);
+			/* The VOL1 label on a CDL formatted ECKD DASD is in block 2
+			 * It will be verified later, if this position actually holds a
+			 * valid label record.
+			 */
+			anc->label_pos = 2 * blksize;
+			/* A devno 0 is actually a valid devno, which could exist
+			 * in the system. Since we use this number only to create
+			 * a default volume serial, there is no serious conflict.
+			 */
+			anc->devno = 0;
+		} else {
+		        characteristics = (struct dasd_eckd_characteristics *)
+			        &dasd_info.characteristics;
+			if (characteristics->no_cyl == LV_COMPAT_CYL &&
+			        characteristics->long_no_cyl)
+		                anc->hw_cylinders = characteristics->long_no_cyl;
+			else
+		                anc->hw_cylinders = characteristics->no_cyl;
+			anc->dev_type = dasd_info.dev_type;
+			anc->label_pos = dasd_info.label_block * blksize;
+			anc->devno = dasd_info.devno;
+			anc->label_block = dasd_info.label_block;
+			anc->FBA_layout = dasd_info.FBA_layout;
+		}
 
 		anc->is_file = 0;
 	}
 
-	anc->dev_type   = dasd_info.dev_type;
-	anc->blksize    = blksize;
-	anc->label_pos  = dasd_info.label_block * blksize;
-	anc->devno      = dasd_info.devno;
-	anc->label_block = dasd_info.label_block;
-	anc->FBA_layout = dasd_info.FBA_layout;
+	anc->blksize = blksize;
+	return 1;
+
+ error:
+	return 0;
 }
 
 /*

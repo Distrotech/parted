@@ -190,6 +190,8 @@ typedef struct format_data_t {
 #define BLKRRPART  _IO(0x12,95)
 /* get block device sector size */
 #define BLKSSZGET  _IO(0x12,104)
+/* device size in bytes (u64 *arg)*/
+#define BLKGETSIZE64 _IOR(0x12,114,size_t)
 /* get device geometry */
 #define HDIO_GETGEO		0x0301
 
@@ -285,7 +287,7 @@ enum fdasd_failure {
 
 void fdasd_cleanup (fdasd_anchor_t *anchor);
 void fdasd_initialize_anchor (fdasd_anchor_t * anc);
-void fdasd_get_geometry (const PedDevice *dev, fdasd_anchor_t *anc, int fd);
+int fdasd_get_geometry (const PedDevice *dev, fdasd_anchor_t *anc, int fd);
 void fdasd_check_api_version (fdasd_anchor_t *anc, int fd);
 int fdasd_check_volume (fdasd_anchor_t *anc, int fd);
 int fdasd_write_labels (fdasd_anchor_t *anc, int fd);
