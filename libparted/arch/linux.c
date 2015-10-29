@@ -3184,59 +3184,6 @@ linux_disk_commit (PedDisk* disk)
         return 1;
 }
 
-#if defined __s390__ || defined __s390x__
-/**
- * Check whether this device could be a DASD
- *
- * The device probing yields PED_DEVICE_DASD for native DASD transport
- * If the block device uses a different transport (e.g. virtio)
- * a simplified heuristic (assuming a model 3390 with 4K sectors)
- * is applied (only) on s390x systems for this check.
- *
- * \return 1 if the geometry indicates this could be a DASD
- *         and 0 otherwise
- */
-static int
-_ped_device_like_dasd(const PedDevice *dev)
-{
-        return (dev->type == PED_DEVICE_DASD)
-          || (dev->hw_geom.heads == 15
-              && dev->hw_geom.sectors == 12
-              && (dev->hw_geom.cylinders
-                  * dev->hw_geom.heads
-                  * dev->hw_geom.sectors
-                  * dev->phys_sector_size
-                  == dev->length * dev->sector_size));
-}
-
-
-
-static PedAlignment*
-s390_get_minimum_alignment(const PedDevice *dev)
-{
-#if USE_BLKID
-        return linux_get_minimum_alignment(dev);
-#else
-        return ped_alignment_new(0,
-                                 dev->phys_sector_size
-                                 / dev->sector_size);
-#endif
-}
-
-static PedAlignment*
-s390_get_optimum_alignment(const PedDevice *dev)
-{
-        /* DASD needs to use minimum alignment */
-        if (_ped_device_like_dasd(dev))
-                return s390_get_minimum_alignment(dev);
-#if USE_BLKID
-        return linux_get_optimum_alignment(dev);
-#else
-        return NULL;
-#endif
-}
-#endif
-
 #if USE_BLKID
 static PedAlignment*
 linux_get_minimum_alignment(const PedDevice *dev)
@@ -3290,6 +3237,59 @@ linux_get_optimum_alignment(const PedDevice *dev)
         return ped_alignment_new(
                 blkid_topology_get_alignment_offset(tp) / dev->sector_size,
                 blkid_topology_get_optimal_io_size(tp) / dev->sector_size);
+}
+#endif
+
+#if defined __s390__ || defined __s390x__
+/**
+ * Check whether this device could be a DASD
+ *
+ * The device probing yields PED_DEVICE_DASD for native DASD transport
+ * If the block device uses a different transport (e.g. virtio)
+ * a simplified heuristic (assuming a model 3390 with 4K sectors)
+ * is applied (only) on s390x systems for this check.
+ *
+ * \return 1 if the geometry indicates this could be a DASD
+ *         and 0 otherwise
+ */
+static int
+_ped_device_like_dasd(const PedDevice *dev)
+{
+        return (dev->type == PED_DEVICE_DASD)
+          || (dev->hw_geom.heads == 15
+              && dev->hw_geom.sectors == 12
+              && (dev->hw_geom.cylinders
+                  * dev->hw_geom.heads
+                  * dev->hw_geom.sectors
+                  * dev->phys_sector_size
+                  == dev->length * dev->sector_size));
+}
+
+
+
+static PedAlignment*
+s390_get_minimum_alignment(const PedDevice *dev)
+{
+#if USE_BLKID
+        return linux_get_minimum_alignment(dev);
+#else
+        return ped_alignment_new(0,
+                                 dev->phys_sector_size
+                                 / dev->sector_size);
+#endif
+}
+
+static PedAlignment*
+s390_get_optimum_alignment(const PedDevice *dev)
+{
+        /* DASD needs to use minimum alignment */
+        if (_ped_device_like_dasd(dev))
+                return s390_get_minimum_alignment(dev);
+#if USE_BLKID
+        return linux_get_optimum_alignment(dev);
+#else
+        return NULL;
+#endif
 }
 #endif
 
